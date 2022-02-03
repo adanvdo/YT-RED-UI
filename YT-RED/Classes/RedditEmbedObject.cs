@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace YT_RED_UI.Classes
+namespace YT_RED.Classes
 {
     public class RedditEmbedObject
     {

@@ -7,7 +7,7 @@ using YoutubeDLSharp;
 using HtmlAgilityPack;
 using Newtonsoft.Json;
 
-namespace YT_RED_UI.Utils
+namespace YT_RED.Utils
 {
     public static class HtmlUtil
     {
@@ -48,8 +48,8 @@ namespace YT_RED_UI.Utils
                             .SelectSingleNode(dataPath);
                         if (embedCheck != null)
                         {
-                            result.Add(new Classes.StreamLink(Classes.StreamVideoType.DASH, embedCheck.Attributes["data-mpd-url"].Value.Replace(@"&f=sd", "")));
-                            result.Add(new Classes.StreamLink(Classes.StreamVideoType.HLS, embedCheck.Attributes["data-hls-url"].Value.Replace(@"&f=sd", "")));
+                            result.Add(new Classes.StreamLink(Classes.StreamPlaylistType.DASH, embedCheck.Attributes["data-mpd-url"].Value.Replace(@"&f=sd", "")));
+                            result.Add(new Classes.StreamLink(Classes.StreamPlaylistType.HLS, embedCheck.Attributes["data-hls-url"].Value.Replace(@"&f=sd", "")));
                         }
                     }
                 }
@@ -63,13 +63,13 @@ namespace YT_RED_UI.Utils
 
                     // if we found the hls url here, we will use it. otherwise we will check the last known element for the url
                     if (check2 != null)
-                        result.Add(new Classes.StreamLink(Classes.StreamVideoType.HLS, check2.Value));
+                        result.Add(new Classes.StreamLink(Classes.StreamPlaylistType.HLS, check2.Value));
                     else
                     {
                         var lastXpath = "//meta[@property='og:video']/@content";
                         var check3 = navigator.SelectSingleNode(lastXpath);
                         if (check3 != null)
-                            result.Add(new Classes.StreamLink(Classes.StreamVideoType.HLS, check3.Value));
+                            result.Add(new Classes.StreamLink(Classes.StreamPlaylistType.HLS, check3.Value));
                     }
                 }
             }

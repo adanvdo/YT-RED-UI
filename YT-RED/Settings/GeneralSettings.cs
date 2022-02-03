@@ -7,11 +7,26 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace YT_RED_UI.Settings
+namespace YT_RED.Settings
 {
 	public class GeneralSettings : FeatureSettings
 	{
 		public override AppFeature Feature => AppFeature.General;
+
+
+		[Category("Preferences")]
+		[DisplayName("Enable Download History")]
+		[Description("Enable YT-RED to keep a list of downloads for quick access on the Home screen")]
+		[DefaultValue(true)]
+		[JsonProperty("history_enabled")]
+		public bool EnableDownloadHistory { get; set; }
+
+		[Category("Preferences")]
+		[DisplayName("History Age")]
+		[Description("The number of days to keep download history if it is enabled")]
+		[DefaultValue(30)]
+		[JsonProperty("history_age")]
+		public int HistoryAge { get; set; }
 
 		[Category("Downloads")]
 		[DisplayName("Video Download Path")]
@@ -70,6 +85,8 @@ namespace YT_RED_UI.Settings
 
 		public GeneralSettings()
         {
+			EnableDownloadHistory = true;
+			HistoryAge = 30;
 			RedditSampleUrl = @"https://www.reddit.com/r/PraiseTheCameraMan/comments/sj7iwr/couldnt_be_more_perfect/";
 			RedditMediaURLPrefix = @"https://v.redd.it/";
 			RedditPreferredVideoResolution = Resolution.x1080;

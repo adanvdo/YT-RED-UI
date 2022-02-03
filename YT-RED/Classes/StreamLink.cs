@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace YT_RED_UI.Classes
+namespace YT_RED.Classes
 {
     public class StreamLink
     {
-        public StreamVideoType VideoType { get; set; }
+        public StreamPlaylistType PlaylistType { get; set; }
         public string StreamUrl { get; set; }
 
         public StreamLink()
@@ -16,14 +16,14 @@ namespace YT_RED_UI.Classes
             StreamUrl = string.Empty;
         }
 
-        public StreamLink(StreamVideoType videoType, string url)
+        public StreamLink(StreamPlaylistType videoType, string url)
         {            
-            VideoType = videoType;
+            PlaylistType = videoType;
             StreamUrl = url;
         }
     }
 
-    public enum StreamVideoType
+    public enum StreamPlaylistType
     {
         HLS = 0,
         DASH = 1,

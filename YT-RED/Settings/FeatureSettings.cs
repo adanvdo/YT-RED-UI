@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Threading.Tasks;
 
-namespace YT_RED_UI.Settings
+namespace YT_RED.Settings
 {
 	public abstract class FeatureSettings
 	{

@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-namespace YT_RED_UI
+namespace YT_RED
 {
 	public enum AppFeature
 	{

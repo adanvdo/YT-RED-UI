@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace YT_RED_UI.Settings
+namespace YT_RED.Settings
 {
 	public class AppSettings
 	{
