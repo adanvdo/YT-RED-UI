@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using DevExpress.XtraEditors;
 using YT_RED.Controls;
 using YT_RED.Logging;
 using YT_RED.Settings;
 using Xabe.FFmpeg;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace YT_RED
 {
@@ -33,6 +27,7 @@ namespace YT_RED
         {
             InitializeComponent();
             Init();
+            Historian.Init();
         }
 
         protected override void OnLoad(EventArgs e)
@@ -60,6 +55,8 @@ namespace YT_RED
 
         private void btnRedditList_Click(object sender, EventArgs e)
         {
+            this.gcReddit.DataSource = null;
+            this.gvReddit.RefreshData();
             if(!string.IsNullOrEmpty(this.txtRedditPost.Text))
             {
                 redditScrape(this.txtRedditPost.Text, true);
@@ -76,7 +73,6 @@ namespace YT_RED
                 List<Classes.StreamLink> streamLinks = await Utils.HtmlUtil.GetVideoFromRedditPage(playlistUrl);
                 if(streamLinks != null && listFormats)
                 {
-                    gcReddit.Visible = true;
                     List<Classes.RedditStream> dashStreamList = new List<Classes.RedditStream>();
                     List<Classes.RedditStream> hlsStreamList = new List<Classes.RedditStream>();
 
@@ -156,7 +152,15 @@ namespace YT_RED
 
         private void gvReddit_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e)
         {
-            if (e.FocusedRowHandle < 0) return;
+            if (e.FocusedRowHandle < 0)
+            {
+                lblSelectionText.Text = String.Empty;
+                btnDownloadReddit.Enabled = false;
+                btnDownloadReddit.Visible = false;
+                btnRedDL.Text = String.Empty;
+                btnRedDL.Visible = false;
+                return;
+            }
             selectedStream = gvReddit.GetFocusedRow() as Classes.ResultStream;
             if (selectedStream != null)
             {
@@ -166,25 +170,49 @@ namespace YT_RED
                 else displayText += $"Video: {selectedStream.PlaylistType} {selectedStream.VideoCodec} {selectedStream.Width}x{selectedStream.Height}\nAudio: {selectedStream.AudioCodec} {selectedStream.AudioChannels}ch {selectedStream.AudioSampleRate}kHz";
                 lblSelectionText.Text = displayText;
                 lblSelectionText.Refresh();
-                simpleButton1.Visible = true;
-                simpleButton1.Enabled = true;
+                btnDownloadReddit.Visible = true;
+                btnDownloadReddit.Enabled = true;
             }
-            else simpleButton1.Visible = false;
+            else btnDownloadReddit.Visible = false;
         }
 
         private Classes.ResultStream selectedStream = null;
 
-        private async void simpleButton1_Click(object sender, EventArgs e)
+        private async void btnDownloadReddit_Click(object sender, EventArgs e)
         {
             if(selectedStream != null)
             {
+                btnDownloadReddit.Enabled = false;
                 IConversion conversion = Utils.VideoUtil.PrepareConversion(selectedStream);
                 string destination = conversion.OutputFilePath;
                 conversion.OnProgress += Conversion_OnProgress;
                 this.pbDownloadProgress.Visible = true;
-                await conversion.Start();
+                try
+                {
+                    await conversion.Start();
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                await Historian.RecordDownload(new DownloadLog(
+                    DownloadType.Reddit, 
+                    string.IsNullOrEmpty(selectedStream.VideoPath) ? selectedStream.AudioPath : selectedStream.VideoPath,
+                    selectedStream.StreamType, DateTime.Now, destination
+                    ));
+                gcHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.Reddit).ToList();
+                gvHistory.PopulateColumns();
+                gvHistory.Columns["DownloadType"].Width = 10;
+                gvHistory.Columns["DownloadType"].Caption = "Type";
+                gvHistory.Columns["FileName"].Visible = false;
+                gvHistory.Columns["TimeLogged"].Visible = false;
+                gvHistory.Columns["Type"].Visible = false;
+                gvHistory.Columns["Downloaded"].Visible = false;
+                gvHistory.RefreshData();
+
                 this.pbDownloadProgress.Visible = false;
-                this.lblDLLocation.Text = destination;
+                this.btnRedDL.Text = destination;
+                this.btnRedDL.Visible = true;
             }
         }
 
@@ -207,9 +235,41 @@ namespace YT_RED
 
         private void lblDLLocation_Click(object sender, EventArgs e)
         {
-            string argument = "/select, \"" + lblDLLocation.Text + "\"";
+            string argument = "/select, \"" + btnRedDL.Text + "\"";
 
             System.Diagnostics.Process.Start("explorer.exe", argument);
+        }
+
+        private void tabFormControl1_SelectedPageChanged(object sender, DevExpress.XtraBars.TabFormSelectedPageChangedEventArgs e)
+        {
+            if(tabFormControl1.SelectedPage != null && tabFormControl1.SelectedPage.Text == "Reddit")
+            {
+                gcHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.Reddit).ToList();
+                gvHistory.PopulateColumns();
+                gvHistory.Columns["DownloadType"].Width = 10;
+                gvHistory.Columns["DownloadType"].Caption = "Type";
+                gvHistory.Columns["FileName"].Visible = false;
+                gvHistory.Columns["TimeLogged"].Visible = false;
+                gvHistory.Columns["Type"].Visible = false;
+                gvHistory.Columns["Downloaded"].Visible = false;
+            }
+        }
+
+        private void gvHistory_DoubleClick(object sender, EventArgs e)
+        {
+            if(selectedRedditLog != null)
+            {
+                string argument = "/select, \"" + selectedRedditLog.DownloadLocation + "\"";
+
+                System.Diagnostics.Process.Start("explorer.exe", argument);
+            }
+        }
+
+        private DownloadLog selectedRedditLog = null;
+        private void gvHistory_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e)
+        {
+            if (e.FocusedRowHandle < 0) return;
+            selectedRedditLog = gvHistory.GetFocusedRow() as DownloadLog;
         }
     }
 }

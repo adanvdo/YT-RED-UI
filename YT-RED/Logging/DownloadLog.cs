@@ -10,6 +10,8 @@ namespace YT_RED.Logging
 {
     public class DownloadLog
     {
+        [JsonProperty("dl_type")]
+        public DownloadType DownloadType { get; set; }
         [JsonProperty("filename")]
         public string FileName { get; set; }
         [JsonProperty("type")]
@@ -24,13 +26,20 @@ namespace YT_RED.Logging
         public DownloadLog()
         { }
 
-        public DownloadLog(string fileName, StreamType type, DateTime downloaded, string location)
+        public DownloadLog(DownloadType dlType, string fileName, StreamType type, DateTime downloaded, string location)
         {
+            DownloadType = dlType;
             FileName = fileName;
             Type = type;
             Downloaded = downloaded;
             DownloadLocation = location; 
             TimeLogged = DateTime.Now;
         }
+    }
+
+    public enum DownloadType
+    {
+        YouTube = 0,
+        Reddit = 1
     }
 }

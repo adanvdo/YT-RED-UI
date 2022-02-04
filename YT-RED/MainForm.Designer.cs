@@ -28,11 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.tabFormControl1 = new DevExpress.XtraBars.TabFormControl();
-            this.barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
-            this.tfpHome = new YT_RED.Controls.CustomTabFormPage();
-            this.tabFormContentContainer1 = new DevExpress.XtraBars.TabFormContentContainer();
             this.tfpYouTube = new YT_RED.Controls.CustomTabFormPage();
             this.tabFormContentContainer2 = new DevExpress.XtraBars.TabFormContentContainer();
             this.tfpReddit = new YT_RED.Controls.CustomTabFormPage();
@@ -48,11 +44,15 @@
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
             this.txtRedditPost = new DevExpress.XtraEditors.TextEdit();
             this.pictureEdit1 = new DevExpress.XtraEditors.PictureEdit();
+            this.gcHistory = new DevExpress.XtraGrid.GridControl();
+            this.gvHistory = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.panelControl2 = new DevExpress.XtraEditors.PanelControl();
-            this.lblDLLocation = new DevExpress.XtraEditors.LabelControl();
+            this.btnRedDL = new DevExpress.XtraEditors.SimpleButton();
             this.pbDownloadProgress = new DevExpress.XtraEditors.ProgressBarControl();
-            this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
+            this.btnDownloadReddit = new DevExpress.XtraEditors.SimpleButton();
             this.lblSelectionText = new DevExpress.XtraEditors.LabelControl();
+            this.tfpHome = new YT_RED.Controls.CustomTabFormPage();
+            this.tabFormContentContainer1 = new DevExpress.XtraBars.TabFormContentContainer();
             ((System.ComponentModel.ISupportInitialize)(this.tabFormControl1)).BeginInit();
             this.tabFormContentContainer3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerControl1)).BeginInit();
@@ -68,6 +68,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.redditListMarquee.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtRedditPost.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit1.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gcHistory)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gvHistory)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl2)).BeginInit();
             this.panelControl2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbDownloadProgress.Properties)).BeginInit();
@@ -75,42 +77,18 @@
             // 
             // tabFormControl1
             // 
-            this.tabFormControl1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
-            this.barButtonItem1});
             this.tabFormControl1.Location = new System.Drawing.Point(0, 0);
             this.tabFormControl1.Name = "tabFormControl1";
-            this.tabFormControl1.Pages.Add(this.tfpHome);
             this.tabFormControl1.Pages.Add(this.tfpYouTube);
             this.tabFormControl1.Pages.Add(this.tfpReddit);
+            this.tabFormControl1.Pages.Add(this.tfpHome);
             this.tabFormControl1.SelectedPage = this.tfpReddit;
             this.tabFormControl1.Size = new System.Drawing.Size(1059, 50);
             this.tabFormControl1.TabForm = this;
             this.tabFormControl1.TabIndex = 0;
-            this.tabFormControl1.TabRightItemLinks.Add(this.barButtonItem1);
             this.tabFormControl1.TabStop = false;
             this.tabFormControl1.PageClosing += new DevExpress.XtraBars.PageClosingEventHandler(this.tabFormControl1_PageClosing);
-            // 
-            // barButtonItem1
-            // 
-            this.barButtonItem1.Caption = "Settings";
-            this.barButtonItem1.Hint = "Program Settings";
-            this.barButtonItem1.Id = 2;
-            this.barButtonItem1.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("barButtonItem1.ImageOptions.SvgImage")));
-            this.barButtonItem1.Name = "barButtonItem1";
-            // 
-            // tfpHome
-            // 
-            this.tfpHome.ContentContainer = this.tabFormContentContainer1;
-            this.tfpHome.Name = "tfpHome";
-            this.tfpHome.Text = "Home";
-            // 
-            // tabFormContentContainer1
-            // 
-            this.tabFormContentContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabFormContentContainer1.Location = new System.Drawing.Point(0, 50);
-            this.tabFormContentContainer1.Name = "tabFormContentContainer1";
-            this.tabFormContentContainer1.Size = new System.Drawing.Size(1059, 678);
-            this.tabFormContentContainer1.TabIndex = 1;
+            this.tabFormControl1.SelectedPageChanged += new DevExpress.XtraBars.TabFormSelectedPageChangedEventHandler(this.tabFormControl1_SelectedPageChanged);
             // 
             // tfpYouTube
             // 
@@ -156,6 +134,7 @@
             // 
             // splitContainerControl1.Panel2
             // 
+            this.splitContainerControl1.Panel2.Controls.Add(this.gcHistory);
             this.splitContainerControl1.Panel2.Controls.Add(this.panelControl2);
             this.splitContainerControl1.Panel2.Controls.Add(this.lblSelectionText);
             this.splitContainerControl1.Panel2.Text = "Panel2";
@@ -173,7 +152,6 @@
             this.gcReddit.TabIndex = 2;
             this.gcReddit.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvReddit});
-            this.gcReddit.Visible = false;
             // 
             // gvReddit
             // 
@@ -283,53 +261,76 @@
             this.pictureEdit1.Size = new System.Drawing.Size(112, 45);
             this.pictureEdit1.TabIndex = 0;
             // 
+            // gcHistory
+            // 
+            this.gcHistory.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gcHistory.Location = new System.Drawing.Point(0, 161);
+            this.gcHistory.MainView = this.gvHistory;
+            this.gcHistory.Name = "gcHistory";
+            this.gcHistory.Size = new System.Drawing.Size(325, 517);
+            this.gcHistory.TabIndex = 5;
+            this.gcHistory.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
+            this.gvHistory});
+            // 
+            // gvHistory
+            // 
+            this.gvHistory.GridControl = this.gcHistory;
+            this.gvHistory.Name = "gvHistory";
+            this.gvHistory.OptionsBehavior.AlignGroupSummaryInGroupRow = DevExpress.Utils.DefaultBoolean.False;
+            this.gvHistory.OptionsBehavior.Editable = false;
+            this.gvHistory.OptionsCustomization.AllowColumnMoving = false;
+            this.gvHistory.OptionsCustomization.AllowGroup = false;
+            this.gvHistory.OptionsCustomization.AllowQuickHideColumns = false;
+            this.gvHistory.OptionsDetail.ShowDetailTabs = false;
+            this.gvHistory.OptionsSelection.EnableAppearanceFocusedCell = false;
+            this.gvHistory.OptionsSelection.EnableAppearanceHideSelection = false;
+            this.gvHistory.OptionsView.ShowDetailButtons = false;
+            this.gvHistory.OptionsView.ShowGroupExpandCollapseButtons = false;
+            this.gvHistory.OptionsView.ShowGroupPanel = false;
+            this.gvHistory.FocusedRowChanged += new DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventHandler(this.gvHistory_FocusedRowChanged);
+            this.gvHistory.DoubleClick += new System.EventHandler(this.gvHistory_DoubleClick);
+            // 
             // panelControl2
             // 
-            this.panelControl2.Controls.Add(this.lblDLLocation);
+            this.panelControl2.Controls.Add(this.btnRedDL);
             this.panelControl2.Controls.Add(this.pbDownloadProgress);
-            this.panelControl2.Controls.Add(this.simpleButton1);
+            this.panelControl2.Controls.Add(this.btnDownloadReddit);
             this.panelControl2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelControl2.Location = new System.Drawing.Point(0, 20);
             this.panelControl2.Name = "panelControl2";
-            this.panelControl2.Size = new System.Drawing.Size(325, 176);
+            this.panelControl2.Size = new System.Drawing.Size(325, 141);
             this.panelControl2.TabIndex = 4;
             // 
-            // lblDLLocation
+            // btnRedDL
             // 
-            this.lblDLLocation.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
-            this.lblDLLocation.Appearance.Options.UseFont = true;
-            this.lblDLLocation.Appearance.Options.UseTextOptions = true;
-            this.lblDLLocation.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
-            this.lblDLLocation.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.Vertical;
-            this.lblDLLocation.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.lblDLLocation.Location = new System.Drawing.Point(2, 164);
-            this.lblDLLocation.Name = "lblDLLocation";
-            this.lblDLLocation.Padding = new System.Windows.Forms.Padding(0, 0, 0, 10);
-            this.lblDLLocation.Size = new System.Drawing.Size(321, 10);
-            this.lblDLLocation.TabIndex = 3;
-            this.lblDLLocation.Click += new System.EventHandler(this.lblDLLocation_Click);
+            this.btnRedDL.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnRedDL.Location = new System.Drawing.Point(2, 113);
+            this.btnRedDL.Name = "btnRedDL";
+            this.btnRedDL.Size = new System.Drawing.Size(321, 26);
+            this.btnRedDL.TabIndex = 2;
+            this.btnRedDL.Visible = false;
             // 
             // pbDownloadProgress
             // 
-            this.pbDownloadProgress.Location = new System.Drawing.Point(15, 76);
+            this.pbDownloadProgress.Location = new System.Drawing.Point(15, 65);
             this.pbDownloadProgress.Name = "pbDownloadProgress";
             this.pbDownloadProgress.Properties.ShowTitle = true;
             this.pbDownloadProgress.Size = new System.Drawing.Size(298, 31);
             this.pbDownloadProgress.TabIndex = 1;
             this.pbDownloadProgress.Visible = false;
             // 
-            // simpleButton1
+            // btnDownloadReddit
             // 
-            this.simpleButton1.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
-            this.simpleButton1.Appearance.Options.UseFont = true;
-            this.simpleButton1.Enabled = false;
-            this.simpleButton1.Location = new System.Drawing.Point(106, 20);
-            this.simpleButton1.Name = "simpleButton1";
-            this.simpleButton1.Size = new System.Drawing.Size(112, 32);
-            this.simpleButton1.TabIndex = 0;
-            this.simpleButton1.Text = "DOWNLOAD";
-            this.simpleButton1.Visible = false;
-            this.simpleButton1.Click += new System.EventHandler(this.simpleButton1_Click);
+            this.btnDownloadReddit.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
+            this.btnDownloadReddit.Appearance.Options.UseFont = true;
+            this.btnDownloadReddit.Enabled = false;
+            this.btnDownloadReddit.Location = new System.Drawing.Point(105, 18);
+            this.btnDownloadReddit.Name = "btnDownloadReddit";
+            this.btnDownloadReddit.Size = new System.Drawing.Size(112, 32);
+            this.btnDownloadReddit.TabIndex = 0;
+            this.btnDownloadReddit.Text = "DOWNLOAD";
+            this.btnDownloadReddit.Visible = false;
+            this.btnDownloadReddit.Click += new System.EventHandler(this.btnDownloadReddit_Click);
             // 
             // lblSelectionText
             // 
@@ -344,6 +345,20 @@
             this.lblSelectionText.Padding = new System.Windows.Forms.Padding(0, 10, 0, 10);
             this.lblSelectionText.Size = new System.Drawing.Size(325, 20);
             this.lblSelectionText.TabIndex = 3;
+            // 
+            // tfpHome
+            // 
+            this.tfpHome.ContentContainer = this.tabFormContentContainer1;
+            this.tfpHome.Name = "tfpHome";
+            this.tfpHome.Text = "Settings";
+            // 
+            // tabFormContentContainer1
+            // 
+            this.tabFormContentContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabFormContentContainer1.Location = new System.Drawing.Point(0, 50);
+            this.tabFormContentContainer1.Name = "tabFormContentContainer1";
+            this.tabFormContentContainer1.Size = new System.Drawing.Size(1059, 678);
+            this.tabFormContentContainer1.TabIndex = 1;
             // 
             // MainForm
             // 
@@ -371,6 +386,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.redditListMarquee.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtRedditPost.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit1.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gcHistory)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gvHistory)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl2)).EndInit();
             this.panelControl2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbDownloadProgress.Properties)).EndInit();
@@ -385,7 +402,6 @@
         private DevExpress.XtraBars.TabFormContentContainer tabFormContentContainer2;
         private YT_RED.Controls.CustomTabFormPage tfpReddit;
         private DevExpress.XtraBars.TabFormContentContainer tabFormContentContainer3;
-        private DevExpress.XtraBars.BarButtonItem barButtonItem1;
         private DevExpress.XtraEditors.SplitContainerControl splitContainerControl1;
         private DevExpress.XtraEditors.PanelControl panelControl1;
         private DevExpress.XtraEditors.PictureEdit pictureEdit1;
@@ -400,9 +416,11 @@
         protected DevExpress.XtraBars.TabFormControl tabFormControl1;
         private DevExpress.XtraEditors.LabelControl lblSelectionText;
         private DevExpress.XtraEditors.PanelControl panelControl2;
-        private DevExpress.XtraEditors.SimpleButton simpleButton1;
+        private DevExpress.XtraEditors.SimpleButton btnDownloadReddit;
         private DevExpress.XtraEditors.ProgressBarControl pbDownloadProgress;
-        private DevExpress.XtraEditors.LabelControl lblDLLocation;
+        private DevExpress.XtraGrid.GridControl gcHistory;
+        private DevExpress.XtraGrid.Views.Grid.GridView gvHistory;
+        private DevExpress.XtraEditors.SimpleButton btnRedDL;
     }
 }
 

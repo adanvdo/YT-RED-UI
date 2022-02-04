@@ -13,17 +13,26 @@ namespace YT_RED.Logging
     {
         private const string historyFile = "history.json";
         private static bool historyWasLoaded = false;
-        public static List<DownloadLog> DownloadHistory = new List<DownloadLog>();
+        public static List<DownloadLog> DownloadHistory;
 
+        public static void Init()
+        {
+            DownloadHistory = new List<DownloadLog>();
+        }
         public static async Task<bool> LoadDownloadHistory()
         {
+            if(DownloadHistory == null)
+                DownloadHistory = new List<DownloadLog>();
             try
             {
                 if (File.Exists(historyFile))
                 {
                     var json = await Task.Run(() => File.ReadAllText(historyFile));
                     List<DownloadLog> history = JsonConvert.DeserializeObject<List<DownloadLog>>(json);
-                    DownloadHistory = history;
+                    if (history != null)
+                        DownloadHistory = history;
+                    else
+                        DownloadHistory = new List<DownloadLog>();
                     historyWasLoaded = true;
                     return true;
                 }
@@ -40,6 +49,8 @@ namespace YT_RED.Logging
 
         private static async Task CleanHistory(bool fullErase = false)
         {
+            if (DownloadHistory == null)
+                DownloadHistory = new List<DownloadLog>();
             try
             {
                 if (!historyWasLoaded)
@@ -59,7 +70,6 @@ namespace YT_RED.Logging
                 {
                     DownloadHistory.RemoveAll(h => h.Downloaded.Date < DateTime.Today.AddDays(-AppSettings.Default.General.HistoryAge).Date);
                 }
-                bool saved = await SaveHistory();            
             }
             catch(Exception ex)
             {
@@ -69,6 +79,8 @@ namespace YT_RED.Logging
 
         public static async Task<bool> RecordDownload(DownloadLog dlLog)
         {
+            if(DownloadHistory == null)
+                DownloadHistory = new List<DownloadLog>();
             try
             {
                 DownloadHistory.Add(dlLog);
@@ -86,7 +98,6 @@ namespace YT_RED.Logging
         {
             try
             {
-                await CleanHistory();
                 var json = JsonConvert.SerializeObject(DownloadHistory, Formatting.Indented);
                 await Task.Run(() => File.WriteAllText(historyFile, json));
                 return true;

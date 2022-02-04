@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using Xabe.FFmpeg;
 
 namespace YT_RED
 {
@@ -18,6 +19,7 @@ namespace YT_RED
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            FFmpeg.SetExecutablesPath(@".\Resources\App");
             Application.Run(new MainForm());
         }
     }
