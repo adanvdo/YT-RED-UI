@@ -73,6 +73,7 @@
     <Compile Include="AppFeature.cs" />
     <Compile Include="Classes\RedditEmbedObject.cs" />
     <Compile Include="Classes\RedditStream.cs" />
+    <Compile Include="Classes\ResultStream.cs" />
     <Compile Include="Classes\StreamLink.cs" />
     <Compile Include="Controls\CustomTabFormPage.cs">
       <SubType>Component</SubType>

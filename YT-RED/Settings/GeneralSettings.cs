@@ -32,7 +32,6 @@ namespace YT_RED.Settings
 		[DisplayName("Video Download Path")]
 		[Description("The destination folder for downloaded video files")]
 		[EditorAttribute(typeof(System.Windows.Forms.FolderBrowserDialog), typeof(System.Drawing.Design.UITypeEditor))]
-		[DefaultValue(@"C:\Users\%USERNAME%\Downloads")]
 		[JsonProperty("video_dl_path")]
 		public string VideoDownloadPath { get; set; }
 
@@ -40,7 +39,6 @@ namespace YT_RED.Settings
 		[DisplayName("Audio Download Path")]
 		[Description("The destination folder for downloaded audio files")]
 		[EditorAttribute(typeof(System.Windows.Forms.FolderBrowserDialog), typeof(System.Drawing.Design.UITypeEditor))]
-		[DefaultValue(@"C:\Users\%USERNAME%\Downloads")]
 		[JsonProperty("audio_dl_path")]
 		public string AudioDownloadPath { get; set; }
 
@@ -93,8 +91,8 @@ namespace YT_RED.Settings
 			RedditDefaultVideoSuffix = @"/DASH_{0}.mp4?source=fallback";
 			RedditDefaultAudioSuffix = @"/DASH_audio.mp4?source=fallback";
 			YouTubePreferredVideoResolution = Resolution.BEST;
-			VideoDownloadPath = @"C:\Users\%USERNAME%\Downloads";
-			AudioDownloadPath = @"C:\Users\%USERNAME%\Downloads";
+			VideoDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
+			AudioDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
 		}
 
 		public override async Task<string> ValidateSettings()
