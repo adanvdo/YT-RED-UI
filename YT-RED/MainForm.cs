@@ -38,19 +38,27 @@ namespace YT_RED
 
         private async void Init()
         {
+            this.settingsGrid.SelectedObject = AppSettings.Default.General;
             if (AppSettings.Default.General.EnableDownloadHistory)
             {
                 bool loadDownloadHistory = await Historian.LoadDownloadHistory();
                 if (loadDownloadHistory)
                 {
-                    
+                    gcHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.Reddit).ToList();
+                    refreshRedditHistory();
                 }
             }
+            tabFormControl1.SelectedPage = tfpYouTube;
         }
 
         private void btnRedditDefault_Click(object sender, EventArgs e)
         {
-
+            this.gcReddit.DataSource = null;
+            this.gvReddit.RefreshData();
+            if (!string.IsNullOrEmpty(this.txtRedditPost.Text))
+            {
+                redditScrape(this.txtRedditPost.Text);
+            }
         }
 
         private void btnRedditList_Click(object sender, EventArgs e)
@@ -71,48 +79,74 @@ namespace YT_RED
             try
             {
                 List<Classes.StreamLink> streamLinks = await Utils.HtmlUtil.GetVideoFromRedditPage(playlistUrl);
-                if(streamLinks != null && listFormats)
+                if (streamLinks != null)
                 {
-                    List<Classes.RedditStream> dashStreamList = new List<Classes.RedditStream>();
-                    List<Classes.RedditStream> hlsStreamList = new List<Classes.RedditStream>();
-
-                    foreach (Classes.StreamLink link in streamLinks)
+                    if (listFormats)
                     {
-                        IMediaInfo m3u8contents = await Utils.VideoUtil.ParseM3U8(link.StreamUrl);
-                        List<Classes.RedditStream> l = new List<Classes.RedditStream>();
-                        foreach(IStream ist in m3u8contents.Streams) 
+                        List<Classes.RedditStream> dashStreamList = new List<Classes.RedditStream>();
+                        List<Classes.RedditStream> hlsStreamList = new List<Classes.RedditStream>();
+
+                        foreach (Classes.StreamLink link in streamLinks)
                         {
-                            string transform = JsonConvert.SerializeObject(ist);
-                            Classes.RedditStream rs = JsonConvert.DeserializeObject<Classes.RedditStream>(transform);
-                            rs.DeliverStream = ist;
-                            l.Add(rs);
+                            IMediaInfo m3u8contents = await Utils.VideoUtil.ParseM3U8(link.StreamUrl);
+                            List<Classes.RedditStream> l = new List<Classes.RedditStream>();
+                            foreach (IStream ist in m3u8contents.Streams)
+                            {
+                                string transform = JsonConvert.SerializeObject(ist);
+                                Classes.RedditStream rs = JsonConvert.DeserializeObject<Classes.RedditStream>(transform);
+                                rs.DeliverStream = ist;
+                                l.Add(rs);
+                            }
+                            foreach (Classes.RedditStream stream in l)
+                            {
+                                stream.PlaylistType = link.PlaylistType;
+                            }
+                            if (link.PlaylistType == Classes.StreamPlaylistType.DASH)
+                                dashStreamList.AddRange(l);
+                            else if (link.PlaylistType == Classes.StreamPlaylistType.HLS)
+                                hlsStreamList.AddRange(l);
                         }
-                        foreach(Classes.RedditStream stream in l)
-                        {
-                            stream.PlaylistType = link.PlaylistType;
-                        }
-                        if (link.PlaylistType == Classes.StreamPlaylistType.DASH)
-                            dashStreamList.AddRange(l);
-                        else if (link.PlaylistType == Classes.StreamPlaylistType.HLS)
-                            hlsStreamList.AddRange(l);
+
+                        List<Classes.ResultStream> buildList = new List<Classes.ResultStream>();
+                        buildList.AddRange(await Utils.VideoUtil.ConsolidateStreams(dashStreamList));
+                        buildList.AddRange(await Utils.VideoUtil.ConsolidateStreams(hlsStreamList));
+                        gcReddit.DataSource = buildList;
+                        refreshRedditList();
                     }
-
-                    List<Classes.ResultStream> buildList = new List<Classes.ResultStream>();
-                    buildList.AddRange(await Utils.VideoUtil.ConsolidateStreams(dashStreamList));
-                    buildList.AddRange(await Utils.VideoUtil.ConsolidateStreams(hlsStreamList));
-                    gcReddit.DataSource = buildList;
-                    gvReddit.PopulateColumns();
-                    gvReddit.Columns["StreamType"].Visible = false;
-                    gvReddit.Columns["VideoPath"].Visible = false;
-                    gvReddit.Columns["AudioPath"].Visible = false;
-                    gvReddit.Columns["VideoStream"].Visible = false;
-                    gvReddit.Columns["AudioStream"].Visible = false;
+                    else
+                    {
+                        string id = Utils.VideoUtil.GetRedditVideoID(streamLinks[0].StreamUrl);
+                        if (id != null)
+                        {
+                            Tuple<int,string> bestDash = await Utils.HtmlUtil.GetBestRedditDashVideo(id);
+                            if(bestDash != null)
+                            {
+                                IConversion conversion = await Utils.VideoUtil.PrepareDashConversion(bestDash.Item2, Utils.VideoUtil.RedditAudioUrl(id));
+                                string destination = conversion.OutputFilePath;
+                                conversion.OnProgress += Conversion_OnProgress;
+                                this.pbDownloadProgress.Visible = true;
+                                lblSelectionText.Text = $"Downloading DASH {bestDash.Item1}";
+                                try
+                                {
+                                    await conversion.Start();
+                                }
+                                catch (Exception ex)
+                                {
+                                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                }
+                                bool saved = await Historian.RecordDownload(new DownloadLog(
+                                    DownloadType.Reddit, bestDash.Item2, Classes.StreamType.AudioAndVideo, DateTime.Now, destination
+                                    ));
+                                gcHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.Reddit).ToList();
+                                refreshRedditHistory();
+                                lblSelectionText.Text = string.Empty;
+                                this.pbDownloadProgress.Visible = false;
+                                this.btnRedDL.Text = destination;
+                                this.btnRedDL.Visible = true;
+                            }
+                        }
+                    }
                 }
-                else
-                {
-
-                }
-
             }
             catch (Exception ex)
             {
@@ -122,6 +156,28 @@ namespace YT_RED
             this.UseWaitCursor = false;
             (this.tabFormControl1.SelectedPage as CustomTabFormPage).IsLocked = false;
             this.redditListMarquee.Hide();
+        }
+
+        private void refreshRedditList()
+        {
+            gvReddit.PopulateColumns();
+            gvReddit.Columns["StreamType"].Visible = false;
+            gvReddit.Columns["VideoPath"].Visible = false;
+            gvReddit.Columns["AudioPath"].Visible = false;
+            gvReddit.Columns["VideoStream"].Visible = false;
+            gvReddit.Columns["AudioStream"].Visible = false;
+        }
+
+        private void refreshRedditHistory()
+        {
+            gvHistory.PopulateColumns();
+            gvHistory.Columns["DownloadType"].Width = 10;
+            gvHistory.Columns["DownloadType"].Caption = "Type";
+            gvHistory.Columns["FileName"].Visible = false;
+            gvHistory.Columns["TimeLogged"].Visible = false;
+            gvHistory.Columns["Type"].Visible = false;
+            gvHistory.Columns["Downloaded"].Visible = false;
+            gvHistory.RefreshData();
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -195,21 +251,13 @@ namespace YT_RED
                 {
                     MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                await Historian.RecordDownload(new DownloadLog(
+                bool saved = await Historian.RecordDownload(new DownloadLog(
                     DownloadType.Reddit, 
                     string.IsNullOrEmpty(selectedStream.VideoPath) ? selectedStream.AudioPath : selectedStream.VideoPath,
                     selectedStream.StreamType, DateTime.Now, destination
                     ));
                 gcHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.Reddit).ToList();
-                gvHistory.PopulateColumns();
-                gvHistory.Columns["DownloadType"].Width = 10;
-                gvHistory.Columns["DownloadType"].Caption = "Type";
-                gvHistory.Columns["FileName"].Visible = false;
-                gvHistory.Columns["TimeLogged"].Visible = false;
-                gvHistory.Columns["Type"].Visible = false;
-                gvHistory.Columns["Downloaded"].Visible = false;
-                gvHistory.RefreshData();
-
+                refreshRedditHistory();
                 this.pbDownloadProgress.Visible = false;
                 this.btnRedDL.Text = destination;
                 this.btnRedDL.Visible = true;
@@ -245,13 +293,7 @@ namespace YT_RED
             if(tabFormControl1.SelectedPage != null && tabFormControl1.SelectedPage.Text == "Reddit")
             {
                 gcHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.Reddit).ToList();
-                gvHistory.PopulateColumns();
-                gvHistory.Columns["DownloadType"].Width = 10;
-                gvHistory.Columns["DownloadType"].Caption = "Type";
-                gvHistory.Columns["FileName"].Visible = false;
-                gvHistory.Columns["TimeLogged"].Visible = false;
-                gvHistory.Columns["Type"].Visible = false;
-                gvHistory.Columns["Downloaded"].Visible = false;
+                refreshRedditHistory();
             }
         }
 
@@ -270,6 +312,21 @@ namespace YT_RED
         {
             if (e.FocusedRowHandle < 0) return;
             selectedRedditLog = gvHistory.GetFocusedRow() as DownloadLog;
+        }
+
+        private void btnSaveSettings_Click(object sender, EventArgs e)
+        {
+            AppSettings.Default.Save();
+        }
+
+        private void btnRedDL_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(btnRedDL.Text))
+            {
+                string argument = "/select, \"" + btnRedDL.Text + "\"";
+
+                System.Diagnostics.Process.Start("explorer.exe", argument);
+            }
         }
     }
 }

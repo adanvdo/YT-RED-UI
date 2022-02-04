@@ -78,14 +78,17 @@ namespace YT_RED.Logging
         }
 
         public static async Task<bool> RecordDownload(DownloadLog dlLog)
-        {
-            if(DownloadHistory == null)
-                DownloadHistory = new List<DownloadLog>();
+        {            
             try
             {
-                DownloadHistory.Add(dlLog);
+                if (DownloadHistory == null || DownloadHistory.Count == 0)
+                {
+                    DownloadHistory = new List<DownloadLog>();
+                    DownloadHistory.Add(dlLog);
+                } 
+                else DownloadHistory.Insert(0, dlLog);
                 bool saved = await SaveHistory();
-                return true; 
+                return saved;
             }
             catch (Exception ex)
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using YoutubeDLSharp;
@@ -79,6 +80,48 @@ namespace YT_RED.Utils
             }
 
             return result;
+        }
+
+        public static async Task<Tuple<int, string>> GetBestRedditDashVideo(string id)
+        {
+            int[] resolutions = new int[]
+            {
+                2160,
+                1080,
+                720,
+                480,
+                240
+            };
+            Tuple<int, string> bestUrl = null;
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    foreach (int res in resolutions)
+                    {
+                        var response = await client.GetAsync(redditVideoUrl(id, res));
+                        if (response != null)
+                        {
+                            if (response.IsSuccessStatusCode)
+                            {
+                                bestUrl = Tuple.Create(res, redditVideoUrl(id, res));
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (bestUrl != null) return bestUrl;
+            }
+            catch(Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+            }
+            return null;
+        }        
+
+        private static string redditVideoUrl(string id, int resolution)
+        {
+            return string.Format($@"{YT_RED.Settings.AppSettings.Default.General.RedditMediaURLPrefix}{id}{YT_RED.Settings.AppSettings.Default.General.RedditDefaultVideoSuffix}", resolution);
         }
     }
 }

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.tabFormControl1 = new DevExpress.XtraBars.TabFormControl();
             this.tfpYouTube = new YT_RED.Controls.CustomTabFormPage();
             this.tabFormContentContainer2 = new DevExpress.XtraBars.TabFormContentContainer();
@@ -53,6 +54,17 @@
             this.lblSelectionText = new DevExpress.XtraEditors.LabelControl();
             this.tfpHome = new YT_RED.Controls.CustomTabFormPage();
             this.tabFormContentContainer1 = new DevExpress.XtraBars.TabFormContentContainer();
+            this.gridPanel = new DevExpress.XtraVerticalGrid.PGPanel();
+            this.settingsGrid = new DevExpress.XtraVerticalGrid.PropertyGridControl();
+            this.pgToolbar1 = new DevExpress.XtraVerticalGrid.PGToolbar();
+            this.pgCategoryCheckButton1 = new DevExpress.XtraVerticalGrid.PGCategoryCheckButton();
+            this.pgAlphabeticalCheckButton1 = new DevExpress.XtraVerticalGrid.PGAlphabeticalCheckButton();
+            this.pgSeparatorControl1 = new DevExpress.XtraVerticalGrid.PGSeparatorControl();
+            this.pgDescriptionCheckButton1 = new DevExpress.XtraVerticalGrid.PGDescriptionCheckButton();
+            this.propertyDescriptionControl1 = new DevExpress.XtraVerticalGrid.PropertyDescriptionControl();
+            this.pgSearchControl1 = new DevExpress.XtraVerticalGrid.PGSearchControl();
+            this.panelControl3 = new DevExpress.XtraEditors.PanelControl();
+            this.btnSaveSettings = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.tabFormControl1)).BeginInit();
             this.tabFormContentContainer3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerControl1)).BeginInit();
@@ -73,6 +85,16 @@
             ((System.ComponentModel.ISupportInitialize)(this.panelControl2)).BeginInit();
             this.panelControl2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbDownloadProgress.Properties)).BeginInit();
+            this.tabFormContentContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridPanel)).BeginInit();
+            this.gridPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.settingsGrid)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pgToolbar1)).BeginInit();
+            this.pgToolbar1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pgSeparatorControl1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pgSearchControl1.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.panelControl3)).BeginInit();
+            this.panelControl3.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabFormControl1
@@ -309,6 +331,7 @@
             this.btnRedDL.Size = new System.Drawing.Size(321, 26);
             this.btnRedDL.TabIndex = 2;
             this.btnRedDL.Visible = false;
+            this.btnRedDL.Click += new System.EventHandler(this.btnRedDL_Click);
             // 
             // pbDownloadProgress
             // 
@@ -354,11 +377,139 @@
             // 
             // tabFormContentContainer1
             // 
+            this.tabFormContentContainer1.Controls.Add(this.gridPanel);
+            this.tabFormContentContainer1.Controls.Add(this.panelControl3);
             this.tabFormContentContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabFormContentContainer1.Location = new System.Drawing.Point(0, 50);
             this.tabFormContentContainer1.Name = "tabFormContentContainer1";
             this.tabFormContentContainer1.Size = new System.Drawing.Size(1059, 678);
             this.tabFormContentContainer1.TabIndex = 1;
+            // 
+            // gridPanel
+            // 
+            this.gridPanel.Columns.AddRange(new DevExpress.Utils.Layout.TablePanelColumn[] {
+            new DevExpress.Utils.Layout.TablePanelColumn(DevExpress.Utils.Layout.TablePanelEntityStyle.Relative, 1F)});
+            this.gridPanel.Controls.Add(this.settingsGrid);
+            this.gridPanel.Controls.Add(this.pgToolbar1);
+            this.gridPanel.Controls.Add(this.propertyDescriptionControl1);
+            this.gridPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridPanel.Location = new System.Drawing.Point(0, 33);
+            this.gridPanel.Name = "gridPanel";
+            this.gridPanel.Rows.AddRange(new DevExpress.Utils.Layout.TablePanelRow[] {
+            new DevExpress.Utils.Layout.TablePanelRow(DevExpress.Utils.Layout.TablePanelEntityStyle.AutoSize, 1F),
+            new DevExpress.Utils.Layout.TablePanelRow(DevExpress.Utils.Layout.TablePanelEntityStyle.Relative, 1F),
+            new DevExpress.Utils.Layout.TablePanelRow(DevExpress.Utils.Layout.TablePanelEntityStyle.AutoSize, 1F)});
+            this.gridPanel.Size = new System.Drawing.Size(1059, 645);
+            this.gridPanel.TabIndex = 1;
+            // 
+            // settingsGrid
+            // 
+            this.gridPanel.SetColumn(this.settingsGrid, 0);
+            this.settingsGrid.Cursor = System.Windows.Forms.Cursors.Default;
+            this.settingsGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.settingsGrid.Location = new System.Drawing.Point(3, 31);
+            this.settingsGrid.Name = "settingsGrid";
+            this.settingsGrid.OptionsFind.FindFilterColumns = "Caption;SearchTags";
+            this.settingsGrid.OptionsView.AllowReadOnlyRowAppearance = DevExpress.Utils.DefaultBoolean.True;
+            this.gridPanel.SetRow(this.settingsGrid, 1);
+            this.settingsGrid.Size = new System.Drawing.Size(1053, 505);
+            this.settingsGrid.TabIndex = 0;
+            // 
+            // pgToolbar1
+            // 
+            this.gridPanel.SetColumn(this.pgToolbar1, 0);
+            this.pgToolbar1.Controls.Add(this.pgCategoryCheckButton1);
+            this.pgToolbar1.Controls.Add(this.pgAlphabeticalCheckButton1);
+            this.pgToolbar1.Controls.Add(this.pgSeparatorControl1);
+            this.pgToolbar1.Controls.Add(this.pgDescriptionCheckButton1);
+            this.pgToolbar1.Controls.Add(this.pgSearchControl1);
+            this.pgToolbar1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pgToolbar1.Location = new System.Drawing.Point(0, 2);
+            this.pgToolbar1.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
+            this.pgToolbar1.Name = "pgToolbar1";
+            this.gridPanel.SetRow(this.pgToolbar1, 0);
+            this.pgToolbar1.Size = new System.Drawing.Size(1059, 24);
+            this.pgToolbar1.TabIndex = 1;
+            // 
+            // pgCategoryCheckButton1
+            // 
+            this.pgCategoryCheckButton1.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("pgCategoryCheckButton1.ImageOptions.SvgImage")));
+            this.pgCategoryCheckButton1.Location = new System.Drawing.Point(2, 0);
+            this.pgCategoryCheckButton1.Name = "pgCategoryCheckButton1";
+            this.pgCategoryCheckButton1.PropertyGrid = this.settingsGrid;
+            this.pgCategoryCheckButton1.Size = new System.Drawing.Size(26, 24);
+            this.pgCategoryCheckButton1.TabIndex = 0;
+            // 
+            // pgAlphabeticalCheckButton1
+            // 
+            this.pgAlphabeticalCheckButton1.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("pgAlphabeticalCheckButton1.ImageOptions.SvgImage")));
+            this.pgAlphabeticalCheckButton1.Location = new System.Drawing.Point(32, 0);
+            this.pgAlphabeticalCheckButton1.Name = "pgAlphabeticalCheckButton1";
+            this.pgAlphabeticalCheckButton1.PropertyGrid = this.settingsGrid;
+            this.pgAlphabeticalCheckButton1.Size = new System.Drawing.Size(26, 24);
+            this.pgAlphabeticalCheckButton1.TabIndex = 1;
+            this.pgAlphabeticalCheckButton1.TabStop = false;
+            // 
+            // pgSeparatorControl1
+            // 
+            this.pgSeparatorControl1.Location = new System.Drawing.Point(63, 2);
+            this.pgSeparatorControl1.Name = "pgSeparatorControl1";
+            this.pgSeparatorControl1.Size = new System.Drawing.Size(2, 20);
+            this.pgSeparatorControl1.TabIndex = 2;
+            // 
+            // pgDescriptionCheckButton1
+            // 
+            this.pgDescriptionCheckButton1.DescriptionControl = this.propertyDescriptionControl1;
+            this.pgDescriptionCheckButton1.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("pgDescriptionCheckButton1.ImageOptions.SvgImage")));
+            this.pgDescriptionCheckButton1.Location = new System.Drawing.Point(70, 0);
+            this.pgDescriptionCheckButton1.Name = "pgDescriptionCheckButton1";
+            this.pgDescriptionCheckButton1.PropertyGrid = this.settingsGrid;
+            this.pgDescriptionCheckButton1.Size = new System.Drawing.Size(26, 24);
+            this.pgDescriptionCheckButton1.TabIndex = 3;
+            // 
+            // propertyDescriptionControl1
+            // 
+            this.propertyDescriptionControl1.AutoHeight = true;
+            this.gridPanel.SetColumn(this.propertyDescriptionControl1, 0);
+            this.propertyDescriptionControl1.Location = new System.Drawing.Point(3, 542);
+            this.propertyDescriptionControl1.Name = "propertyDescriptionControl1";
+            this.propertyDescriptionControl1.PropertyGrid = this.settingsGrid;
+            this.gridPanel.SetRow(this.propertyDescriptionControl1, 2);
+            this.propertyDescriptionControl1.Size = new System.Drawing.Size(1053, 100);
+            this.propertyDescriptionControl1.TabIndex = 2;
+            // 
+            // pgSearchControl1
+            // 
+            this.pgSearchControl1.Client = this.settingsGrid;
+            this.pgSearchControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pgSearchControl1.Location = new System.Drawing.Point(100, 2);
+            this.pgSearchControl1.Name = "pgSearchControl1";
+            this.pgSearchControl1.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Repository.ClearButton(),
+            new DevExpress.XtraEditors.Repository.SearchButton()});
+            this.pgSearchControl1.Properties.Client = this.settingsGrid;
+            this.pgSearchControl1.Size = new System.Drawing.Size(957, 20);
+            this.pgToolbar1.SetStretched(this.pgSearchControl1, true);
+            this.pgSearchControl1.TabIndex = 2;
+            // 
+            // panelControl3
+            // 
+            this.panelControl3.Controls.Add(this.btnSaveSettings);
+            this.panelControl3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelControl3.Location = new System.Drawing.Point(0, 0);
+            this.panelControl3.Name = "panelControl3";
+            this.panelControl3.Size = new System.Drawing.Size(1059, 33);
+            this.panelControl3.TabIndex = 2;
+            // 
+            // btnSaveSettings
+            // 
+            this.btnSaveSettings.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnSaveSettings.Location = new System.Drawing.Point(982, 2);
+            this.btnSaveSettings.Name = "btnSaveSettings";
+            this.btnSaveSettings.Size = new System.Drawing.Size(75, 29);
+            this.btnSaveSettings.TabIndex = 0;
+            this.btnSaveSettings.Text = "Save";
+            this.btnSaveSettings.Click += new System.EventHandler(this.btnSaveSettings_Click);
             // 
             // MainForm
             // 
@@ -391,6 +542,17 @@
             ((System.ComponentModel.ISupportInitialize)(this.panelControl2)).EndInit();
             this.panelControl2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbDownloadProgress.Properties)).EndInit();
+            this.tabFormContentContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridPanel)).EndInit();
+            this.gridPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.settingsGrid)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pgToolbar1)).EndInit();
+            this.pgToolbar1.ResumeLayout(false);
+            this.pgToolbar1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pgSeparatorControl1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pgSearchControl1.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.panelControl3)).EndInit();
+            this.panelControl3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -421,6 +583,17 @@
         private DevExpress.XtraGrid.GridControl gcHistory;
         private DevExpress.XtraGrid.Views.Grid.GridView gvHistory;
         private DevExpress.XtraEditors.SimpleButton btnRedDL;
+        private DevExpress.XtraVerticalGrid.PGPanel gridPanel;
+        private DevExpress.XtraVerticalGrid.PropertyGridControl settingsGrid;
+        private DevExpress.XtraVerticalGrid.PGToolbar pgToolbar1;
+        private DevExpress.XtraVerticalGrid.PGCategoryCheckButton pgCategoryCheckButton1;
+        private DevExpress.XtraVerticalGrid.PGAlphabeticalCheckButton pgAlphabeticalCheckButton1;
+        private DevExpress.XtraVerticalGrid.PGSeparatorControl pgSeparatorControl1;
+        private DevExpress.XtraVerticalGrid.PGDescriptionCheckButton pgDescriptionCheckButton1;
+        private DevExpress.XtraVerticalGrid.PropertyDescriptionControl propertyDescriptionControl1;
+        private DevExpress.XtraVerticalGrid.PGSearchControl pgSearchControl1;
+        private DevExpress.XtraEditors.PanelControl panelControl3;
+        private DevExpress.XtraEditors.SimpleButton btnSaveSettings;
     }
 }
 

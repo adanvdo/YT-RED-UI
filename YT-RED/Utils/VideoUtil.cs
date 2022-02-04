@@ -14,6 +14,8 @@ namespace YT_RED.Utils
     {
         public static string GetRedditVideoID(string m3u8URL)
         {
+            if (m3u8URL == null)
+                throw new ArgumentNullException("m3U8 URL was null");
             string id = m3u8URL.Replace(@"https://v.redd.it/", "");
             int endex = id.IndexOf('/');
             id = id.Substring(0, endex);
@@ -25,6 +27,23 @@ namespace YT_RED.Utils
             IMediaInfo mediaInfo = await FFmpeg.GetMediaInfo(url);
             return mediaInfo;
         }      
+
+        public static async Task<IConversion> PrepareDashConversion(string videoUrl, string audioUrl)
+        {
+            string outputDir = AppSettings.Default.General.VideoDownloadPath;
+            string fileName = DateTime.Now.ToString("MMddyyyyhhmmss") + ".mp4";
+            string outputFile = Path.Combine(outputDir, fileName);
+
+            IMediaInfo videoInfo = await FFmpeg.GetMediaInfo(videoUrl);
+            IMediaInfo audioInfo = await FFmpeg.GetMediaInfo(audioUrl);
+            IStream v = videoInfo.VideoStreams.FirstOrDefault();
+            IStream a = audioInfo.AudioStreams.FirstOrDefault();
+
+            var convert = FFmpeg.Conversions.New()
+                .AddStream(v, a)
+                .SetOutput(outputFile);
+            return convert;
+        }
 
         public static IConversion PrepareConversion(Classes.ResultStream stream)
         {
@@ -88,5 +107,9 @@ namespace YT_RED.Utils
             });
         }
 
+        public static string RedditAudioUrl(string id)
+        {
+            return $@"{YT_RED.Settings.AppSettings.Default.General.RedditMediaURLPrefix}{id}{YT_RED.Settings.AppSettings.Default.General.RedditDefaultAudioSuffix}";
+        }
     }
 }
