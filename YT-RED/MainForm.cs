@@ -38,7 +38,6 @@ namespace YT_RED
 
         private async void Init()
         {
-            this.settingsGrid.SelectedObject = AppSettings.Default.General;
             if (AppSettings.Default.General.EnableDownloadHistory)
             {
                 bool loadDownloadHistory = await Historian.LoadDownloadHistory();
