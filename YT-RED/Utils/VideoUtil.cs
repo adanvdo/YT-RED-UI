@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xabe.FFmpeg;
+using YoutubeDLSharp;
+using YoutubeDLSharp.Metadata;
 using Newtonsoft.Json;
 using YT_RED.Settings;
 
@@ -12,6 +14,21 @@ namespace YT_RED.Utils
 {
     public static class VideoUtil
     {
+        private static YoutubeDL ytdl;
+
+        //private static IProgress<DownloadProgress> ytProgress;
+        //private static IProgress<string> ytOutput;
+
+        public static void Init()
+        {
+            ytdl = new YoutubeDL();
+            ytdl.FFmpegPath = @".\Resources\App\ffmpeg.exe";
+            string ytdlVer = Program.x64 ? "yt-dlp.exe" : "yt-dlp_x86.exe";
+            ytdl.YoutubeDLPath = $@".\Resources\App\{ytdlVer}";
+            //ytProgress = new Progress<DownloadProgress>(async (p) => { await Task.Run(() => Console.WriteLine(p)); });
+            //ytOutput = new Progress<string>(async (s) => { await Task.Run(() => Console.WriteLine(s)); });
+        }
+
         public static string GetRedditVideoID(string m3u8URL)
         {
             if (m3u8URL == null)
@@ -26,7 +43,12 @@ namespace YT_RED.Utils
         {
             IMediaInfo mediaInfo = await FFmpeg.GetMediaInfo(url);
             return mediaInfo;
-        }      
+        }
+
+        public static async Task<IConversion> PrepareDashConversion(string videoUrl)
+        {
+            return await PrepareDashConversion(videoUrl, string.Empty);
+        }
 
         public static async Task<IConversion> PrepareDashConversion(string videoUrl, string audioUrl)
         {
@@ -35,13 +57,24 @@ namespace YT_RED.Utils
             string outputFile = Path.Combine(outputDir, fileName);
 
             IMediaInfo videoInfo = await FFmpeg.GetMediaInfo(videoUrl);
-            IMediaInfo audioInfo = await FFmpeg.GetMediaInfo(audioUrl);
             IStream v = videoInfo.VideoStreams.FirstOrDefault();
-            IStream a = audioInfo.AudioStreams.FirstOrDefault();
 
-            var convert = FFmpeg.Conversions.New()
-                .AddStream(v, a)
-                .SetOutput(outputFile);
+            IStream a = null;
+            if (!string.IsNullOrEmpty(audioUrl))
+            {
+                IMediaInfo audioInfo = await FFmpeg.GetMediaInfo(audioUrl);
+                a = audioInfo.AudioStreams.FirstOrDefault();
+            }
+
+            var convert = FFmpeg.Conversions.New();
+            if(a != null)
+            {
+                convert.AddStream(v, a);
+            } else
+            {
+                convert.AddStream(v);
+            }
+            convert.SetOutput(outputFile);
             return convert;
         }
 
@@ -110,6 +143,17 @@ namespace YT_RED.Utils
         public static string RedditAudioUrl(string id)
         {
             return $@"{YT_RED.Settings.AppSettings.Default.General.RedditMediaURLPrefix}{id}{YT_RED.Settings.AppSettings.Default.General.RedditDefaultAudioSuffix}";
+        }
+
+        public static async Task<YoutubeDLSharp.Metadata.VideoData> GetVideoData(string url)
+        {
+            RunResult<VideoData> res = await ytdl.RunVideoDataFetch(url);
+            if(res.Success)
+            {
+                return res.Data;
+            }
+            System.Windows.Forms.MessageBox.Show(String.Join("\n", res.ErrorOutput));
+            return null;
         }
     }
 }

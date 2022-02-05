@@ -79,9 +79,9 @@ namespace YT_RED.Settings
 		[JsonProperty("youtube_res")]
 		public Resolution YouTubePreferredVideoResolution { get; set; }
 
-		#endregion;
+        #endregion;
 
-		public GeneralSettings()
+        public GeneralSettings()
         {
 			EnableDownloadHistory = true;
 			HistoryAge = 30;
@@ -90,6 +90,7 @@ namespace YT_RED.Settings
 			RedditPreferredVideoResolution = Resolution.x1080;
 			RedditDefaultVideoSuffix = @"/DASH_{0}.mp4?source=fallback";
 			RedditDefaultAudioSuffix = @"/DASH_audio.mp4?source=fallback";
+			YouTubeSampleUrl = @"https://www.youtube.com/watch?v=dCAORZphnlY";
 			YouTubePreferredVideoResolution = Resolution.BEST;
 			VideoDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
 			AudioDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);

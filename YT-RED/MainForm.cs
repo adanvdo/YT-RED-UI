@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using YT_RED.Controls;
 using YT_RED.Logging;
 using YT_RED.Settings;
+using YT_RED.Utils;
 using Xabe.FFmpeg;
 using Newtonsoft.Json;
 using System.Linq;
@@ -26,13 +27,17 @@ namespace YT_RED
         public MainForm()
         {
             InitializeComponent();
-            Init();
             Historian.Init();
+            Init();
         }
 
         protected override void OnLoad(EventArgs e)
         {
-            txtRedditPost.Text = AppSettings.Default.General.RedditSampleUrl;
+            if (Program.DevRun)
+            {
+                txtYTUrl.Text = AppSettings.Default.General.YouTubeSampleUrl;
+                txtRedditPost.Text = AppSettings.Default.General.RedditSampleUrl;
+            }
             base.OnLoad(e);
         }
 
@@ -47,6 +52,7 @@ namespace YT_RED
                     refreshRedditHistory();
                 }
             }
+            VideoUtil.Init();
             tabFormControl1.SelectedPage = tfpYouTube;
         }
 
@@ -118,9 +124,10 @@ namespace YT_RED
                         if (id != null)
                         {
                             Tuple<int,string> bestDash = await Utils.HtmlUtil.GetBestRedditDashVideo(id);
+                            bool audioExists = await Utils.HtmlUtil.MediaExists(Utils.VideoUtil.RedditAudioUrl(id));
                             if(bestDash != null)
                             {
-                                IConversion conversion = await Utils.VideoUtil.PrepareDashConversion(bestDash.Item2, Utils.VideoUtil.RedditAudioUrl(id));
+                                IConversion conversion = await Utils.VideoUtil.PrepareDashConversion(bestDash.Item2, audioExists ? Utils.VideoUtil.RedditAudioUrl(id) : String.Empty);
                                 string destination = conversion.OutputFilePath;
                                 conversion.OnProgress += Conversion_OnProgress;
                                 this.pbDownloadProgress.Visible = true;
@@ -140,6 +147,7 @@ namespace YT_RED
                                 refreshRedditHistory();
                                 lblSelectionText.Text = string.Empty;
                                 this.pbDownloadProgress.Visible = false;
+                                this.pbDownloadProgress.Position = 0;
                                 this.btnRedDL.Text = destination;
                                 this.btnRedDL.Visible = true;
                             }
@@ -258,6 +266,7 @@ namespace YT_RED
                 gcHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.Reddit).ToList();
                 refreshRedditHistory();
                 this.pbDownloadProgress.Visible = false;
+                this.pbDownloadProgress.Position = 0;
                 this.btnRedDL.Text = destination;
                 this.btnRedDL.Visible = true;
             }
@@ -293,6 +302,8 @@ namespace YT_RED
             {
                 gcHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.Reddit).ToList();
                 refreshRedditHistory();
+                if(gvHistory.RowCount > 0)
+                    gvHistory.FocusedRowHandle = 0;
             }
         }
 
@@ -326,6 +337,20 @@ namespace YT_RED
 
                 System.Diagnostics.Process.Start("explorer.exe", argument);
             }
+        }
+
+        private void toggleYTSegment_Toggled(object sender, EventArgs e)
+        {
+            tsYTStart.Enabled = toggleYTSegment.IsOn;
+            tsYTEnd.Enabled = toggleYTSegment.IsOn;
+        }
+
+        private async void btnYTListFormats_Click(object sender, EventArgs e)
+        {
+            btnYTSelectionDL.Text = "DOWNLOAD";
+            var data = await VideoUtil.GetVideoData(txtYTUrl.Text);
+            string json = JsonConvert.SerializeObject(data);
+            return;
         }
     }
 }
