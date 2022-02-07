@@ -16,8 +16,8 @@ namespace YT_RED.Utils
     {
         private static YoutubeDL ytdl;
 
-        //private static IProgress<DownloadProgress> ytProgress;
-        //private static IProgress<string> ytOutput;
+        public static IProgress<DownloadProgress> ytProgress;
+        public static IProgress<string> ytOutput;
 
         public static void Init()
         {
@@ -25,8 +25,7 @@ namespace YT_RED.Utils
             ytdl.FFmpegPath = @".\Resources\App\ffmpeg.exe";
             string ytdlVer = Program.x64 ? "yt-dlp.exe" : "yt-dlp_x86.exe";
             ytdl.YoutubeDLPath = $@".\Resources\App\{ytdlVer}";
-            //ytProgress = new Progress<DownloadProgress>(async (p) => { await Task.Run(() => Console.WriteLine(p)); });
-            //ytOutput = new Progress<string>(async (s) => { await Task.Run(() => Console.WriteLine(s)); });
+            ytdl.OutputFolder = AppSettings.Default.General.VideoDownloadPath;
         }
 
         public static string GetRedditVideoID(string m3u8URL)
@@ -152,7 +151,48 @@ namespace YT_RED.Utils
             {
                 return res.Data;
             }
-            System.Windows.Forms.MessageBox.Show(String.Join("\n", res.ErrorOutput));
+            else
+            {
+                throw new Exception(String.Join("\n", res.ErrorOutput));
+            }
+        }        
+
+        public static async Task<RunResult<string>> DownloadBestYT(string url)
+        {
+            try
+            {
+                return await ytdl.RunVideoDownload(url, "best", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress);
+            }
+            catch(Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message);
+            }
+            return null;
+        }
+
+        public static async Task<RunResult<string>> DownloadYTFormat(string videoUrl, FormatData formatData)
+        {
+            if (string.IsNullOrEmpty(videoUrl))
+            {
+                throw new ArgumentException("Invalid Video Url");
+            }
+            if(formatData == null)
+            {
+                throw new ArgumentNullException("FormatData is null");
+            }
+            return await downloadYTVideo(videoUrl, formatData.FormatId);
+        }
+
+        private static async Task<RunResult<string>> downloadYTVideo(string url, string format)
+        {
+            try
+            {
+                return await ytdl.RunVideoDownload(url, format, YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress);
+            }
+            catch(Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message);
+            }
             return null;
         }
     }

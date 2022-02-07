@@ -81,6 +81,23 @@ namespace YT_RED.Settings
 		}
 	}
 
+	public enum AudioFormat
+    {
+		MP3 = 0,
+		M4A = 1,
+		AAC = 2,
+		OGG = 3,
+		WAV = 4,
+		BESTAUDIO = 5
+    }
+
+    public enum VideoFormat
+    {
+		MP4 = 0,
+		WEBM = 1,
+		FLV = 2,
+		BESTVIDEO = 3
+    }
 	public enum Resolution
     {
 		BEST = 0,

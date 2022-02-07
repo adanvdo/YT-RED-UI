@@ -51,10 +51,10 @@ namespace YT_RED.Settings
 		[JsonIgnore]
 		public string RedditMediaURLPrefix { get; set; }
 
-		[Category("Defaults")]
+		[Category("Preferences")]
 		[DisplayName("Reddit Preferred Video Resolution")]
 		[Description("The preferred resolution for default reddit downloads")]
-		[DefaultValue(Resolution.x1080)]
+		[DefaultValue(Resolution.BEST)]
 		[JsonProperty("reddit_res")]
 		public Resolution RedditPreferredVideoResolution { get; set; }
 
@@ -72,13 +72,12 @@ namespace YT_RED.Settings
 		[JsonIgnore]
 		public string YouTubeSampleUrl { get; set; } = @"";
 
-		[Category("Defaults")]
+		[Category("Preferences")]
 		[DisplayName("YouTube Preferred Video Resolution")]
 		[Description("The preferred resolution for default youtube downloads")]
 		[DefaultValue(Resolution.BEST)]
 		[JsonProperty("youtube_res")]
 		public Resolution YouTubePreferredVideoResolution { get; set; }
-
         #endregion;
 
         public GeneralSettings()
@@ -87,7 +86,7 @@ namespace YT_RED.Settings
 			HistoryAge = 30;
 			RedditSampleUrl = @"https://www.reddit.com/r/PraiseTheCameraMan/comments/sj7iwr/couldnt_be_more_perfect/";
 			RedditMediaURLPrefix = @"https://v.redd.it/";
-			RedditPreferredVideoResolution = Resolution.x1080;
+			RedditPreferredVideoResolution = Resolution.BEST;
 			RedditDefaultVideoSuffix = @"/DASH_{0}.mp4?source=fallback";
 			RedditDefaultAudioSuffix = @"/DASH_audio.mp4?source=fallback";
 			YouTubeSampleUrl = @"https://www.youtube.com/watch?v=dCAORZphnlY";
@@ -98,7 +97,11 @@ namespace YT_RED.Settings
 
 		public override async Task<string> ValidateSettings()
         {
-			return string.Empty;
+			if (string.IsNullOrEmpty(VideoDownloadPath))
+				return "You must specify a video download folder";
+			if (string.IsNullOrEmpty(AudioDownloadPath))
+				return "You must specify an audio download folder";
+			return await base.ValidateSettings();
         }
 	}
 }

@@ -111,8 +111,8 @@
     <Reference Include="DevExpress.XtraScheduler.v21.2.Core, Version=21.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.XtraScheduler.v21.2.Core.Desktop, Version=21.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.XtraVerticalGrid.v21.2, Version=21.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="HtmlAgilityPack, Version=1.11.40.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
-      <HintPath>..\packages\HtmlAgilityPack.1.11.40\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    <Reference Include="HtmlAgilityPack, Version=1.11.42.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.11.42\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -132,11 +132,13 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
     <Reference Include="Xabe.FFmpeg, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Xabe.FFmpeg.5.1.0\lib\netstandard2.0\Xabe.FFmpeg.dll</HintPath>
     </Reference>
-    <Reference Include="YoutubeDLSharp, Version=0.4.1.2219, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\YoutubeDLSharp.0.4.1\lib\net45\YoutubeDLSharp.dll</HintPath>
+    <Reference Include="YoutubeDLSharp, Version=0.4.1.2236, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Resources\App\YoutubeDLSharp.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -145,8 +147,15 @@
     <Compile Include="Classes\RedditStream.cs" />
     <Compile Include="Classes\ResultStream.cs" />
     <Compile Include="Classes\StreamLink.cs" />
+    <Compile Include="Classes\UIBlockDetector.cs" />
     <Compile Include="Controls\CustomTabFormPage.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\SettingsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\SettingsDialog.Designer.cs">
+      <DependentUpon>SettingsDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Logging\DownloadLog.cs" />
     <Compile Include="Logging\Historian.cs" />
@@ -163,6 +172,9 @@
     <Compile Include="Settings\GeneralSettings.cs" />
     <Compile Include="Utils\HtmlUtil.cs" />
     <Compile Include="Utils\VideoUtil.cs" />
+    <EmbeddedResource Include="Controls\SettingsDialog.resx">
+      <DependentUpon>SettingsDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

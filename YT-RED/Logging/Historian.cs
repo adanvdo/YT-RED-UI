@@ -78,7 +78,9 @@ namespace YT_RED.Logging
         }
 
         public static async Task<bool> RecordDownload(DownloadLog dlLog)
-        {            
+        {
+            if (!AppSettings.Default.General.EnableDownloadHistory)
+                return false;
             try
             {
                 if (DownloadHistory == null || DownloadHistory.Count == 0)
