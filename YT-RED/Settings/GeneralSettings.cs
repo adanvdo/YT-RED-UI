@@ -51,13 +51,6 @@ namespace YT_RED.Settings
 		[JsonIgnore]
 		public string RedditMediaURLPrefix { get; set; }
 
-		[Category("Preferences")]
-		[DisplayName("Reddit Preferred Video Resolution")]
-		[Description("The preferred resolution for default reddit downloads")]
-		[DefaultValue(Resolution.BEST)]
-		[JsonProperty("reddit_res")]
-		public Resolution RedditPreferredVideoResolution { get; set; }
-
 		[Browsable(false)]
 		[JsonIgnore]
 		public string RedditDefaultVideoSuffix { get; set; }
@@ -71,13 +64,6 @@ namespace YT_RED.Settings
 		[Browsable(false)]
 		[JsonIgnore]
 		public string YouTubeSampleUrl { get; set; } = @"";
-
-		[Category("Preferences")]
-		[DisplayName("YouTube Preferred Video Resolution")]
-		[Description("The preferred resolution for default youtube downloads")]
-		[DefaultValue(Resolution.BEST)]
-		[JsonProperty("youtube_res")]
-		public Resolution YouTubePreferredVideoResolution { get; set; }
         #endregion;
 
         public GeneralSettings()
@@ -86,11 +72,9 @@ namespace YT_RED.Settings
 			HistoryAge = 30;
 			RedditSampleUrl = @"https://www.reddit.com/r/PraiseTheCameraMan/comments/sj7iwr/couldnt_be_more_perfect/";
 			RedditMediaURLPrefix = @"https://v.redd.it/";
-			RedditPreferredVideoResolution = Resolution.BEST;
 			RedditDefaultVideoSuffix = @"/DASH_{0}.mp4?source=fallback";
 			RedditDefaultAudioSuffix = @"/DASH_audio.mp4?source=fallback";
 			YouTubeSampleUrl = @"https://www.youtube.com/watch?v=dCAORZphnlY";
-			YouTubePreferredVideoResolution = Resolution.BEST;
 			VideoDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
 			AudioDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
 		}

@@ -31,6 +31,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.tabFormControl1 = new DevExpress.XtraBars.TabFormControl();
             this.tfpYouTube = new YT_RED.Controls.CustomTabFormPage();
+            this.bbiSettings = new DevExpress.XtraBars.BarButtonItem();
+            this.bsiMessage = new DevExpress.XtraBars.BarStaticItem();
             this.ytTabContainer = new DevExpress.XtraBars.TabFormContentContainer();
             this.ytSplitContainer = new DevExpress.XtraEditors.SplitContainerControl();
             this.gcYoutube = new DevExpress.XtraGrid.GridControl();
@@ -49,14 +51,16 @@
             this.pbYTProgress = new DevExpress.XtraEditors.ProgressBarControl();
             this.splitterYTTop = new DevExpress.XtraEditors.SplitterControl();
             this.pnlYTOptionPanel = new DevExpress.XtraEditors.PanelControl();
+            this.gcYTDLButtons = new DevExpress.XtraEditors.GroupControl();
+            this.btnYTDownloadBest = new DevExpress.XtraEditors.SimpleButton();
+            this.btnDownloadAudio = new DevExpress.XtraEditors.SimpleButton();
+            this.btnYTSelectionDL = new DevExpress.XtraEditors.SimpleButton();
             this.groupControl1 = new DevExpress.XtraEditors.GroupControl();
             this.toggleYTSegment = new DevExpress.XtraEditors.ToggleSwitch();
-            this.btnYTSelectionDL = new DevExpress.XtraEditors.SimpleButton();
             this.labelControl4 = new DevExpress.XtraEditors.LabelControl();
             this.tsYTEnd = new DevExpress.XtraEditors.TimeSpanEdit();
             this.tsYTStart = new DevExpress.XtraEditors.TimeSpanEdit();
             this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
-            this.btnYTDownloadBest = new DevExpress.XtraEditors.SimpleButton();
             this.lblYTSelectionText = new DevExpress.XtraEditors.LabelControl();
             this.tfpReddit = new YT_RED.Controls.CustomTabFormPage();
             this.tabFormContentContainer3 = new DevExpress.XtraBars.TabFormContentContainer();
@@ -78,8 +82,7 @@
             this.pbDownloadProgress = new DevExpress.XtraEditors.ProgressBarControl();
             this.btnDownloadReddit = new DevExpress.XtraEditors.SimpleButton();
             this.lblSelectionText = new DevExpress.XtraEditors.LabelControl();
-            this.bbiSettings = new DevExpress.XtraBars.BarButtonItem();
-            this.bsiMessage = new DevExpress.XtraBars.BarStaticItem();
+            this.chkUsePrefs = new DevExpress.XtraEditors.CheckEdit();
             ((System.ComponentModel.ISupportInitialize)(this.tabFormControl1)).BeginInit();
             this.ytTabContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ytSplitContainer)).BeginInit();
@@ -102,6 +105,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbYTProgress.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pnlYTOptionPanel)).BeginInit();
             this.pnlYTOptionPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gcYTDLButtons)).BeginInit();
+            this.gcYTDLButtons.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).BeginInit();
             this.groupControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.toggleYTSegment.Properties)).BeginInit();
@@ -126,6 +131,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.panelControl2)).BeginInit();
             this.panelControl2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbDownloadProgress.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chkUsePrefs.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // tabFormControl1
@@ -149,12 +155,23 @@
             this.tabFormControl1.TabStop = false;
             this.tabFormControl1.PageClosing += new DevExpress.XtraBars.PageClosingEventHandler(this.tabFormControl1_PageClosing);
             this.tabFormControl1.SelectedPageChanged += new DevExpress.XtraBars.TabFormSelectedPageChangedEventHandler(this.tabFormControl1_SelectedPageChanged);
+            //             
+            // bbiSettings
             // 
-            // tfpYouTube
+            this.bbiSettings.Caption = "Settings";
+            this.bbiSettings.Hint = "Settings";
+            this.bbiSettings.Id = 0;
+            this.bbiSettings.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("bbiSettings.ImageOptions.SvgImage")));
+            this.bbiSettings.Name = "bbiSettings";
+            this.bbiSettings.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiSettings_ItemClick);
+            // 
+            // bsiMessage
             // 
             this.tfpYouTube.ContentContainer = this.ytTabContainer;
             this.tfpYouTube.Name = "tfpYouTube";
             this.tfpYouTube.Text = "YouTube";
+            this.bsiMessage.Id = 2;
+            this.bsiMessage.Name = "bsiMessage";
             // 
             // ytTabContainer
             // 
@@ -286,6 +303,8 @@
             this.txtYTUrl.Properties.AutoHeight = false;
             this.txtYTUrl.Size = new System.Drawing.Size(592, 25);
             this.txtYTUrl.TabIndex = 1;
+            this.txtYTUrl.EditValueChanged += new System.EventHandler(this.txtYTUrl_EditValueChanged);
+            this.txtYTUrl.Enter += new System.EventHandler(this.txtYTUrl_Enter);
             // 
             // pictureEdit2
             // 
@@ -301,10 +320,10 @@
             // gcYTHistory
             // 
             this.gcYTHistory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcYTHistory.Location = new System.Drawing.Point(0, 281);
+            this.gcYTHistory.Location = new System.Drawing.Point(0, 332);
             this.gcYTHistory.MainView = this.gvYTHistory;
             this.gcYTHistory.Name = "gcYTHistory";
-            this.gcYTHistory.Size = new System.Drawing.Size(327, 397);
+            this.gcYTHistory.Size = new System.Drawing.Size(327, 346);
             this.gcYTHistory.TabIndex = 6;
             this.gcYTHistory.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvYTHistory});
@@ -332,7 +351,7 @@
             this.pnlYTProgressPanel.Controls.Add(this.btnYTOpenDL);
             this.pnlYTProgressPanel.Controls.Add(this.pbYTProgress);
             this.pnlYTProgressPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlYTProgressPanel.Location = new System.Drawing.Point(0, 212);
+            this.pnlYTProgressPanel.Location = new System.Drawing.Point(0, 263);
             this.pnlYTProgressPanel.Name = "pnlYTProgressPanel";
             this.pnlYTProgressPanel.Size = new System.Drawing.Size(327, 69);
             this.pnlYTProgressPanel.TabIndex = 5;
@@ -362,7 +381,7 @@
             // 
             this.splitterYTTop.Cursor = System.Windows.Forms.Cursors.VSplit;
             this.splitterYTTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.splitterYTTop.Location = new System.Drawing.Point(0, 207);
+            this.splitterYTTop.Location = new System.Drawing.Point(0, 258);
             this.splitterYTTop.Name = "splitterYTTop";
             this.splitterYTTop.Size = new System.Drawing.Size(327, 5);
             this.splitterYTTop.TabIndex = 8;
@@ -370,30 +389,80 @@
             // 
             // pnlYTOptionPanel
             // 
+            this.pnlYTOptionPanel.Controls.Add(this.gcYTDLButtons);
             this.pnlYTOptionPanel.Controls.Add(this.groupControl1);
             this.pnlYTOptionPanel.Controls.Add(this.lblYTSelectionText);
             this.pnlYTOptionPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlYTOptionPanel.Location = new System.Drawing.Point(0, 0);
             this.pnlYTOptionPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlYTOptionPanel.MinimumSize = new System.Drawing.Size(327, 258);
             this.pnlYTOptionPanel.Name = "pnlYTOptionPanel";
-            this.pnlYTOptionPanel.Size = new System.Drawing.Size(327, 207);
+            this.pnlYTOptionPanel.Size = new System.Drawing.Size(327, 258);
             this.pnlYTOptionPanel.TabIndex = 7;
+            // 
+            // gcYTDLButtons
+            // 
+            this.gcYTDLButtons.Controls.Add(this.btnYTDownloadBest);
+            this.gcYTDLButtons.Controls.Add(this.btnDownloadAudio);
+            this.gcYTDLButtons.Controls.Add(this.chkUsePrefs);
+            this.gcYTDLButtons.Controls.Add(this.btnYTSelectionDL);
+            this.gcYTDLButtons.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gcYTDLButtons.Location = new System.Drawing.Point(2, 107);
+            this.gcYTDLButtons.Name = "gcYTDLButtons";
+            this.gcYTDLButtons.Size = new System.Drawing.Size(323, 149);
+            this.gcYTDLButtons.TabIndex = 7;
+            this.gcYTDLButtons.Text = "Execute Download";
+            // 
+            // btnYTDownloadBest
+            // 
+            this.btnYTDownloadBest.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.btnYTDownloadBest.Appearance.Options.UseFont = true;
+            this.btnYTDownloadBest.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnYTDownloadBest.Location = new System.Drawing.Point(2, 114);
+            this.btnYTDownloadBest.Name = "btnYTDownloadBest";
+            this.btnYTDownloadBest.Size = new System.Drawing.Size(319, 32);
+            this.btnYTDownloadBest.TabIndex = 6;
+            this.btnYTDownloadBest.Text = "DOWNLOAD BEST [audio+video]";
+            this.btnYTDownloadBest.Click += new System.EventHandler(this.btnYTDownloadBest_Click);
+            // 
+            // btnDownloadAudio
+            // 
+            this.btnDownloadAudio.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.btnDownloadAudio.Appearance.Options.UseFont = true;
+            this.btnDownloadAudio.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnDownloadAudio.Location = new System.Drawing.Point(2, 82);
+            this.btnDownloadAudio.Name = "btnDownloadAudio";
+            this.btnDownloadAudio.Size = new System.Drawing.Size(319, 32);
+            this.btnDownloadAudio.TabIndex = 7;
+            this.btnDownloadAudio.Text = "DOWNLOAD AUDIO";
+            this.btnDownloadAudio.Click += new System.EventHandler(this.btnDownloadAudio_Click);
+            // 
+            // btnYTSelectionDL
+            // 
+            this.btnYTSelectionDL.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.btnYTSelectionDL.Appearance.Options.UseFont = true;
+            this.btnYTSelectionDL.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnYTSelectionDL.Enabled = false;
+            this.btnYTSelectionDL.Location = new System.Drawing.Point(2, 20);
+            this.btnYTSelectionDL.Name = "btnYTSelectionDL";
+            this.btnYTSelectionDL.Size = new System.Drawing.Size(319, 32);
+            this.btnYTSelectionDL.TabIndex = 0;
+            this.btnYTSelectionDL.Text = "DOWNLOAD SELECTED FORMAT";
+            this.btnYTSelectionDL.Visible = false;
+            this.btnYTSelectionDL.Click += new System.EventHandler(this.btnYTSelectionDL_Click);
             // 
             // groupControl1
             // 
             this.groupControl1.Controls.Add(this.toggleYTSegment);
-            this.groupControl1.Controls.Add(this.btnYTSelectionDL);
             this.groupControl1.Controls.Add(this.labelControl4);
             this.groupControl1.Controls.Add(this.tsYTEnd);
             this.groupControl1.Controls.Add(this.tsYTStart);
             this.groupControl1.Controls.Add(this.labelControl3);
-            this.groupControl1.Controls.Add(this.btnYTDownloadBest);
-            this.groupControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupControl1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupControl1.Location = new System.Drawing.Point(2, 22);
             this.groupControl1.Margin = new System.Windows.Forms.Padding(0);
-            this.groupControl1.MinimumSize = new System.Drawing.Size(323, 148);
             this.groupControl1.Name = "groupControl1";
-            this.groupControl1.Size = new System.Drawing.Size(323, 183);
+            this.groupControl1.Size = new System.Drawing.Size(323, 85);
             this.groupControl1.TabIndex = 4;
             this.groupControl1.Text = "Download Segment";
             // 
@@ -407,20 +476,6 @@
             this.toggleYTSegment.Size = new System.Drawing.Size(95, 24);
             this.toggleYTSegment.TabIndex = 6;
             this.toggleYTSegment.Toggled += new System.EventHandler(this.toggleYTSegment_Toggled);
-            // 
-            // btnYTSelectionDL
-            // 
-            this.btnYTSelectionDL.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
-            this.btnYTSelectionDL.Appearance.Options.UseFont = true;
-            this.btnYTSelectionDL.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnYTSelectionDL.Enabled = false;
-            this.btnYTSelectionDL.Location = new System.Drawing.Point(2, 117);
-            this.btnYTSelectionDL.Name = "btnYTSelectionDL";
-            this.btnYTSelectionDL.Size = new System.Drawing.Size(319, 32);
-            this.btnYTSelectionDL.TabIndex = 0;
-            this.btnYTSelectionDL.Text = "DOWNLOAD SELECTED";
-            this.btnYTSelectionDL.Visible = false;
-            this.btnYTSelectionDL.Click += new System.EventHandler(this.btnYTSelectionDL_Click);
             // 
             // labelControl4
             // 
@@ -464,18 +519,6 @@
             this.labelControl3.TabIndex = 3;
             this.labelControl3.Text = "Start";
             // 
-            // btnYTDownloadBest
-            // 
-            this.btnYTDownloadBest.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
-            this.btnYTDownloadBest.Appearance.Options.UseFont = true;
-            this.btnYTDownloadBest.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnYTDownloadBest.Location = new System.Drawing.Point(2, 149);
-            this.btnYTDownloadBest.Name = "btnYTDownloadBest";
-            this.btnYTDownloadBest.Size = new System.Drawing.Size(319, 32);
-            this.btnYTDownloadBest.TabIndex = 6;
-            this.btnYTDownloadBest.Text = "DOWNLOAD BEST";
-            this.btnYTDownloadBest.Click += new System.EventHandler(this.btnYTDownloadBest_Click);
-            // 
             // lblYTSelectionText
             // 
             this.lblYTSelectionText.Appearance.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold);
@@ -493,11 +536,9 @@
             this.lblYTSelectionText.SizeChanged += new System.EventHandler(this.lblYTSelectionText_SizeChanged);
             // 
             // tfpReddit
-            // 
             this.tfpReddit.ContentContainer = this.tabFormContentContainer3;
             this.tfpReddit.Name = "tfpReddit";
             this.tfpReddit.Text = "Reddit";
-            // 
             // tabFormContentContainer3
             // 
             this.tabFormContentContainer3.Controls.Add(this.splitContainerControl1);
@@ -737,26 +778,22 @@
             this.lblSelectionText.Size = new System.Drawing.Size(325, 20);
             this.lblSelectionText.TabIndex = 3;
             // 
-            // bbiSettings
+            // chkUsePrefs
             // 
-            this.bbiSettings.Caption = "Settings";
-            this.bbiSettings.Hint = "Settings";
-            this.bbiSettings.Id = 0;
-            this.bbiSettings.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("barButtonItem1.ImageOptions.SvgImage")));
-            this.bbiSettings.Name = "bbiSettings";
-            this.bbiSettings.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiSettings_ItemClick);
-            // 
-            // bsiMessage
-            // 
-            this.bsiMessage.Id = 2;
-            this.bsiMessage.Name = "bsiMessage";
+            this.chkUsePrefs.Dock = System.Windows.Forms.DockStyle.Top;
+            this.chkUsePrefs.Location = new System.Drawing.Point(2, 52);
+            this.chkUsePrefs.Name = "chkUsePrefs";
+            this.chkUsePrefs.Properties.AutoHeight = false;
+            this.chkUsePrefs.Properties.Caption = "Use Preferences";
+            this.chkUsePrefs.Size = new System.Drawing.Size(319, 30);
+            this.chkUsePrefs.TabIndex = 8;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1059, 728);
-            this.Controls.Add(this.tabFormContentContainer3);
+            this.Controls.Add(this.ytTabContainer);
             this.Controls.Add(this.tabFormControl1);
             this.Name = "MainForm";
             this.TabFormControl = this.tabFormControl1;
@@ -784,6 +821,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbYTProgress.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pnlYTOptionPanel)).EndInit();
             this.pnlYTOptionPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gcYTDLButtons)).EndInit();
+            this.gcYTDLButtons.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).EndInit();
             this.groupControl1.ResumeLayout(false);
             this.groupControl1.PerformLayout();
@@ -810,6 +849,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.panelControl2)).EndInit();
             this.panelControl2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbDownloadProgress.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chkUsePrefs.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -866,6 +906,9 @@
         private DevExpress.XtraEditors.SimpleButton btnYTDownloadBest;
         private DevExpress.XtraBars.BarButtonItem bbiSettings;
         private DevExpress.XtraBars.BarStaticItem bsiMessage;
+        private DevExpress.XtraEditors.GroupControl gcYTDLButtons;
+        private DevExpress.XtraEditors.SimpleButton btnDownloadAudio;
+        private DevExpress.XtraEditors.CheckEdit chkUsePrefs;
     }
 }
 

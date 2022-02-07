@@ -53,7 +53,8 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>YTREDFEB.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -99,6 +100,7 @@
     <Reference Include="DevExpress.BonusSkins.v21.2" />
     <Reference Include="DevExpress.Data.Desktop.v21.2, Version=21.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Data.v21.2" />
+    <Reference Include="DevExpress.Printing.v21.2.Core, Version=21.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Utils.v21.2" />
     <Reference Include="DevExpress.XtraBars.v21.2, Version=21.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraEditors.v21.2" />
@@ -145,12 +147,19 @@
     <Compile Include="Controls\CustomTabFormPage.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\PropertyGrid.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\PropertyGrid.Designer.cs">
+      <DependentUpon>PropertyGrid.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SettingsDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Controls\SettingsDialog.Designer.cs">
       <DependentUpon>SettingsDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Extensions\EnumExtension.cs" />
     <Compile Include="Logging\DownloadLog.cs" />
     <Compile Include="Logging\Historian.cs" />
     <Compile Include="MainForm.cs">
@@ -161,11 +170,15 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings\AdvancedSettings.cs" />
     <Compile Include="Settings\AppSettings.cs" />
     <Compile Include="Settings\FeatureSettings.cs" />
     <Compile Include="Settings\GeneralSettings.cs" />
     <Compile Include="Utils\HtmlUtil.cs" />
     <Compile Include="Utils\VideoUtil.cs" />
+    <EmbeddedResource Include="Controls\PropertyGrid.resx">
+      <DependentUpon>PropertyGrid.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\SettingsDialog.resx">
       <DependentUpon>SettingsDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -185,7 +198,6 @@
     </Compile>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="YTREDFEB.pfx" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.8">

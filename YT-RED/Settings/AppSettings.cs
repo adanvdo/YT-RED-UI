@@ -51,10 +51,13 @@ namespace YT_RED.Settings
 		
 		public GeneralSettings General { get; set; }
 
-		public FeatureSettings[] AllSettings => new FeatureSettings[] { General };
+		public AdvancedSettings Advanced { get; set; }
+
+		public FeatureSettings[] AllSettings => new FeatureSettings[] { General, Advanced};
 		public AppSettings() 
 		{
 			General = new GeneralSettings();
+			Advanced = new AdvancedSettings();
 		}
 
 		/// <summary>
@@ -75,9 +78,8 @@ namespace YT_RED.Settings
 			}
 			catch (Exception ex)
 			{
-				// do something
+				System.Windows.Forms.MessageBox.Show(ex.Message);
 			}
-
 		}
 	}
 
@@ -101,11 +103,11 @@ namespace YT_RED.Settings
 	public enum Resolution
     {
 		BEST = 0,
-		x2160 = 1,
-		x1080 = 2,
-		x720 = 3,
-		x480 = 4,
-		x360 = 5,
-		x240 = 6
+		_2160p = 1,
+		_1080p = 2,
+		_720p = 3,
+		_480p = 4,
+		_360p = 5,
+		_240p = 6
     }
 }

@@ -22,7 +22,29 @@ namespace YT_RED.Controls
 
         private void Init()
         {
-            this.pgSettingsGrid.SelectedObject = AppSettings.Default.General;
+            createFeatureOptionsPages();
+            this.tcSettingsTabControl.SelectedTabPage = this.tcSettingsTabControl.TabPages[0];
+        }
+        private void createFeatureOptionsPages()
+        {
+            foreach (var setting in Settings.AppSettings.Default.AllSettings)
+            {
+                var propertyGrid = new PropertyGrid();
+                propertyGrid.Dock = DockStyle.Fill;
+                propertyGrid.Location = new Point(0, 0);
+                propertyGrid.Name = $"pg{setting.Feature}";
+                propertyGrid.TabIndex = 99;
+                propertyGrid.GridTabIndex = 1;
+
+                var tabPage = new DevExpress.XtraTab.XtraTabPage();
+                tabPage.Controls.Add(propertyGrid);
+                tabPage.Name = $"tpg{setting.Feature}";
+                tabPage.Text = setting.Feature.ToFriendlyString().Replace("&", "&&");
+
+                this.tcSettingsTabControl.TabPages.Add(tabPage);
+
+                propertyGrid.SelectedObject = setting;
+            }
         }
 
         private async void saveSettings()

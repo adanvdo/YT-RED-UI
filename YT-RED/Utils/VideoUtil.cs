@@ -157,13 +157,48 @@ namespace YT_RED.Utils
             }
         }        
 
-        public static async Task<RunResult<string>> DownloadBestYT(string url)
+        public static async Task<RunResult<string>> DownloadBestYT(string url, Classes.StreamType streamType)
         {
             try
             {
-                return await ytdl.RunVideoDownload(url, "best", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress);
+                if(streamType == Classes.StreamType.AudioAndVideo)
+                    return await ytdl.RunVideoDownload(url, "bestvideo+bestaudio", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress);
+                if (streamType == Classes.StreamType.Video)
+                    return await ytdl.RunVideoDownload(url, "bestvideo", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress);
+                return await ytdl.RunVideoDownload(url, "bestaudio", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress);
             }
             catch(Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message);
+            }
+            return null;
+        }
+
+        public static async Task<RunResult<string>> DownloadPreferred(string url, Classes.StreamType streamType)
+        {
+            try
+            {
+                if (streamType == Classes.StreamType.AudioAndVideo)
+                    return await ytdl.RunVideoDownload(url, "bestvideo+bestaudio", AppSettings.Default.Advanced.PreferredVideoFormat, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress);
+                else if (streamType == Classes.StreamType.Video)
+                    return await ytdl.RunVideoDownload(url, "bestvideo", AppSettings.Default.Advanced.PreferredVideoFormat, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress);
+                else
+                    return await DownloadAudioYT(url, AppSettings.Default.Advanced.PreferredAudioFormat);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message);
+            }
+            return null;
+        }
+
+        public static async Task<RunResult<string>> DownloadAudioYT(string url, YoutubeDLSharp.Options.AudioConversionFormat audioFormat)
+        {
+            try
+            {
+                return await ytdl.RunAudioDownload(url, audioFormat, default, ytProgress);
+            }
+            catch (Exception ex)
             {
                 System.Windows.Forms.MessageBox.Show(ex.Message);
             }
