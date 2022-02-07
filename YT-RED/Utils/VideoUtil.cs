@@ -179,11 +179,11 @@ namespace YT_RED.Utils
             try
             {
                 if (streamType == Classes.StreamType.AudioAndVideo)
-                    return await ytdl.RunVideoDownload(url, "bestvideo+bestaudio", AppSettings.Default.Advanced.PreferredVideoFormat, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress);
+                    return await ytdl.RunVideoDownload(url, "bestvideo+bestaudio", AppSettings.Default.Advanced.PreferredYoutubeVideoFormat, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress);
                 else if (streamType == Classes.StreamType.Video)
-                    return await ytdl.RunVideoDownload(url, "bestvideo", AppSettings.Default.Advanced.PreferredVideoFormat, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress);
+                    return await ytdl.RunVideoDownload(url, "bestvideo", AppSettings.Default.Advanced.PreferredYoutubeVideoFormat, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress);
                 else
-                    return await DownloadAudioYT(url, AppSettings.Default.Advanced.PreferredAudioFormat);
+                    return await DownloadAudioYT(url, AppSettings.Default.Advanced.PreferredYoutubeAudioFormat);
             }
             catch (Exception ex)
             {
@@ -229,6 +229,16 @@ namespace YT_RED.Utils
                 System.Windows.Forms.MessageBox.Show(ex.Message);
             }
             return null;
+        }
+
+        public static string YouTubeString(string linkOrID)
+        {
+            if (linkOrID.Length == 11)
+                linkOrID = @"https://www.youtube.com/watch?v=" + linkOrID;
+            else if (!linkOrID.StartsWith(@"https://youtu.be") && !linkOrID.StartsWith(@"https://www.youtube.com/watch?v="))
+                throw new ArgumentException("Invalid Link or ID");
+
+            return linkOrID;
         }
     }
 }

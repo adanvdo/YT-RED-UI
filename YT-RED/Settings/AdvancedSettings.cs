@@ -18,18 +18,18 @@ namespace YT_RED.Settings
         [DisplayName("Preferred Video Format")]
         [Description("Prefer this format when downloading \"Preferred\" video")]
         [JsonProperty("preferred_video_format")]
-        public YoutubeDLSharp.Options.DownloadMergeFormat PreferredVideoFormat { get; set; }
+        public YoutubeDLSharp.Options.DownloadMergeFormat PreferredYoutubeVideoFormat { get; set; }
 
         [Category("Processing")]
         [DisplayName("Preferred Audio Format")]
         [Description("Prefer this format when downloading \"preferred\" audio")]
         [JsonProperty("preferred_audio_format")]
-        public YoutubeDLSharp.Options.AudioConversionFormat PreferredAudioFormat { get; set; }
+        public YoutubeDLSharp.Options.AudioConversionFormat PreferredYoutubeAudioFormat { get; set; }
 
         public AdvancedSettings()
         {
-            PreferredVideoFormat = YoutubeDLSharp.Options.DownloadMergeFormat.Mp4;
-            PreferredAudioFormat = YoutubeDLSharp.Options.AudioConversionFormat.Mp3;
+            PreferredYoutubeVideoFormat = YoutubeDLSharp.Options.DownloadMergeFormat.Mp4;
+            PreferredYoutubeAudioFormat = YoutubeDLSharp.Options.AudioConversionFormat.Mp3;
         }
 
         public override async Task<string> ValidateSettings()

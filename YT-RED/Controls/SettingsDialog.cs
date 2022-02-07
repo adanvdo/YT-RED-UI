@@ -70,5 +70,11 @@ namespace YT_RED.Controls
         {
             saveSettings();
         }
+
+        private async void btnClearHistory_Click(object sender, EventArgs e)
+        {
+            await Logging.Historian.CleanHistory(true);
+            MessageBox.Show("Download History Cleared");
+        }
     }
 }

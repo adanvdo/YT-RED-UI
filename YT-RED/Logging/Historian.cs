@@ -45,7 +45,7 @@ namespace YT_RED.Logging
             return false;
         }
 
-        private static async Task CleanHistory(bool fullErase = false)
+        public static async Task CleanHistory(bool fullErase = false)
         {
             if (DownloadHistory == null)
                 DownloadHistory = new List<DownloadLog>();
@@ -68,6 +68,7 @@ namespace YT_RED.Logging
                 {
                     DownloadHistory.RemoveAll(h => h.Downloaded.Date < DateTime.Today.AddDays(-AppSettings.Default.General.HistoryAge).Date);
                 }
+                await SaveHistory();
             }
             catch(Exception ex)
             {
