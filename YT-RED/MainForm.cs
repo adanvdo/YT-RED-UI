@@ -20,7 +20,7 @@ namespace YT_RED
         public bool IsLocked { 
             get 
             { 
-                foreach(CustomTabFormPage pg in this.tabFormControl1.Pages)
+                foreach(CustomTabFormPage pg in this.tcMainTabControl.Pages)
                 {
                     if (pg.IsLocked)
                         return true;
@@ -75,27 +75,74 @@ namespace YT_RED
             }
             VideoUtil.Init();
             VideoUtil.ytProgress = new Progress<DownloadProgress>(showYTProgress);
-            tabFormControl1.SelectedPage = tfpYouTube;
+            tcMainTabControl.SelectedPage = tfpYouTube;
         }
+
+        #region Validation
+
+        private DownloadType checkUrl(string url)
+        {
+            if (url.StartsWith(@"https://www.youtube.com") || url.StartsWith("https://youtu.be") || url.StartsWith(@"https://youtube.com"))
+                return DownloadType.YouTube;
+            if (url.StartsWith(@"https://reddit.com") || url.StartsWith(@"https://www.reddit.com"))
+                return DownloadType.Reddit;
+            return DownloadType.Unknown;
+        }
+
+        #endregion
 
         #region Reddit
         private void btnRedditDefault_Click(object sender, EventArgs e)
         {
-            this.gcReddit.DataSource = null;
-            this.gvReddit.RefreshData();
-            if (!string.IsNullOrEmpty(this.txtRedditPost.Text))
+            if (!string.IsNullOrEmpty(txtRedditPost.Text))
             {
-                redditScrape(this.txtRedditPost.Text);
+                if (checkUrl(txtRedditPost.Text) == DownloadType.Reddit)
+                {
+                    redditScrape(this.txtRedditPost.Text);
+                    return;
+                }
+                else if (checkUrl(txtRedditPost.Text) == DownloadType.YouTube)
+                {
+                    txtYTUrl.Text = txtRedditPost.Text;
+                    tcMainTabControl.SelectedPage = tfpYouTube;
+
+                    return;
+                }
             }
+            MessageBox.Show("The url provided is not a valid Youtube or Reddit url", "Unsupported URL", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            return;
         }
 
         private void btnRedditList_Click(object sender, EventArgs e)
         {
-            this.gcReddit.DataSource = null;
-            this.gvReddit.RefreshData();
-            if(!string.IsNullOrEmpty(this.txtRedditPost.Text))
+            if (!string.IsNullOrEmpty(txtRedditPost.Text))
             {
-                redditScrape(this.txtRedditPost.Text, true);
+                if (checkUrl(txtRedditPost.Text) == DownloadType.Reddit)
+                {
+                    listRedditFormats(txtRedditPost.Text);
+                    return;
+                }
+                else if(checkUrl(txtRedditPost.Text) == DownloadType.YouTube)
+                {
+                    txtYTUrl.Text = txtRedditPost.Text;
+                    tcMainTabControl.SelectedPage = tfpYouTube;
+                    getYTFormats(txtYTUrl.Text);
+                    return;
+                }
+            }
+            MessageBox.Show("The url provided is not a valid Youtube or Reddit url", "Unsupported URL", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            return;
+        }
+
+        private void listRedditFormats(string url)
+        {
+            if (!string.IsNullOrEmpty(url))
+            {
+                redditScrape(url, true);
+            }
+            else
+            {
+                throw new ArgumentNullException("url is null");
             }
         }
 
@@ -132,8 +179,11 @@ namespace YT_RED
 
         private async void redditScrape(string playlistUrl, bool listFormats = false)
         {
+            this.gcReddit.DataSource = null;
+            this.gvReddit.RefreshData();
+
             this.UseWaitCursor = true;
-            (this.tabFormControl1.SelectedPage as CustomTabFormPage).IsLocked = true;
+            (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = true;
             this.redditListMarquee.Show();
             try
             {
@@ -142,6 +192,7 @@ namespace YT_RED
                 {
                     if (listFormats)
                     {
+                        this.redditListMarquee.Text = "Fetching available formats..";
                         List<Classes.RedditStream> dashStreamList = new List<Classes.RedditStream>();
                         List<Classes.RedditStream> hlsStreamList = new List<Classes.RedditStream>();
 
@@ -171,19 +222,23 @@ namespace YT_RED
                         buildList.AddRange(await Utils.VideoUtil.ConsolidateStreams(hlsStreamList));
                         gcReddit.DataSource = buildList;
                         refreshRedditList();
+                        this.redditListMarquee.Text = string.Empty;
                     }
                     else
                     {
                         string id = Utils.VideoUtil.GetRedditVideoID(streamLinks[0].StreamUrl);
                         if (id != null)
                         {
+                            this.redditListMarquee.Text = "Evaluating available formats..";
                             Tuple<int,string> bestDash = await Utils.HtmlUtil.GetBestRedditDashVideo(id);
                             bool audioExists = await Utils.HtmlUtil.MediaExists(Utils.VideoUtil.RedditAudioUrl(id));
                             if(bestDash != null)
                             {
+                                this.redditListMarquee.Text = "Preparing download..";
                                 IConversion conversion = await Utils.VideoUtil.PrepareDashConversion(bestDash.Item2, audioExists ? Utils.VideoUtil.RedditAudioUrl(id) : String.Empty);
                                 string destination = conversion.OutputFilePath;
                                 conversion.OnProgress += Conversion_OnProgress;
+                                this.redditListMarquee.Text = string.Empty;
                                 this.pbDownloadProgress.Visible = true;
                                 lblSelectionText.Text = $"Downloading DASH {bestDash.Item1}";
                                 try
@@ -215,7 +270,7 @@ namespace YT_RED
             }
             lblSelect.Visible = true;
             this.UseWaitCursor = false;
-            (this.tabFormControl1.SelectedPage as CustomTabFormPage).IsLocked = false;
+            (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = false;
             this.redditListMarquee.Hide();
         }
 
@@ -318,7 +373,7 @@ namespace YT_RED
 
         private void tabFormControl1_SelectedPageChanged(object sender, DevExpress.XtraBars.TabFormSelectedPageChangedEventArgs e)
         {
-            if(tabFormControl1.SelectedPage != null && tabFormControl1.SelectedPage.Text == "Reddit")
+            if(tcMainTabControl.SelectedPage != null && tcMainTabControl.SelectedPage.Text == "Reddit")
             {
                 gcHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.Reddit).ToList();
                 refreshRedditHistory();
@@ -371,8 +426,20 @@ namespace YT_RED
         {
             if(!string.IsNullOrEmpty(txtYTUrl.Text))
             {
-                getYTFormats(VideoUtil.YouTubeString(txtYTUrl.Text));
-            }
+                if(checkUrl(txtYTUrl.Text) == DownloadType.YouTube)
+                    getYTFormats(VideoUtil.YouTubeString(txtYTUrl.Text));
+                else if(checkUrl(txtYTUrl.Text) == DownloadType.Reddit)
+                {
+                    txtRedditPost.Text = txtYTUrl.Text;
+                    tcMainTabControl.SelectedPage = tfpReddit;
+                    listRedditFormats(txtRedditPost.Text);
+                }
+                else
+                {
+                    MessageBox.Show("The url provided is not a valid Youtube or Reddit url", "Unsupported URL", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return;
+                }
+            }            
         }
 
         private async void getYTFormats(string url)
@@ -380,15 +447,17 @@ namespace YT_RED
             try
             {
                 this.UseWaitCursor = true;
-                (this.tabFormControl1.SelectedPage as CustomTabFormPage).IsLocked = true;
+                (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = true;
+                this.ytMarquee.Text = "Fetching Available Formats";                
                 this.ytMarquee.Show();
                 var data = await VideoUtil.GetVideoData(url);
                 var formatList = data.Formats.Where(f => f.FormatId != "sb0").OrderBy(f => f.AudioCodec != null ? 0 : 1).ThenBy(f => f.Height).ToList();
                 gcYoutube.DataSource = formatList;
                 refreshYTGrid();        
                 this.UseWaitCursor=false;
-                (this.tabFormControl1.SelectedPage as CustomTabFormPage).IsLocked = false;
+                (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = false;
                 this.ytMarquee.Hide();
+                this.ytMarquee.Text = string.Empty;
             }
             catch(Exception ex)
             {
@@ -467,7 +536,7 @@ namespace YT_RED
         private async void btnYTSelectionDL_Click(object sender, EventArgs e)
         {
             this.UseWaitCursor = true;
-            (this.tabFormControl1.SelectedPage as CustomTabFormPage).IsLocked = true;
+            (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = true;
             btnYTOpenDL.Text = String.Empty;
             btnYTOpenDL.Visible = false;
             btnDownloadAudio.Enabled = false;
@@ -498,56 +567,86 @@ namespace YT_RED
             btnDownloadAudio.Enabled = true;
             btnYTDownloadBest.Enabled = true;
             this.UseWaitCursor = false;
-            (this.tabFormControl1.SelectedPage as CustomTabFormPage).IsLocked = false;
+            (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = false;
         }
 
         private async void btnDownloadAudio_Click(object sender, EventArgs e)
         {
+            if (!string.IsNullOrEmpty(txtYTUrl.Text))
+            {
+                if (checkUrl(txtYTUrl.Text) == DownloadType.YouTube)
+                {
+                    this.UseWaitCursor = true;
+                    (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = true;
+                    btnYTOpenDL.Text = String.Empty;
+                    btnYTOpenDL.Visible = false;
+                    RunResult<string> result = null;
+                    if (chkUsePrefs.Checked)
+                        result = await Utils.VideoUtil.DownloadPreferred(VideoUtil.YouTubeString(txtYTUrl.Text), Classes.StreamType.Audio);
+                    else
+                        result = await Utils.VideoUtil.DownloadBestYT(VideoUtil.YouTubeString(txtYTUrl.Text), Classes.StreamType.Audio);
+                    if (!result.Success)
+                    {
+                        MessageBox.Show("Download Failed");
+                    }
+                    await Historian.RecordDownload(new DownloadLog(
+                        DownloadType.YouTube,
+                        VideoUtil.YouTubeString(txtYTUrl.Text),
+                        YT_RED.Classes.StreamType.Audio, DateTime.Now,
+                        result.Data
+                        ));
+                    gcYTHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.YouTube).ToList();
+                    refreshYoutubeHistory();
+                    btnYTOpenDL.Text = result.Data;
+                    btnYTOpenDL.Visible = true;
+                    this.UseWaitCursor = false;
+                    (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = false;
+                    return;
+                }                
+            }
+            MessageBox.Show("The url provided is not a valid Youtube url", "Invalid URL", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            return;
+        }
+
+        private void btnYTDownloadBest_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(txtYTUrl.Text))
+            {
+                if (checkUrl(txtYTUrl.Text) == DownloadType.YouTube)
+                {
+                    ytDownloadBest(txtYTUrl.Text);
+                    return;
+                }
+                else if(checkUrl(txtYTUrl.Text) == DownloadType.Reddit)
+                {
+                    txtRedditPost.Text = txtYTUrl.Text;
+                    tcMainTabControl.SelectedPage = tfpReddit;
+                    redditScrape(txtRedditPost.Text);
+                    return;
+                }
+            }
+            MessageBox.Show("The url provided is not a valid Youtube or Reddit url", "Unsupported URL", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            return;
+        }
+
+        private async void ytDownloadBest(string url)
+        {
             this.UseWaitCursor = true;
-            (this.tabFormControl1.SelectedPage as CustomTabFormPage).IsLocked = true;
+            (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = true;
             btnYTOpenDL.Text = String.Empty;
             btnYTOpenDL.Visible = false;
             RunResult<string> result = null;
             if (chkUsePrefs.Checked)
-                result = await Utils.VideoUtil.DownloadPreferred(VideoUtil.YouTubeString(txtYTUrl.Text), Classes.StreamType.Audio);
+                result = await Utils.VideoUtil.DownloadPreferred(VideoUtil.YouTubeString(url), Classes.StreamType.AudioAndVideo);
             else
-                result = await Utils.VideoUtil.DownloadBestYT(VideoUtil.YouTubeString(txtYTUrl.Text), Classes.StreamType.Audio);
-            if (!result.Success)
-            {
-                MessageBox.Show("Download Failed");
-            }
-            await Historian.RecordDownload(new DownloadLog(
-                DownloadType.YouTube,
-                VideoUtil.YouTubeString(txtYTUrl.Text),
-                YT_RED.Classes.StreamType.Audio, DateTime.Now,
-                result.Data
-                ));
-            gcYTHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.YouTube).ToList();
-            refreshYoutubeHistory();
-            btnYTOpenDL.Text = result.Data;
-            btnYTOpenDL.Visible = true;
-            this.UseWaitCursor = false;
-            (this.tabFormControl1.SelectedPage as CustomTabFormPage).IsLocked = false;
-        }
-
-        private async void btnYTDownloadBest_Click(object sender, EventArgs e)
-        {
-            this.UseWaitCursor = true;
-            (this.tabFormControl1.SelectedPage as CustomTabFormPage).IsLocked = true;
-            btnYTOpenDL.Text = String.Empty;
-            btnYTOpenDL.Visible = false; 
-            RunResult<string> result = null;
-            if (chkUsePrefs.Checked)
-                result = await Utils.VideoUtil.DownloadPreferred(VideoUtil.YouTubeString(txtYTUrl.Text), Classes.StreamType.AudioAndVideo);
-            else
-                result = await Utils.VideoUtil.DownloadBestYT(VideoUtil.YouTubeString(txtYTUrl.Text), Classes.StreamType.AudioAndVideo);
+                result = await Utils.VideoUtil.DownloadBestYT(VideoUtil.YouTubeString(url), Classes.StreamType.AudioAndVideo);
             if (!result.Success)
             {
                 MessageBox.Show("Download Failed\n" + String.Join("\n", result.ErrorOutput));
             }
             await Historian.RecordDownload(new DownloadLog(
                 DownloadType.YouTube,
-                VideoUtil.YouTubeString(txtYTUrl.Text),
+                VideoUtil.YouTubeString(url),
                 Classes.StreamType.AudioAndVideo,
                 DateTime.Now,
                 result.Data));
@@ -556,7 +655,8 @@ namespace YT_RED
             btnYTOpenDL.Text = result.Data;
             btnYTOpenDL.Visible = true;
             this.UseWaitCursor = false;
-            (this.tabFormControl1.SelectedPage as CustomTabFormPage).IsLocked = false;
+            (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = false;
+            return;
         }
 
         private void lblYTSelectionText_SizeChanged(object sender, EventArgs e)

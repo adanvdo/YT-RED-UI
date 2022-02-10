@@ -40,6 +40,7 @@ namespace YT_RED.Logging
     public enum DownloadType
     {
         YouTube = 0,
-        Reddit = 1
+        Reddit = 1,
+        Unknown = 2
     }
 }

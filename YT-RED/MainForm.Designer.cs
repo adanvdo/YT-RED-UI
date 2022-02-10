@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.tabFormControl1 = new DevExpress.XtraBars.TabFormControl();
+            this.tcMainTabControl = new DevExpress.XtraBars.TabFormControl();
             this.bbiSettings = new DevExpress.XtraBars.BarButtonItem();
             this.bsiMessage = new DevExpress.XtraBars.BarStaticItem();
             this.tfpYouTube = new YT_RED.Controls.CustomTabFormPage();
@@ -82,7 +82,7 @@
             this.pbDownloadProgress = new DevExpress.XtraEditors.ProgressBarControl();
             this.btnDownloadReddit = new DevExpress.XtraEditors.SimpleButton();
             this.lblSelectionText = new DevExpress.XtraEditors.LabelControl();
-            ((System.ComponentModel.ISupportInitialize)(this.tabFormControl1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tcMainTabControl)).BeginInit();
             this.ytTabContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ytSplitContainer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ytSplitContainer.Panel1)).BeginInit();
@@ -133,27 +133,27 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbDownloadProgress.Properties)).BeginInit();
             this.SuspendLayout();
             // 
-            // tabFormControl1
+            // tcMainTabControl
             // 
-            this.tabFormControl1.AllowMoreTabsButton = DevExpress.Utils.DefaultBoolean.False;
-            this.tabFormControl1.AllowMoveTabsToOuterForm = false;
-            this.tabFormControl1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
+            this.tcMainTabControl.AllowMoreTabsButton = DevExpress.Utils.DefaultBoolean.False;
+            this.tcMainTabControl.AllowMoveTabsToOuterForm = false;
+            this.tcMainTabControl.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
             this.bbiSettings,
             this.bsiMessage});
-            this.tabFormControl1.Location = new System.Drawing.Point(0, 0);
-            this.tabFormControl1.Name = "tabFormControl1";
-            this.tabFormControl1.Pages.Add(this.tfpYouTube);
-            this.tabFormControl1.Pages.Add(this.tfpReddit);
-            this.tabFormControl1.SelectedPage = this.tfpYouTube;
-            this.tabFormControl1.ShowAddPageButton = false;
-            this.tabFormControl1.Size = new System.Drawing.Size(1059, 50);
-            this.tabFormControl1.TabForm = this;
-            this.tabFormControl1.TabIndex = 0;
-            this.tabFormControl1.TabRightItemLinks.Add(this.bsiMessage);
-            this.tabFormControl1.TabRightItemLinks.Add(this.bbiSettings);
-            this.tabFormControl1.TabStop = false;
-            this.tabFormControl1.PageClosing += new DevExpress.XtraBars.PageClosingEventHandler(this.tabFormControl1_PageClosing);
-            this.tabFormControl1.SelectedPageChanged += new DevExpress.XtraBars.TabFormSelectedPageChangedEventHandler(this.tabFormControl1_SelectedPageChanged);
+            this.tcMainTabControl.Location = new System.Drawing.Point(0, 0);
+            this.tcMainTabControl.Name = "tcMainTabControl";
+            this.tcMainTabControl.Pages.Add(this.tfpYouTube);
+            this.tcMainTabControl.Pages.Add(this.tfpReddit);
+            this.tcMainTabControl.SelectedPage = this.tfpReddit;
+            this.tcMainTabControl.ShowAddPageButton = false;
+            this.tcMainTabControl.Size = new System.Drawing.Size(1059, 50);
+            this.tcMainTabControl.TabForm = this;
+            this.tcMainTabControl.TabIndex = 0;
+            this.tcMainTabControl.TabRightItemLinks.Add(this.bsiMessage);
+            this.tcMainTabControl.TabRightItemLinks.Add(this.bbiSettings);
+            this.tcMainTabControl.TabStop = false;
+            this.tcMainTabControl.PageClosing += new DevExpress.XtraBars.PageClosingEventHandler(this.tabFormControl1_PageClosing);
+            this.tcMainTabControl.SelectedPageChanged += new DevExpress.XtraBars.TabFormSelectedPageChangedEventHandler(this.tabFormControl1_SelectedPageChanged);
             // 
             // bbiSettings
             // 
@@ -211,10 +211,10 @@
             // gcYoutube
             // 
             this.gcYoutube.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcYoutube.Location = new System.Drawing.Point(0, 161);
+            this.gcYoutube.Location = new System.Drawing.Point(0, 168);
             this.gcYoutube.MainView = this.gvYouTube;
             this.gcYoutube.Name = "gcYoutube";
-            this.gcYoutube.Size = new System.Drawing.Size(727, 517);
+            this.gcYoutube.Size = new System.Drawing.Size(727, 510);
             this.gcYoutube.TabIndex = 5;
             this.gcYoutube.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvYouTube});
@@ -245,7 +245,7 @@
             this.lblYTSelect.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.lblYTSelect.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
             this.lblYTSelect.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblYTSelect.Location = new System.Drawing.Point(0, 133);
+            this.lblYTSelect.Location = new System.Drawing.Point(0, 140);
             this.lblYTSelect.Name = "lblYTSelect";
             this.lblYTSelect.Size = new System.Drawing.Size(727, 28);
             this.lblYTSelect.TabIndex = 4;
@@ -262,17 +262,17 @@
             this.panelControl3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelControl3.Location = new System.Drawing.Point(0, 0);
             this.panelControl3.Name = "panelControl3";
-            this.panelControl3.Size = new System.Drawing.Size(727, 133);
+            this.panelControl3.Size = new System.Drawing.Size(727, 140);
             this.panelControl3.TabIndex = 1;
             // 
             // ytMarquee
             // 
-            this.ytMarquee.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ytMarquee.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.ytMarquee.EditValue = 0;
-            this.ytMarquee.Location = new System.Drawing.Point(5, 116);
+            this.ytMarquee.Location = new System.Drawing.Point(2, 118);
             this.ytMarquee.Name = "ytMarquee";
-            this.ytMarquee.Size = new System.Drawing.Size(717, 10);
+            this.ytMarquee.Properties.ShowTitle = true;
+            this.ytMarquee.Size = new System.Drawing.Size(723, 20);
             this.ytMarquee.TabIndex = 5;
             this.ytMarquee.Visible = false;
             // 
@@ -586,10 +586,10 @@
             // gcReddit
             // 
             this.gcReddit.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcReddit.Location = new System.Drawing.Point(0, 161);
+            this.gcReddit.Location = new System.Drawing.Point(0, 168);
             this.gcReddit.MainView = this.gvReddit;
             this.gcReddit.Name = "gcReddit";
-            this.gcReddit.Size = new System.Drawing.Size(729, 517);
+            this.gcReddit.Size = new System.Drawing.Size(729, 510);
             this.gcReddit.TabIndex = 2;
             this.gcReddit.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvReddit});
@@ -619,7 +619,7 @@
             this.lblSelect.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.lblSelect.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
             this.lblSelect.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblSelect.Location = new System.Drawing.Point(0, 133);
+            this.lblSelect.Location = new System.Drawing.Point(0, 140);
             this.lblSelect.Name = "lblSelect";
             this.lblSelect.Size = new System.Drawing.Size(729, 28);
             this.lblSelect.TabIndex = 3;
@@ -637,17 +637,17 @@
             this.panelControl1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelControl1.Location = new System.Drawing.Point(0, 0);
             this.panelControl1.Name = "panelControl1";
-            this.panelControl1.Size = new System.Drawing.Size(729, 133);
+            this.panelControl1.Size = new System.Drawing.Size(729, 140);
             this.panelControl1.TabIndex = 0;
             // 
             // redditListMarquee
             // 
-            this.redditListMarquee.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.redditListMarquee.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.redditListMarquee.EditValue = 0;
-            this.redditListMarquee.Location = new System.Drawing.Point(5, 116);
+            this.redditListMarquee.Location = new System.Drawing.Point(2, 118);
             this.redditListMarquee.Name = "redditListMarquee";
-            this.redditListMarquee.Size = new System.Drawing.Size(719, 10);
+            this.redditListMarquee.Properties.ShowTitle = true;
+            this.redditListMarquee.Size = new System.Drawing.Size(725, 20);
             this.redditListMarquee.TabIndex = 5;
             this.redditListMarquee.Visible = false;
             // 
@@ -796,12 +796,12 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1059, 728);
-            this.Controls.Add(this.ytTabContainer);
-            this.Controls.Add(this.tabFormControl1);
+            this.Controls.Add(this.tabFormContentContainer3);
+            this.Controls.Add(this.tcMainTabControl);
             this.Name = "MainForm";
-            this.TabFormControl = this.tabFormControl1;
+            this.TabFormControl = this.tcMainTabControl;
             this.Text = "YT-RED";
-            ((System.ComponentModel.ISupportInitialize)(this.tabFormControl1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tcMainTabControl)).EndInit();
             this.ytTabContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.ytSplitContainer.Panel1)).EndInit();
             this.ytSplitContainer.Panel1.ResumeLayout(false);
@@ -875,7 +875,7 @@
         private DevExpress.XtraGrid.GridControl gcReddit;
         private DevExpress.XtraGrid.Views.Grid.GridView gvReddit;
         private DevExpress.XtraEditors.LabelControl lblSelect;
-        protected DevExpress.XtraBars.TabFormControl tabFormControl1;
+        protected DevExpress.XtraBars.TabFormControl tcMainTabControl;
         private DevExpress.XtraEditors.LabelControl lblSelectionText;
         private DevExpress.XtraEditors.PanelControl panelControl2;
         private DevExpress.XtraEditors.SimpleButton btnDownloadReddit;

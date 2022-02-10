@@ -233,4 +233,31 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="PostBuildMacros">
+    <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
+      <Output TaskParameter="Assemblies" ItemName="Targets" />
+    </GetAssemblyIdentity>
+    <ItemGroup>
+      <VersionNumber Include="@(Targets->'%(Version)')" />
+    </ItemGroup>
+  </Target>
+  <PropertyGroup>
+    <PostBuildEventDependsOn>
+		  $(PostBuildEventDependsOn);
+		  PostBuildMacros;
+	  </PostBuildEventDependsOn>
+    <PostBuildEvent>if $(ConfigurationName) == Release (
+  @echo off
+  rmdir de /s /q
+  rmdir es /s /q
+  rmdir ja /s /q
+  rmdir ru /s /q
+  cd..
+  rmdir E:\Dev\Releases\YT-RED /s /q
+  xcopy Release E:\Dev\Releases\YT-RED /E/H/C/I
+  cd E:\Dev\Releases
+  rename Release YT-RED
+  7z a -r YT-RED_Alpha_$(PlatformName)_@(VersionNumber).zip -tzip YT-RED
+)</PostBuildEvent>
+  </PropertyGroup>
 </Project>
