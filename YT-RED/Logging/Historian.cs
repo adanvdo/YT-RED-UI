@@ -17,6 +17,7 @@ namespace YT_RED.Logging
         {
             DownloadHistory = new List<DownloadLog>();
         }
+
         public static async Task<bool> LoadDownloadHistory()
         {
             if(DownloadHistory == null)

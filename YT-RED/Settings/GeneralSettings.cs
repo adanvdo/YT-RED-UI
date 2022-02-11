@@ -13,6 +13,9 @@ namespace YT_RED.Settings
 	{
 		public override AppFeature Feature => AppFeature.General;
 
+		[Browsable(false)]
+		[JsonProperty("active_skin")]
+		public string ActiveSkin { get; set; }
 
 		[Category("Preferences")]
 		[DisplayName("Enable Download History")]
@@ -68,6 +71,7 @@ namespace YT_RED.Settings
 
         public GeneralSettings()
         {
+			ActiveSkin = "DevExpress Dark Style";
 			EnableDownloadHistory = true;
 			HistoryAge = 30;
 			RedditSampleUrl = @"https://www.reddit.com/r/PraiseTheCameraMan/comments/sj7iwr/couldnt_be_more_perfect/";

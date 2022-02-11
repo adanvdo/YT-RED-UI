@@ -11,6 +11,10 @@ using YoutubeDLSharp;
 using Newtonsoft.Json;
 using System.Linq;
 using System.Threading.Tasks;
+using DevExpress.XtraGrid;
+using DevExpress.XtraGrid.Views.Grid;
+using DevExpress.XtraGrid.Views.Grid.ViewInfo;
+using DevExpress.Utils;
 
 namespace YT_RED
 {
@@ -56,6 +60,7 @@ namespace YT_RED
 
         private async void Init()
         {
+            DevExpress.LookAndFeel.UserLookAndFeel.Default.SetSkinStyle(AppSettings.Default.General.ActiveSkin);
             if (AppSettings.Default.General.EnableDownloadHistory)
             {
                 bool loadDownloadHistory = await Historian.LoadDownloadHistory();
@@ -291,6 +296,12 @@ namespace YT_RED
 
         private void refreshRedditHistory()
         {
+            gvHistory.Columns["FileExists"].VisibleIndex = 0;
+            gvHistory.Columns["FileExists"].ColumnEdit = repCheckEdit;
+            gvHistory.Columns["FileExists"].ToolTip = "File Exists";
+            gvHistory.Columns["FileExists"].OptionsColumn.ShowCaption = false; 
+            gvHistory.Columns["FileExists"].MinWidth = 5;
+            gvHistory.Columns["FileExists"].Width = 10;
             gvHistory.Columns["DownloadType"].Width = 10;
             gvHistory.Columns["DownloadType"].Caption = "Type";
             gvHistory.Columns["FileName"].Visible = false;
@@ -515,12 +526,18 @@ namespace YT_RED
 
         private void refreshYoutubeHistory()
         {
+            gvYTHistory.Columns["FileExists"].VisibleIndex = 0;
+            gvYTHistory.Columns["FileExists"].ColumnEdit = repCheckEdit;
+            gvYTHistory.Columns["FileExists"].OptionsColumn.ShowCaption = false;
+            gvYTHistory.Columns["FileExists"].MinWidth = 5;
+            gvYTHistory.Columns["FileExists"].Width = 10;
+            gvYTHistory.Columns["FileExists"].ToolTip = "File Exists?";
             gvYTHistory.Columns["DownloadType"].Width = 10;
             gvYTHistory.Columns["DownloadType"].Caption = "Type";
             gvYTHistory.Columns["FileName"].Visible = false;
             gvYTHistory.Columns["TimeLogged"].Visible = false;
             gvYTHistory.Columns["Type"].Visible = false;
-            gvYTHistory.Columns["Downloaded"].Visible = false;
+            gvYTHistory.Columns["Downloaded"].Visible = false;            
             gvYTHistory.RefreshData();
         }
 
@@ -560,6 +577,8 @@ namespace YT_RED
             (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = true;
             btnYTOpenDL.Text = String.Empty;
             btnYTOpenDL.Visible = false;
+            ytMarquee.Text = "Preparing Download..";
+            ytMarquee.Show();
             btnDownloadAudio.Enabled = false;
             btnYTDownloadBest.Enabled = false;
             var result = await Utils.VideoUtil.DownloadYTFormat(VideoUtil.YouTubeString(txtYTUrl.Text), selectedFormat);
@@ -574,6 +593,8 @@ namespace YT_RED
                 t = Classes.StreamType.Audio;
             else
                 t = Classes.StreamType.AudioAndVideo;
+            ytMarquee.Hide();
+            ytMarquee.Text = "";
             await Historian.RecordDownload(new DownloadLog(
                 DownloadType.YouTube,
                 VideoUtil.YouTubeString(txtYTUrl.Text),
@@ -601,6 +622,8 @@ namespace YT_RED
                     (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = true;
                     btnYTOpenDL.Text = String.Empty;
                     btnYTOpenDL.Visible = false;
+                    ytMarquee.Text = "Sending Download Request..";
+                    ytMarquee.Show();
                     RunResult<string> result = null;
                     if (chkUsePrefs.Checked)
                         result = await Utils.VideoUtil.DownloadPreferred(VideoUtil.YouTubeString(txtYTUrl.Text), Classes.StreamType.Audio);
@@ -616,6 +639,8 @@ namespace YT_RED
                         YT_RED.Classes.StreamType.Audio, DateTime.Now,
                         result.Data
                         ));
+                    ytMarquee.Hide();
+                    ytMarquee.Text = "";
                     gcYTHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.YouTube).ToList();
                     refreshYoutubeHistory();
                     btnYTOpenDL.Text = result.Data;
@@ -656,6 +681,8 @@ namespace YT_RED
             (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = true;
             btnYTOpenDL.Text = String.Empty;
             btnYTOpenDL.Visible = false;
+            ytMarquee.Text = "Sending Download Request..";
+            ytMarquee.Show();
             RunResult<string> result = null;
             if (chkUsePrefs.Checked)
                 result = await Utils.VideoUtil.DownloadPreferred(VideoUtil.YouTubeString(url), Classes.StreamType.AudioAndVideo);
@@ -665,6 +692,8 @@ namespace YT_RED
             {
                 MessageBox.Show("Download Failed\n" + String.Join("\n", result.ErrorOutput));
             }
+            ytMarquee.Hide();
+            ytMarquee.Text = "";
             await Historian.RecordDownload(new DownloadLog(
                 DownloadType.YouTube,
                 VideoUtil.YouTubeString(url),
@@ -758,6 +787,28 @@ namespace YT_RED
         private void txtRedditPost_Click(object sender, EventArgs e)
         {
             txtRedditPost.SelectAll();
+        }
+
+        private void toolTipController_GetActiveObjectInfo(object sender, DevExpress.Utils.ToolTipControllerGetActiveObjectInfoEventArgs e)
+        {
+            if (e.Info == null && e.SelectedControl is GridControl)
+            {
+                GridView view = (e.SelectedControl as GridControl).FocusedView as GridView;
+                GridHitInfo info = view.CalcHitInfo(e.ControlMousePosition);
+                if (info.InRowCell && info.Column.FieldName == "FileExists")
+                {
+                    bool exists = Convert.ToBoolean(view.GetRowCellValue(info.RowHandle, "FileExists"));
+                    string text = exists ? "File Exists" : "File Not Found";
+                    string cellKey = info.RowHandle.ToString() + " - " + info.Column.ToString();
+                    e.Info = new ToolTipControlInfo(cellKey, text);
+                }
+            }
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            AppSettings.Default.General.ActiveSkin = this.LookAndFeel.ActiveSkinName;
+            AppSettings.Default.Save();
         }
     }
 }

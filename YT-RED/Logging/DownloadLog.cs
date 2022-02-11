@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using YT_RED.Classes;
 using Newtonsoft.Json;
 
@@ -22,6 +19,15 @@ namespace YT_RED.Logging
         public string DownloadLocation { get; set; }
         [JsonProperty("time_logged")]
         public DateTime TimeLogged { get; set; }
+
+        [JsonIgnore]
+        public bool FileExists
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(DownloadLocation) && File.Exists(DownloadLocation);
+            }
+        }
 
         public DownloadLog()
         { }

@@ -28,10 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.tcMainTabControl = new DevExpress.XtraBars.TabFormControl();
             this.bbiSettings = new DevExpress.XtraBars.BarButtonItem();
             this.bsiMessage = new DevExpress.XtraBars.BarStaticItem();
+            this.skinBarSubItem1 = new DevExpress.XtraBars.SkinBarSubItem();
             this.tfpYouTube = new YT_RED.Controls.CustomTabFormPage();
             this.ytTabContainer = new DevExpress.XtraBars.TabFormContentContainer();
             this.ytSplitContainer = new DevExpress.XtraEditors.SplitContainerControl();
@@ -46,6 +48,7 @@
             this.pictureEdit2 = new DevExpress.XtraEditors.PictureEdit();
             this.gcYTHistory = new DevExpress.XtraGrid.GridControl();
             this.gvYTHistory = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.toolTipController = new DevExpress.Utils.ToolTipController(this.components);
             this.pnlYTProgressPanel = new DevExpress.XtraEditors.PanelControl();
             this.btnYTOpenDL = new DevExpress.XtraEditors.SimpleButton();
             this.pbYTProgress = new DevExpress.XtraEditors.ProgressBarControl();
@@ -76,6 +79,7 @@
             this.pictureEdit1 = new DevExpress.XtraEditors.PictureEdit();
             this.gcHistory = new DevExpress.XtraGrid.GridControl();
             this.gvHistory = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.repCheckEdit = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.pnlRedOptionsPanel = new DevExpress.XtraEditors.PanelControl();
             this.pnlRedDLPanel = new DevExpress.XtraEditors.PanelControl();
             this.btnRedDL = new DevExpress.XtraEditors.SimpleButton();
@@ -84,7 +88,6 @@
             this.btnRedditDefault = new DevExpress.XtraEditors.SimpleButton();
             this.btnDownloadReddit = new DevExpress.XtraEditors.SimpleButton();
             this.lblSelectionText = new DevExpress.XtraEditors.LabelControl();
-            this.skinBarSubItem1 = new DevExpress.XtraBars.SkinBarSubItem();
             ((System.ComponentModel.ISupportInitialize)(this.tcMainTabControl)).BeginInit();
             this.ytTabContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ytSplitContainer)).BeginInit();
@@ -131,6 +134,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gcHistory)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvHistory)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repCheckEdit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pnlRedOptionsPanel)).BeginInit();
             this.pnlRedOptionsPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pnlRedDLPanel)).BeginInit();
@@ -152,7 +156,7 @@
             this.tcMainTabControl.Name = "tcMainTabControl";
             this.tcMainTabControl.Pages.Add(this.tfpYouTube);
             this.tcMainTabControl.Pages.Add(this.tfpReddit);
-            this.tcMainTabControl.SelectedPage = this.tfpReddit;
+            this.tcMainTabControl.SelectedPage = this.tfpYouTube;
             this.tcMainTabControl.ShowAddPageButton = false;
             this.tcMainTabControl.Size = new System.Drawing.Size(1059, 50);
             this.tcMainTabControl.TabForm = this;
@@ -178,6 +182,16 @@
             // 
             this.bsiMessage.Id = 2;
             this.bsiMessage.Name = "bsiMessage";
+            // 
+            // skinBarSubItem1
+            // 
+            this.skinBarSubItem1.AllowSerializeChildren = DevExpress.Utils.DefaultBoolean.False;
+            this.skinBarSubItem1.Hint = "Skins";
+            this.skinBarSubItem1.Id = 3;
+            this.skinBarSubItem1.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
+            this.skinBarSubItem1.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("skinBarSubItem1.ImageOptions.SvgImage")));
+            this.skinBarSubItem1.Name = "skinBarSubItem1";
+            this.skinBarSubItem1.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
             // 
             // tfpYouTube
             // 
@@ -222,10 +236,10 @@
             // gcYoutube
             // 
             this.gcYoutube.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcYoutube.Location = new System.Drawing.Point(0, 165);
+            this.gcYoutube.Location = new System.Drawing.Point(0, 146);
             this.gcYoutube.MainView = this.gvYouTube;
             this.gcYoutube.Name = "gcYoutube";
-            this.gcYoutube.Size = new System.Drawing.Size(731, 513);
+            this.gcYoutube.Size = new System.Drawing.Size(731, 532);
             this.gcYoutube.TabIndex = 5;
             this.gcYoutube.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvYouTube});
@@ -256,7 +270,7 @@
             this.lblYTSelect.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.lblYTSelect.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
             this.lblYTSelect.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblYTSelect.Location = new System.Drawing.Point(0, 140);
+            this.lblYTSelect.Location = new System.Drawing.Point(0, 121);
             this.lblYTSelect.Name = "lblYTSelect";
             this.lblYTSelect.Size = new System.Drawing.Size(731, 25);
             this.lblYTSelect.TabIndex = 4;
@@ -274,16 +288,16 @@
             this.panelControl3.Controls.Add(this.pictureEdit2);
             this.panelControl3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelControl3.Location = new System.Drawing.Point(0, 0);
-            this.panelControl3.MinimumSize = new System.Drawing.Size(400, 140);
+            this.panelControl3.MinimumSize = new System.Drawing.Size(400, 120);
             this.panelControl3.Name = "panelControl3";
-            this.panelControl3.Size = new System.Drawing.Size(731, 140);
+            this.panelControl3.Size = new System.Drawing.Size(731, 121);
             this.panelControl3.TabIndex = 1;
             // 
             // ytMarquee
             // 
             this.ytMarquee.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.ytMarquee.EditValue = 0;
-            this.ytMarquee.Location = new System.Drawing.Point(2, 118);
+            this.ytMarquee.Location = new System.Drawing.Point(2, 99);
             this.ytMarquee.Name = "ytMarquee";
             this.ytMarquee.Properties.ShowTitle = true;
             this.ytMarquee.Size = new System.Drawing.Size(727, 20);
@@ -347,6 +361,7 @@
             this.gcYTHistory.Name = "gcYTHistory";
             this.gcYTHistory.Size = new System.Drawing.Size(323, 368);
             this.gcYTHistory.TabIndex = 6;
+            this.gcYTHistory.ToolTipController = this.toolTipController;
             this.gcYTHistory.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvYTHistory});
             // 
@@ -359,6 +374,7 @@
             this.gvYTHistory.OptionsCustomization.AllowColumnMoving = false;
             this.gvYTHistory.OptionsCustomization.AllowGroup = false;
             this.gvYTHistory.OptionsCustomization.AllowQuickHideColumns = false;
+            this.gvYTHistory.OptionsDetail.EnableDetailToolTip = true;
             this.gvYTHistory.OptionsDetail.ShowDetailTabs = false;
             this.gvYTHistory.OptionsSelection.EnableAppearanceFocusedCell = false;
             this.gvYTHistory.OptionsSelection.EnableAppearanceHideSelection = false;
@@ -367,6 +383,10 @@
             this.gvYTHistory.OptionsView.ShowGroupPanel = false;
             this.gvYTHistory.FocusedRowChanged += new DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventHandler(this.gvYTHistory_FocusedRowChanged);
             this.gvYTHistory.DoubleClick += new System.EventHandler(this.gvYTHistory_DoubleClick);
+            // 
+            // toolTipController
+            // 
+            this.toolTipController.GetActiveObjectInfo += new DevExpress.Utils.ToolTipControllerGetActiveObjectInfoEventHandler(this.toolTipController_GetActiveObjectInfo);
             // 
             // pnlYTProgressPanel
             // 
@@ -623,10 +643,10 @@
             // gcReddit
             // 
             this.gcReddit.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcReddit.Location = new System.Drawing.Point(0, 168);
+            this.gcReddit.Location = new System.Drawing.Point(0, 150);
             this.gcReddit.MainView = this.gvReddit;
             this.gcReddit.Name = "gcReddit";
-            this.gcReddit.Size = new System.Drawing.Size(731, 510);
+            this.gcReddit.Size = new System.Drawing.Size(731, 528);
             this.gcReddit.TabIndex = 2;
             this.gcReddit.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvReddit});
@@ -656,7 +676,7 @@
             this.lblSelect.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.lblSelect.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
             this.lblSelect.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblSelect.Location = new System.Drawing.Point(0, 140);
+            this.lblSelect.Location = new System.Drawing.Point(0, 122);
             this.lblSelect.Name = "lblSelect";
             this.lblSelect.Size = new System.Drawing.Size(731, 28);
             this.lblSelect.TabIndex = 3;
@@ -674,16 +694,16 @@
             this.panelControl1.Controls.Add(this.pictureEdit1);
             this.panelControl1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelControl1.Location = new System.Drawing.Point(0, 0);
-            this.panelControl1.MinimumSize = new System.Drawing.Size(400, 140);
+            this.panelControl1.MinimumSize = new System.Drawing.Size(400, 120);
             this.panelControl1.Name = "panelControl1";
-            this.panelControl1.Size = new System.Drawing.Size(731, 140);
+            this.panelControl1.Size = new System.Drawing.Size(731, 122);
             this.panelControl1.TabIndex = 0;
             // 
             // redditListMarquee
             // 
             this.redditListMarquee.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.redditListMarquee.EditValue = 0;
-            this.redditListMarquee.Location = new System.Drawing.Point(2, 118);
+            this.redditListMarquee.Location = new System.Drawing.Point(2, 100);
             this.redditListMarquee.Name = "redditListMarquee";
             this.redditListMarquee.Properties.ShowTitle = true;
             this.redditListMarquee.Size = new System.Drawing.Size(727, 20);
@@ -745,8 +765,11 @@
             this.gcHistory.Location = new System.Drawing.Point(0, 163);
             this.gcHistory.MainView = this.gvHistory;
             this.gcHistory.Name = "gcHistory";
+            this.gcHistory.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
+            this.repCheckEdit});
             this.gcHistory.Size = new System.Drawing.Size(323, 515);
             this.gcHistory.TabIndex = 5;
+            this.gcHistory.ToolTipController = this.toolTipController;
             this.gcHistory.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvHistory});
             // 
@@ -759,6 +782,7 @@
             this.gvHistory.OptionsCustomization.AllowColumnMoving = false;
             this.gvHistory.OptionsCustomization.AllowGroup = false;
             this.gvHistory.OptionsCustomization.AllowQuickHideColumns = false;
+            this.gvHistory.OptionsDetail.EnableDetailToolTip = true;
             this.gvHistory.OptionsDetail.ShowDetailTabs = false;
             this.gvHistory.OptionsSelection.EnableAppearanceFocusedCell = false;
             this.gvHistory.OptionsSelection.EnableAppearanceHideSelection = false;
@@ -767,6 +791,15 @@
             this.gvHistory.OptionsView.ShowGroupPanel = false;
             this.gvHistory.FocusedRowChanged += new DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventHandler(this.gvHistory_FocusedRowChanged);
             this.gvHistory.DoubleClick += new System.EventHandler(this.gvHistory_DoubleClick);
+            // 
+            // repCheckEdit
+            // 
+            this.repCheckEdit.AutoHeight = false;
+            this.repCheckEdit.CheckBoxOptions.Style = DevExpress.XtraEditors.Controls.CheckBoxStyle.Custom;
+            this.repCheckEdit.ImageOptions.SvgImageChecked = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("repCheckEdit.ImageOptions.SvgImageChecked")));
+            this.repCheckEdit.ImageOptions.SvgImageSize = new System.Drawing.Size(20, 20);
+            this.repCheckEdit.ImageOptions.SvgImageUnchecked = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("repCheckEdit.ImageOptions.SvgImageUnchecked")));
+            this.repCheckEdit.Name = "repCheckEdit";
             // 
             // pnlRedOptionsPanel
             // 
@@ -778,7 +811,7 @@
             this.pnlRedOptionsPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlRedOptionsPanel.Location = new System.Drawing.Point(0, 20);
             this.pnlRedOptionsPanel.Margin = new System.Windows.Forms.Padding(0);
-            this.pnlRedOptionsPanel.MinimumSize = new System.Drawing.Size(323, 111);
+            this.pnlRedOptionsPanel.MinimumSize = new System.Drawing.Size(323, 55);
             this.pnlRedOptionsPanel.Name = "pnlRedOptionsPanel";
             this.pnlRedOptionsPanel.Size = new System.Drawing.Size(323, 143);
             this.pnlRedOptionsPanel.TabIndex = 4;
@@ -882,25 +915,17 @@
             this.lblSelectionText.Size = new System.Drawing.Size(323, 20);
             this.lblSelectionText.TabIndex = 3;
             // 
-            // skinBarSubItem1
-            // 
-            this.skinBarSubItem1.Hint = "Skins";
-            this.skinBarSubItem1.Id = 3;
-            this.skinBarSubItem1.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
-            this.skinBarSubItem1.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("skinBarSubItem1.ImageOptions.SvgImage")));
-            this.skinBarSubItem1.Name = "skinBarSubItem1";
-            this.skinBarSubItem1.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1059, 728);
-            this.Controls.Add(this.tabFormContentContainer3);
+            this.Controls.Add(this.ytTabContainer);
             this.Controls.Add(this.tcMainTabControl);
             this.Name = "MainForm";
             this.TabFormControl = this.tcMainTabControl;
             this.Text = "YT-RED";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.tcMainTabControl)).EndInit();
             this.ytTabContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.ytSplitContainer.Panel1)).EndInit();
@@ -955,6 +980,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gcHistory)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvHistory)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repCheckEdit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pnlRedOptionsPanel)).EndInit();
             this.pnlRedOptionsPanel.ResumeLayout(false);
             this.pnlRedOptionsPanel.PerformLayout();
@@ -1024,6 +1050,8 @@
         private DevExpress.XtraEditors.GroupControl groupControl2;
         private DevExpress.XtraBars.SkinBarSubItem skinBarSubItem1;
         private DevExpress.XtraEditors.SimpleButton btnYTListFormats;
+        private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repCheckEdit;
+        private DevExpress.Utils.ToolTipController toolTipController;
     }
 }
 
