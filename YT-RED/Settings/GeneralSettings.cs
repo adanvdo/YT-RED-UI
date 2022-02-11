@@ -31,14 +31,14 @@ namespace YT_RED.Settings
 		[Category("Downloads")]
 		[DisplayName("Video Download Path")]
 		[Description("The destination folder for downloaded video files")]
-		[EditorAttribute(typeof(System.Windows.Forms.FolderBrowserDialog), typeof(System.Drawing.Design.UITypeEditor))]
+		[EditorAttribute(typeof(System.Windows.Forms.Design.FolderNameEditor), typeof(System.Drawing.Design.UITypeEditor))]
 		[JsonProperty("video_dl_path")]
 		public string VideoDownloadPath { get; set; }
 
 		[Category("Downloads")]
 		[DisplayName("Audio Download Path")]
 		[Description("The destination folder for downloaded audio files")]
-		[EditorAttribute(typeof(System.Windows.Forms.FolderBrowserDialog), typeof(System.Drawing.Design.UITypeEditor))]
+		[EditorAttribute(typeof(System.Windows.Forms.Design.FolderNameEditor), typeof(System.Drawing.Design.UITypeEditor))]
 		[JsonProperty("audio_dl_path")]
 		public string AudioDownloadPath { get; set; }
 

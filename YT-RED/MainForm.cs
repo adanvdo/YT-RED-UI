@@ -33,6 +33,8 @@ namespace YT_RED
         private Classes.ResultStream selectedStream = null;
         private DownloadLog selectedRedditLog = null;
         private YoutubeDLSharp.Metadata.FormatData selectedFormat = null;
+        private CustomTabFormPage youTubePage = null;
+        private CustomTabFormPage redditPage = null;
 
         public MainForm()
         {
@@ -151,6 +153,8 @@ namespace YT_RED
             if (selectedStream != null)
             {
                 btnDownloadReddit.Enabled = false;
+                this.UseWaitCursor = true;
+                (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = true;
                 IConversion conversion = Utils.VideoUtil.PrepareConversion(selectedStream);
                 string destination = conversion.OutputFilePath;
                 conversion.OnProgress += Conversion_OnProgress;
@@ -172,6 +176,8 @@ namespace YT_RED
                 refreshRedditHistory();
                 this.pbDownloadProgress.Visible = false;
                 this.pbDownloadProgress.Position = 0;
+                (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = false;
+                this.UseWaitCursor = false;
                 this.btnRedDL.Text = destination;
                 this.btnRedDL.Visible = true;
             }
@@ -311,7 +317,16 @@ namespace YT_RED
 
         private void tabFormControl1_PageClosing(object sender, DevExpress.XtraBars.PageClosingEventArgs e)
         {
-            CustomTabFormPage page = sender as CustomTabFormPage;
+            CustomTabFormPage page = e.Page as CustomTabFormPage;
+            if(page.Name == "tfpYouTube")
+            {
+                this.youTubePage = page;
+            }
+            else if (page.Name == "tfpReddit")
+            {
+                this.redditPage = page;
+            }
+
             if(page.IsLocked)
             {
                 MessageBox.Show("A Task is currently in progress and cannot be cancelled.\nPlease wait for the operation to complete.", "A Task is Busy", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -329,6 +344,7 @@ namespace YT_RED
                 btnDownloadReddit.Visible = false;
                 btnRedDL.Text = String.Empty;
                 btnRedDL.Visible = false;
+                btnRedditDefault.Visible = true;
                 return;
             }
             selectedStream = gvReddit.GetFocusedRow() as Classes.ResultStream;
@@ -340,10 +356,15 @@ namespace YT_RED
                 else displayText += $"Video: {selectedStream.PlaylistType} {selectedStream.VideoCodec} {selectedStream.Width}x{selectedStream.Height}\nAudio: {selectedStream.AudioCodec} {selectedStream.AudioChannels}ch {selectedStream.AudioSampleRate}kHz";
                 lblSelectionText.Text = displayText;
                 lblSelectionText.Refresh();
+                btnRedditDefault.Visible = false;
                 btnDownloadReddit.Visible = true;
                 btnDownloadReddit.Enabled = true;
             }
-            else btnDownloadReddit.Visible = false;
+            else
+            {
+                btnDownloadReddit.Visible = false;
+                btnRedditDefault.Visible = true;
+            }
         }
       
 
