@@ -15,6 +15,7 @@ This project is UNLICENSED and uses licensed DevExpress WinForms Controls.
 - Download Best Quality in Preferred Format
 - Download Best Quality Audio
 - Download History Log
+- YouTube Segment Downloads (Partial Support)
 
 ![yt-red](https://user-images.githubusercontent.com/26498008/152799675-edbe4a26-9e58-4c67-8e75-61456651fd29.jpg)
 
