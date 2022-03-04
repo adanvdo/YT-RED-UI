@@ -21,5 +21,13 @@ This project is UNLICENSED and uses licensed DevExpress WinForms Controls.
 
 ![2022-02-07_8-52-44](https://user-images.githubusercontent.com/26498008/152800932-e1c7bf6a-ea63-495f-b87d-6faf094df6e6.jpg)
 
+## CHANGELOG
+
+### 3/4/2022 v1.0.0.4
+- Added Download History File Status Indicator
+- Added Partial Segment Download support for YouTube
+- Added Program Icon
+- UI and Behavior Tweaks
+
 ## This is an experimental build.  Bugs and/or crashes are possible.  
 Report new issues [here](https://github.com/adanvdo/YT-RED-UI/issues/new)
