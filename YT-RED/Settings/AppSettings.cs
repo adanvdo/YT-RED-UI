@@ -53,6 +53,96 @@ namespace YT_RED.Settings
 
 		public AdvancedSettings Advanced { get; set; }
 
+		public static VideoFormat VideoFormatFromExtension(string extension)
+        {
+			switch(extension.ToLower())
+            {
+				case "flv":
+					return VideoFormat.FLV;
+				case "mkv":
+					return VideoFormat.MKV;
+				case "mp4":
+					return VideoFormat.MP4;
+				case "ogg":
+					return VideoFormat.OGG;
+				case "webm":
+					return VideoFormat.WEBM;
+				case "":
+					return VideoFormat.UNSPECIFIED;
+				default:
+					return VideoFormat.BESTVIDEO;
+            }
+        }
+
+		public static VideoFormat ConvertMergeFormatToVideoFormat(YoutubeDLSharp.Options.DownloadMergeFormat downloadMergeFormat)
+        {
+			switch(downloadMergeFormat)
+            {
+				case YoutubeDLSharp.Options.DownloadMergeFormat.Flv:
+					return VideoFormat.FLV;
+				case YoutubeDLSharp.Options.DownloadMergeFormat.Mkv:
+					return VideoFormat.MKV;
+				case YoutubeDLSharp.Options.DownloadMergeFormat.Mp4:
+					return VideoFormat.MP4;
+				case YoutubeDLSharp.Options.DownloadMergeFormat.Ogg:
+					return VideoFormat.OGG;
+				case YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified:
+					return VideoFormat.UNSPECIFIED;
+				case YoutubeDLSharp.Options.DownloadMergeFormat.Webm:
+					return VideoFormat.WEBM;
+				default:
+					return VideoFormat.BESTVIDEO;
+            }
+        }
+
+		public static AudioFormat AudioFormatFromExtension(string extension)
+        {
+			switch(extension.ToLower())
+            {
+				case "aac":
+					return AudioFormat.AAC;
+				case "flac":
+					return AudioFormat.FLAC;
+				case "m4a":
+					return AudioFormat.M4A;
+				case "mp3":
+					return AudioFormat.MP3;
+				case "opus":
+					return AudioFormat.OPUS;
+				case "vorbis":
+					return AudioFormat.VORBIS;
+				case "wav":
+					return AudioFormat.WAV;
+				default:
+					return AudioFormat.BEST;
+			}
+        }
+
+		public static AudioFormat ConvertAudioConversionFormatToAudioFormat(YoutubeDLSharp.Options.AudioConversionFormat audioConversionFormat)
+        {
+			switch(audioConversionFormat)
+            {
+				case YoutubeDLSharp.Options.AudioConversionFormat.Aac:
+					return AudioFormat.AAC;
+				case YoutubeDLSharp.Options.AudioConversionFormat.Flac:
+					return AudioFormat.FLAC;
+				case YoutubeDLSharp.Options.AudioConversionFormat.M4a:
+					return AudioFormat.M4A;
+				case YoutubeDLSharp.Options.AudioConversionFormat.Mp3:
+					return AudioFormat.MP3;
+				case YoutubeDLSharp.Options.AudioConversionFormat.Opus:
+					return AudioFormat.OPUS;
+				case YoutubeDLSharp.Options.AudioConversionFormat.Vorbis:
+					return AudioFormat.VORBIS;
+				case YoutubeDLSharp.Options.AudioConversionFormat.Wav:
+					return AudioFormat.WAV;
+				case YoutubeDLSharp.Options.AudioConversionFormat.Best:
+					return AudioFormat.BEST;
+				default:
+					return AudioFormat.BEST;
+            }
+        }
+
 		public FeatureSettings[] AllSettings => new FeatureSettings[] { General, Advanced};
 		public AppSettings() 
 		{
@@ -90,7 +180,10 @@ namespace YT_RED.Settings
 		AAC = 2,
 		OGG = 3,
 		WAV = 4,
-		BESTAUDIO = 5
+		FLAC = 5,
+		OPUS = 6,
+		VORBIS = 7,
+		BEST = 8
     }
 
     public enum VideoFormat
@@ -98,8 +191,12 @@ namespace YT_RED.Settings
 		MP4 = 0,
 		WEBM = 1,
 		FLV = 2,
-		BESTVIDEO = 3
-    }
+		MKV = 3,
+		OGG = 4,
+		UNSPECIFIED = 5,
+		BESTVIDEO = 6
+	}
+
 	public enum Resolution
     {
 		BEST = 0,

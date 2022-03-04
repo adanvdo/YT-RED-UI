@@ -55,10 +55,11 @@
             this.pnlYTOptionPanel = new DevExpress.XtraEditors.PanelControl();
             this.gcYTDLButtons = new DevExpress.XtraEditors.GroupControl();
             this.btnYTDownloadBest = new DevExpress.XtraEditors.SimpleButton();
-            this.btnDownloadAudio = new DevExpress.XtraEditors.SimpleButton();
+            this.btnYTDownloadAudio = new DevExpress.XtraEditors.SimpleButton();
             this.chkUsePrefs = new DevExpress.XtraEditors.CheckEdit();
             this.btnYTSelectionDL = new DevExpress.XtraEditors.SimpleButton();
             this.groupControl1 = new DevExpress.XtraEditors.GroupControl();
+            this.lblSegmentDisclaimer = new DevExpress.XtraEditors.LabelControl();
             this.toggleYTSegment = new DevExpress.XtraEditors.ToggleSwitch();
             this.labelControl4 = new DevExpress.XtraEditors.LabelControl();
             this.tsYTEnd = new DevExpress.XtraEditors.TimeSpanEdit();
@@ -88,6 +89,11 @@
             this.btnRedditDefault = new DevExpress.XtraEditors.SimpleButton();
             this.btnDownloadReddit = new DevExpress.XtraEditors.SimpleButton();
             this.lblSelectionText = new DevExpress.XtraEditors.LabelControl();
+            this.panelControl2 = new DevExpress.XtraEditors.PanelControl();
+            this.panelControl4 = new DevExpress.XtraEditors.PanelControl();
+            this.btnListReset = new DevExpress.XtraEditors.SimpleButton();
+            this.panelControl5 = new DevExpress.XtraEditors.PanelControl();
+            this.btnRedditReset = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.tcMainTabControl)).BeginInit();
             this.ytTabContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ytSplitContainer)).BeginInit();
@@ -142,6 +148,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbDownloadProgress.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl2)).BeginInit();
             this.groupControl2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.panelControl2)).BeginInit();
+            this.panelControl2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.panelControl4)).BeginInit();
+            this.panelControl4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.panelControl5)).BeginInit();
+            this.panelControl5.SuspendLayout();
             this.SuspendLayout();
             // 
             // tcMainTabControl
@@ -156,7 +168,7 @@
             this.tcMainTabControl.Name = "tcMainTabControl";
             this.tcMainTabControl.Pages.Add(this.tfpYouTube);
             this.tcMainTabControl.Pages.Add(this.tfpReddit);
-            this.tcMainTabControl.SelectedPage = this.tfpYouTube;
+            this.tcMainTabControl.SelectedPage = this.tfpReddit;
             this.tcMainTabControl.ShowAddPageButton = false;
             this.tcMainTabControl.Size = new System.Drawing.Size(1059, 50);
             this.tcMainTabControl.TabForm = this;
@@ -236,10 +248,10 @@
             // gcYoutube
             // 
             this.gcYoutube.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcYoutube.Location = new System.Drawing.Point(0, 146);
+            this.gcYoutube.Location = new System.Drawing.Point(0, 170);
             this.gcYoutube.MainView = this.gvYouTube;
             this.gcYoutube.Name = "gcYoutube";
-            this.gcYoutube.Size = new System.Drawing.Size(731, 532);
+            this.gcYoutube.Size = new System.Drawing.Size(731, 508);
             this.gcYoutube.TabIndex = 5;
             this.gcYoutube.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvYouTube});
@@ -270,7 +282,7 @@
             this.lblYTSelect.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.lblYTSelect.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
             this.lblYTSelect.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblYTSelect.Location = new System.Drawing.Point(0, 121);
+            this.lblYTSelect.Location = new System.Drawing.Point(0, 145);
             this.lblYTSelect.Name = "lblYTSelect";
             this.lblYTSelect.Size = new System.Drawing.Size(731, 25);
             this.lblYTSelect.TabIndex = 4;
@@ -282,22 +294,19 @@
             this.panelControl3.AutoSize = true;
             this.panelControl3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.panelControl3.Controls.Add(this.ytMarquee);
-            this.panelControl3.Controls.Add(this.btnYTListFormats);
-            this.panelControl3.Controls.Add(this.labelControl2);
-            this.panelControl3.Controls.Add(this.txtYTUrl);
-            this.panelControl3.Controls.Add(this.pictureEdit2);
+            this.panelControl3.Controls.Add(this.panelControl4);
             this.panelControl3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelControl3.Location = new System.Drawing.Point(0, 0);
             this.panelControl3.MinimumSize = new System.Drawing.Size(400, 120);
             this.panelControl3.Name = "panelControl3";
-            this.panelControl3.Size = new System.Drawing.Size(731, 121);
+            this.panelControl3.Size = new System.Drawing.Size(731, 145);
             this.panelControl3.TabIndex = 1;
             // 
             // ytMarquee
             // 
-            this.ytMarquee.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.ytMarquee.Dock = System.Windows.Forms.DockStyle.Top;
             this.ytMarquee.EditValue = 0;
-            this.ytMarquee.Location = new System.Drawing.Point(2, 99);
+            this.ytMarquee.Location = new System.Drawing.Point(2, 123);
             this.ytMarquee.Name = "ytMarquee";
             this.ytMarquee.Properties.ShowTitle = true;
             this.ytMarquee.Size = new System.Drawing.Size(727, 20);
@@ -312,7 +321,7 @@
             this.btnYTListFormats.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
             this.btnYTListFormats.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("btnYTListFormats.ImageOptions.SvgImage")));
             this.btnYTListFormats.ImageOptions.SvgImageSize = new System.Drawing.Size(25, 25);
-            this.btnYTListFormats.Location = new System.Drawing.Point(551, 82);
+            this.btnYTListFormats.Location = new System.Drawing.Point(549, 82);
             this.btnYTListFormats.Name = "btnYTListFormats";
             this.btnYTListFormats.Size = new System.Drawing.Size(175, 32);
             this.btnYTListFormats.TabIndex = 4;
@@ -323,7 +332,7 @@
             // 
             this.labelControl2.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
             this.labelControl2.Appearance.Options.UseFont = true;
-            this.labelControl2.Location = new System.Drawing.Point(34, 57);
+            this.labelControl2.Location = new System.Drawing.Point(10, 54);
             this.labelControl2.Name = "labelControl2";
             this.labelControl2.Size = new System.Drawing.Size(90, 16);
             this.labelControl2.TabIndex = 2;
@@ -333,17 +342,17 @@
             // 
             this.txtYTUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtYTUrl.Location = new System.Drawing.Point(130, 54);
+            this.txtYTUrl.Location = new System.Drawing.Point(106, 51);
             this.txtYTUrl.Name = "txtYTUrl";
             this.txtYTUrl.Properties.AutoHeight = false;
-            this.txtYTUrl.Size = new System.Drawing.Size(596, 25);
+            this.txtYTUrl.Size = new System.Drawing.Size(618, 25);
             this.txtYTUrl.TabIndex = 1;
             this.txtYTUrl.Click += new System.EventHandler(this.txtYTUrl_Click);
             // 
             // pictureEdit2
             // 
             this.pictureEdit2.EditValue = global::YT_RED.Properties.Resources.yt_logo_dark;
-            this.pictureEdit2.Location = new System.Drawing.Point(7, 6);
+            this.pictureEdit2.Location = new System.Drawing.Point(4, 3);
             this.pictureEdit2.Name = "pictureEdit2";
             this.pictureEdit2.Properties.Appearance.BackColor = System.Drawing.Color.Transparent;
             this.pictureEdit2.Properties.Appearance.Options.UseBackColor = true;
@@ -356,10 +365,10 @@
             // gcYTHistory
             // 
             this.gcYTHistory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcYTHistory.Location = new System.Drawing.Point(0, 310);
+            this.gcYTHistory.Location = new System.Drawing.Point(0, 342);
             this.gcYTHistory.MainView = this.gvYTHistory;
             this.gcYTHistory.Name = "gcYTHistory";
-            this.gcYTHistory.Size = new System.Drawing.Size(323, 368);
+            this.gcYTHistory.Size = new System.Drawing.Size(323, 336);
             this.gcYTHistory.TabIndex = 6;
             this.gcYTHistory.ToolTipController = this.toolTipController;
             this.gcYTHistory.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -396,7 +405,7 @@
             this.pnlYTProgressPanel.Controls.Add(this.btnYTOpenDL);
             this.pnlYTProgressPanel.Controls.Add(this.pbYTProgress);
             this.pnlYTProgressPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlYTProgressPanel.Location = new System.Drawing.Point(0, 253);
+            this.pnlYTProgressPanel.Location = new System.Drawing.Point(0, 285);
             this.pnlYTProgressPanel.Margin = new System.Windows.Forms.Padding(0);
             this.pnlYTProgressPanel.Name = "pnlYTProgressPanel";
             this.pnlYTProgressPanel.Size = new System.Drawing.Size(323, 57);
@@ -435,7 +444,7 @@
             this.pnlYTOptionPanel.Margin = new System.Windows.Forms.Padding(0);
             this.pnlYTOptionPanel.MinimumSize = new System.Drawing.Size(323, 136);
             this.pnlYTOptionPanel.Name = "pnlYTOptionPanel";
-            this.pnlYTOptionPanel.Size = new System.Drawing.Size(323, 253);
+            this.pnlYTOptionPanel.Size = new System.Drawing.Size(323, 285);
             this.pnlYTOptionPanel.TabIndex = 7;
             // 
             // gcYTDLButtons
@@ -443,11 +452,11 @@
             this.gcYTDLButtons.AutoSize = true;
             this.gcYTDLButtons.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gcYTDLButtons.Controls.Add(this.btnYTDownloadBest);
-            this.gcYTDLButtons.Controls.Add(this.btnDownloadAudio);
+            this.gcYTDLButtons.Controls.Add(this.btnYTDownloadAudio);
             this.gcYTDLButtons.Controls.Add(this.chkUsePrefs);
             this.gcYTDLButtons.Controls.Add(this.btnYTSelectionDL);
             this.gcYTDLButtons.Dock = System.Windows.Forms.DockStyle.Top;
-            this.gcYTDLButtons.Location = new System.Drawing.Point(0, 105);
+            this.gcYTDLButtons.Location = new System.Drawing.Point(0, 137);
             this.gcYTDLButtons.Margin = new System.Windows.Forms.Padding(0);
             this.gcYTDLButtons.Name = "gcYTDLButtons";
             this.gcYTDLButtons.Size = new System.Drawing.Size(323, 148);
@@ -470,21 +479,21 @@
             this.btnYTDownloadBest.Text = "DOWNLOAD BEST [audio+video]      ";
             this.btnYTDownloadBest.Click += new System.EventHandler(this.btnYTDownloadBest_Click);
             // 
-            // btnDownloadAudio
+            // btnYTDownloadAudio
             // 
-            this.btnDownloadAudio.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
-            this.btnDownloadAudio.Appearance.Options.UseFont = true;
-            this.btnDownloadAudio.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnDownloadAudio.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
-            this.btnDownloadAudio.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("btnDownloadAudio.ImageOptions.SvgImage")));
-            this.btnDownloadAudio.ImageOptions.SvgImageSize = new System.Drawing.Size(25, 25);
-            this.btnDownloadAudio.Location = new System.Drawing.Point(2, 82);
-            this.btnDownloadAudio.Margin = new System.Windows.Forms.Padding(0);
-            this.btnDownloadAudio.Name = "btnDownloadAudio";
-            this.btnDownloadAudio.Size = new System.Drawing.Size(319, 32);
-            this.btnDownloadAudio.TabIndex = 7;
-            this.btnDownloadAudio.Text = "DOWNLOAD AUDIO       ";
-            this.btnDownloadAudio.Click += new System.EventHandler(this.btnDownloadAudio_Click);
+            this.btnYTDownloadAudio.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.btnYTDownloadAudio.Appearance.Options.UseFont = true;
+            this.btnYTDownloadAudio.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnYTDownloadAudio.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
+            this.btnYTDownloadAudio.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("btnDownloadAudio.ImageOptions.SvgImage")));
+            this.btnYTDownloadAudio.ImageOptions.SvgImageSize = new System.Drawing.Size(25, 25);
+            this.btnYTDownloadAudio.Location = new System.Drawing.Point(2, 82);
+            this.btnYTDownloadAudio.Margin = new System.Windows.Forms.Padding(0);
+            this.btnYTDownloadAudio.Name = "btnYTDownloadAudio";
+            this.btnYTDownloadAudio.Size = new System.Drawing.Size(319, 32);
+            this.btnYTDownloadAudio.TabIndex = 7;
+            this.btnYTDownloadAudio.Text = "DOWNLOAD AUDIO       ";
+            this.btnYTDownloadAudio.Click += new System.EventHandler(this.btnDownloadAudio_Click);
             // 
             // chkUsePrefs
             // 
@@ -516,24 +525,39 @@
             // 
             // groupControl1
             // 
-            this.groupControl1.Controls.Add(this.toggleYTSegment);
-            this.groupControl1.Controls.Add(this.labelControl4);
-            this.groupControl1.Controls.Add(this.tsYTEnd);
-            this.groupControl1.Controls.Add(this.tsYTStart);
-            this.groupControl1.Controls.Add(this.labelControl3);
+            this.groupControl1.AutoSize = true;
+            this.groupControl1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupControl1.Controls.Add(this.lblSegmentDisclaimer);
+            this.groupControl1.Controls.Add(this.panelControl2);
             this.groupControl1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupControl1.Location = new System.Drawing.Point(0, 20);
             this.groupControl1.Margin = new System.Windows.Forms.Padding(0);
             this.groupControl1.Name = "groupControl1";
-            this.groupControl1.Size = new System.Drawing.Size(323, 85);
+            this.groupControl1.Size = new System.Drawing.Size(323, 117);
             this.groupControl1.TabIndex = 4;
             this.groupControl1.Text = "Download Segment";
-            this.groupControl1.Visible = false;
+            // 
+            // lblSegmentDisclaimer
+            // 
+            this.lblSegmentDisclaimer.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.lblSegmentDisclaimer.Appearance.Options.UseForeColor = true;
+            this.lblSegmentDisclaimer.Appearance.Options.UseTextOptions = true;
+            this.lblSegmentDisclaimer.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.lblSegmentDisclaimer.Appearance.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap;
+            this.lblSegmentDisclaimer.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
+            this.lblSegmentDisclaimer.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblSegmentDisclaimer.Location = new System.Drawing.Point(2, 83);
+            this.lblSegmentDisclaimer.Name = "lblSegmentDisclaimer";
+            this.lblSegmentDisclaimer.Padding = new System.Windows.Forms.Padding(3);
+            this.lblSegmentDisclaimer.Size = new System.Drawing.Size(319, 32);
+            this.lblSegmentDisclaimer.TabIndex = 7;
+            this.lblSegmentDisclaimer.Text = "For best performance, it is highly recommended to choose a format when downloadin" +
+    "g segments.";
+            this.lblSegmentDisclaimer.Visible = false;
             // 
             // toggleYTSegment
             // 
-            this.toggleYTSegment.Enabled = false;
-            this.toggleYTSegment.Location = new System.Drawing.Point(13, 27);
+            this.toggleYTSegment.Location = new System.Drawing.Point(7, 4);
             this.toggleYTSegment.Name = "toggleYTSegment";
             this.toggleYTSegment.Properties.OffText = "Off";
             this.toggleYTSegment.Properties.OnText = "On";
@@ -545,7 +569,7 @@
             // 
             this.labelControl4.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
             this.labelControl4.Appearance.Options.UseFont = true;
-            this.labelControl4.Location = new System.Drawing.Point(164, 57);
+            this.labelControl4.Location = new System.Drawing.Point(158, 34);
             this.labelControl4.Name = "labelControl4";
             this.labelControl4.Size = new System.Drawing.Size(48, 16);
             this.labelControl4.TabIndex = 5;
@@ -553,12 +577,18 @@
             // 
             // tsYTEnd
             // 
-            this.tsYTEnd.EditValue = System.TimeSpan.Parse("00:00:00");
+            this.tsYTEnd.EditValue = System.TimeSpan.Parse("00:00:01");
             this.tsYTEnd.Enabled = false;
-            this.tsYTEnd.Location = new System.Drawing.Point(218, 56);
+            this.tsYTEnd.Location = new System.Drawing.Point(214, 35);
             this.tsYTEnd.Name = "tsYTEnd";
             this.tsYTEnd.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.tsYTEnd.Properties.DisplayFormat.FormatString = "{hh}h {mm}m {ss}s";
+            this.tsYTEnd.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Custom;
+            this.tsYTEnd.Properties.EditFormat.FormatString = "{hh}h {mm}m {ss}s";
+            this.tsYTEnd.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Custom;
+            this.tsYTEnd.Properties.MaskSettings.Set("mask", "hh\\h mm\\m ss\\s");
+            this.tsYTEnd.Properties.MinValue = System.TimeSpan.Parse("00:00:01");
             this.tsYTEnd.Size = new System.Drawing.Size(100, 20);
             this.tsYTEnd.TabIndex = 4;
             // 
@@ -566,10 +596,16 @@
             // 
             this.tsYTStart.EditValue = System.TimeSpan.Parse("00:00:00");
             this.tsYTStart.Enabled = false;
-            this.tsYTStart.Location = new System.Drawing.Point(47, 56);
+            this.tsYTStart.Location = new System.Drawing.Point(43, 35);
             this.tsYTStart.Name = "tsYTStart";
             this.tsYTStart.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.tsYTStart.Properties.DisplayFormat.FormatString = "{hh}h {mm}m {ss}s";
+            this.tsYTStart.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Custom;
+            this.tsYTStart.Properties.EditFormat.FormatString = "{hh}h {mm}m {ss}s";
+            this.tsYTStart.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Custom;
+            this.tsYTStart.Properties.MaskSettings.Set("mask", "hh\\h mm\\m ss\\s");
+            this.tsYTStart.Properties.MinValue = System.TimeSpan.Parse("00:00:00");
             this.tsYTStart.Size = new System.Drawing.Size(100, 20);
             this.tsYTStart.TabIndex = 0;
             // 
@@ -577,7 +613,7 @@
             // 
             this.labelControl3.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
             this.labelControl3.Appearance.Options.UseFont = true;
-            this.labelControl3.Location = new System.Drawing.Point(13, 57);
+            this.labelControl3.Location = new System.Drawing.Point(7, 34);
             this.labelControl3.Name = "labelControl3";
             this.labelControl3.Size = new System.Drawing.Size(28, 16);
             this.labelControl3.TabIndex = 3;
@@ -643,10 +679,10 @@
             // gcReddit
             // 
             this.gcReddit.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcReddit.Location = new System.Drawing.Point(0, 150);
+            this.gcReddit.Location = new System.Drawing.Point(0, 174);
             this.gcReddit.MainView = this.gvReddit;
             this.gcReddit.Name = "gcReddit";
-            this.gcReddit.Size = new System.Drawing.Size(731, 528);
+            this.gcReddit.Size = new System.Drawing.Size(731, 504);
             this.gcReddit.TabIndex = 2;
             this.gcReddit.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvReddit});
@@ -676,7 +712,7 @@
             this.lblSelect.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.lblSelect.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
             this.lblSelect.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblSelect.Location = new System.Drawing.Point(0, 122);
+            this.lblSelect.Location = new System.Drawing.Point(0, 146);
             this.lblSelect.Name = "lblSelect";
             this.lblSelect.Size = new System.Drawing.Size(731, 28);
             this.lblSelect.TabIndex = 3;
@@ -687,23 +723,20 @@
             // 
             this.panelControl1.AutoSize = true;
             this.panelControl1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panelControl1.Controls.Add(this.panelControl5);
             this.panelControl1.Controls.Add(this.redditListMarquee);
-            this.panelControl1.Controls.Add(this.btnRedditList);
-            this.panelControl1.Controls.Add(this.labelControl1);
-            this.panelControl1.Controls.Add(this.txtRedditPost);
-            this.panelControl1.Controls.Add(this.pictureEdit1);
             this.panelControl1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelControl1.Location = new System.Drawing.Point(0, 0);
             this.panelControl1.MinimumSize = new System.Drawing.Size(400, 120);
             this.panelControl1.Name = "panelControl1";
-            this.panelControl1.Size = new System.Drawing.Size(731, 122);
+            this.panelControl1.Size = new System.Drawing.Size(731, 146);
             this.panelControl1.TabIndex = 0;
             // 
             // redditListMarquee
             // 
             this.redditListMarquee.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.redditListMarquee.EditValue = 0;
-            this.redditListMarquee.Location = new System.Drawing.Point(2, 100);
+            this.redditListMarquee.Location = new System.Drawing.Point(2, 124);
             this.redditListMarquee.Name = "redditListMarquee";
             this.redditListMarquee.Properties.ShowTitle = true;
             this.redditListMarquee.Size = new System.Drawing.Size(727, 20);
@@ -718,7 +751,7 @@
             this.btnRedditList.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
             this.btnRedditList.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("btnRedditList.ImageOptions.SvgImage")));
             this.btnRedditList.ImageOptions.SvgImageSize = new System.Drawing.Size(25, 25);
-            this.btnRedditList.Location = new System.Drawing.Point(551, 83);
+            this.btnRedditList.Location = new System.Drawing.Point(547, 85);
             this.btnRedditList.Name = "btnRedditList";
             this.btnRedditList.Size = new System.Drawing.Size(175, 32);
             this.btnRedditList.TabIndex = 4;
@@ -729,7 +762,7 @@
             // 
             this.labelControl1.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
             this.labelControl1.Appearance.Options.UseFont = true;
-            this.labelControl1.Location = new System.Drawing.Point(31, 57);
+            this.labelControl1.Location = new System.Drawing.Point(10, 57);
             this.labelControl1.Name = "labelControl1";
             this.labelControl1.Size = new System.Drawing.Size(93, 16);
             this.labelControl1.TabIndex = 2;
@@ -739,17 +772,17 @@
             // 
             this.txtRedditPost.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtRedditPost.Location = new System.Drawing.Point(130, 54);
+            this.txtRedditPost.Location = new System.Drawing.Point(109, 54);
             this.txtRedditPost.Name = "txtRedditPost";
             this.txtRedditPost.Properties.AutoHeight = false;
-            this.txtRedditPost.Size = new System.Drawing.Size(596, 25);
+            this.txtRedditPost.Size = new System.Drawing.Size(615, 25);
             this.txtRedditPost.TabIndex = 1;
             this.txtRedditPost.Click += new System.EventHandler(this.txtRedditPost_Click);
             // 
             // pictureEdit1
             // 
             this.pictureEdit1.EditValue = global::YT_RED.Properties.Resources.reddit;
-            this.pictureEdit1.Location = new System.Drawing.Point(7, 6);
+            this.pictureEdit1.Location = new System.Drawing.Point(3, 5);
             this.pictureEdit1.Name = "pictureEdit1";
             this.pictureEdit1.Properties.Appearance.BackColor = System.Drawing.Color.Transparent;
             this.pictureEdit1.Properties.Appearance.Options.UseBackColor = true;
@@ -915,12 +948,89 @@
             this.lblSelectionText.Size = new System.Drawing.Size(323, 20);
             this.lblSelectionText.TabIndex = 3;
             // 
+            // panelControl2
+            // 
+            this.panelControl2.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.panelControl2.Controls.Add(this.toggleYTSegment);
+            this.panelControl2.Controls.Add(this.labelControl3);
+            this.panelControl2.Controls.Add(this.labelControl4);
+            this.panelControl2.Controls.Add(this.tsYTStart);
+            this.panelControl2.Controls.Add(this.tsYTEnd);
+            this.panelControl2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelControl2.Location = new System.Drawing.Point(2, 20);
+            this.panelControl2.Margin = new System.Windows.Forms.Padding(0);
+            this.panelControl2.Name = "panelControl2";
+            this.panelControl2.Size = new System.Drawing.Size(319, 63);
+            this.panelControl2.TabIndex = 8;
+            // 
+            // panelControl4
+            // 
+            this.panelControl4.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.panelControl4.Controls.Add(this.btnListReset);
+            this.panelControl4.Controls.Add(this.pictureEdit2);
+            this.panelControl4.Controls.Add(this.txtYTUrl);
+            this.panelControl4.Controls.Add(this.btnYTListFormats);
+            this.panelControl4.Controls.Add(this.labelControl2);
+            this.panelControl4.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelControl4.Location = new System.Drawing.Point(2, 2);
+            this.panelControl4.Margin = new System.Windows.Forms.Padding(0);
+            this.panelControl4.Name = "panelControl4";
+            this.panelControl4.Size = new System.Drawing.Size(727, 121);
+            this.panelControl4.TabIndex = 6;
+            // 
+            // btnListReset
+            // 
+            this.btnListReset.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.btnListReset.Appearance.Options.UseFont = true;
+            this.btnListReset.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
+            this.btnListReset.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.LeftCenter;
+            this.btnListReset.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleLeft;
+            this.btnListReset.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("simpleButton1.ImageOptions.SvgImage")));
+            this.btnListReset.ImageOptions.SvgImageSize = new System.Drawing.Size(18, 18);
+            this.btnListReset.Location = new System.Drawing.Point(512, 82);
+            this.btnListReset.Name = "btnListReset";
+            this.btnListReset.Size = new System.Drawing.Size(31, 32);
+            this.btnListReset.TabIndex = 5;
+            this.btnListReset.ToolTip = "Clear and Reset";
+            this.btnListReset.Click += new System.EventHandler(this.btnListReset_Click);
+            // 
+            // panelControl5
+            // 
+            this.panelControl5.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.panelControl5.Controls.Add(this.btnRedditReset);
+            this.panelControl5.Controls.Add(this.pictureEdit1);
+            this.panelControl5.Controls.Add(this.txtRedditPost);
+            this.panelControl5.Controls.Add(this.btnRedditList);
+            this.panelControl5.Controls.Add(this.labelControl1);
+            this.panelControl5.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelControl5.Location = new System.Drawing.Point(2, 2);
+            this.panelControl5.Margin = new System.Windows.Forms.Padding(0);
+            this.panelControl5.Name = "panelControl5";
+            this.panelControl5.Size = new System.Drawing.Size(727, 122);
+            this.panelControl5.TabIndex = 6;
+            // 
+            // btnRedditReset
+            // 
+            this.btnRedditReset.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.btnRedditReset.Appearance.Options.UseFont = true;
+            this.btnRedditReset.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
+            this.btnRedditReset.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.LeftCenter;
+            this.btnRedditReset.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleLeft;
+            this.btnRedditReset.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("simpleButton1.ImageOptions.SvgImage1")));
+            this.btnRedditReset.ImageOptions.SvgImageSize = new System.Drawing.Size(18, 18);
+            this.btnRedditReset.Location = new System.Drawing.Point(510, 85);
+            this.btnRedditReset.Name = "btnRedditReset";
+            this.btnRedditReset.Size = new System.Drawing.Size(31, 32);
+            this.btnRedditReset.TabIndex = 6;
+            this.btnRedditReset.ToolTip = "Clear and Reset";
+            this.btnRedditReset.Click += new System.EventHandler(this.btnRedditReset_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1059, 728);
-            this.Controls.Add(this.ytTabContainer);
+            this.Controls.Add(this.tabFormContentContainer3);
             this.Controls.Add(this.tcMainTabControl);
             this.Name = "MainForm";
             this.TabFormControl = this.tcMainTabControl;
@@ -940,7 +1050,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.gvYouTube)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl3)).EndInit();
             this.panelControl3.ResumeLayout(false);
-            this.panelControl3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ytMarquee.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtYTUrl.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit2.Properties)).EndInit();
@@ -957,7 +1066,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.chkUsePrefs.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).EndInit();
             this.groupControl1.ResumeLayout(false);
-            this.groupControl1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.toggleYTSegment.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tsYTEnd.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tsYTStart.Properties)).EndInit();
@@ -974,7 +1082,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.gvReddit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).EndInit();
             this.panelControl1.ResumeLayout(false);
-            this.panelControl1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.redditListMarquee.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtRedditPost.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit1.Properties)).EndInit();
@@ -989,6 +1096,15 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbDownloadProgress.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl2)).EndInit();
             this.groupControl2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.panelControl2)).EndInit();
+            this.panelControl2.ResumeLayout(false);
+            this.panelControl2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.panelControl4)).EndInit();
+            this.panelControl4.ResumeLayout(false);
+            this.panelControl4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.panelControl5)).EndInit();
+            this.panelControl5.ResumeLayout(false);
+            this.panelControl5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1044,7 +1160,7 @@
         private DevExpress.XtraBars.BarButtonItem bbiSettings;
         private DevExpress.XtraBars.BarStaticItem bsiMessage;
         private DevExpress.XtraEditors.GroupControl gcYTDLButtons;
-        private DevExpress.XtraEditors.SimpleButton btnDownloadAudio;
+        private DevExpress.XtraEditors.SimpleButton btnYTDownloadAudio;
         private DevExpress.XtraEditors.CheckEdit chkUsePrefs;
         private DevExpress.XtraEditors.PanelControl pnlRedDLPanel;
         private DevExpress.XtraEditors.GroupControl groupControl2;
@@ -1052,6 +1168,12 @@
         private DevExpress.XtraEditors.SimpleButton btnYTListFormats;
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repCheckEdit;
         private DevExpress.Utils.ToolTipController toolTipController;
+        private DevExpress.XtraEditors.LabelControl lblSegmentDisclaimer;
+        private DevExpress.XtraEditors.PanelControl panelControl2;
+        private DevExpress.XtraEditors.PanelControl panelControl4;
+        private DevExpress.XtraEditors.SimpleButton btnListReset;
+        private DevExpress.XtraEditors.PanelControl panelControl5;
+        private DevExpress.XtraEditors.SimpleButton btnRedditReset;
     }
 }
 

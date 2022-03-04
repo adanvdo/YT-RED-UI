@@ -27,9 +27,9 @@ namespace YT_RED.Classes
         public string AudioSampleRate { get; set; }
 
         public IStream VideoStream { get; set; }
-        public IStream AudioStream { get; set; }
+        public IStream AudioStream { get; set; }        
 
-        public ResultStream(RedditStream stream)
+        public ResultStream(MediaStream stream)
         {
             Row = -1;
             StreamType = stream.StreamType;
@@ -66,7 +66,7 @@ namespace YT_RED.Classes
 
         }
 
-        public ResultStream(RedditStream video, RedditStream audio)
+        public ResultStream(MediaStream video, MediaStream audio)
         {
             Row = -1;
             VideoStream = video.DeliverStream;

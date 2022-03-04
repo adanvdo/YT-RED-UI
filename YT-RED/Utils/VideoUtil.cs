@@ -46,35 +46,129 @@ namespace YT_RED.Utils
 
         public static async Task<IConversion> PrepareDashConversion(string videoUrl)
         {
-            return await PrepareDashConversion(videoUrl, string.Empty);
+            return await PrepareStreamConversion(videoUrl, string.Empty);
         }
 
-        public static async Task<IConversion> PrepareDashConversion(string videoUrl, string audioUrl)
+        public static async Task<IConversion> PrepareYoutubeAudioConversion(string url, TimeSpan? start = null, TimeSpan? duration = null, bool usePreferences = false)
         {
-            string outputDir = AppSettings.Default.General.VideoDownloadPath;
-            string fileName = DateTime.Now.ToString("MMddyyyyhhmmss") + ".mp4";
-            string outputFile = Path.Combine(outputDir, fileName);
+            var getUrls = await GetFormatUrls(url, "best");
+            if (getUrls == null || getUrls.Count < 1)
+                return null;
 
-            IMediaInfo videoInfo = await FFmpeg.GetMediaInfo(videoUrl);
-            IStream v = videoInfo.VideoStreams.FirstOrDefault();
-
-            IStream a = null;
-            if (!string.IsNullOrEmpty(audioUrl))
+            var getUrl = getUrls[0];
+            List<Classes.FFmpegParam> parameters = new List<Classes.FFmpegParam>();
+            if (start != null)
             {
-                IMediaInfo audioInfo = await FFmpeg.GetMediaInfo(audioUrl);
-                a = audioInfo.AudioStreams.FirstOrDefault();
+                parameters.Add(new Classes.FFmpegParam(Classes.ParamType.StartTime, $"-ss {((TimeSpan)start)}"));
+            }
+            if (duration != null)
+            {
+                parameters.Add(new Classes.FFmpegParam(Classes.ParamType.Duration, $"-t {((TimeSpan)duration)}"));
             }
 
-            var convert = FFmpeg.Conversions.New();
-            if(a != null)
+            string ac = usePreferences ? AppSettings.Default.Advanced.PreferredYoutubeAudioFormat.ToFriendlyString(true) : "mp3";
+            parameters.Add(new Classes.FFmpegParam(Classes.ParamType.AudioOutFormat, $@" -acodec {ac}"));
+
+
+            return await PrepareStreamConversion("", getUrl, parameters.ToArray(), VideoFormat.UNSPECIFIED, usePreferences ? AppSettings.ConvertAudioConversionFormatToAudioFormat(AppSettings.Default.Advanced.PreferredYoutubeAudioFormat) : AudioFormat.MP3);
+        }
+
+        public static async Task<IConversion> PrepareYoutubeConversion(string url, FormatData formatData, TimeSpan? start = null, TimeSpan? duration = null, bool usePreferences = false)
+        {
+            var getUrls = await GetFormatUrls(url, formatData.FormatId);
+            if (getUrls == null || getUrls.Count < 1)
+                return null;
+
+            string videoUrl = string.Empty;
+            string audioUrl = string.Empty;
+            VideoFormat vf = AppSettings.VideoFormatFromExtension(formatData.Extension);
+            AudioFormat af = AppSettings.AudioFormatFromExtension(formatData.Extension);
+            if(usePreferences)
             {
-                convert.AddStream(v, a);
-            } else
-            {
-                convert.AddStream(v);
+                vf = AppSettings.ConvertMergeFormatToVideoFormat(AppSettings.Default.Advanced.PreferredYoutubeVideoFormat);
+                af = AppSettings.ConvertAudioConversionFormatToAudioFormat(AppSettings.Default.Advanced.PreferredYoutubeAudioFormat);
             }
-            convert.SetOutput(outputFile);
-            return convert;
+            
+            if(!string.IsNullOrEmpty(formatData.VideoCodec))
+            {
+                videoUrl = getUrls[0];
+                if (!string.IsNullOrEmpty(formatData.AudioCodec) && getUrls.Count > 1)
+                    audioUrl = getUrls[1];                
+            }
+            else if (!string.IsNullOrEmpty(formatData.AudioCodec))
+            {
+                audioUrl = getUrls[0];
+            }
+
+            List<Classes.FFmpegParam> parameters = new List<Classes.FFmpegParam>();
+            if(start != null)
+            {
+                parameters.Add(new Classes.FFmpegParam(Classes.ParamType.StartTime, $"-ss {((TimeSpan)start)}"));
+            }
+            if(duration != null)
+            {
+                parameters.Add(new Classes.FFmpegParam(Classes.ParamType.Duration, $"-t {((TimeSpan)duration)}"));
+            }
+            return await PrepareStreamConversion(videoUrl, audioUrl, parameters.ToArray(), vf, af);
+        }
+
+        public static async Task<IConversion> PrepareStreamConversion(string videoUrl = "", string audioUrl = "", Classes.FFmpegParam[] parameters = null, VideoFormat format = VideoFormat.MP4, AudioFormat aformat = AudioFormat.MP3)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(videoUrl) && string.IsNullOrEmpty(audioUrl))
+                    throw new ArgumentNullException("URL Invalid");
+                string outputDir = !string.IsNullOrEmpty(videoUrl) ? AppSettings.Default.General.VideoDownloadPath : AppSettings.Default.General.AudioDownloadPath;
+                string fileName = DateTime.Now.ToString("MMddyyyyhhmmss");
+                if (!string.IsNullOrEmpty(videoUrl)) fileName += $".{format}";
+                else if (!string.IsNullOrEmpty(audioUrl)) fileName += $".{aformat}";
+                string outputFile = Path.Combine(outputDir, fileName);
+
+                IMediaInfo mediaInfo = null;
+                IStream v = null;
+                if (!string.IsNullOrEmpty(videoUrl))
+                {
+                    mediaInfo = await FFmpeg.GetMediaInfo(videoUrl);
+                    v = mediaInfo.VideoStreams.FirstOrDefault();
+                }
+
+                IStream a = null;
+
+                if (!string.IsNullOrEmpty(audioUrl))
+                {
+                    IMediaInfo audioInfo = await FFmpeg.GetMediaInfo(audioUrl);
+                    a = audioInfo.AudioStreams.FirstOrDefault();
+                }
+                else if (mediaInfo != null && mediaInfo.AudioStreams.ToList().Count > 0)
+                {
+                    a = mediaInfo.AudioStreams.FirstOrDefault();
+                }
+
+                var convert = FFmpeg.Conversions.New();
+                if (v != null)
+                    convert.AddStream(v);
+                if (a != null)
+                    convert.AddStream(a);
+
+                if (parameters != null)
+                {
+                    foreach (var param in parameters)
+                    {
+                        if (param.Type == Classes.ParamType.StartTime)
+                            convert.AddParameter(param.Value, ParameterPosition.PreInput);
+                        else
+                            convert.AddParameter(param.Value, ParameterPosition.PostInput);
+                    }
+                }
+
+                convert.SetOutput(outputFile);
+                return convert;
+            }
+            catch(Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message);
+            }
+            return null;
         }
 
         public static IConversion PrepareConversion(Classes.ResultStream stream)
@@ -105,31 +199,31 @@ namespace YT_RED.Utils
             }
         }
 
-        public static async Task<List<Classes.ResultStream>> ConsolidateStreams(List<Classes.RedditStream> streams)
+        public static async Task<List<Classes.ResultStream>> ConsolidateStreams(List<Classes.MediaStream> streams)
         {
             return await Task.Run(() =>
             {
                 List<Classes.ResultStream> consolidated = new List<Classes.ResultStream>();
-                List<Classes.RedditStream> video = streams.Where(s => s.StreamType == Classes.StreamType.Video).ToList();
-                List<Classes.RedditStream> audio = streams.Where(s => s.StreamType == Classes.StreamType.Audio).ToList();
+                List<Classes.MediaStream> video = streams.Where(s => s.StreamType == Classes.StreamType.Video).ToList();
+                List<Classes.MediaStream> audio = streams.Where(s => s.StreamType == Classes.StreamType.Audio).ToList();
 
                 int row = 1;
-                foreach (Classes.RedditStream vs in video)
+                foreach (Classes.MediaStream vs in video)
                 {
                     consolidated.Add(new Classes.ResultStream(vs) { Row = row });
                     row++;
                 }
 
-                foreach (Classes.RedditStream s in audio)
+                foreach (Classes.MediaStream s in audio)
                 {
-                    foreach (Classes.RedditStream vs in video)
+                    foreach (Classes.MediaStream vs in video)
                     {
                         consolidated.Add(new Classes.ResultStream(vs, s) { Row = row });
                         row++;
                     }
                 }
 
-                foreach (Classes.RedditStream vs in audio)
+                foreach (Classes.MediaStream vs in audio)
                 {
                     consolidated.Add(new Classes.ResultStream(vs) { Row = row });
                     row++;
@@ -155,7 +249,61 @@ namespace YT_RED.Utils
             {
                 throw new Exception(String.Join("\n", res.ErrorOutput));
             }
-        }        
+        }
+
+        public static async Task<RunResult<string>> DownloadBestYTSegment(string url, Classes.StreamType streamType, TimeSpan start, TimeSpan duration)
+        {
+            try
+            {
+                string formatString = "";
+                switch (streamType)
+                {
+                    case Classes.StreamType.AudioAndVideo:
+                        formatString = "bestvideo+bestaudio";
+                        break;
+                    case Classes.StreamType.Video:
+                        formatString = "bestvideo";
+                        break;
+                    case Classes.StreamType.Audio:
+                        formatString = "bestaudio";
+                        break;
+                    default:
+                        formatString = "bestvideo+bestaudio";
+                        break;
+                }
+
+               
+                return null;
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message);
+            }
+            return null;
+        }
+
+        public static async Task<List<string>> GetFormatUrls(string url, string format)
+        {
+            var options = new YoutubeDLSharp.Options.OptionSet()
+            {
+                GetUrl = true,
+                Format = format
+            };
+            try
+            {
+                var result = await ytdl.RunWithOptions(new[] { url }, options, default);
+                if (result != null && result.Data.Length > 0)
+                {
+                    return result.Data.ToList();
+                }
+                return new List<string>();
+            }
+            catch(Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message, "Error");
+            }
+            return null;
+        }
 
         public static async Task<RunResult<string>> DownloadBestYT(string url, Classes.StreamType streamType)
         {

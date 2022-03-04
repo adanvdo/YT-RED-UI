@@ -9,7 +9,7 @@ using Xabe.FFmpeg;
 
 namespace YT_RED.Classes
 {
-    public class RedditStream
+    public class MediaStream
     {
         [JsonProperty("StreamType")]
         public StreamType StreamType { get; set; }
@@ -37,7 +37,7 @@ namespace YT_RED.Classes
         
         public IStream DeliverStream { get; set; }
 
-        public RedditStream()
+        public MediaStream()
         {
         }
     }
