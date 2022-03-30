@@ -31,6 +31,13 @@ namespace YT_RED.Settings
 		[JsonProperty("history_age")]
 		public int HistoryAge { get; set; }
 
+		[Category("Preferences")]
+		[DisplayName("Auto-Open Download Location")]
+		[Description("Automatically Open Completed Downloads in File Explorer")]
+		[DefaultValue(false)]
+		[JsonProperty("auto_open")]
+		public bool AutomaticallyOpenDownloadLocation { get; set; }
+
 		[Category("Downloads")]
 		[DisplayName("Video Download Path")]
 		[Description("The destination folder for downloaded video files")]
@@ -44,6 +51,10 @@ namespace YT_RED.Settings
 		[EditorAttribute(typeof(System.Windows.Forms.Design.FolderNameEditor), typeof(System.Drawing.Design.UITypeEditor))]
 		[JsonProperty("audio_dl_path")]
 		public string AudioDownloadPath { get; set; }
+
+		[Browsable(false)]
+		[JsonProperty("use_preferred_format")]
+		public bool UsePreferredFormat { get; set; }
 
 		#region reddit
 		[Browsable(false)]
@@ -74,6 +85,7 @@ namespace YT_RED.Settings
 			ActiveSkin = "DevExpress Dark Style";
 			EnableDownloadHistory = true;
 			HistoryAge = 30;
+			AutomaticallyOpenDownloadLocation = false;
 			RedditSampleUrl = @"https://www.reddit.com/r/PraiseTheCameraMan/comments/sj7iwr/couldnt_be_more_perfect/";
 			RedditMediaURLPrefix = @"https://v.redd.it/";
 			RedditDefaultVideoSuffix = @"/DASH_{0}.mp4?source=fallback";
@@ -81,6 +93,7 @@ namespace YT_RED.Settings
 			YouTubeSampleUrl = @"https://www.youtube.com/watch?v=dCAORZphnlY";
 			VideoDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
 			AudioDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+			UsePreferredFormat = false;
 		}
 
 		public override async Task<string> ValidateSettings()

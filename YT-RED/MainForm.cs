@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 using YT_RED.Controls;
 using YT_RED.Classes;
@@ -11,6 +12,7 @@ using YoutubeDLSharp;
 using Newtonsoft.Json;
 using System.Linq;
 using System.Threading.Tasks;
+using DevExpress.Skins;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
@@ -21,6 +23,7 @@ namespace YT_RED
     public partial class MainForm : DevExpress.XtraBars.TabForm
     {
         private UIBlockDetector _blockDetector;
+        private Timer historyTimer;
         public bool IsLocked { 
             get 
             { 
@@ -45,9 +48,23 @@ namespace YT_RED
         public MainForm()
         {
             InitializeComponent();
+            this.historyTimer = new Timer();
+            this.historyTimer.Interval = 10000;
+            this.historyTimer.Tick += HistoryTimer_Tick;
+            if (AppSettings.Default.General.EnableDownloadHistory)
+                this.historyTimer.Start();
             Historian.Init();
             Init();
             _blockDetector = new UIBlockDetector(); 
+        }
+
+        private void HistoryTimer_Tick(object sender, EventArgs e)
+        {
+            if (AppSettings.Default.General.EnableDownloadHistory)
+            {
+                refreshRedditHistory();
+                refreshYoutubeHistory();
+            }
         }
 
         protected override void OnLoad(EventArgs e)
@@ -57,6 +74,7 @@ namespace YT_RED
                 txtYTUrl.Text = AppSettings.Default.General.YouTubeSampleUrl;
                 txtRedditPost.Text = AppSettings.Default.General.RedditSampleUrl;
             }
+            chkUsePrefs.Checked = AppSettings.Default.General.UsePreferredFormat;
             base.OnLoad(e);
         }
 
@@ -163,7 +181,22 @@ namespace YT_RED
                 this.UseWaitCursor = true;
                 this.currentDownload = DownloadType.Reddit;
                 (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = true;
-                IConversion conversion = Utils.VideoUtil.PrepareConversion(selectedStream);
+                List<Classes.FFmpegParam> parameters = null;
+                if (toggleRedSegment.IsOn)
+                {
+                    parameters = new List<Classes.FFmpegParam>();
+                    TimeSpan start = tsRedStart.TimeSpan;
+                    TimeSpan duration = tsRedDuration.TimeSpan;
+                    if(start != null)
+                    {
+                        parameters.Add(new Classes.FFmpegParam(Classes.ParamType.StartTime, $"-ss {((TimeSpan)start)}"));
+                    }
+                    if(duration != null)
+                    {
+                        parameters.Add(new Classes.FFmpegParam(Classes.ParamType.Duration, $"-t {((TimeSpan)duration)}"));
+                    }
+                }
+                IConversion conversion = Utils.VideoUtil.PrepareConversion(selectedStream, parameters == null ? null : parameters.ToArray());
                 string destination = conversion.OutputFilePath;
                 conversion.OnProgress += Conversion_OnProgress;
                 this.pbDownloadProgress.Visible = true;
@@ -189,6 +222,12 @@ namespace YT_RED
                 this.currentDownload = DownloadType.Unknown;
                 this.btnRedDL.Text = destination;
                 this.btnRedDL.Visible = true;
+                if (AppSettings.Default.General.AutomaticallyOpenDownloadLocation)
+                {
+                    string argument = "/select, \"" + btnRedDL.Text + "\"";
+
+                    System.Diagnostics.Process.Start("explorer.exe", argument);
+                }
             }
         }
 
@@ -274,6 +313,12 @@ namespace YT_RED
                                 this.pbDownloadProgress.Position = 0;
                                 this.btnRedDL.Text = destination;
                                 this.btnRedDL.Visible = true;
+                                if (AppSettings.Default.General.AutomaticallyOpenDownloadLocation)
+                                {
+                                    string argument = "/select, \"" + btnRedDL.Text + "\"";
+
+                                    System.Diagnostics.Process.Start("explorer.exe", argument);
+                                }
                             }
                         }
                     }
@@ -381,6 +426,7 @@ namespace YT_RED
                 btnDownloadReddit.Visible = false;
                 btnRedditDefault.Visible = true;
             }
+            updateRedditSegmentState();
         }
       
 
@@ -463,16 +509,34 @@ namespace YT_RED
             }
         }
 
+        private void toggleRedSegment_Toggled(object sender, EventArgs e)
+        {
+            updateRedditSegmentState();
+        }
+
+        private void updateRedditSegmentState()
+        {
+            tsRedStart.Enabled = toggleRedSegment.IsOn;
+            tsRedDuration.Enabled = toggleRedSegment.IsOn;
+            lblRedSegDisclaimer.Visible = toggleRedSegment.IsOn && (gvReddit.RowCount < 1 || selectedStream == null);
+            btnRedditList.Invalidate();
+            btnRedditDefault.Enabled = !toggleRedSegment.IsOn;
+        }
+
         #endregion
 
         #region YOUTUBE
         private void toggleYTSegment_Toggled(object sender, EventArgs e)
         {
+            updateYTSegmentState();
+        }
+
+        private void updateYTSegmentState()
+        {
             tsYTStart.Enabled = toggleYTSegment.IsOn;
             tsYTEnd.Enabled = toggleYTSegment.IsOn;
-            lblSegmentDisclaimer.Visible = toggleYTSegment.IsOn;
-
-            // disable best download until implemented
+            lblSegmentDisclaimer.Visible = toggleYTSegment.IsOn && (gvYouTube.RowCount < 1 || selectedFormat == null);
+            btnYTListFormats.Invalidate();
             btnYTDownloadBest.Enabled = !toggleYTSegment.IsOn;
         }
 
@@ -559,10 +623,10 @@ namespace YT_RED
             gvYTHistory.Columns["FileName"].Visible = false;
             gvYTHistory.Columns["TimeLogged"].Visible = false;
             gvYTHistory.Columns["Type"].Visible = false;
-            gvYTHistory.Columns["Downloaded"].Visible = false;            
+            gvYTHistory.Columns["Downloaded"].Visible = false;
             gvYTHistory.RefreshData();
+            selectedYTLog = gvYTHistory.GetRow(0) as DownloadLog;
         }
-
 
         private void gvYouTube_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e)
         {
@@ -579,6 +643,7 @@ namespace YT_RED
                 lblYTSelectionText.Text = fd.Format;
                 selectedFormat = fd;
             }
+            updateYTSegmentState();
         }
 
         private void showYTProgress(DownloadProgress progress)
@@ -662,12 +727,18 @@ namespace YT_RED
                     t, DateTime.Now,
                     result.Data
                     ));
+                btnYTOpenDL.Text = result.Data;
+                btnYTOpenDL.Visible = true;
+                if (AppSettings.Default.General.AutomaticallyOpenDownloadLocation)
+                {
+                    string argument = "/select, \"" + btnYTOpenDL.Text + "\"";
+
+                    System.Diagnostics.Process.Start("explorer.exe", argument);
+                }
             }
-            gcYTHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.YouTube).ToList();
-            refreshYoutubeHistory();
-            lblYTSelectionText.Text = String.Empty;
-            btnYTOpenDL.Text = result.Data;
-            btnYTOpenDL.Visible = true;
+            gcYTHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.YouTube).ToList();            
+            refreshYoutubeHistory(); 
+            lblYTSelectionText.Text = String.Empty;    
             btnYTDownloadAudio.Enabled = true;
             btnYTDownloadBest.Enabled = true;
             this.UseWaitCursor = false;
@@ -726,6 +797,7 @@ namespace YT_RED
                             MessageBox.Show("Download Failed");
                         }
                     }
+
                     if (result.Success)
                     {
                         await Historian.RecordDownload(new DownloadLog(
@@ -734,13 +806,19 @@ namespace YT_RED
                             YT_RED.Classes.StreamType.Audio, DateTime.Now,
                             result.Data
                             ));
+                        btnYTOpenDL.Text = result.Data;
+                        btnYTOpenDL.Visible = true;
+                        if (AppSettings.Default.General.AutomaticallyOpenDownloadLocation)
+                        {
+                            string argument = "/select, \"" + btnYTOpenDL.Text + "\"";
+
+                            System.Diagnostics.Process.Start("explorer.exe", argument);
+                        }
                     }
                     ytMarquee.Hide();
                     ytMarquee.Text = "";
                     gcYTHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.YouTube).ToList();
                     refreshYoutubeHistory();
-                    btnYTOpenDL.Text = result.Data;
-                    btnYTOpenDL.Visible = true;
                     this.UseWaitCursor = false;
                     this.currentDownload = DownloadType.Unknown;
                     (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = false;
@@ -815,8 +893,14 @@ namespace YT_RED
                 Classes.StreamType.AudioAndVideo,
                 DateTime.Now,
                 result.Data));
+            if (AppSettings.Default.General.AutomaticallyOpenDownloadLocation)
+            {
+                string argument = "/select, \"" + btnYTOpenDL.Text + "\"";
+
+                System.Diagnostics.Process.Start("explorer.exe", argument);
+            }
             gcYTHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.YouTube).ToList();
-            refreshYoutubeHistory();
+            refreshYoutubeHistory(); 
             btnYTOpenDL.Text = result.Data;
             btnYTOpenDL.Visible = true;
             this.UseWaitCursor = false;
@@ -931,12 +1015,44 @@ namespace YT_RED
         {
             this.gcYoutube.DataSource = null;
             this.gvYouTube.RefreshData();
+            updateYTSegmentState();
         }
 
         private void btnRedditReset_Click(object sender, EventArgs e)
         {
             this.gcReddit.DataSource = null;
             this.gvReddit.RefreshData();
+            updateRedditSegmentState();
+        }
+
+        private void chkUsePrefs_CheckedChanged(object sender, EventArgs e)
+        {
+            AppSettings.Default.General.UsePreferredFormat = chkUsePrefs.Checked;
+            AppSettings.Default.Save();
+        }
+
+        private void btnRedditList_Paint(object sender, PaintEventArgs e)
+        {
+            if (toggleRedSegment.IsOn && (gvReddit.RowCount < 1 || selectedStream == null))
+            {
+                e.Graphics.DrawRectangle(new Pen(Color.Red), new Rectangle(0, 0, btnRedditList.Width - 1, btnRedditList.Height - 1));
+            }
+            else
+            {
+                base.OnPaint(e);
+            }
+        }
+
+        private void btnYTListFormats_Paint(object sender, PaintEventArgs e)
+        {
+            if(toggleYTSegment.IsOn && (gvYouTube.RowCount < 1 || selectedFormat == null))
+            {
+                e.Graphics.DrawRectangle(new Pen(Color.Red), new Rectangle(0, 0, btnYTListFormats.Width - 1, btnYTListFormats.Height - 1));
+            }
+            else
+            {
+                base.OnPaint(e);
+            }
         }
     }
 }

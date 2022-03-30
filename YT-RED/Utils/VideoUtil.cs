@@ -171,7 +171,7 @@ namespace YT_RED.Utils
             return null;
         }
 
-        public static IConversion PrepareConversion(Classes.ResultStream stream)
+        public static IConversion PrepareConversion(Classes.ResultStream stream, Classes.FFmpegParam[] parameters = null)
         {
             string outputDir = stream.StreamType == Classes.StreamType.Audio ? AppSettings.Default.General.AudioDownloadPath : AppSettings.Default.General.VideoDownloadPath;
             string fileName = DateTime.Now.ToString("MMddyyyyhhmmss")+ (stream.StreamType == Classes.StreamType.Audio ? ".m4a" : ".mp4");
@@ -180,8 +180,18 @@ namespace YT_RED.Utils
             if(stream.StreamType == Classes.StreamType.AudioAndVideo)
             {
                 var convert = FFmpeg.Conversions.New()
-                    .AddStream(stream.AudioStream, stream.VideoStream)
-                    .SetOutput(outputFile);
+                    .AddStream(stream.AudioStream, stream.VideoStream);
+                if(parameters != null)
+                {
+                    foreach(var p in parameters)
+                    {
+                        if (p.Type == Classes.ParamType.StartTime)
+                            convert.AddParameter(p.Value, ParameterPosition.PreInput);
+                        else
+                            convert.AddParameter(p.Value, ParameterPosition.PostInput);
+                    }
+                }
+                convert.SetOutput(outputFile);
                 return convert;
             }
             else if (stream.StreamType == Classes.StreamType.Video)
@@ -309,11 +319,14 @@ namespace YT_RED.Utils
         {
             try
             {
-                if(streamType == Classes.StreamType.AudioAndVideo)
-                    return await ytdl.RunVideoDownload(url, "bestvideo+bestaudio", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress);
+                ytdl.OutputFolder = streamType == Classes.StreamType.Audio ? AppSettings.Default.General.AudioDownloadPath : AppSettings.Default.General.VideoDownloadPath;
+                var options = YoutubeDLSharp.Options.OptionSet.Default;
+                options.RestrictFilenames = true;
+                if (streamType == Classes.StreamType.AudioAndVideo)
+                    return await ytdl.RunVideoDownload(url, "bestvideo+bestaudio", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress, null, options);
                 if (streamType == Classes.StreamType.Video)
-                    return await ytdl.RunVideoDownload(url, "bestvideo", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress);
-                return await ytdl.RunVideoDownload(url, "bestaudio", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress);
+                    return await ytdl.RunVideoDownload(url, "bestvideo", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress, null, options);
+                return await ytdl.RunVideoDownload(url, "bestaudio", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress, null, options);
             }
             catch(Exception ex)
             {
@@ -326,10 +339,13 @@ namespace YT_RED.Utils
         {
             try
             {
+                ytdl.OutputFolder = streamType == Classes.StreamType.Audio ? AppSettings.Default.General.AudioDownloadPath : AppSettings.Default.General.VideoDownloadPath;
+                var options = YoutubeDLSharp.Options.OptionSet.Default;
+                options.RestrictFilenames = true;
                 if (streamType == Classes.StreamType.AudioAndVideo)
-                    return await ytdl.RunVideoDownload(url, "bestvideo+bestaudio", AppSettings.Default.Advanced.PreferredYoutubeVideoFormat, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress);
+                    return await ytdl.RunVideoDownload(url, "bestvideo+bestaudio", AppSettings.Default.Advanced.PreferredYoutubeVideoFormat, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress, null, options);
                 else if (streamType == Classes.StreamType.Video)
-                    return await ytdl.RunVideoDownload(url, "bestvideo", AppSettings.Default.Advanced.PreferredYoutubeVideoFormat, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress);
+                    return await ytdl.RunVideoDownload(url, "bestvideo", AppSettings.Default.Advanced.PreferredYoutubeVideoFormat, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress, null, options);
                 else
                     return await DownloadAudioYT(url, AppSettings.Default.Advanced.PreferredYoutubeAudioFormat);
             }
@@ -344,7 +360,10 @@ namespace YT_RED.Utils
         {
             try
             {
-                return await ytdl.RunAudioDownload(url, audioFormat, default, ytProgress);
+                ytdl.OutputFolder = AppSettings.Default.General.AudioDownloadPath;
+                var options = YoutubeDLSharp.Options.OptionSet.Default;
+                options.RestrictFilenames = true;
+                return await ytdl.RunAudioDownload(url, audioFormat, default, ytProgress, null, options);
             }
             catch (Exception ex)
             {
@@ -363,6 +382,10 @@ namespace YT_RED.Utils
             {
                 throw new ArgumentNullException("FormatData is null");
             }
+            if (formatData.VideoCodec == "none")
+            {
+                return await DownloadAudioYT(videoUrl, AppSettings.Default.Advanced.PreferredYoutubeAudioFormat);
+            }
             return await downloadYTVideo(videoUrl, formatData.FormatId);
         }
 
@@ -370,7 +393,10 @@ namespace YT_RED.Utils
         {
             try
             {
-                return await ytdl.RunVideoDownload(url, format, YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress);
+                ytdl.OutputFolder = AppSettings.Default.General.VideoDownloadPath;
+                var options = YoutubeDLSharp.Options.OptionSet.Default;
+                options.RestrictFilenames = true;
+                return await ytdl.RunVideoDownload(url, format, YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress, null, options);
             }
             catch(Exception ex)
             {
@@ -381,10 +407,25 @@ namespace YT_RED.Utils
 
         public static string YouTubeString(string linkOrID)
         {
+            if (!linkOrID.StartsWith(@"https://youtu.be") && !linkOrID.StartsWith(@"https://www.youtube.com/watch?v=") && !linkOrID.StartsWith(@"https://www.youtube.com/shorts/"))
+                throw new ArgumentException("Invalid Link or ID");
             if (linkOrID.Length == 11)
                 linkOrID = @"https://www.youtube.com/watch?v=" + linkOrID;
-            else if (!linkOrID.StartsWith(@"https://youtu.be") && !linkOrID.StartsWith(@"https://www.youtube.com/watch?v="))
-                throw new ArgumentException("Invalid Link or ID");
+            else if (linkOrID.Contains("/shorts/"))
+            {
+                string id = linkOrID.Substring(linkOrID.IndexOf("/shorts/") + 8, 11);
+                linkOrID = $"https://www.youtube.com/watch?v={id}";
+            }
+            else if (linkOrID.StartsWith(@"https://youtu.be/"))
+            {
+                string id = linkOrID.Substring(17, 11);
+                linkOrID = $"https://www.youtube.com/watch?v={id}";
+            }
+            else if(linkOrID.StartsWith(@"https://www.youtube.com/"))
+            {
+                string id = linkOrID.Substring(linkOrID.IndexOf("v=") + 2, 11);
+                linkOrID = $"https://www.youtube.com/watch?v={id}";
+            }
 
             return linkOrID;
         }
