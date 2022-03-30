@@ -18,9 +18,13 @@ This project is UNLICENSED and uses licensed DevExpress WinForms Controls.
 - File Format Preference for Downloads
 - Segment Downloads for YT and Reddit
 
-![yt-red](https://user-images.githubusercontent.com/26498008/152799675-edbe4a26-9e58-4c67-8e75-61456651fd29.jpg)
 
-![2022-02-07_8-52-44](https://user-images.githubusercontent.com/26498008/152800932-e1c7bf6a-ea63-495f-b87d-6faf094df6e6.jpg)
+![image](https://user-images.githubusercontent.com/26498008/160806413-9cf735e9-ef8f-4492-af48-92b226cb210b.png)
+
+![image](https://user-images.githubusercontent.com/26498008/160806436-2c31ab5e-4c51-406f-be0e-346dc7218569.png)
+
+![image](https://user-images.githubusercontent.com/26498008/160806455-8a14d646-e87c-4515-9de4-80ecc8baf2d9.png)
+
 
 ## CHANGELOG
 
