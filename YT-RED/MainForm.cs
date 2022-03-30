@@ -44,8 +44,25 @@ namespace YT_RED
         private CustomTabFormPage redditPage = null;
         private DownloadType currentDownload = DownloadType.Unknown;
         private bool downloadingSegment = false;
+        private InitialFunction initialFunction = InitialFunction.None;
+        private string initialLink = string.Empty;
+        private MediaSource initialSource = MediaSource.None;
+
 
         public MainForm()
+        {
+            InitializeComponent(); 
+            this.historyTimer = new Timer();
+            this.historyTimer.Interval = 10000;
+            this.historyTimer.Tick += HistoryTimer_Tick;
+            if (AppSettings.Default.General.EnableDownloadHistory)
+                this.historyTimer.Start();
+            Historian.Init();
+            Init();
+            _blockDetector = new UIBlockDetector();
+        }
+
+        public MainForm(InitialFunction initialFunction, string initialLink, Classes.MediaSource mediaSource)
         {
             InitializeComponent();
             this.historyTimer = new Timer();
@@ -55,7 +72,10 @@ namespace YT_RED
                 this.historyTimer.Start();
             Historian.Init();
             Init();
-            _blockDetector = new UIBlockDetector(); 
+            _blockDetector = new UIBlockDetector();
+            this.initialFunction = initialFunction;
+            this.initialLink = initialLink;
+            initialSource = mediaSource;
         }
 
         private void HistoryTimer_Tick(object sender, EventArgs e)
@@ -102,7 +122,26 @@ namespace YT_RED
             }
             VideoUtil.Init();
             VideoUtil.ytProgress = new Progress<DownloadProgress>(showYTProgress);
-            tcMainTabControl.SelectedPage = tfpYouTube;
+            if (this.initialSource == MediaSource.YouTube)
+            {
+                tcMainTabControl.SelectedPage = tfpYouTube;
+                txtYTUrl.Text = this.initialLink;
+                if (initialFunction == InitialFunction.ListFormats)
+                    doYTFormatList();
+                else if (initialFunction == InitialFunction.DownloadBest)
+                    doYTBest();
+            }
+            else if (this.initialSource == MediaSource.Reddit)
+            {
+                tcMainTabControl.SelectedPage = tfpReddit;
+                txtRedditPost.Text = this.initialLink;
+                if (initialFunction == InitialFunction.ListFormats)
+                    doRedditList();
+                else if (initialFunction == InitialFunction.DownloadBest)
+                    doRedBest();
+            }
+            else 
+                tcMainTabControl.SelectedPage = tfpYouTube;
         }
 
         #region Validation
@@ -120,6 +159,11 @@ namespace YT_RED
 
         #region Reddit
         private void btnRedditDefault_Click(object sender, EventArgs e)
+        {
+            doRedBest();
+        }
+
+        private void doRedBest()
         {
             if (!string.IsNullOrEmpty(txtRedditPost.Text))
             {
@@ -142,6 +186,11 @@ namespace YT_RED
 
         private void btnRedditList_Click(object sender, EventArgs e)
         {
+            doRedditList();
+        }
+
+        private void doRedditList()
+        {
             if (!string.IsNullOrEmpty(txtRedditPost.Text))
             {
                 if (checkUrl(txtRedditPost.Text) == DownloadType.Reddit)
@@ -149,7 +198,7 @@ namespace YT_RED
                     listRedditFormats(txtRedditPost.Text);
                     return;
                 }
-                else if(checkUrl(txtRedditPost.Text) == DownloadType.YouTube)
+                else if (checkUrl(txtRedditPost.Text) == DownloadType.YouTube)
                 {
                     txtYTUrl.Text = txtRedditPost.Text;
                     tcMainTabControl.SelectedPage = tfpYouTube;
@@ -542,11 +591,16 @@ namespace YT_RED
 
         private void btnYTListFormats_Click(object sender, EventArgs e)
         {
-            if(!string.IsNullOrEmpty(txtYTUrl.Text))
+            doYTFormatList();     
+        }
+
+        private void doYTFormatList()
+        {
+            if (!string.IsNullOrEmpty(txtYTUrl.Text))
             {
-                if(checkUrl(txtYTUrl.Text) == DownloadType.YouTube)
+                if (checkUrl(txtYTUrl.Text) == DownloadType.YouTube)
                     getYTFormats(VideoUtil.YouTubeString(txtYTUrl.Text));
-                else if(checkUrl(txtYTUrl.Text) == DownloadType.Reddit)
+                else if (checkUrl(txtYTUrl.Text) == DownloadType.Reddit)
                 {
                     txtRedditPost.Text = txtYTUrl.Text;
                     tcMainTabControl.SelectedPage = tfpReddit;
@@ -557,7 +611,7 @@ namespace YT_RED
                     MessageBox.Show("The url provided is not a valid Youtube or Reddit url", "Unsupported URL", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
-            }            
+            }
         }
 
         private async void getYTFormats(string url)
@@ -831,6 +885,11 @@ namespace YT_RED
 
         private void btnYTDownloadBest_Click(object sender, EventArgs e)
         {
+            doYTBest();
+        }
+
+        private void doYTBest()
+        {
             if (!string.IsNullOrEmpty(txtYTUrl.Text))
             {
                 if (checkUrl(txtYTUrl.Text) == DownloadType.YouTube)
@@ -838,7 +897,7 @@ namespace YT_RED
                     ytDownloadBest(txtYTUrl.Text);
                     return;
                 }
-                else if(checkUrl(txtYTUrl.Text) == DownloadType.Reddit)
+                else if (checkUrl(txtYTUrl.Text) == DownloadType.Reddit)
                 {
                     txtRedditPost.Text = txtYTUrl.Text;
                     tcMainTabControl.SelectedPage = tfpReddit;

@@ -182,6 +182,7 @@
     <Compile Include="Settings\FeatureSettings.cs" />
     <Compile Include="Settings\GeneralSettings.cs" />
     <Compile Include="Utils\HtmlUtil.cs" />
+    <Compile Include="Utils\StringUtil.cs" />
     <Compile Include="Utils\VideoUtil.cs" />
     <EmbeddedResource Include="Controls\PropertyGrid.resx">
       <DependentUpon>PropertyGrid.cs</DependentUpon>
