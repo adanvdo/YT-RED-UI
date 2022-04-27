@@ -14,6 +14,10 @@ namespace YT_RED.Settings
 		public override AppFeature Feature => AppFeature.General;
 
 		[Browsable(false)]
+		[JsonIgnore]
+		public string ExePath { get; set; }
+
+		[Browsable(false)]
 		[JsonProperty("active_skin")]
 		public string ActiveSkin { get; set; }
 

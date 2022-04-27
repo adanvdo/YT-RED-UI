@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Xabe.FFmpeg;
 using YT_RED.Utils;
+using URIScheme;
 
 namespace YT_RED
 {
@@ -32,9 +33,11 @@ namespace YT_RED
         [STAThread]
         static void Main(string[] args)
         {
-            x64 = IntPtr.Size == 8;
+            x64 = IntPtr.Size == 8;           
+
             if(args.Length > 0)
             {
+                System.Windows.Forms.MessageBox.Show(String.Join(" ", args));
                 try
                 {
                     foreach (string s in args)

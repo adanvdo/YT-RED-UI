@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -11,13 +12,16 @@ namespace YT_RED.Settings
 {
 	public class AppSettings
 	{
-		private const string SettingsFile = "settings.json";
+		private static string SettingsFile = "settings.json";
 
 		private static AppSettings _default;
 		public static AppSettings Default
 		{
 			get
 			{
+				FileInfo exeinfo = new FileInfo(Assembly.GetEntryAssembly().Location);
+				SettingsFile = Path.Combine(exeinfo.DirectoryName, "settings.json");
+
 				if (_default == null)
 				{
 					if (File.Exists(SettingsFile))

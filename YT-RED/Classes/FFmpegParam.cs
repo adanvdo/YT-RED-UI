@@ -25,6 +25,7 @@ namespace YT_RED.Classes
         EndTime = 2,
         Size = 3,
         VideoOutFormat = 4,
-        AudioOutFormat = 5
+        AudioOutFormat = 5,
+        Crop = 6
     }
 }

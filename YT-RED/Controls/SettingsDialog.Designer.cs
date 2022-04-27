@@ -29,10 +29,11 @@
         private void InitializeComponent()
         {
             this.panelControl1 = new DevExpress.XtraEditors.PanelControl();
+            this.btnClearHistory = new DevExpress.XtraEditors.SimpleButton();
             this.btnSave = new DevExpress.XtraEditors.SimpleButton();
             this.btnCancel = new DevExpress.XtraEditors.SimpleButton();
             this.tcSettingsTabControl = new DevExpress.XtraTab.XtraTabControl();
-            this.btnClearHistory = new DevExpress.XtraEditors.SimpleButton();
+            this.btnDeleteDownloads = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).BeginInit();
             this.panelControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tcSettingsTabControl)).BeginInit();
@@ -40,6 +41,7 @@
             // 
             // panelControl1
             // 
+            this.panelControl1.Controls.Add(this.btnDeleteDownloads);
             this.panelControl1.Controls.Add(this.btnClearHistory);
             this.panelControl1.Controls.Add(this.btnSave);
             this.panelControl1.Controls.Add(this.btnCancel);
@@ -49,6 +51,16 @@
             this.panelControl1.Name = "panelControl1";
             this.panelControl1.Size = new System.Drawing.Size(509, 30);
             this.panelControl1.TabIndex = 2;
+            // 
+            // btnClearHistory
+            // 
+            this.btnClearHistory.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnClearHistory.Location = new System.Drawing.Point(282, 2);
+            this.btnClearHistory.Name = "btnClearHistory";
+            this.btnClearHistory.Size = new System.Drawing.Size(75, 26);
+            this.btnClearHistory.TabIndex = 2;
+            this.btnClearHistory.Text = "Clear History";
+            this.btnClearHistory.Click += new System.EventHandler(this.btnClearHistory_Click);
             // 
             // btnSave
             // 
@@ -79,15 +91,16 @@
             this.tcSettingsTabControl.Size = new System.Drawing.Size(509, 391);
             this.tcSettingsTabControl.TabIndex = 3;
             // 
-            // btnClearHistory
+            // btnDeleteDownloads
             // 
-            this.btnClearHistory.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnClearHistory.Location = new System.Drawing.Point(282, 2);
-            this.btnClearHistory.Name = "btnClearHistory";
-            this.btnClearHistory.Size = new System.Drawing.Size(75, 26);
-            this.btnClearHistory.TabIndex = 2;
-            this.btnClearHistory.Text = "Clear History";
-            this.btnClearHistory.Click += new System.EventHandler(this.btnClearHistory_Click);
+            this.btnDeleteDownloads.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnDeleteDownloads.Location = new System.Drawing.Point(171, 2);
+            this.btnDeleteDownloads.Name = "btnDeleteDownloads";
+            this.btnDeleteDownloads.Size = new System.Drawing.Size(111, 26);
+            this.btnDeleteDownloads.TabIndex = 3;
+            this.btnDeleteDownloads.Text = "Delete Downloads";
+            this.btnDeleteDownloads.ToolTip = "Delete All Downloaded Files That Still Exist";
+            this.btnDeleteDownloads.Click += new System.EventHandler(this.btnDeleteDownloads_Click);
             // 
             // SettingsDialog
             // 
@@ -117,5 +130,6 @@
         private DevExpress.XtraEditors.SimpleButton btnCancel;
         private DevExpress.XtraTab.XtraTabControl tcSettingsTabControl;
         private DevExpress.XtraEditors.SimpleButton btnClearHistory;
+        private DevExpress.XtraEditors.SimpleButton btnDeleteDownloads;
     }
 }

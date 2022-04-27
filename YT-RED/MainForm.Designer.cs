@@ -30,6 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions4 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
+            DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions5 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
+            DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions1 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
+            DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions2 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             this.tcMainTabControl = new DevExpress.XtraBars.TabFormControl();
             this.bbiSettings = new DevExpress.XtraBars.BarButtonItem();
             this.bsiMessage = new DevExpress.XtraBars.BarStaticItem();
@@ -60,9 +64,21 @@
             this.btnYTDownloadAudio = new DevExpress.XtraEditors.SimpleButton();
             this.chkUsePrefs = new DevExpress.XtraEditors.CheckEdit();
             this.btnYTSelectionDL = new DevExpress.XtraEditors.SimpleButton();
-            this.groupControl1 = new DevExpress.XtraEditors.GroupControl();
-            this.lblSegmentDisclaimer = new DevExpress.XtraEditors.LabelControl();
+            this.gcYTCrop = new DevExpress.XtraEditors.GroupControl();
+            this.pnlYTCropPanel = new DevExpress.XtraEditors.PanelControl();
             this.panelControl2 = new DevExpress.XtraEditors.PanelControl();
+            this.toggleYTCrop = new DevExpress.XtraEditors.ToggleSwitch();
+            this.labelControl10 = new DevExpress.XtraEditors.LabelControl();
+            this.teYTCropTop = new DevExpress.XtraEditors.TextEdit();
+            this.labelControl9 = new DevExpress.XtraEditors.LabelControl();
+            this.teYTCropBottom = new DevExpress.XtraEditors.TextEdit();
+            this.labelControl8 = new DevExpress.XtraEditors.LabelControl();
+            this.teYTCropLeft = new DevExpress.XtraEditors.TextEdit();
+            this.labelControl5 = new DevExpress.XtraEditors.LabelControl();
+            this.teYTCropRight = new DevExpress.XtraEditors.TextEdit();
+            this.gcYTSegments = new DevExpress.XtraEditors.GroupControl();
+            this.lblSegmentDisclaimer = new DevExpress.XtraEditors.LabelControl();
+            this.pnlYTSegPanel = new DevExpress.XtraEditors.PanelControl();
             this.toggleYTSegment = new DevExpress.XtraEditors.ToggleSwitch();
             this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl4 = new DevExpress.XtraEditors.LabelControl();
@@ -93,9 +109,11 @@
             this.groupControl2 = new DevExpress.XtraEditors.GroupControl();
             this.btnRedditDefault = new DevExpress.XtraEditors.SimpleButton();
             this.btnDownloadReddit = new DevExpress.XtraEditors.SimpleButton();
-            this.groupControl3 = new DevExpress.XtraEditors.GroupControl();
+            this.gcRedCrop = new DevExpress.XtraEditors.GroupControl();
+            this.pnlRedCropPanel = new DevExpress.XtraEditors.PanelControl();
+            this.gcRedSegment = new DevExpress.XtraEditors.GroupControl();
             this.lblRedSegDisclaimer = new DevExpress.XtraEditors.LabelControl();
-            this.panelControl6 = new DevExpress.XtraEditors.PanelControl();
+            this.pnlRedSegPanel = new DevExpress.XtraEditors.PanelControl();
             this.toggleRedSegment = new DevExpress.XtraEditors.ToggleSwitch();
             this.labelControl6 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl7 = new DevExpress.XtraEditors.LabelControl();
@@ -129,10 +147,21 @@
             ((System.ComponentModel.ISupportInitialize)(this.gcYTDLButtons)).BeginInit();
             this.gcYTDLButtons.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chkUsePrefs.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).BeginInit();
-            this.groupControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gcYTCrop)).BeginInit();
+            this.gcYTCrop.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlYTCropPanel)).BeginInit();
+            this.pnlYTCropPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl2)).BeginInit();
             this.panelControl2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.toggleYTCrop.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.teYTCropTop.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.teYTCropBottom.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.teYTCropLeft.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.teYTCropRight.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gcYTSegments)).BeginInit();
+            this.gcYTSegments.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlYTSegPanel)).BeginInit();
+            this.pnlYTSegPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.toggleYTSegment.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tsYTStart.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tsYTEnd.Properties)).BeginInit();
@@ -162,10 +191,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbDownloadProgress.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl2)).BeginInit();
             this.groupControl2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.groupControl3)).BeginInit();
-            this.groupControl3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.panelControl6)).BeginInit();
-            this.panelControl6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gcRedCrop)).BeginInit();
+            this.gcRedCrop.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlRedCropPanel)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gcRedSegment)).BeginInit();
+            this.gcRedSegment.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlRedSegPanel)).BeginInit();
+            this.pnlRedSegPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.toggleRedSegment.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tsRedStart.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tsRedDuration.Properties)).BeginInit();
@@ -183,7 +215,7 @@
             this.tcMainTabControl.Name = "tcMainTabControl";
             this.tcMainTabControl.Pages.Add(this.tfpYouTube);
             this.tcMainTabControl.Pages.Add(this.tfpReddit);
-            this.tcMainTabControl.SelectedPage = this.tfpYouTube;
+            this.tcMainTabControl.SelectedPage = this.tfpReddit;
             this.tcMainTabControl.ShowAddPageButton = false;
             this.tcMainTabControl.Size = new System.Drawing.Size(1059, 50);
             this.tcMainTabControl.TabForm = this;
@@ -233,7 +265,7 @@
             this.ytTabContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ytTabContainer.Location = new System.Drawing.Point(0, 50);
             this.ytTabContainer.Name = "ytTabContainer";
-            this.ytTabContainer.Size = new System.Drawing.Size(1059, 678);
+            this.ytTabContainer.Size = new System.Drawing.Size(1059, 734);
             this.ytTabContainer.TabIndex = 2;
             // 
             // ytSplitContainer
@@ -251,12 +283,13 @@
             // 
             // ytSplitContainer.Panel2
             // 
+            this.ytSplitContainer.Panel2.AutoScroll = true;
             this.ytSplitContainer.Panel2.Controls.Add(this.gcYTHistory);
             this.ytSplitContainer.Panel2.Controls.Add(this.pnlYTProgressPanel);
             this.ytSplitContainer.Panel2.Controls.Add(this.pnlYTOptionPanel);
             this.ytSplitContainer.Panel2.MinSize = 323;
             this.ytSplitContainer.Panel2.Text = "Panel2";
-            this.ytSplitContainer.Size = new System.Drawing.Size(1059, 678);
+            this.ytSplitContainer.Size = new System.Drawing.Size(1059, 734);
             this.ytSplitContainer.SplitterPosition = 731;
             this.ytSplitContainer.TabIndex = 0;
             // 
@@ -266,7 +299,7 @@
             this.gcYoutube.Location = new System.Drawing.Point(0, 170);
             this.gcYoutube.MainView = this.gvYouTube;
             this.gcYoutube.Name = "gcYoutube";
-            this.gcYoutube.Size = new System.Drawing.Size(731, 508);
+            this.gcYoutube.Size = new System.Drawing.Size(731, 564);
             this.gcYoutube.TabIndex = 5;
             this.gcYoutube.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvYouTube});
@@ -381,6 +414,7 @@
             this.txtYTUrl.Properties.AutoHeight = false;
             this.txtYTUrl.Size = new System.Drawing.Size(618, 25);
             this.txtYTUrl.TabIndex = 1;
+            this.txtYTUrl.EditValueChanged += new System.EventHandler(this.txtYTUrl_EditValueChanged);
             this.txtYTUrl.Click += new System.EventHandler(this.txtYTUrl_Click);
             // 
             // btnYTListFormats
@@ -412,10 +446,10 @@
             // gcYTHistory
             // 
             this.gcYTHistory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcYTHistory.Location = new System.Drawing.Point(0, 361);
+            this.gcYTHistory.Location = new System.Drawing.Point(0, 505);
             this.gcYTHistory.MainView = this.gvYTHistory;
             this.gcYTHistory.Name = "gcYTHistory";
-            this.gcYTHistory.Size = new System.Drawing.Size(323, 317);
+            this.gcYTHistory.Size = new System.Drawing.Size(323, 229);
             this.gcYTHistory.TabIndex = 6;
             this.gcYTHistory.ToolTipController = this.toolTipController;
             this.gcYTHistory.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -452,7 +486,7 @@
             this.pnlYTProgressPanel.Controls.Add(this.btnYTOpenDL);
             this.pnlYTProgressPanel.Controls.Add(this.pbYTProgress);
             this.pnlYTProgressPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlYTProgressPanel.Location = new System.Drawing.Point(0, 304);
+            this.pnlYTProgressPanel.Location = new System.Drawing.Point(0, 448);
             this.pnlYTProgressPanel.Margin = new System.Windows.Forms.Padding(0);
             this.pnlYTProgressPanel.Name = "pnlYTProgressPanel";
             this.pnlYTProgressPanel.Size = new System.Drawing.Size(323, 57);
@@ -484,14 +518,15 @@
             this.pnlYTOptionPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.pnlYTOptionPanel.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.pnlYTOptionPanel.Controls.Add(this.gcYTDLButtons);
-            this.pnlYTOptionPanel.Controls.Add(this.groupControl1);
+            this.pnlYTOptionPanel.Controls.Add(this.gcYTCrop);
+            this.pnlYTOptionPanel.Controls.Add(this.gcYTSegments);
             this.pnlYTOptionPanel.Controls.Add(this.lblYTSelectionText);
             this.pnlYTOptionPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlYTOptionPanel.Location = new System.Drawing.Point(0, 0);
             this.pnlYTOptionPanel.Margin = new System.Windows.Forms.Padding(0);
             this.pnlYTOptionPanel.MinimumSize = new System.Drawing.Size(323, 136);
             this.pnlYTOptionPanel.Name = "pnlYTOptionPanel";
-            this.pnlYTOptionPanel.Size = new System.Drawing.Size(323, 304);
+            this.pnlYTOptionPanel.Size = new System.Drawing.Size(323, 448);
             this.pnlYTOptionPanel.TabIndex = 7;
             // 
             // gcYTDLButtons
@@ -503,7 +538,7 @@
             this.gcYTDLButtons.Controls.Add(this.chkUsePrefs);
             this.gcYTDLButtons.Controls.Add(this.btnYTSelectionDL);
             this.gcYTDLButtons.Dock = System.Windows.Forms.DockStyle.Top;
-            this.gcYTDLButtons.Location = new System.Drawing.Point(0, 156);
+            this.gcYTDLButtons.Location = new System.Drawing.Point(0, 300);
             this.gcYTDLButtons.Margin = new System.Windows.Forms.Padding(0);
             this.gcYTDLButtons.Name = "gcYTDLButtons";
             this.gcYTDLButtons.Size = new System.Drawing.Size(323, 148);
@@ -571,19 +606,184 @@
             this.btnYTSelectionDL.Visible = false;
             this.btnYTSelectionDL.Click += new System.EventHandler(this.btnYTSelectionDL_Click);
             // 
-            // groupControl1
+            // gcYTCrop
             // 
-            this.groupControl1.AutoSize = true;
-            this.groupControl1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.groupControl1.Controls.Add(this.lblSegmentDisclaimer);
-            this.groupControl1.Controls.Add(this.panelControl2);
-            this.groupControl1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupControl1.Location = new System.Drawing.Point(0, 20);
-            this.groupControl1.Margin = new System.Windows.Forms.Padding(0);
-            this.groupControl1.Name = "groupControl1";
-            this.groupControl1.Size = new System.Drawing.Size(323, 136);
-            this.groupControl1.TabIndex = 4;
-            this.groupControl1.Text = "Download Segment";
+            this.gcYTCrop.AutoSize = true;
+            this.gcYTCrop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.gcYTCrop.CaptionImageOptions.AllowGlyphSkinning = true;
+            this.gcYTCrop.Controls.Add(this.pnlYTCropPanel);
+            buttonImageOptions4.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("buttonImageOptions4.SvgImage")));
+            buttonImageOptions4.SvgImageSize = new System.Drawing.Size(18, 18);
+            this.gcYTCrop.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions4, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
+            this.gcYTCrop.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
+            this.gcYTCrop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.gcYTCrop.Location = new System.Drawing.Point(0, 164);
+            this.gcYTCrop.Margin = new System.Windows.Forms.Padding(0);
+            this.gcYTCrop.Name = "gcYTCrop";
+            this.gcYTCrop.Size = new System.Drawing.Size(323, 136);
+            this.gcYTCrop.TabIndex = 8;
+            this.gcYTCrop.Text = "Crop Video";
+            this.gcYTCrop.CustomButtonClick += new DevExpress.XtraBars.Docking2010.BaseButtonEventHandler(this.gcYTCrop_CustomButtonClick);
+            // 
+            // pnlYTCropPanel
+            // 
+            this.pnlYTCropPanel.AutoSize = true;
+            this.pnlYTCropPanel.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.pnlYTCropPanel.Controls.Add(this.panelControl2);
+            this.pnlYTCropPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlYTCropPanel.Location = new System.Drawing.Point(2, 31);
+            this.pnlYTCropPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlYTCropPanel.Name = "pnlYTCropPanel";
+            this.pnlYTCropPanel.Size = new System.Drawing.Size(319, 103);
+            this.pnlYTCropPanel.TabIndex = 8;
+            this.pnlYTCropPanel.Visible = false;
+            // 
+            // panelControl2
+            // 
+            this.panelControl2.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.panelControl2.Controls.Add(this.toggleYTCrop);
+            this.panelControl2.Controls.Add(this.labelControl10);
+            this.panelControl2.Controls.Add(this.teYTCropTop);
+            this.panelControl2.Controls.Add(this.labelControl9);
+            this.panelControl2.Controls.Add(this.teYTCropBottom);
+            this.panelControl2.Controls.Add(this.labelControl8);
+            this.panelControl2.Controls.Add(this.teYTCropLeft);
+            this.panelControl2.Controls.Add(this.labelControl5);
+            this.panelControl2.Controls.Add(this.teYTCropRight);
+            this.panelControl2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelControl2.Location = new System.Drawing.Point(0, 0);
+            this.panelControl2.Margin = new System.Windows.Forms.Padding(0);
+            this.panelControl2.Name = "panelControl2";
+            this.panelControl2.Size = new System.Drawing.Size(319, 103);
+            this.panelControl2.TabIndex = 9;
+            // 
+            // toggleYTCrop
+            // 
+            this.toggleYTCrop.Location = new System.Drawing.Point(7, 3);
+            this.toggleYTCrop.Name = "toggleYTCrop";
+            this.toggleYTCrop.Properties.OffText = "Off";
+            this.toggleYTCrop.Properties.OnText = "On";
+            this.toggleYTCrop.Size = new System.Drawing.Size(95, 24);
+            this.toggleYTCrop.TabIndex = 0;
+            this.toggleYTCrop.Toggled += new System.EventHandler(this.toggleYTCrop_Toggled);
+            // 
+            // labelControl10
+            // 
+            this.labelControl10.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.labelControl10.Appearance.Options.UseFont = true;
+            this.labelControl10.Location = new System.Drawing.Point(173, 63);
+            this.labelControl10.Name = "labelControl10";
+            this.labelControl10.Size = new System.Drawing.Size(29, 16);
+            this.labelControl10.TabIndex = 8;
+            this.labelControl10.Text = "Right";
+            // 
+            // teYTCropTop
+            // 
+            this.teYTCropTop.EditValue = "0";
+            this.teYTCropTop.Location = new System.Drawing.Point(68, 33);
+            this.teYTCropTop.Name = "teYTCropTop";
+            this.teYTCropTop.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.teYTCropTop.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.teYTCropTop.Properties.MaskSettings.Set("MaskManagerType", typeof(DevExpress.Data.Mask.NumericMaskManager));
+            this.teYTCropTop.Properties.MaskSettings.Set("MaskManagerSignature", "allowNull=False");
+            this.teYTCropTop.Properties.MaskSettings.Set("mask", "d");
+            this.teYTCropTop.Properties.NullText = "0";
+            this.teYTCropTop.Size = new System.Drawing.Size(75, 20);
+            this.teYTCropTop.TabIndex = 1;
+            // 
+            // labelControl9
+            // 
+            this.labelControl9.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.labelControl9.Appearance.Options.UseFont = true;
+            this.labelControl9.Location = new System.Drawing.Point(42, 63);
+            this.labelControl9.Name = "labelControl9";
+            this.labelControl9.Size = new System.Drawing.Size(21, 16);
+            this.labelControl9.TabIndex = 7;
+            this.labelControl9.Text = "Left";
+            // 
+            // teYTCropBottom
+            // 
+            this.teYTCropBottom.EditValue = "0";
+            this.teYTCropBottom.Location = new System.Drawing.Point(208, 33);
+            this.teYTCropBottom.Name = "teYTCropBottom";
+            this.teYTCropBottom.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.teYTCropBottom.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.teYTCropBottom.Properties.MaskSettings.Set("MaskManagerType", typeof(DevExpress.Data.Mask.NumericMaskManager));
+            this.teYTCropBottom.Properties.MaskSettings.Set("MaskManagerSignature", "allowNull=False");
+            this.teYTCropBottom.Properties.MaskSettings.Set("mask", "d");
+            this.teYTCropBottom.Properties.NullText = "0";
+            this.teYTCropBottom.Size = new System.Drawing.Size(75, 20);
+            this.teYTCropBottom.TabIndex = 2;
+            // 
+            // labelControl8
+            // 
+            this.labelControl8.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.labelControl8.Appearance.Options.UseFont = true;
+            this.labelControl8.Location = new System.Drawing.Point(162, 34);
+            this.labelControl8.Name = "labelControl8";
+            this.labelControl8.Size = new System.Drawing.Size(40, 16);
+            this.labelControl8.TabIndex = 6;
+            this.labelControl8.Text = "Bottom";
+            // 
+            // teYTCropLeft
+            // 
+            this.teYTCropLeft.EditValue = "0";
+            this.teYTCropLeft.Location = new System.Drawing.Point(68, 62);
+            this.teYTCropLeft.Name = "teYTCropLeft";
+            this.teYTCropLeft.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.teYTCropLeft.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.teYTCropLeft.Properties.MaskSettings.Set("MaskManagerType", typeof(DevExpress.Data.Mask.NumericMaskManager));
+            this.teYTCropLeft.Properties.MaskSettings.Set("MaskManagerSignature", "allowNull=False");
+            this.teYTCropLeft.Properties.MaskSettings.Set("mask", "d");
+            this.teYTCropLeft.Properties.NullText = "0";
+            this.teYTCropLeft.Size = new System.Drawing.Size(75, 20);
+            this.teYTCropLeft.TabIndex = 3;
+            // 
+            // labelControl5
+            // 
+            this.labelControl5.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.labelControl5.Appearance.Options.UseFont = true;
+            this.labelControl5.Location = new System.Drawing.Point(41, 34);
+            this.labelControl5.Name = "labelControl5";
+            this.labelControl5.Size = new System.Drawing.Size(22, 16);
+            this.labelControl5.TabIndex = 5;
+            this.labelControl5.Text = "Top";
+            // 
+            // teYTCropRight
+            // 
+            this.teYTCropRight.EditValue = "0";
+            this.teYTCropRight.Location = new System.Drawing.Point(208, 62);
+            this.teYTCropRight.Name = "teYTCropRight";
+            this.teYTCropRight.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.teYTCropRight.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.teYTCropRight.Properties.MaskSettings.Set("MaskManagerType", typeof(DevExpress.Data.Mask.NumericMaskManager));
+            this.teYTCropRight.Properties.MaskSettings.Set("MaskManagerSignature", "allowNull=False");
+            this.teYTCropRight.Properties.MaskSettings.Set("mask", "d");
+            this.teYTCropRight.Properties.NullText = "0";
+            this.teYTCropRight.Size = new System.Drawing.Size(75, 20);
+            this.teYTCropRight.TabIndex = 4;
+            // 
+            // gcYTSegments
+            // 
+            this.gcYTSegments.AutoSize = true;
+            this.gcYTSegments.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.gcYTSegments.CaptionImageOptions.AllowGlyphSkinning = true;
+            this.gcYTSegments.Controls.Add(this.lblSegmentDisclaimer);
+            this.gcYTSegments.Controls.Add(this.pnlYTSegPanel);
+            buttonImageOptions5.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
+            buttonImageOptions5.SvgImageSize = new System.Drawing.Size(18, 18);
+            this.gcYTSegments.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions5, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, false, true, "ytSegment", -1)});
+            this.gcYTSegments.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
+            this.gcYTSegments.Dock = System.Windows.Forms.DockStyle.Top;
+            this.gcYTSegments.Location = new System.Drawing.Point(0, 20);
+            this.gcYTSegments.Margin = new System.Windows.Forms.Padding(0);
+            this.gcYTSegments.Name = "gcYTSegments";
+            this.gcYTSegments.Size = new System.Drawing.Size(323, 144);
+            this.gcYTSegments.TabIndex = 4;
+            this.gcYTSegments.Text = "Download Segment";
+            this.gcYTSegments.CustomButtonClick += new DevExpress.XtraBars.Docking2010.BaseButtonEventHandler(this.gcYTSegments_CustomButtonClick);
             // 
             // lblSegmentDisclaimer
             // 
@@ -594,7 +794,7 @@
             this.lblSegmentDisclaimer.Appearance.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap;
             this.lblSegmentDisclaimer.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
             this.lblSegmentDisclaimer.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblSegmentDisclaimer.Location = new System.Drawing.Point(2, 83);
+            this.lblSegmentDisclaimer.Location = new System.Drawing.Point(2, 91);
             this.lblSegmentDisclaimer.Name = "lblSegmentDisclaimer";
             this.lblSegmentDisclaimer.Padding = new System.Windows.Forms.Padding(3);
             this.lblSegmentDisclaimer.Size = new System.Drawing.Size(319, 51);
@@ -603,20 +803,20 @@
     "e select an available format.\r\n";
             this.lblSegmentDisclaimer.Visible = false;
             // 
-            // panelControl2
+            // pnlYTSegPanel
             // 
-            this.panelControl2.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-            this.panelControl2.Controls.Add(this.toggleYTSegment);
-            this.panelControl2.Controls.Add(this.labelControl3);
-            this.panelControl2.Controls.Add(this.labelControl4);
-            this.panelControl2.Controls.Add(this.tsYTStart);
-            this.panelControl2.Controls.Add(this.tsYTEnd);
-            this.panelControl2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelControl2.Location = new System.Drawing.Point(2, 20);
-            this.panelControl2.Margin = new System.Windows.Forms.Padding(0);
-            this.panelControl2.Name = "panelControl2";
-            this.panelControl2.Size = new System.Drawing.Size(319, 63);
-            this.panelControl2.TabIndex = 8;
+            this.pnlYTSegPanel.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.pnlYTSegPanel.Controls.Add(this.toggleYTSegment);
+            this.pnlYTSegPanel.Controls.Add(this.labelControl3);
+            this.pnlYTSegPanel.Controls.Add(this.labelControl4);
+            this.pnlYTSegPanel.Controls.Add(this.tsYTStart);
+            this.pnlYTSegPanel.Controls.Add(this.tsYTEnd);
+            this.pnlYTSegPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlYTSegPanel.Location = new System.Drawing.Point(2, 31);
+            this.pnlYTSegPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlYTSegPanel.Name = "pnlYTSegPanel";
+            this.pnlYTSegPanel.Size = new System.Drawing.Size(319, 60);
+            this.pnlYTSegPanel.TabIndex = 8;
             // 
             // toggleYTSegment
             // 
@@ -712,7 +912,7 @@
             this.tabFormContentContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabFormContentContainer3.Location = new System.Drawing.Point(0, 50);
             this.tabFormContentContainer3.Name = "tabFormContentContainer3";
-            this.tabFormContentContainer3.Size = new System.Drawing.Size(1059, 678);
+            this.tabFormContentContainer3.Size = new System.Drawing.Size(1059, 734);
             this.tabFormContentContainer3.TabIndex = 3;
             // 
             // splitContainerControl1
@@ -735,7 +935,7 @@
             this.splitContainerControl1.Panel2.Controls.Add(this.lblSelectionText);
             this.splitContainerControl1.Panel2.MinSize = 323;
             this.splitContainerControl1.Panel2.Text = "Panel2";
-            this.splitContainerControl1.Size = new System.Drawing.Size(1059, 678);
+            this.splitContainerControl1.Size = new System.Drawing.Size(1059, 734);
             this.splitContainerControl1.SplitterPosition = 731;
             this.splitContainerControl1.TabIndex = 0;
             // 
@@ -745,7 +945,7 @@
             this.gcReddit.Location = new System.Drawing.Point(0, 174);
             this.gcReddit.MainView = this.gvReddit;
             this.gcReddit.Name = "gcReddit";
-            this.gcReddit.Size = new System.Drawing.Size(731, 504);
+            this.gcReddit.Size = new System.Drawing.Size(731, 560);
             this.gcReddit.TabIndex = 2;
             this.gcReddit.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvReddit});
@@ -864,6 +1064,7 @@
             this.txtRedditPost.Properties.AutoHeight = false;
             this.txtRedditPost.Size = new System.Drawing.Size(615, 25);
             this.txtRedditPost.TabIndex = 1;
+            this.txtRedditPost.EditValueChanged += new System.EventHandler(this.txtRedditPost_EditValueChanged);
             this.txtRedditPost.Click += new System.EventHandler(this.txtRedditPost_Click);
             // 
             // labelControl1
@@ -890,12 +1091,12 @@
             // gcHistory
             // 
             this.gcHistory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcHistory.Location = new System.Drawing.Point(0, 299);
+            this.gcHistory.Location = new System.Drawing.Point(0, 400);
             this.gcHistory.MainView = this.gvHistory;
             this.gcHistory.Name = "gcHistory";
             this.gcHistory.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repCheckEdit});
-            this.gcHistory.Size = new System.Drawing.Size(323, 379);
+            this.gcHistory.Size = new System.Drawing.Size(323, 334);
             this.gcHistory.TabIndex = 5;
             this.gcHistory.ToolTipController = this.toolTipController;
             this.gcHistory.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -936,13 +1137,14 @@
             this.pnlRedOptionsPanel.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.pnlRedOptionsPanel.Controls.Add(this.pnlRedDLPanel);
             this.pnlRedOptionsPanel.Controls.Add(this.groupControl2);
-            this.pnlRedOptionsPanel.Controls.Add(this.groupControl3);
+            this.pnlRedOptionsPanel.Controls.Add(this.gcRedCrop);
+            this.pnlRedOptionsPanel.Controls.Add(this.gcRedSegment);
             this.pnlRedOptionsPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlRedOptionsPanel.Location = new System.Drawing.Point(0, 20);
             this.pnlRedOptionsPanel.Margin = new System.Windows.Forms.Padding(0);
             this.pnlRedOptionsPanel.MinimumSize = new System.Drawing.Size(323, 55);
             this.pnlRedOptionsPanel.Name = "pnlRedOptionsPanel";
-            this.pnlRedOptionsPanel.Size = new System.Drawing.Size(323, 279);
+            this.pnlRedOptionsPanel.Size = new System.Drawing.Size(323, 380);
             this.pnlRedOptionsPanel.TabIndex = 4;
             // 
             // pnlRedDLPanel
@@ -953,7 +1155,7 @@
             this.pnlRedDLPanel.Controls.Add(this.btnRedDL);
             this.pnlRedDLPanel.Controls.Add(this.pbDownloadProgress);
             this.pnlRedDLPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlRedDLPanel.Location = new System.Drawing.Point(0, 222);
+            this.pnlRedDLPanel.Location = new System.Drawing.Point(0, 323);
             this.pnlRedDLPanel.Margin = new System.Windows.Forms.Padding(0);
             this.pnlRedDLPanel.Name = "pnlRedDLPanel";
             this.pnlRedDLPanel.Size = new System.Drawing.Size(323, 57);
@@ -988,7 +1190,7 @@
             this.groupControl2.Controls.Add(this.btnRedditDefault);
             this.groupControl2.Controls.Add(this.btnDownloadReddit);
             this.groupControl2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupControl2.Location = new System.Drawing.Point(0, 136);
+            this.groupControl2.Location = new System.Drawing.Point(0, 237);
             this.groupControl2.Margin = new System.Windows.Forms.Padding(0);
             this.groupControl2.Name = "groupControl2";
             this.groupControl2.Size = new System.Drawing.Size(323, 86);
@@ -1030,19 +1232,57 @@
             this.btnDownloadReddit.Visible = false;
             this.btnDownloadReddit.Click += new System.EventHandler(this.btnDownloadReddit_Click);
             // 
-            // groupControl3
+            // gcRedCrop
             // 
-            this.groupControl3.AutoSize = true;
-            this.groupControl3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.groupControl3.Controls.Add(this.lblRedSegDisclaimer);
-            this.groupControl3.Controls.Add(this.panelControl6);
-            this.groupControl3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupControl3.Location = new System.Drawing.Point(0, 0);
-            this.groupControl3.Margin = new System.Windows.Forms.Padding(0);
-            this.groupControl3.Name = "groupControl3";
-            this.groupControl3.Size = new System.Drawing.Size(323, 136);
-            this.groupControl3.TabIndex = 5;
-            this.groupControl3.Text = "Download Segment";
+            this.gcRedCrop.AutoSize = true;
+            this.gcRedCrop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.gcRedCrop.CaptionImageOptions.AllowGlyphSkinning = true;
+            this.gcRedCrop.Controls.Add(this.pnlRedCropPanel);
+            buttonImageOptions1.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("buttonImageOptions1.SvgImage")));
+            buttonImageOptions1.SvgImageSize = new System.Drawing.Size(18, 18);
+            this.gcRedCrop.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions1, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
+            this.gcRedCrop.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
+            this.gcRedCrop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.gcRedCrop.Location = new System.Drawing.Point(0, 144);
+            this.gcRedCrop.Margin = new System.Windows.Forms.Padding(0);
+            this.gcRedCrop.Name = "gcRedCrop";
+            this.gcRedCrop.Size = new System.Drawing.Size(323, 93);
+            this.gcRedCrop.TabIndex = 9;
+            this.gcRedCrop.Text = "Crop";
+            this.gcRedCrop.CustomButtonClick += new DevExpress.XtraBars.Docking2010.BaseButtonEventHandler(this.gcRedCrop_CustomButtonClick);
+            // 
+            // pnlRedCropPanel
+            // 
+            this.pnlRedCropPanel.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.pnlRedCropPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlRedCropPanel.Location = new System.Drawing.Point(2, 31);
+            this.pnlRedCropPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlRedCropPanel.Name = "pnlRedCropPanel";
+            this.pnlRedCropPanel.Size = new System.Drawing.Size(319, 60);
+            this.pnlRedCropPanel.TabIndex = 8;
+            this.pnlRedCropPanel.Visible = false;
+            // 
+            // gcRedSegment
+            // 
+            this.gcRedSegment.AutoSize = true;
+            this.gcRedSegment.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.gcRedSegment.CaptionImageOptions.AllowGlyphSkinning = true;
+            this.gcRedSegment.Controls.Add(this.lblRedSegDisclaimer);
+            this.gcRedSegment.Controls.Add(this.pnlRedSegPanel);
+            buttonImageOptions2.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
+            buttonImageOptions2.SvgImageSize = new System.Drawing.Size(18, 18);
+            this.gcRedSegment.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", true, buttonImageOptions2, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, false, true, null, -1)});
+            this.gcRedSegment.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
+            this.gcRedSegment.Dock = System.Windows.Forms.DockStyle.Top;
+            this.gcRedSegment.Location = new System.Drawing.Point(0, 0);
+            this.gcRedSegment.Margin = new System.Windows.Forms.Padding(0);
+            this.gcRedSegment.Name = "gcRedSegment";
+            this.gcRedSegment.Size = new System.Drawing.Size(323, 144);
+            this.gcRedSegment.TabIndex = 5;
+            this.gcRedSegment.Text = "Download Segment";
+            this.gcRedSegment.CustomButtonClick += new DevExpress.XtraBars.Docking2010.BaseButtonEventHandler(this.gcRedSegment_CustomButtonClick);
             // 
             // lblRedSegDisclaimer
             // 
@@ -1053,7 +1293,7 @@
             this.lblRedSegDisclaimer.Appearance.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap;
             this.lblRedSegDisclaimer.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
             this.lblRedSegDisclaimer.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblRedSegDisclaimer.Location = new System.Drawing.Point(2, 83);
+            this.lblRedSegDisclaimer.Location = new System.Drawing.Point(2, 91);
             this.lblRedSegDisclaimer.Name = "lblRedSegDisclaimer";
             this.lblRedSegDisclaimer.Padding = new System.Windows.Forms.Padding(3);
             this.lblRedSegDisclaimer.Size = new System.Drawing.Size(319, 51);
@@ -1062,20 +1302,20 @@
     "e select an available format.";
             this.lblRedSegDisclaimer.Visible = false;
             // 
-            // panelControl6
+            // pnlRedSegPanel
             // 
-            this.panelControl6.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-            this.panelControl6.Controls.Add(this.toggleRedSegment);
-            this.panelControl6.Controls.Add(this.labelControl6);
-            this.panelControl6.Controls.Add(this.labelControl7);
-            this.panelControl6.Controls.Add(this.tsRedStart);
-            this.panelControl6.Controls.Add(this.tsRedDuration);
-            this.panelControl6.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelControl6.Location = new System.Drawing.Point(2, 20);
-            this.panelControl6.Margin = new System.Windows.Forms.Padding(0);
-            this.panelControl6.Name = "panelControl6";
-            this.panelControl6.Size = new System.Drawing.Size(319, 63);
-            this.panelControl6.TabIndex = 8;
+            this.pnlRedSegPanel.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.pnlRedSegPanel.Controls.Add(this.toggleRedSegment);
+            this.pnlRedSegPanel.Controls.Add(this.labelControl6);
+            this.pnlRedSegPanel.Controls.Add(this.labelControl7);
+            this.pnlRedSegPanel.Controls.Add(this.tsRedStart);
+            this.pnlRedSegPanel.Controls.Add(this.tsRedDuration);
+            this.pnlRedSegPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlRedSegPanel.Location = new System.Drawing.Point(2, 31);
+            this.pnlRedSegPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlRedSegPanel.Name = "pnlRedSegPanel";
+            this.pnlRedSegPanel.Size = new System.Drawing.Size(319, 60);
+            this.pnlRedSegPanel.TabIndex = 8;
             // 
             // toggleRedSegment
             // 
@@ -1159,8 +1399,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1059, 728);
-            this.Controls.Add(this.ytTabContainer);
+            this.ClientSize = new System.Drawing.Size(1059, 784);
+            this.Controls.Add(this.tabFormContentContainer3);
             this.Controls.Add(this.tcMainTabControl);
             this.Name = "MainForm";
             this.TabFormControl = this.tcMainTabControl;
@@ -1197,11 +1437,24 @@
             ((System.ComponentModel.ISupportInitialize)(this.gcYTDLButtons)).EndInit();
             this.gcYTDLButtons.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.chkUsePrefs.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).EndInit();
-            this.groupControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gcYTCrop)).EndInit();
+            this.gcYTCrop.ResumeLayout(false);
+            this.gcYTCrop.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlYTCropPanel)).EndInit();
+            this.pnlYTCropPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.panelControl2)).EndInit();
             this.panelControl2.ResumeLayout(false);
             this.panelControl2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.toggleYTCrop.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.teYTCropTop.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.teYTCropBottom.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.teYTCropLeft.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.teYTCropRight.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gcYTSegments)).EndInit();
+            this.gcYTSegments.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pnlYTSegPanel)).EndInit();
+            this.pnlYTSegPanel.ResumeLayout(false);
+            this.pnlYTSegPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.toggleYTSegment.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tsYTStart.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tsYTEnd.Properties)).EndInit();
@@ -1235,11 +1488,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbDownloadProgress.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl2)).EndInit();
             this.groupControl2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.groupControl3)).EndInit();
-            this.groupControl3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.panelControl6)).EndInit();
-            this.panelControl6.ResumeLayout(false);
-            this.panelControl6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gcRedCrop)).EndInit();
+            this.gcRedCrop.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pnlRedCropPanel)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gcRedSegment)).EndInit();
+            this.gcRedSegment.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pnlRedSegPanel)).EndInit();
+            this.pnlRedSegPanel.ResumeLayout(false);
+            this.pnlRedSegPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.toggleRedSegment.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tsRedStart.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tsRedDuration.Properties)).EndInit();
@@ -1287,7 +1543,7 @@
         private DevExpress.XtraGrid.GridControl gcYTHistory;
         private DevExpress.XtraGrid.Views.Grid.GridView gvYTHistory;
         private DevExpress.XtraEditors.PanelControl pnlYTOptionPanel;
-        private DevExpress.XtraEditors.GroupControl groupControl1;
+        private DevExpress.XtraEditors.GroupControl gcYTSegments;
         private DevExpress.XtraEditors.LabelControl labelControl4;
         private DevExpress.XtraEditors.TimeSpanEdit tsYTEnd;
         private DevExpress.XtraEditors.TimeSpanEdit tsYTStart;
@@ -1307,19 +1563,33 @@
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repCheckEdit;
         private DevExpress.Utils.ToolTipController toolTipController;
         private DevExpress.XtraEditors.LabelControl lblSegmentDisclaimer;
-        private DevExpress.XtraEditors.PanelControl panelControl2;
+        private DevExpress.XtraEditors.PanelControl pnlYTSegPanel;
         private DevExpress.XtraEditors.PanelControl panelControl4;
         private DevExpress.XtraEditors.SimpleButton btnListReset;
         private DevExpress.XtraEditors.PanelControl panelControl5;
         private DevExpress.XtraEditors.SimpleButton btnRedditReset;
-        private DevExpress.XtraEditors.GroupControl groupControl3;
+        private DevExpress.XtraEditors.GroupControl gcRedSegment;
         private DevExpress.XtraEditors.LabelControl lblRedSegDisclaimer;
-        private DevExpress.XtraEditors.PanelControl panelControl6;
+        private DevExpress.XtraEditors.PanelControl pnlRedSegPanel;
         private DevExpress.XtraEditors.ToggleSwitch toggleRedSegment;
         private DevExpress.XtraEditors.LabelControl labelControl6;
         private DevExpress.XtraEditors.LabelControl labelControl7;
         private DevExpress.XtraEditors.TimeSpanEdit tsRedStart;
         private DevExpress.XtraEditors.TimeSpanEdit tsRedDuration;
+        private DevExpress.XtraEditors.GroupControl gcYTCrop;
+        private DevExpress.XtraEditors.PanelControl pnlYTCropPanel;
+        private DevExpress.XtraEditors.GroupControl gcRedCrop;
+        private DevExpress.XtraEditors.PanelControl pnlRedCropPanel;
+        private DevExpress.XtraEditors.PanelControl panelControl2;
+        private DevExpress.XtraEditors.ToggleSwitch toggleYTCrop;
+        private DevExpress.XtraEditors.LabelControl labelControl10;
+        private DevExpress.XtraEditors.TextEdit teYTCropTop;
+        private DevExpress.XtraEditors.LabelControl labelControl9;
+        private DevExpress.XtraEditors.TextEdit teYTCropBottom;
+        private DevExpress.XtraEditors.LabelControl labelControl8;
+        private DevExpress.XtraEditors.TextEdit teYTCropLeft;
+        private DevExpress.XtraEditors.LabelControl labelControl5;
+        private DevExpress.XtraEditors.TextEdit teYTCropRight;
     }
 }
 

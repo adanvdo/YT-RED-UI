@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using YT_RED.Settings;
 
@@ -9,7 +10,7 @@ namespace YT_RED.Logging
 {
     public static class Historian
     {
-        private const string historyFile = "history.json";
+        private static string historyFile = "history.json";
         private static bool historyWasLoaded = false;
         public static List<DownloadLog> DownloadHistory;
 
@@ -22,6 +23,10 @@ namespace YT_RED.Logging
         {
             if(DownloadHistory == null)
                 DownloadHistory = new List<DownloadLog>();
+
+            FileInfo hinfo = new FileInfo(Assembly.GetEntryAssembly().Location);
+            historyFile = Path.Combine(hinfo.DirectoryName, "history.json");
+
             try
             {
                 if (File.Exists(historyFile))
@@ -46,7 +51,7 @@ namespace YT_RED.Logging
             return false;
         }
 
-        public static async Task CleanHistory(bool fullErase = false)
+        public static async Task CleanHistory(bool fullErase = false, bool deleteFiles = false)
         {
             if (DownloadHistory == null)
                 DownloadHistory = new List<DownloadLog>();
@@ -58,6 +63,17 @@ namespace YT_RED.Logging
                     if (!loadHistory)
                     {
                         return;
+                    }
+                }
+
+                if(deleteFiles)
+                {
+                    foreach(var log in DownloadHistory)
+                    {
+                        if(File.Exists(log.DownloadLocation))
+                        {
+                            File.Delete(log.DownloadLocation);
+                        }
                     }
                 }
 

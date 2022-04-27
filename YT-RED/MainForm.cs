@@ -13,10 +13,13 @@ using Newtonsoft.Json;
 using System.Linq;
 using System.Threading.Tasks;
 using DevExpress.Skins;
+using System.Reflection;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
 using DevExpress.Utils;
+using URIScheme;
+using System.ComponentModel;
 
 namespace YT_RED
 {
@@ -44,14 +47,16 @@ namespace YT_RED
         private CustomTabFormPage redditPage = null;
         private DownloadType currentDownload = DownloadType.Unknown;
         private bool downloadingSegment = false;
+        private bool downloadingCropped = false;
         private InitialFunction initialFunction = InitialFunction.None;
         private string initialLink = string.Empty;
         private MediaSource initialSource = MediaSource.None;
-
+        private URISchemeService uriService = null;
 
         public MainForm()
         {
-            InitializeComponent(); 
+            InitializeComponent();
+            registerURIScheme();
             this.historyTimer = new Timer();
             this.historyTimer.Interval = 10000;
             this.historyTimer.Tick += HistoryTimer_Tick;
@@ -65,6 +70,7 @@ namespace YT_RED
         public MainForm(InitialFunction initialFunction, string initialLink, Classes.MediaSource mediaSource)
         {
             InitializeComponent();
+            registerURIScheme();
             this.historyTimer = new Timer();
             this.historyTimer.Interval = 10000;
             this.historyTimer.Tick += HistoryTimer_Tick;
@@ -78,10 +84,11 @@ namespace YT_RED
             initialSource = mediaSource;
         }
 
-        private void HistoryTimer_Tick(object sender, EventArgs e)
+        private async void HistoryTimer_Tick(object sender, EventArgs e)
         {
             if (AppSettings.Default.General.EnableDownloadHistory)
             {
+                await Historian.CleanHistory();
                 refreshRedditHistory();
                 refreshYoutubeHistory();
             }
@@ -96,6 +103,26 @@ namespace YT_RED
             }
             chkUsePrefs.Checked = AppSettings.Default.General.UsePreferredFormat;
             base.OnLoad(e);
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            //uriService.Delete();
+            base.OnClosing(e);            
+        }
+
+        private void registerURIScheme()
+        {
+            const string key = @"ytred";
+            string exeLocation = Assembly.GetEntryAssembly().Location;
+            uriService = new URISchemeService(key, @"URL:ytred", $"{exeLocation}");
+            var isSet = uriService.Check();
+            if (isSet)
+                uriService.Delete();
+
+            
+            uriService.Set();
+            
         }
 
         private async void Init()
@@ -391,10 +418,12 @@ namespace YT_RED
             gvReddit.Columns["AudioPath"].Visible = false;
             gvReddit.Columns["VideoStream"].Visible = false;
             gvReddit.Columns["AudioStream"].Visible = false;
+            gvReddit.RefreshData();
         }
 
         private void refreshRedditHistory()
         {
+            gcHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.Reddit).ToList();
             gvHistory.Columns["FileExists"].VisibleIndex = 0;
             gvHistory.Columns["FileExists"].ColumnEdit = repCheckEdit;
             gvHistory.Columns["FileExists"].ToolTip = "File Exists";
@@ -570,6 +599,7 @@ namespace YT_RED
             lblRedSegDisclaimer.Visible = toggleRedSegment.IsOn && (gvReddit.RowCount < 1 || selectedStream == null);
             btnRedditList.Invalidate();
             btnRedditDefault.Enabled = !toggleRedSegment.IsOn;
+            gcRedSegment.CustomHeaderButtons[0].Properties.Enabled = !toggleRedSegment.IsOn && (gvReddit.RowCount < 1 || selectedStream == null);
         }
 
         #endregion
@@ -586,7 +616,24 @@ namespace YT_RED
             tsYTEnd.Enabled = toggleYTSegment.IsOn;
             lblSegmentDisclaimer.Visible = toggleYTSegment.IsOn && (gvYouTube.RowCount < 1 || selectedFormat == null);
             btnYTListFormats.Invalidate();
-            btnYTDownloadBest.Enabled = !toggleYTSegment.IsOn;
+            btnYTDownloadBest.Enabled = !toggleYTSegment.IsOn && (gvYouTube.RowCount < 1 || selectedFormat == null);
+            gcYTSegments.CustomHeaderButtons[0].Properties.Enabled = !toggleYTSegment.IsOn;
+        }
+
+        private void toggleYTCrop_Toggled(object sender, EventArgs e)
+        {
+            updateYTCropState();
+        }
+
+        private void updateYTCropState()
+        {
+            teYTCropTop.Enabled = toggleYTCrop.IsOn;
+            teYTCropBottom.Enabled = toggleYTCrop.IsOn;
+            teYTCropLeft.Enabled = toggleYTCrop.IsOn;
+            teYTCropRight.Enabled = toggleYTCrop.IsOn;
+            btnYTListFormats.Invalidate();
+            btnYTDownloadAudio.Enabled = !toggleYTCrop.IsOn && gvYouTube.RowCount < 1;
+            gcYTCrop.CustomHeaderButtons[0].Properties.Enabled = !toggleYTCrop.IsOn;
         }
 
         private void btnYTListFormats_Click(object sender, EventArgs e)
@@ -666,6 +713,8 @@ namespace YT_RED
 
         private void refreshYoutubeHistory()
         {
+            gcYTHistory.DataSource = null;
+            gcYTHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.YouTube).ToList();
             gvYTHistory.Columns["FileExists"].VisibleIndex = 0;
             gvYTHistory.Columns["FileExists"].ColumnEdit = repCheckEdit;
             gvYTHistory.Columns["FileExists"].OptionsColumn.ShowCaption = false;
@@ -702,7 +751,7 @@ namespace YT_RED
 
         private void showYTProgress(DownloadProgress progress)
         {
-            if (downloadingSegment)
+            if (downloadingSegment || downloadingCropped)
                 return;
             if(!pbYTProgress.Visible)
             {
@@ -729,15 +778,27 @@ namespace YT_RED
             btnYTDownloadBest.Enabled = false;
             RunResult<string> result = null;
 
-            if (toggleYTSegment.IsOn)
+            if (toggleYTSegment.IsOn || toggleYTCrop.IsOn)
             {
-                if (this.tsYTEnd.TimeSpan == TimeSpan.Zero)
+                if (toggleYTSegment.IsOn && this.tsYTEnd.TimeSpan == TimeSpan.Zero)
                 {
                     MessageBox.Show("Please specify a valid duration for the segment", "Invalid Duration");
                     return;
                 }
                 downloadingSegment = true;
-                IConversion conversion = await Utils.VideoUtil.PrepareYoutubeConversion(VideoUtil.YouTubeString(txtYTUrl.Text), selectedFormat, tsYTStart.TimeSpan, tsYTEnd.TimeSpan, chkUsePrefs.Checked);
+                int[] crops = null;
+                if (toggleYTCrop.IsOn)
+                {
+                    crops = new int[] { Convert.ToInt32(teYTCropTop.Text), Convert.ToInt32(teYTCropBottom.Text), Convert.ToInt32(teYTCropLeft.Text), Convert.ToInt32(teYTCropRight.Text) };
+                }
+                TimeSpan? start = null;
+                TimeSpan? duration = null;
+                if (toggleYTSegment.IsOn) {
+                    start = tsYTStart.TimeSpan;
+                    duration = tsYTEnd.TimeSpan;
+                }
+
+                IConversion conversion = await Utils.VideoUtil.PrepareYoutubeConversion(VideoUtil.YouTubeString(txtYTUrl.Text), selectedFormat, start, duration, chkUsePrefs.Checked, crops);
                 string destination = conversion.OutputFilePath;
                 conversion.OnProgress += Conversion_OnProgress;
                 this.pbYTProgress.Visible = true;
@@ -785,16 +846,14 @@ namespace YT_RED
                 btnYTOpenDL.Visible = true;
                 if (AppSettings.Default.General.AutomaticallyOpenDownloadLocation)
                 {
-                    string argument = "/select, \"" + btnYTOpenDL.Text + "\"";
+                    string argument = "/select, \"" + result.Data + "\"";
 
                     System.Diagnostics.Process.Start("explorer.exe", argument);
                 }
             }
             gcYTHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.YouTube).ToList();            
-            refreshYoutubeHistory(); 
+            refreshYoutubeHistory();
             lblYTSelectionText.Text = String.Empty;    
-            btnYTDownloadAudio.Enabled = true;
-            btnYTDownloadBest.Enabled = true;
             this.UseWaitCursor = false;
             this.currentDownload = DownloadType.Unknown;
             (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = false;
@@ -864,7 +923,7 @@ namespace YT_RED
                         btnYTOpenDL.Visible = true;
                         if (AppSettings.Default.General.AutomaticallyOpenDownloadLocation)
                         {
-                            string argument = "/select, \"" + btnYTOpenDL.Text + "\"";
+                            string argument = "/select, \"" + result.Data + "\"";
 
                             System.Diagnostics.Process.Start("explorer.exe", argument);
                         }
@@ -918,27 +977,55 @@ namespace YT_RED
             btnYTOpenDL.Visible = false;
             ytMarquee.Text = "Sending Download Request..";
             ytMarquee.Show();
-            RunResult<string> result = null;
-            if (chkUsePrefs.Checked)
+            int[] crops = null;
+            if (toggleYTCrop.IsOn)
             {
-                result = await Utils.VideoUtil.DownloadPreferred(VideoUtil.YouTubeString(url), Classes.StreamType.AudioAndVideo);
+                crops = new int[] { Convert.ToInt32(teYTCropTop.Text), Convert.ToInt32(teYTCropBottom.Text), Convert.ToInt32(teYTCropLeft.Text), Convert.ToInt32(teYTCropRight.Text) };
+            }
+            RunResult<string> result = null;
+            if (crops != null)
+            {
+                this.downloadingCropped = true;
+                IConversion conversion = await VideoUtil.PrepareYoutubeConversion(url, "bestvideo+bestaudio", null, null, true, crops);
+                string destination = conversion.OutputFilePath;
+                conversion.OnProgress += Conversion_OnProgress;
+                this.pbYTProgress.Visible = true;
+                try
+                {
+                    await conversion.Start();
+                    result = new RunResult<string>(true, new string[] { }, destination);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    result = new RunResult<string>(false, new string[] { ex.Message }, null);
+                }
+                this.pbYTProgress.Hide();
+                this.downloadingCropped = false;
             }
             else
             {
-                //if (toggleYTSegment.IsOn)
-                //{
-                //    if(this.tsYTEnd.TimeSpan == TimeSpan.Zero)
-                //    {
-                //        MessageBox.Show("Please specify a valid duration for the segment", "Invalid Duration");
-                //        return;
-                //    }
-                //    result = await Utils.VideoUtil.DownloadBestYTSegment(VideoUtil.YouTubeString(url), Classes.StreamType.AudioAndVideo, tsYTStart.TimeSpan, tsYTEnd.TimeSpan);
-                //    return;
-                //}
-                //else
-                //{
+                if (chkUsePrefs.Checked)
+                {
+                    result = await Utils.VideoUtil.DownloadPreferred(VideoUtil.YouTubeString(url), Classes.StreamType.AudioAndVideo);
+                }
+                else
+                {
+                    //if (toggleYTSegment.IsOn)
+                    //{
+                    //    if(this.tsYTEnd.TimeSpan == TimeSpan.Zero)
+                    //    {
+                    //        MessageBox.Show("Please specify a valid duration for the segment", "Invalid Duration");
+                    //        return;
+                    //    }
+                    //    result = await Utils.VideoUtil.DownloadBestYTSegment(VideoUtil.YouTubeString(url), Classes.StreamType.AudioAndVideo, tsYTStart.TimeSpan, tsYTEnd.TimeSpan);
+                    //    return;
+                    //}
+                    //else
+                    //{
                     result = await Utils.VideoUtil.DownloadBestYT(VideoUtil.YouTubeString(url), Classes.StreamType.AudioAndVideo);
-                //}
+                    //}
+                }
             }
             if (!result.Success)
             {
@@ -952,16 +1039,16 @@ namespace YT_RED
                 Classes.StreamType.AudioAndVideo,
                 DateTime.Now,
                 result.Data));
-            if (AppSettings.Default.General.AutomaticallyOpenDownloadLocation)
-            {
-                string argument = "/select, \"" + btnYTOpenDL.Text + "\"";
-
-                System.Diagnostics.Process.Start("explorer.exe", argument);
-            }
             gcYTHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.YouTube).ToList();
             refreshYoutubeHistory(); 
             btnYTOpenDL.Text = result.Data;
             btnYTOpenDL.Visible = true;
+            if (AppSettings.Default.General.AutomaticallyOpenDownloadLocation)
+            {
+                string argument = "/select, \"" + result.Data + "\"";
+
+                System.Diagnostics.Process.Start("explorer.exe", argument);
+            }
             this.UseWaitCursor = false;
             this.currentDownload = DownloadType.Unknown;
             (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = false;
@@ -970,7 +1057,7 @@ namespace YT_RED
 
         private void lblYTSelectionText_SizeChanged(object sender, EventArgs e)
         {
-            pnlYTOptionPanel.Height = groupControl1.MinimumSize.Height + lblYTSelectionText.Height;
+            pnlYTOptionPanel.Height = gcYTSegments.MinimumSize.Height + lblYTSelectionText.Height;
         }
 
         private async void bbiSettings_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -1075,6 +1162,7 @@ namespace YT_RED
             this.gcYoutube.DataSource = null;
             this.gvYouTube.RefreshData();
             updateYTSegmentState();
+            updateYTCropState();
         }
 
         private void btnRedditReset_Click(object sender, EventArgs e)
@@ -1111,6 +1199,83 @@ namespace YT_RED
             else
             {
                 base.OnPaint(e);
+            }
+        }
+
+        private void gcYTSegments_CustomButtonClick(object sender, DevExpress.XtraBars.Docking2010.BaseButtonEventArgs e)
+        {
+            if (pnlYTSegPanel.Visible)
+            {
+                pnlYTSegPanel.Visible = false;
+                e.Button.Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
+            }
+            else
+            {
+                pnlYTSegPanel.Visible = true;
+                e.Button.Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
+            }
+        }
+
+        private void gcYTCrop_CustomButtonClick(object sender, DevExpress.XtraBars.Docking2010.BaseButtonEventArgs e)
+        {
+            if (pnlYTCropPanel.Visible)
+            {                
+                pnlYTCropPanel.Visible = false;
+                e.Button.Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
+            }
+            else
+            {
+                pnlYTCropPanel.Visible = true;
+                e.Button.Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
+            }
+        }
+
+        private void gcRedCrop_CustomButtonClick(object sender, DevExpress.XtraBars.Docking2010.BaseButtonEventArgs e)
+        {
+            if (pnlRedCropPanel.Visible)
+            {
+                pnlRedCropPanel.Visible = false;
+                e.Button.Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
+            }
+            else
+            {
+                pnlRedCropPanel.Visible = true;
+                e.Button.Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
+            }
+        }
+
+        private void gcRedSegment_CustomButtonClick(object sender, DevExpress.XtraBars.Docking2010.BaseButtonEventArgs e)
+        {
+            if (pnlRedSegPanel.Visible)
+            {
+                pnlRedSegPanel.Visible = false;
+                e.Button.Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
+            }
+            else
+            {
+                pnlRedSegPanel.Visible = true;
+                e.Button.Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
+            }
+        }
+
+        private void txtYTUrl_EditValueChanged(object sender, EventArgs e)
+        {
+            if(gvYouTube.RowCount > 0)
+            {
+                this.gcYoutube.DataSource = null;
+                this.gvYouTube.RefreshData();
+                updateYTSegmentState();
+                updateYTCropState();
+            }
+        }
+
+        private void txtRedditPost_EditValueChanged(object sender, EventArgs e)
+        {
+            if(gvReddit.RowCount > 0)
+            {
+                this.gcReddit.DataSource = null;
+                this.gvReddit.RefreshData();
+                updateRedditSegmentState();
             }
         }
     }

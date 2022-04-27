@@ -76,5 +76,15 @@ namespace YT_RED.Controls
             await Logging.Historian.CleanHistory(true);
             MessageBox.Show("Download History Cleared");
         }
+
+        private async void btnDeleteDownloads_Click(object sender, EventArgs e)
+        {
+            DialogResult res = MessageBox.Show("Files for all recorded downloads will be deleted\nand download history will be reset.\n\nContinue?", "Delete Downloaded Files", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+            if (res == DialogResult.OK)
+            {
+                await Logging.Historian.CleanHistory(true, true);
+            }
+            MessageBox.Show("Downloads Cleared");
+        }
     }
 }
