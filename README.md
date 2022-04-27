@@ -17,6 +17,7 @@ This project is UNLICENSED and uses licensed DevExpress WinForms Controls.
 - Download History Log / File Browser
 - File Format Preference for Downloads
 - Segment Downloads for YT and Reddit
+- Video Cropping for YT (Reddit In Progress)
 
 
 ![image](https://user-images.githubusercontent.com/26498008/160806413-9cf735e9-ef8f-4492-af48-92b226cb210b.png)
@@ -27,6 +28,14 @@ This project is UNLICENSED and uses licensed DevExpress WinForms Controls.
 
 
 ## CHANGELOG
+
+### 4/27/2022 v1.0.0.6
+- Added Video Cropping for YouTube Downloads
+- Added Function in Settings to Delete Downloaded Files
+- Fixed bug where expired download history logs were not removed
+- Fixed bug where audio segments were saved in the wrong location with the wrong file extension
+- Fixed bug where videos processed in ffmpeg were not located by the auto-explorer after downloading
+- Behavior and UI Tweaks
 
 ### 3/30/2022 v1.0.0.5
 - Added Reddit Segment Download Support
