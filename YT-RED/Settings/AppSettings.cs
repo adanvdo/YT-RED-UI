@@ -7,12 +7,14 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using YT_RED.Classes;
 
 namespace YT_RED.Settings
 {
 	public class AppSettings
 	{
 		private static string SettingsFile = "settings.json";
+		private static bool initialLoad = true;
 
 		private static AppSettings _default;
 		public static AppSettings Default
@@ -30,14 +32,16 @@ namespace YT_RED.Settings
 						{
 							// load settings from disk
 							var json = File.ReadAllText(SettingsFile);
-							_default = JsonConvert.DeserializeObject<AppSettings>(json);
+							JsonSerializerSettings settings = new JsonSerializerSettings();
+							settings.Converters.Add(new HotkeyConverter());
+							_default = JsonConvert.DeserializeObject<AppSettings>(json, settings);
 
 							// re-save the file so we add any new settings
 							_default.Save();
 						}
 						catch (Exception ex)
 						{
-							// do something
+							System.Windows.Forms.MessageBox.Show(ex.Message);
 						}
 					}
 
@@ -56,6 +60,8 @@ namespace YT_RED.Settings
 		public GeneralSettings General { get; set; }
 
 		public AdvancedSettings Advanced { get; set; }
+
+		public About About { get; set; }
 
 		public static VideoFormat VideoFormatFromExtension(string extension)
         {
@@ -147,11 +153,12 @@ namespace YT_RED.Settings
             }
         }
 
-		public FeatureSettings[] AllSettings => new FeatureSettings[] { General, Advanced};
+		public FeatureSettings[] AllSettings => new FeatureSettings[] { General, Advanced, About };
 		public AppSettings() 
 		{
 			General = new GeneralSettings();
 			Advanced = new AdvancedSettings();
+			About = new About();
 		}
 
 		/// <summary>
@@ -169,6 +176,10 @@ namespace YT_RED.Settings
 			try
 			{
 				File.WriteAllText(SettingsFile, json);
+				if (initialLoad)
+					initialLoad = false;
+				else 
+					MainForm.UpdateDownloadHotkey();
 			}
 			catch (Exception ex)
 			{

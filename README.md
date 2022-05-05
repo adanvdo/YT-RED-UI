@@ -8,7 +8,7 @@ This project is UNLICENSED and uses licensed DevExpress WinForms Controls.
 - Windows 7, 8, 10
 - .NET Framework 4.8
 
-### Current Features
+### Current Features (Scroll Down for More Info)
 - List Video Format Options
 - Download Selected Format
 - Download Best Quality Video
@@ -17,17 +17,59 @@ This project is UNLICENSED and uses licensed DevExpress WinForms Controls.
 - Download History Log / File Browser
 - File Format Preference for Downloads
 - Segment Downloads for YT and Reddit
-- Video Cropping for YT (Reddit In Progress)
+- Video Cropping
+- Minimize to System Tray
+- Quick Download while in System Tray
+- Quick Download Hotkey
+
+### Known Issues
+- Reddit GIF downloads are not supported
 
 
-![image](https://user-images.githubusercontent.com/26498008/160806413-9cf735e9-ef8f-4492-af48-92b226cb210b.png)
 
-![image](https://user-images.githubusercontent.com/26498008/160806436-2c31ab5e-4c51-406f-be0e-346dc7218569.png)
 
-![image](https://user-images.githubusercontent.com/26498008/160806455-8a14d646-e87c-4515-9de4-80ecc8baf2d9.png)
 
+## YT-RED Youtube & Reddit Video Downloader
+### How To Use
+
+YT-RED's main interface is pretty straight forward. Simply enter the URL of any Youtube video or reddit video post in address bar of the corresponding tab.
+
+- #### List Formats
+  Both Youtube and Reddit tabs have a "List Formats" button.
+  This will retrieve all video formats available to download.
+  An individual format can be selected and downloaded.
+
+- #### Download Best
+  The "Download Best" option evaluates all available video and audio formats before downloading the best available.
+
+  *Note* Download Best often requires downloading separate video and audio files, which are then merged after downloading. This can take a little longer than downloading a specific format.
+
+- #### Download Segment
+  The "Download Segment" option can be toggled on and off. This feature is only available when downloading a specific format in order to improve performance and reduce resource usage.
+
+  Specify the start time of the segment, and the duration.
+
+- #### Crop Video
+  The "Crop Video" option is available for all video downloads. The feature only accepts crop sizes in pixels at this time. 
+
+  Enter the number of pixels to crop on each desired side, and then start the download.
+
+- #### Quick Downloads
+  Quick Download is only available when YT-RED has been minimized to the System Tray. Right-click on the YT-RED icon in the tray, and select "Quick Download" to open the Quick Download form.
+
+- #### Quick Download Hotkey
+  When the Quick Download Hotkey is enabled in advanced settings, YT-RED will register a custom Hotkey that initiates a Quick Download.
+
+  To use, Highlight a youtube or reddit media post url in your browser, and press the configured hotkey. This will perform an automatic "Best Download" with the progress displayed above the system tray.
 
 ## CHANGELOG
+
+### 5/5/2022 v1.0.0.7
+- Added System Tray Support - Can now be minimized to System Tray
+- Added Quick Download Hotkey Feature
+- Added "About" Section in Settings
+- Fully Implemented Crop Feature for Youtube and Reddit downloads
+- Fixed bug where youtube "Best" downloads were not converted to preferred format
 
 ### 4/27/2022 v1.0.0.6
 - Added Video Cropping for YouTube Downloads

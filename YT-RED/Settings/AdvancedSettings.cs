@@ -1,17 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DevExpress.Utils;
 using Newtonsoft.Json;
+using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace YT_RED.Settings
 {
     public class AdvancedSettings : FeatureSettings
     {
-        public override AppFeature Feature => AppFeature.Advanced;        
+        public override AppFeature Feature => AppFeature.Advanced;
+
+        [Category("Hotkeys")]
+        [DisplayName("Enable Hotkeys")]
+        [Description(@"Enables and Registers Hotkey for Quick Download Feature
+YT-RED will not register any Hotkeys or access your clipboard data if this is disabled")]
+        [DefaultValue(false)]
+        [JsonProperty("enable_hotkeys")]
+        public bool EnableHotKeys { get; set; }
+
+        [Category("Hotkeys")]
+        [DisplayName("Quick Download Hotkey")]
+        [Description(@"Register a Hotkey to perform Quick Downloads without needing YT-RED open in the foreground.
+
+How it works:
+Highlight the YouTube or Reddit Media URL in your browser address bar and press your configured Hotkey.
+YT-DLP will store the highlighted URL on your clipboard, and use the clipboard value to start a download from the System Tray.
+If there is existing text in your clipboard, YT-RED will restore it after starting the download.
+")]
+        [EditorAttribute(typeof(DevExpress.XtraEditors.Repository.RepositoryItemPopupContainerEdit), typeof(System.Drawing.Design.UITypeEditor))]
+        [JsonProperty("dl_hotkey")]
+        public KeyShortcut DownloadHotKey { get; set; }
 
         
         [Category("Processing")]
@@ -28,6 +45,8 @@ namespace YT_RED.Settings
 
         public AdvancedSettings()
         {
+            EnableHotKeys = false;
+            DownloadHotKey = KeyShortcut.Empty;
             PreferredYoutubeVideoFormat = YoutubeDLSharp.Options.DownloadMergeFormat.Mp4;
             PreferredYoutubeAudioFormat = YoutubeDLSharp.Options.AudioConversionFormat.Mp3;
         }

@@ -30,10 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions4 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
-            DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions5 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions1 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions2 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
+            DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions3 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
+            DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions4 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             this.tcMainTabControl = new DevExpress.XtraBars.TabFormControl();
             this.bbiSettings = new DevExpress.XtraBars.BarButtonItem();
             this.bsiMessage = new DevExpress.XtraBars.BarStaticItem();
@@ -111,6 +111,15 @@
             this.btnDownloadReddit = new DevExpress.XtraEditors.SimpleButton();
             this.gcRedCrop = new DevExpress.XtraEditors.GroupControl();
             this.pnlRedCropPanel = new DevExpress.XtraEditors.PanelControl();
+            this.txtRedCropRight = new DevExpress.XtraEditors.TextEdit();
+            this.txtRedCropBottom = new DevExpress.XtraEditors.TextEdit();
+            this.txtRedCropLeft = new DevExpress.XtraEditors.TextEdit();
+            this.txtRedCropTop = new DevExpress.XtraEditors.TextEdit();
+            this.labelControl11 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl12 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl13 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl14 = new DevExpress.XtraEditors.LabelControl();
+            this.toggleRedditCrop = new DevExpress.XtraEditors.ToggleSwitch();
             this.gcRedSegment = new DevExpress.XtraEditors.GroupControl();
             this.lblRedSegDisclaimer = new DevExpress.XtraEditors.LabelControl();
             this.pnlRedSegPanel = new DevExpress.XtraEditors.PanelControl();
@@ -120,6 +129,10 @@
             this.tsRedStart = new DevExpress.XtraEditors.TimeSpanEdit();
             this.tsRedDuration = new DevExpress.XtraEditors.TimeSpanEdit();
             this.lblSelectionText = new DevExpress.XtraEditors.LabelControl();
+            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.taskBarMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsiDownload = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsiExit = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.tcMainTabControl)).BeginInit();
             this.ytTabContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ytSplitContainer)).BeginInit();
@@ -194,6 +207,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.gcRedCrop)).BeginInit();
             this.gcRedCrop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pnlRedCropPanel)).BeginInit();
+            this.pnlRedCropPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.txtRedCropRight.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtRedCropBottom.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtRedCropLeft.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtRedCropTop.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.toggleRedditCrop.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gcRedSegment)).BeginInit();
             this.gcRedSegment.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pnlRedSegPanel)).BeginInit();
@@ -201,6 +220,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.toggleRedSegment.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tsRedStart.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tsRedDuration.Properties)).BeginInit();
+            this.taskBarMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // tcMainTabControl
@@ -215,7 +235,7 @@
             this.tcMainTabControl.Name = "tcMainTabControl";
             this.tcMainTabControl.Pages.Add(this.tfpYouTube);
             this.tcMainTabControl.Pages.Add(this.tfpReddit);
-            this.tcMainTabControl.SelectedPage = this.tfpReddit;
+            this.tcMainTabControl.SelectedPage = this.tfpYouTube;
             this.tcMainTabControl.ShowAddPageButton = false;
             this.tcMainTabControl.Size = new System.Drawing.Size(1059, 50);
             this.tcMainTabControl.TabForm = this;
@@ -612,10 +632,10 @@
             this.gcYTCrop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gcYTCrop.CaptionImageOptions.AllowGlyphSkinning = true;
             this.gcYTCrop.Controls.Add(this.pnlYTCropPanel);
-            buttonImageOptions4.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("buttonImageOptions4.SvgImage")));
-            buttonImageOptions4.SvgImageSize = new System.Drawing.Size(18, 18);
+            buttonImageOptions1.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("buttonImageOptions1.SvgImage")));
+            buttonImageOptions1.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcYTCrop.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
-            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions4, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions1, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
             this.gcYTCrop.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
             this.gcYTCrop.Dock = System.Windows.Forms.DockStyle.Top;
             this.gcYTCrop.Location = new System.Drawing.Point(0, 164);
@@ -771,10 +791,10 @@
             this.gcYTSegments.CaptionImageOptions.AllowGlyphSkinning = true;
             this.gcYTSegments.Controls.Add(this.lblSegmentDisclaimer);
             this.gcYTSegments.Controls.Add(this.pnlYTSegPanel);
-            buttonImageOptions5.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
-            buttonImageOptions5.SvgImageSize = new System.Drawing.Size(18, 18);
+            buttonImageOptions2.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
+            buttonImageOptions2.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcYTSegments.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
-            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions5, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, false, true, "ytSegment", -1)});
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions2, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, false, true, "ytSegment", -1)});
             this.gcYTSegments.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
             this.gcYTSegments.Dock = System.Windows.Forms.DockStyle.Top;
             this.gcYTSegments.Location = new System.Drawing.Point(0, 20);
@@ -1091,12 +1111,12 @@
             // gcHistory
             // 
             this.gcHistory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcHistory.Location = new System.Drawing.Point(0, 400);
+            this.gcHistory.Location = new System.Drawing.Point(0, 442);
             this.gcHistory.MainView = this.gvHistory;
             this.gcHistory.Name = "gcHistory";
             this.gcHistory.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repCheckEdit});
-            this.gcHistory.Size = new System.Drawing.Size(323, 334);
+            this.gcHistory.Size = new System.Drawing.Size(323, 292);
             this.gcHistory.TabIndex = 5;
             this.gcHistory.ToolTipController = this.toolTipController;
             this.gcHistory.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -1144,7 +1164,7 @@
             this.pnlRedOptionsPanel.Margin = new System.Windows.Forms.Padding(0);
             this.pnlRedOptionsPanel.MinimumSize = new System.Drawing.Size(323, 55);
             this.pnlRedOptionsPanel.Name = "pnlRedOptionsPanel";
-            this.pnlRedOptionsPanel.Size = new System.Drawing.Size(323, 380);
+            this.pnlRedOptionsPanel.Size = new System.Drawing.Size(323, 422);
             this.pnlRedOptionsPanel.TabIndex = 4;
             // 
             // pnlRedDLPanel
@@ -1155,7 +1175,7 @@
             this.pnlRedDLPanel.Controls.Add(this.btnRedDL);
             this.pnlRedDLPanel.Controls.Add(this.pbDownloadProgress);
             this.pnlRedDLPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlRedDLPanel.Location = new System.Drawing.Point(0, 323);
+            this.pnlRedDLPanel.Location = new System.Drawing.Point(0, 365);
             this.pnlRedDLPanel.Margin = new System.Windows.Forms.Padding(0);
             this.pnlRedDLPanel.Name = "pnlRedDLPanel";
             this.pnlRedDLPanel.Size = new System.Drawing.Size(323, 57);
@@ -1190,7 +1210,7 @@
             this.groupControl2.Controls.Add(this.btnRedditDefault);
             this.groupControl2.Controls.Add(this.btnDownloadReddit);
             this.groupControl2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupControl2.Location = new System.Drawing.Point(0, 237);
+            this.groupControl2.Location = new System.Drawing.Point(0, 279);
             this.groupControl2.Margin = new System.Windows.Forms.Padding(0);
             this.groupControl2.Name = "groupControl2";
             this.groupControl2.Size = new System.Drawing.Size(323, 86);
@@ -1238,16 +1258,16 @@
             this.gcRedCrop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gcRedCrop.CaptionImageOptions.AllowGlyphSkinning = true;
             this.gcRedCrop.Controls.Add(this.pnlRedCropPanel);
-            buttonImageOptions1.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("buttonImageOptions1.SvgImage")));
-            buttonImageOptions1.SvgImageSize = new System.Drawing.Size(18, 18);
+            buttonImageOptions3.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("buttonImageOptions3.SvgImage")));
+            buttonImageOptions3.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcRedCrop.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
-            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions1, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions3, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
             this.gcRedCrop.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
             this.gcRedCrop.Dock = System.Windows.Forms.DockStyle.Top;
             this.gcRedCrop.Location = new System.Drawing.Point(0, 144);
             this.gcRedCrop.Margin = new System.Windows.Forms.Padding(0);
             this.gcRedCrop.Name = "gcRedCrop";
-            this.gcRedCrop.Size = new System.Drawing.Size(323, 93);
+            this.gcRedCrop.Size = new System.Drawing.Size(323, 135);
             this.gcRedCrop.TabIndex = 9;
             this.gcRedCrop.Text = "Crop";
             this.gcRedCrop.CustomButtonClick += new DevExpress.XtraBars.Docking2010.BaseButtonEventHandler(this.gcRedCrop_CustomButtonClick);
@@ -1255,13 +1275,132 @@
             // pnlRedCropPanel
             // 
             this.pnlRedCropPanel.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.pnlRedCropPanel.Controls.Add(this.txtRedCropRight);
+            this.pnlRedCropPanel.Controls.Add(this.txtRedCropBottom);
+            this.pnlRedCropPanel.Controls.Add(this.txtRedCropLeft);
+            this.pnlRedCropPanel.Controls.Add(this.txtRedCropTop);
+            this.pnlRedCropPanel.Controls.Add(this.labelControl11);
+            this.pnlRedCropPanel.Controls.Add(this.labelControl12);
+            this.pnlRedCropPanel.Controls.Add(this.labelControl13);
+            this.pnlRedCropPanel.Controls.Add(this.labelControl14);
+            this.pnlRedCropPanel.Controls.Add(this.toggleRedditCrop);
             this.pnlRedCropPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlRedCropPanel.Location = new System.Drawing.Point(2, 31);
             this.pnlRedCropPanel.Margin = new System.Windows.Forms.Padding(0);
             this.pnlRedCropPanel.Name = "pnlRedCropPanel";
-            this.pnlRedCropPanel.Size = new System.Drawing.Size(319, 60);
+            this.pnlRedCropPanel.Size = new System.Drawing.Size(319, 102);
             this.pnlRedCropPanel.TabIndex = 8;
             this.pnlRedCropPanel.Visible = false;
+            // 
+            // txtRedCropRight
+            // 
+            this.txtRedCropRight.EditValue = "0";
+            this.txtRedCropRight.Enabled = false;
+            this.txtRedCropRight.Location = new System.Drawing.Point(207, 62);
+            this.txtRedCropRight.Name = "txtRedCropRight";
+            this.txtRedCropRight.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.txtRedCropRight.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.txtRedCropRight.Properties.MaskSettings.Set("MaskManagerType", typeof(DevExpress.Data.Mask.NumericMaskManager));
+            this.txtRedCropRight.Properties.MaskSettings.Set("MaskManagerSignature", "allowNull=False");
+            this.txtRedCropRight.Properties.MaskSettings.Set("mask", "d");
+            this.txtRedCropRight.Properties.NullText = "0";
+            this.txtRedCropRight.Size = new System.Drawing.Size(75, 20);
+            this.txtRedCropRight.TabIndex = 16;
+            // 
+            // txtRedCropBottom
+            // 
+            this.txtRedCropBottom.EditValue = "0";
+            this.txtRedCropBottom.Enabled = false;
+            this.txtRedCropBottom.Location = new System.Drawing.Point(207, 33);
+            this.txtRedCropBottom.Name = "txtRedCropBottom";
+            this.txtRedCropBottom.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.txtRedCropBottom.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.txtRedCropBottom.Properties.MaskSettings.Set("MaskManagerType", typeof(DevExpress.Data.Mask.NumericMaskManager));
+            this.txtRedCropBottom.Properties.MaskSettings.Set("MaskManagerSignature", "allowNull=False");
+            this.txtRedCropBottom.Properties.MaskSettings.Set("mask", "d");
+            this.txtRedCropBottom.Properties.NullText = "0";
+            this.txtRedCropBottom.Size = new System.Drawing.Size(75, 20);
+            this.txtRedCropBottom.TabIndex = 15;
+            // 
+            // txtRedCropLeft
+            // 
+            this.txtRedCropLeft.EditValue = "0";
+            this.txtRedCropLeft.Enabled = false;
+            this.txtRedCropLeft.Location = new System.Drawing.Point(68, 62);
+            this.txtRedCropLeft.Name = "txtRedCropLeft";
+            this.txtRedCropLeft.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.txtRedCropLeft.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.txtRedCropLeft.Properties.MaskSettings.Set("MaskManagerType", typeof(DevExpress.Data.Mask.NumericMaskManager));
+            this.txtRedCropLeft.Properties.MaskSettings.Set("MaskManagerSignature", "allowNull=False");
+            this.txtRedCropLeft.Properties.MaskSettings.Set("mask", "d");
+            this.txtRedCropLeft.Properties.NullText = "0";
+            this.txtRedCropLeft.Size = new System.Drawing.Size(75, 20);
+            this.txtRedCropLeft.TabIndex = 14;
+            // 
+            // txtRedCropTop
+            // 
+            this.txtRedCropTop.EditValue = "0";
+            this.txtRedCropTop.Enabled = false;
+            this.txtRedCropTop.Location = new System.Drawing.Point(68, 33);
+            this.txtRedCropTop.Name = "txtRedCropTop";
+            this.txtRedCropTop.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.txtRedCropTop.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.txtRedCropTop.Properties.MaskSettings.Set("MaskManagerType", typeof(DevExpress.Data.Mask.NumericMaskManager));
+            this.txtRedCropTop.Properties.MaskSettings.Set("MaskManagerSignature", "allowNull=False");
+            this.txtRedCropTop.Properties.MaskSettings.Set("mask", "d");
+            this.txtRedCropTop.Properties.NullText = "0";
+            this.txtRedCropTop.Size = new System.Drawing.Size(75, 20);
+            this.txtRedCropTop.TabIndex = 13;
+            // 
+            // labelControl11
+            // 
+            this.labelControl11.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.labelControl11.Appearance.Options.UseFont = true;
+            this.labelControl11.Location = new System.Drawing.Point(172, 63);
+            this.labelControl11.Name = "labelControl11";
+            this.labelControl11.Size = new System.Drawing.Size(29, 16);
+            this.labelControl11.TabIndex = 12;
+            this.labelControl11.Text = "Right";
+            // 
+            // labelControl12
+            // 
+            this.labelControl12.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.labelControl12.Appearance.Options.UseFont = true;
+            this.labelControl12.Location = new System.Drawing.Point(41, 63);
+            this.labelControl12.Name = "labelControl12";
+            this.labelControl12.Size = new System.Drawing.Size(21, 16);
+            this.labelControl12.TabIndex = 11;
+            this.labelControl12.Text = "Left";
+            // 
+            // labelControl13
+            // 
+            this.labelControl13.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.labelControl13.Appearance.Options.UseFont = true;
+            this.labelControl13.Location = new System.Drawing.Point(161, 34);
+            this.labelControl13.Name = "labelControl13";
+            this.labelControl13.Size = new System.Drawing.Size(40, 16);
+            this.labelControl13.TabIndex = 10;
+            this.labelControl13.Text = "Bottom";
+            // 
+            // labelControl14
+            // 
+            this.labelControl14.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.labelControl14.Appearance.Options.UseFont = true;
+            this.labelControl14.Location = new System.Drawing.Point(40, 34);
+            this.labelControl14.Name = "labelControl14";
+            this.labelControl14.Size = new System.Drawing.Size(22, 16);
+            this.labelControl14.TabIndex = 9;
+            this.labelControl14.Text = "Top";
+            // 
+            // toggleRedditCrop
+            // 
+            this.toggleRedditCrop.Location = new System.Drawing.Point(7, 3);
+            this.toggleRedditCrop.Name = "toggleRedditCrop";
+            this.toggleRedditCrop.Properties.OffText = "Off";
+            this.toggleRedditCrop.Properties.OnText = "On";
+            this.toggleRedditCrop.Size = new System.Drawing.Size(95, 24);
+            this.toggleRedditCrop.TabIndex = 0;
+            this.toggleRedditCrop.Toggled += new System.EventHandler(this.toggleRedditCrop_Toggled);
             // 
             // gcRedSegment
             // 
@@ -1270,10 +1409,10 @@
             this.gcRedSegment.CaptionImageOptions.AllowGlyphSkinning = true;
             this.gcRedSegment.Controls.Add(this.lblRedSegDisclaimer);
             this.gcRedSegment.Controls.Add(this.pnlRedSegPanel);
-            buttonImageOptions2.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
-            buttonImageOptions2.SvgImageSize = new System.Drawing.Size(18, 18);
+            buttonImageOptions4.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
+            buttonImageOptions4.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcRedSegment.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
-            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", true, buttonImageOptions2, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, false, true, null, -1)});
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", true, buttonImageOptions4, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, false, true, null, -1)});
             this.gcRedSegment.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
             this.gcRedSegment.Dock = System.Windows.Forms.DockStyle.Top;
             this.gcRedSegment.Location = new System.Drawing.Point(0, 0);
@@ -1395,13 +1534,50 @@
             this.lblSelectionText.Size = new System.Drawing.Size(323, 20);
             this.lblSelectionText.TabIndex = 3;
             // 
+            // notifyIcon
+            // 
+            this.notifyIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.notifyIcon.BalloonTipText = "Quick Download is now enabled.\r\nConfigure Hotkey in Advanced Settings.\r\nDouble Cl" +
+    "ick to open YT-RED";
+            this.notifyIcon.BalloonTipTitle = "YT-RED is Still Running";
+            this.notifyIcon.ContextMenuStrip = this.taskBarMenu;
+            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
+            this.notifyIcon.Text = "YT-RED";
+            this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseDoubleClick);
+            // 
+            // taskBarMenu
+            // 
+            this.taskBarMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsiDownload,
+            this.tsiExit});
+            this.taskBarMenu.Name = "taskBarMenu";
+            this.taskBarMenu.Size = new System.Drawing.Size(163, 48);
+            // 
+            // tsiDownload
+            // 
+            this.tsiDownload.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tsiDownload.Name = "tsiDownload";
+            this.tsiDownload.Size = new System.Drawing.Size(162, 22);
+            this.tsiDownload.Text = "Quick Download";
+            this.tsiDownload.Click += new System.EventHandler(this.tsiDownload_Click);
+            // 
+            // tsiExit
+            // 
+            this.tsiExit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tsiExit.Name = "tsiExit";
+            this.tsiExit.Size = new System.Drawing.Size(162, 22);
+            this.tsiExit.Text = "Exit";
+            this.tsiExit.Click += new System.EventHandler(this.tsiExit_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1059, 784);
-            this.Controls.Add(this.tabFormContentContainer3);
+            this.Controls.Add(this.ytTabContainer);
             this.Controls.Add(this.tcMainTabControl);
+            this.IconOptions.Icon = ((System.Drawing.Icon)(resources.GetObject("MainForm.IconOptions.Icon")));
+            this.IconOptions.Image = ((System.Drawing.Image)(resources.GetObject("MainForm.IconOptions.Image")));
             this.Name = "MainForm";
             this.TabFormControl = this.tcMainTabControl;
             this.Text = "YT-RED";
@@ -1491,6 +1667,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.gcRedCrop)).EndInit();
             this.gcRedCrop.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pnlRedCropPanel)).EndInit();
+            this.pnlRedCropPanel.ResumeLayout(false);
+            this.pnlRedCropPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.txtRedCropRight.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtRedCropBottom.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtRedCropLeft.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtRedCropTop.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.toggleRedditCrop.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gcRedSegment)).EndInit();
             this.gcRedSegment.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pnlRedSegPanel)).EndInit();
@@ -1499,6 +1682,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.toggleRedSegment.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tsRedStart.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tsRedDuration.Properties)).EndInit();
+            this.taskBarMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1590,6 +1774,19 @@
         private DevExpress.XtraEditors.TextEdit teYTCropLeft;
         private DevExpress.XtraEditors.LabelControl labelControl5;
         private DevExpress.XtraEditors.TextEdit teYTCropRight;
+        private System.Windows.Forms.NotifyIcon notifyIcon;
+        private System.Windows.Forms.ContextMenuStrip taskBarMenu;
+        private System.Windows.Forms.ToolStripMenuItem tsiDownload;
+        private System.Windows.Forms.ToolStripMenuItem tsiExit;
+        private DevExpress.XtraEditors.ToggleSwitch toggleRedditCrop;
+        private DevExpress.XtraEditors.TextEdit txtRedCropRight;
+        private DevExpress.XtraEditors.TextEdit txtRedCropBottom;
+        private DevExpress.XtraEditors.TextEdit txtRedCropLeft;
+        private DevExpress.XtraEditors.TextEdit txtRedCropTop;
+        private DevExpress.XtraEditors.LabelControl labelControl11;
+        private DevExpress.XtraEditors.LabelControl labelControl12;
+        private DevExpress.XtraEditors.LabelControl labelControl13;
+        private DevExpress.XtraEditors.LabelControl labelControl14;
     }
 }
 

@@ -40,6 +40,10 @@ namespace YT_RED.Controls
                 tabPage.Controls.Add(propertyGrid);
                 tabPage.Name = $"tpg{setting.Feature}";
                 tabPage.Text = setting.Feature.ToFriendlyString().Replace("&", "&&");
+                if (setting.Feature == AppFeature.About)
+                {
+                    propertyGrid.Grid.OptionsBehavior.Editable = false;                    
+                }
 
                 this.tcSettingsTabControl.TabPages.Add(tabPage);
 

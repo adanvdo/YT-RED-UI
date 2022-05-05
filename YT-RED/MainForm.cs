@@ -1,25 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
-using YT_RED.Controls;
-using YT_RED.Classes;
-using YT_RED.Logging;
-using YT_RED.Settings;
-using YT_RED.Utils;
-using Xabe.FFmpeg;
-using YoutubeDLSharp;
-using Newtonsoft.Json;
-using System.Linq;
-using System.Threading.Tasks;
-using DevExpress.Skins;
-using System.Reflection;
+﻿using DevExpress.Utils;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
-using DevExpress.Utils;
-using URIScheme;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Windows.Input;
+using URIScheme;
+using Xabe.FFmpeg;
+using YoutubeDLSharp;
+using YT_RED.Classes;
+using YT_RED.Controls;
+using YT_RED.Logging;
+using YT_RED.Settings;
+using YT_RED.Utils;
 
 namespace YT_RED
 {
@@ -27,16 +27,17 @@ namespace YT_RED
     {
         private UIBlockDetector _blockDetector;
         private Timer historyTimer;
-        public bool IsLocked { 
-            get 
-            { 
-                foreach(CustomTabFormPage pg in this.tcMainTabControl.Pages)
+        public bool IsLocked
+        {
+            get
+            {
+                foreach (CustomTabFormPage pg in this.tcMainTabControl.Pages)
                 {
                     if (pg.IsLocked)
                         return true;
                 }
                 return false;
-            } 
+            }
         }
 
         private DownloadLog selectedYTLog = null;
@@ -52,24 +53,28 @@ namespace YT_RED
         private string initialLink = string.Empty;
         private MediaSource initialSource = MediaSource.None;
         private URISchemeService uriService = null;
+        private bool enableQuickDownload = false;
+        static KeyboardHook hook = new KeyboardHook();
 
         public MainForm()
         {
             InitializeComponent();
-            registerURIScheme();
-            this.historyTimer = new Timer();
-            this.historyTimer.Interval = 10000;
-            this.historyTimer.Tick += HistoryTimer_Tick;
-            if (AppSettings.Default.General.EnableDownloadHistory)
-                this.historyTimer.Start();
-            Historian.Init();
-            Init();
-            _blockDetector = new UIBlockDetector();
+            initializeProgram();
         }
 
         public MainForm(InitialFunction initialFunction, string initialLink, Classes.MediaSource mediaSource)
         {
             InitializeComponent();
+            initializeProgram(initialFunction, initialLink, mediaSource);
+        }
+
+        private void initializeProgram(InitialFunction initialFunction = InitialFunction.None, string initialLink = "", MediaSource mediaSource = MediaSource.None)
+        {
+            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            AppSettings.Default.About.Version = assembly.GetName().Version.ToString();
+            AppSettings.Default.About.Build = assembly.GetCustomAttributes(typeof(AssemblyBuildAttribute), false).Cast<AssemblyBuildAttribute>().FirstOrDefault().Value;
+            MainForm.hook.KeyPressed += new EventHandler<KeyPressedEventArgs>(Hook_KeyPressed);
+            MainForm.UpdateDownloadHotkey();
             registerURIScheme();
             this.historyTimer = new Timer();
             this.historyTimer.Interval = 10000;
@@ -82,6 +87,79 @@ namespace YT_RED
             this.initialFunction = initialFunction;
             this.initialLink = initialLink;
             initialSource = mediaSource;
+        }
+
+        public static void UpdateDownloadHotkey()
+        {
+            MainForm.hook.UnregisterHotKey();
+            if (AppSettings.Default.Advanced.EnableHotKeys && AppSettings.Default.Advanced.DownloadHotKey != KeyShortcut.Empty && !string.IsNullOrEmpty(AppSettings.Default.Advanced.DownloadHotKey.ToString()))
+            {
+                ModifierKeysConverter modifierKeysConverter = new ModifierKeysConverter();
+                KeysConverter keysConverter = new KeysConverter();
+                string modifierKeys = "";
+                foreach (string s in AppSettings.Default.Advanced.DownloadHotKey.ToString().Replace(" ", "").Split('+'))
+                {
+                    if (modifierKeysConverter.IsValid(s))
+                        modifierKeys += $"{s}+";
+                }
+                modifierKeys = modifierKeys.Remove(modifierKeys.Length - 1, 1);
+                string keys = "";
+                foreach (string s in AppSettings.Default.Advanced.DownloadHotKey.ToString().Replace(" ", "").Split('+'))
+                {
+                    if (keysConverter.IsValid(s) && !modifierKeysConverter.IsValid(s))
+                        keys += $"{s}+";
+                }
+                keys = keys.Remove(keys.Length - 1, 1);
+                ModifierKeys dlModifier = (ModifierKeys)modifierKeysConverter.ConvertFrom(modifierKeys);
+                Keys dlKey = (Keys)keysConverter.ConvertFrom(keys);
+
+                MainForm.hook.RegisterHotKey(dlModifier, dlKey);
+            }
+        }
+
+        private async void Hook_KeyPressed(object sender, KeyPressedEventArgs e)
+        {
+            if (enableQuickDownload)
+            {
+                string tempText = string.Empty;
+                string copiedText = string.Empty;
+                if (Clipboard.ContainsText()) { tempText = Clipboard.GetText(); }
+                SendKeys.SendWait("^c");
+                await Task.Delay(500);
+                if (Clipboard.ContainsText())
+                    copiedText = Clipboard.GetText();
+                Clipboard.SetText(tempText);
+
+                if (HtmlUtil.CheckUrl(copiedText) == DownloadType.Unknown)
+                {
+                    MessageBox.Show("The selected text is not a valid Youtube or Reddit media url", "No link detected");
+                    return;
+                }
+
+                if (activeTrayForm == null)
+                {
+                    try
+                    {
+                        TrayForm trayForm = new TrayForm();
+
+                        trayForm.FormClosed += TrayForm_FormClosed;
+                        trayForm.StartPosition = FormStartPosition.Manual;
+                        Rectangle workingArea = Screen.GetWorkingArea(this);
+                        var loc = new Point(workingArea.Right - trayForm.Size.Width, workingArea.Bottom - trayForm.Size.Height);
+                        trayForm.HideProgressPanel();
+                        trayForm.Location = loc;
+                        trayForm.Url = copiedText;
+                        trayForm.Show();
+                        trayForm.BringToFront();
+                        trayForm.TopMost = true;
+                        trayForm.TriggerDownload();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                }
+            }
         }
 
         private async void HistoryTimer_Tick(object sender, EventArgs e)
@@ -108,7 +186,23 @@ namespace YT_RED
         protected override void OnClosing(CancelEventArgs e)
         {
             //uriService.Delete();
-            base.OnClosing(e);            
+            base.OnClosing(e);
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                enableQuickDownload = true;
+                notifyIcon.Visible = true;
+                notifyIcon.ShowBalloonTip(3000);
+                this.ShowInTaskbar = false;
+            }
+            else
+            {
+                enableQuickDownload = false;
+            }
+            base.OnResize(e);
         }
 
         private void registerURIScheme()
@@ -120,9 +214,9 @@ namespace YT_RED
             if (isSet)
                 uriService.Delete();
 
-            
+
             uriService.Set();
-            
+
         }
 
         private async void Init()
@@ -167,22 +261,9 @@ namespace YT_RED
                 else if (initialFunction == InitialFunction.DownloadBest)
                     doRedBest();
             }
-            else 
+            else
                 tcMainTabControl.SelectedPage = tfpYouTube;
         }
-
-        #region Validation
-
-        private DownloadType checkUrl(string url)
-        {
-            if (url.StartsWith(@"https://www.youtube.com") || url.StartsWith("https://youtu.be") || url.StartsWith(@"https://youtube.com"))
-                return DownloadType.YouTube;
-            if (url.StartsWith(@"https://reddit.com") || url.StartsWith(@"https://www.reddit.com"))
-                return DownloadType.Reddit;
-            return DownloadType.Unknown;
-        }
-
-        #endregion
 
         #region Reddit
         private void btnRedditDefault_Click(object sender, EventArgs e)
@@ -194,16 +275,16 @@ namespace YT_RED
         {
             if (!string.IsNullOrEmpty(txtRedditPost.Text))
             {
-                if (checkUrl(txtRedditPost.Text) == DownloadType.Reddit)
+                if (HtmlUtil.CheckUrl(txtRedditPost.Text) == DownloadType.Reddit)
                 {
                     redditScrape(this.txtRedditPost.Text);
                     return;
                 }
-                else if (checkUrl(txtRedditPost.Text) == DownloadType.YouTube)
+                else if (HtmlUtil.CheckUrl(txtRedditPost.Text) == DownloadType.YouTube)
                 {
                     txtYTUrl.Text = txtRedditPost.Text;
                     tcMainTabControl.SelectedPage = tfpYouTube;
-
+                    btnYTDownloadBest.PerformClick();
                     return;
                 }
             }
@@ -220,12 +301,12 @@ namespace YT_RED
         {
             if (!string.IsNullOrEmpty(txtRedditPost.Text))
             {
-                if (checkUrl(txtRedditPost.Text) == DownloadType.Reddit)
+                if (HtmlUtil.CheckUrl(txtRedditPost.Text) == DownloadType.Reddit)
                 {
                     listRedditFormats(txtRedditPost.Text);
                     return;
                 }
-                else if (checkUrl(txtRedditPost.Text) == DownloadType.YouTube)
+                else if (HtmlUtil.CheckUrl(txtRedditPost.Text) == DownloadType.YouTube)
                 {
                     txtYTUrl.Text = txtRedditPost.Text;
                     tcMainTabControl.SelectedPage = tfpYouTube;
@@ -257,22 +338,47 @@ namespace YT_RED
                 this.UseWaitCursor = true;
                 this.currentDownload = DownloadType.Reddit;
                 (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = true;
-                List<Classes.FFmpegParam> parameters = null;
+                List<Classes.FFmpegParam> parameters = new List<Classes.FFmpegParam>();
                 if (toggleRedSegment.IsOn)
-                {
-                    parameters = new List<Classes.FFmpegParam>();
+                {                    
                     TimeSpan start = tsRedStart.TimeSpan;
                     TimeSpan duration = tsRedDuration.TimeSpan;
-                    if(start != null)
+                    if (start != null)
                     {
                         parameters.Add(new Classes.FFmpegParam(Classes.ParamType.StartTime, $"-ss {((TimeSpan)start)}"));
                     }
-                    if(duration != null)
+                    if (duration != null)
                     {
                         parameters.Add(new Classes.FFmpegParam(Classes.ParamType.Duration, $"-t {((TimeSpan)duration)}"));
                     }
                 }
-                IConversion conversion = Utils.VideoUtil.PrepareConversion(selectedStream, parameters == null ? null : parameters.ToArray());
+
+                int[] crops = null;
+                if (toggleRedditCrop.IsOn)
+                {
+                    crops = new int[] { Convert.ToInt32(txtRedCropTop.Text), Convert.ToInt32(txtRedCropBottom.Text), Convert.ToInt32(txtRedCropLeft.Text), Convert.ToInt32(txtRedCropRight.Text) };
+                }                
+
+                int outWidth = -1;
+                int outHeight = -1;
+                int x = -1;
+                int y = -1;
+
+                if (crops != null && crops.Length == 4 && selectedStream != null)
+                {
+                    int[] ffmpegCrop = Utils.VideoUtil.ConvertCrop(crops, Convert.ToInt32(selectedStream.Width), Convert.ToInt32(selectedStream.Height));
+                    x = ffmpegCrop[0];
+                    y = ffmpegCrop[1];
+                    outWidth = ffmpegCrop[2];
+                    outHeight = ffmpegCrop[3];
+                }
+
+                if (outWidth >= 0 && outHeight >= 0 && x >= 0 && y >= 0)
+                {
+                    parameters.Add(new Classes.FFmpegParam(Classes.ParamType.Crop, $"-filter:v \"crop={outWidth}:{outHeight}:{x}:{y}\""));
+                }
+
+                IConversion conversion = Utils.VideoUtil.PrepareConversion(selectedStream, parameters.Count > 0 ? parameters.ToArray() : null);
                 string destination = conversion.OutputFilePath;
                 conversion.OnProgress += Conversion_OnProgress;
                 this.pbDownloadProgress.Visible = true;
@@ -360,12 +466,48 @@ namespace YT_RED
                         if (id != null)
                         {
                             this.redditListMarquee.Text = "Evaluating available formats..";
-                            Tuple<int,string> bestDash = await Utils.HtmlUtil.GetBestRedditDashVideo(id);
+                            Tuple<int, string> bestDash = await Utils.HtmlUtil.GetBestRedditDashVideo(id);
                             bool audioExists = await Utils.HtmlUtil.MediaExists(Utils.VideoUtil.RedditAudioUrl(id));
-                            if(bestDash != null)
+                            if (bestDash != null)
                             {
                                 this.redditListMarquee.Text = "Preparing download..";
-                                IConversion conversion = await Utils.VideoUtil.PrepareStreamConversion(bestDash.Item2, audioExists ? Utils.VideoUtil.RedditAudioUrl(id) : String.Empty);
+
+                                int[] crops = null;
+                                if (toggleRedditCrop.IsOn)
+                                {
+                                    crops = new int[] { Convert.ToInt32(txtRedCropTop.Text), Convert.ToInt32(txtRedCropBottom.Text), Convert.ToInt32(txtRedCropLeft.Text), Convert.ToInt32(txtRedCropRight.Text) };
+                                }
+
+                                IMediaInfo mediaInfo = null;
+                                IVideoStream videoStream = null;
+                                if (!string.IsNullOrEmpty(bestDash.Item2))
+                                {
+                                    mediaInfo = await FFmpeg.GetMediaInfo(bestDash.Item2);
+                                    videoStream = mediaInfo.VideoStreams.FirstOrDefault();
+                                }
+
+                                int outWidth = -1;
+                                int outHeight = -1;
+                                int x = -1;
+                                int y = -1;
+
+                                if (crops != null && crops.Length == 4 && videoStream != null)
+                                {
+                                    int[] ffmpegCrop = Utils.VideoUtil.ConvertCrop(crops, videoStream.Width, videoStream.Height);
+                                    x = ffmpegCrop[0];
+                                    y = ffmpegCrop[1];
+                                    outWidth = ffmpegCrop[2];
+                                    outHeight = ffmpegCrop[3];
+                                }
+
+                                List<Classes.FFmpegParam> parameters = new List<Classes.FFmpegParam>();
+
+                                if (outWidth >= 0 && outHeight >= 0 && x >= 0 && y >= 0)
+                                {
+                                    parameters.Add(new Classes.FFmpegParam(Classes.ParamType.Crop, $"-filter:v \"crop={outWidth}:{outHeight}:{x}:{y}\""));
+                                }
+
+                                IConversion conversion = await Utils.VideoUtil.PrepareStreamConversion(bestDash.Item2, audioExists ? Utils.VideoUtil.RedditAudioUrl(id) : String.Empty, parameters.ToArray());
                                 string destination = conversion.OutputFilePath;
                                 conversion.OnProgress += Conversion_OnProgress;
                                 this.redditListMarquee.Text = string.Empty;
@@ -395,6 +537,10 @@ namespace YT_RED
 
                                     System.Diagnostics.Process.Start("explorer.exe", argument);
                                 }
+                            }
+                            else
+                            {
+                                MessageBox.Show("Unable to determine best download", "Oops");
                             }
                         }
                     }
@@ -427,7 +573,7 @@ namespace YT_RED
             gvHistory.Columns["FileExists"].VisibleIndex = 0;
             gvHistory.Columns["FileExists"].ColumnEdit = repCheckEdit;
             gvHistory.Columns["FileExists"].ToolTip = "File Exists";
-            gvHistory.Columns["FileExists"].OptionsColumn.ShowCaption = false; 
+            gvHistory.Columns["FileExists"].OptionsColumn.ShowCaption = false;
             gvHistory.Columns["FileExists"].MinWidth = 5;
             gvHistory.Columns["FileExists"].Width = 10;
             gvHistory.Columns["DownloadType"].Width = 10;
@@ -457,7 +603,7 @@ namespace YT_RED
         private void tabFormControl1_PageClosing(object sender, DevExpress.XtraBars.PageClosingEventArgs e)
         {
             CustomTabFormPage page = e.Page as CustomTabFormPage;
-            if(page.Name == "tfpYouTube")
+            if (page.Name == "tfpYouTube")
             {
                 this.youTubePage = page;
             }
@@ -466,7 +612,7 @@ namespace YT_RED
                 this.redditPage = page;
             }
 
-            if(page.IsLocked)
+            if (page.IsLocked)
             {
                 MessageBox.Show("A Task is currently in progress and cannot be cancelled.\nPlease wait for the operation to complete.", "A Task is Busy", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 e.Cancel = true;
@@ -506,7 +652,7 @@ namespace YT_RED
             }
             updateRedditSegmentState();
         }
-      
+
 
         private void Conversion_OnProgress(object sender, Xabe.FFmpeg.Events.ConversionProgressEventArgs args)
         {
@@ -547,18 +693,18 @@ namespace YT_RED
 
         private void tabFormControl1_SelectedPageChanged(object sender, DevExpress.XtraBars.TabFormSelectedPageChangedEventArgs e)
         {
-            if(tcMainTabControl.SelectedPage != null && tcMainTabControl.SelectedPage.Text == "Reddit")
+            if (tcMainTabControl.SelectedPage != null && tcMainTabControl.SelectedPage.Text == "Reddit")
             {
                 gcHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.Reddit).ToList();
                 refreshRedditHistory();
-                if(gvHistory.RowCount > 0)
+                if (gvHistory.RowCount > 0)
                     gvHistory.FocusedRowHandle = 0;
             }
         }
 
         private void gvHistory_DoubleClick(object sender, EventArgs e)
         {
-            if(selectedRedditLog != null)
+            if (selectedRedditLog != null)
             {
                 string argument = "/select, \"" + selectedRedditLog.DownloadLocation + "\"";
 
@@ -638,16 +784,16 @@ namespace YT_RED
 
         private void btnYTListFormats_Click(object sender, EventArgs e)
         {
-            doYTFormatList();     
+            doYTFormatList();
         }
 
         private void doYTFormatList()
         {
             if (!string.IsNullOrEmpty(txtYTUrl.Text))
             {
-                if (checkUrl(txtYTUrl.Text) == DownloadType.YouTube)
+                if (HtmlUtil.CheckUrl(txtYTUrl.Text) == DownloadType.YouTube)
                     getYTFormats(VideoUtil.YouTubeString(txtYTUrl.Text));
-                else if (checkUrl(txtYTUrl.Text) == DownloadType.Reddit)
+                else if (HtmlUtil.CheckUrl(txtYTUrl.Text) == DownloadType.Reddit)
                 {
                     txtRedditPost.Text = txtYTUrl.Text;
                     tcMainTabControl.SelectedPage = tfpReddit;
@@ -667,18 +813,18 @@ namespace YT_RED
             {
                 this.UseWaitCursor = true;
                 (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = true;
-                this.ytMarquee.Text = "Fetching Available Formats";                
+                this.ytMarquee.Text = "Fetching Available Formats";
                 this.ytMarquee.Show();
                 var data = await VideoUtil.GetVideoData(url);
                 var formatList = data.Formats.Where(f => f.FormatId != "sb0").OrderBy(f => f.AudioCodec != null ? 0 : 1).ThenBy(f => f.Height).ToList();
                 gcYoutube.DataSource = formatList;
-                refreshYTGrid();        
-                this.UseWaitCursor=false;
+                refreshYTGrid();
+                this.UseWaitCursor = false;
                 (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = false;
                 this.ytMarquee.Hide();
                 this.ytMarquee.Text = string.Empty;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -708,7 +854,7 @@ namespace YT_RED
             gvYouTube.Columns["Height"].Visible = false;
             gvYouTube.Columns["StretchedRatio"].Visible = false;
             gvYouTube.Columns["ApproximateFileSize"].Visible = false;
-            gvYouTube.RefreshData(); 
+            gvYouTube.RefreshData();
         }
 
         private void refreshYoutubeHistory()
@@ -740,7 +886,8 @@ namespace YT_RED
             if (e.FocusedRowHandle < 0)
             {
                 lblYTSelectionText.Text = string.Empty;
-            } else
+            }
+            else
             {
                 YoutubeDLSharp.Metadata.FormatData fd = gvYouTube.GetFocusedRow() as YoutubeDLSharp.Metadata.FormatData;
                 lblYTSelectionText.Text = fd.Format;
@@ -753,12 +900,12 @@ namespace YT_RED
         {
             if (downloadingSegment || downloadingCropped)
                 return;
-            if(!pbYTProgress.Visible)
+            if (!pbYTProgress.Visible)
             {
                 pbYTProgress.Show();
             }
             pbYTProgress.Position = Convert.ToInt32(progress.Progress * 100);
-            if(progress.State == DownloadState.Success)
+            if (progress.State == DownloadState.Success)
             {
                 pbYTProgress.Position = 0;
                 pbYTProgress.Hide();
@@ -793,7 +940,8 @@ namespace YT_RED
                 }
                 TimeSpan? start = null;
                 TimeSpan? duration = null;
-                if (toggleYTSegment.IsOn) {
+                if (toggleYTSegment.IsOn)
+                {
                     start = tsYTStart.TimeSpan;
                     duration = tsYTEnd.TimeSpan;
                 }
@@ -851,9 +999,9 @@ namespace YT_RED
                     System.Diagnostics.Process.Start("explorer.exe", argument);
                 }
             }
-            gcYTHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.YouTube).ToList();            
+            gcYTHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.YouTube).ToList();
             refreshYoutubeHistory();
-            lblYTSelectionText.Text = String.Empty;    
+            lblYTSelectionText.Text = String.Empty;
             this.UseWaitCursor = false;
             this.currentDownload = DownloadType.Unknown;
             (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = false;
@@ -863,7 +1011,7 @@ namespace YT_RED
         {
             if (!string.IsNullOrEmpty(txtYTUrl.Text))
             {
-                if (checkUrl(txtYTUrl.Text) == DownloadType.YouTube)
+                if (HtmlUtil.CheckUrl(txtYTUrl.Text) == DownloadType.YouTube)
                 {
                     this.UseWaitCursor = true;
                     this.currentDownload = DownloadType.YouTube;
@@ -936,7 +1084,7 @@ namespace YT_RED
                     this.currentDownload = DownloadType.Unknown;
                     (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = false;
                     return;
-                }                
+                }
             }
             MessageBox.Show("The url provided is not a valid Youtube url", "Invalid URL", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             return;
@@ -951,12 +1099,12 @@ namespace YT_RED
         {
             if (!string.IsNullOrEmpty(txtYTUrl.Text))
             {
-                if (checkUrl(txtYTUrl.Text) == DownloadType.YouTube)
+                if (HtmlUtil.CheckUrl(txtYTUrl.Text) == DownloadType.YouTube)
                 {
                     ytDownloadBest(txtYTUrl.Text);
                     return;
                 }
-                else if (checkUrl(txtYTUrl.Text) == DownloadType.Reddit)
+                else if (HtmlUtil.CheckUrl(txtYTUrl.Text) == DownloadType.Reddit)
                 {
                     txtRedditPost.Text = txtYTUrl.Text;
                     tcMainTabControl.SelectedPage = tfpReddit;
@@ -1010,21 +1158,8 @@ namespace YT_RED
                     result = await Utils.VideoUtil.DownloadPreferred(VideoUtil.YouTubeString(url), Classes.StreamType.AudioAndVideo);
                 }
                 else
-                {
-                    //if (toggleYTSegment.IsOn)
-                    //{
-                    //    if(this.tsYTEnd.TimeSpan == TimeSpan.Zero)
-                    //    {
-                    //        MessageBox.Show("Please specify a valid duration for the segment", "Invalid Duration");
-                    //        return;
-                    //    }
-                    //    result = await Utils.VideoUtil.DownloadBestYTSegment(VideoUtil.YouTubeString(url), Classes.StreamType.AudioAndVideo, tsYTStart.TimeSpan, tsYTEnd.TimeSpan);
-                    //    return;
-                    //}
-                    //else
-                    //{
-                    result = await Utils.VideoUtil.DownloadBestYT(VideoUtil.YouTubeString(url), Classes.StreamType.AudioAndVideo);
-                    //}
+                {                    
+                    result = await Utils.VideoUtil.DownloadBestYT(VideoUtil.YouTubeString(url), Classes.StreamType.AudioAndVideo);                    
                 }
             }
             if (!result.Success)
@@ -1040,7 +1175,7 @@ namespace YT_RED
                 DateTime.Now,
                 result.Data));
             gcYTHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.YouTube).ToList();
-            refreshYoutubeHistory(); 
+            refreshYoutubeHistory();
             btnYTOpenDL.Text = result.Data;
             btnYTOpenDL.Visible = true;
             if (AppSettings.Default.General.AutomaticallyOpenDownloadLocation)
@@ -1063,7 +1198,7 @@ namespace YT_RED
         private async void bbiSettings_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             SettingsDialog dlg = new SettingsDialog();
-            DialogResult res = dlg.ShowDialog(); 
+            DialogResult res = dlg.ShowDialog();
             gcYTHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.YouTube).ToList();
             refreshRedditHistory();
             gcHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.Reddit).ToList();
@@ -1073,7 +1208,7 @@ namespace YT_RED
                 bsiMessage.Caption = "Settings Saved";
                 await Task.Delay(3000);
                 bsiMessage.Caption = String.Empty;
-            }            
+            }
         }
 
         private void btnYTOpenDL_Click(object sender, EventArgs e)
@@ -1096,7 +1231,7 @@ namespace YT_RED
             }
         }
 
-        
+
 
         private void gvYTHistory_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e)
         {
@@ -1114,13 +1249,13 @@ namespace YT_RED
 
         private void gvYouTube_CustomColumnDisplayText(object sender, DevExpress.XtraGrid.Views.Base.CustomColumnDisplayTextEventArgs e)
         {
-            if(e.Column.FieldName == "FileSize")
+            if (e.Column.FieldName == "FileSize")
             {
                 string size;
                 if (e.Value != null)
                 {
                     size = ((Convert.ToDecimal(e.Value) / 1024) / 1024).ToString();
-                    
+
                 }
                 else
                 {
@@ -1192,7 +1327,7 @@ namespace YT_RED
 
         private void btnYTListFormats_Paint(object sender, PaintEventArgs e)
         {
-            if(toggleYTSegment.IsOn && (gvYouTube.RowCount < 1 || selectedFormat == null))
+            if (toggleYTSegment.IsOn && (gvYouTube.RowCount < 1 || selectedFormat == null))
             {
                 e.Graphics.DrawRectangle(new Pen(Color.Red), new Rectangle(0, 0, btnYTListFormats.Width - 1, btnYTListFormats.Height - 1));
             }
@@ -1219,7 +1354,7 @@ namespace YT_RED
         private void gcYTCrop_CustomButtonClick(object sender, DevExpress.XtraBars.Docking2010.BaseButtonEventArgs e)
         {
             if (pnlYTCropPanel.Visible)
-            {                
+            {
                 pnlYTCropPanel.Visible = false;
                 e.Button.Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
             }
@@ -1260,7 +1395,7 @@ namespace YT_RED
 
         private void txtYTUrl_EditValueChanged(object sender, EventArgs e)
         {
-            if(gvYouTube.RowCount > 0)
+            if (gvYouTube.RowCount > 0)
             {
                 this.gcYoutube.DataSource = null;
                 this.gvYouTube.RefreshData();
@@ -1271,12 +1406,78 @@ namespace YT_RED
 
         private void txtRedditPost_EditValueChanged(object sender, EventArgs e)
         {
-            if(gvReddit.RowCount > 0)
+            if (gvReddit.RowCount > 0)
             {
                 this.gcReddit.DataSource = null;
                 this.gvReddit.RefreshData();
                 updateRedditSegmentState();
+                updateRedditCropState();
             }
+        }
+
+        private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            this.WindowState = FormWindowState.Normal;
+            this.ShowInTaskbar = true;
+            notifyIcon.Visible = false;
+        }
+
+        private TrayForm activeTrayForm = null;
+        private void tsiDownload_Click(object sender, EventArgs e)
+        {
+            if (activeTrayForm == null)
+            {
+                try
+                {
+                    using (TrayForm trayForm = new TrayForm())
+                    {
+                        activeTrayForm = trayForm;
+                        trayForm.FormClosed += TrayForm_FormClosed;
+                        trayForm.StartPosition = FormStartPosition.Manual;
+                        Rectangle workingArea = Screen.GetWorkingArea(this);                        
+                        var loc = new Point(workingArea.Right - trayForm.Size.Width, workingArea.Bottom - trayForm.Size.Height);
+                        trayForm.HideProgressPanel();
+                        trayForm.Location = loc;
+                        trayForm.ShowDialog();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
+
+        private void TrayForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            activeTrayForm = null;
+        }
+
+        private void tsiExit_Click(object sender, EventArgs e)
+        {
+            if (IsLocked || (activeTrayForm != null && activeTrayForm.Locked))
+            {
+                DialogResult res = MessageBox.Show("A download is in progress.\nAre you sure you want to exit?", "Download In Progress", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                if (res != DialogResult.OK)
+                    return;
+            }
+
+            Application.Exit();
+        }
+
+        private void toggleRedditCrop_Toggled(object sender, EventArgs e)
+        {
+            updateRedditCropState();
+        }
+
+        private void updateRedditCropState()
+        {
+            txtRedCropBottom.Enabled = toggleRedditCrop.IsOn;
+            txtRedCropLeft.Enabled = toggleRedditCrop.IsOn;
+            txtRedCropRight.Enabled = toggleRedditCrop.IsOn;
+            txtRedCropTop.Enabled = toggleRedditCrop.IsOn;
+            btnRedditList.Invalidate();
+            gcRedCrop.CustomHeaderButtons[0].Properties.Enabled = !toggleRedditCrop.IsOn;
         }
     }
 }

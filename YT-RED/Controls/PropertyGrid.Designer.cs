@@ -49,7 +49,7 @@
             this.pgPropertyGridPanel.Rows.AddRange(new DevExpress.Utils.Layout.TablePanelRow[] {
             new DevExpress.Utils.Layout.TablePanelRow(DevExpress.Utils.Layout.TablePanelEntityStyle.Relative, 1F),
             new DevExpress.Utils.Layout.TablePanelRow(DevExpress.Utils.Layout.TablePanelEntityStyle.AutoSize, 1F)});
-            this.pgPropertyGridPanel.Size = new System.Drawing.Size(540, 462);
+            this.pgPropertyGridPanel.Size = new System.Drawing.Size(673, 483);
             this.pgPropertyGridPanel.TabIndex = 1;
             // 
             // pgcPropertyGrid
@@ -60,19 +60,22 @@
             this.pgcPropertyGrid.Location = new System.Drawing.Point(3, 3);
             this.pgcPropertyGrid.Name = "pgcPropertyGrid";
             this.pgcPropertyGrid.OptionsView.AllowReadOnlyRowAppearance = DevExpress.Utils.DefaultBoolean.True;
+            this.pgcPropertyGrid.OptionsView.AllowRowHeaderReadOnlyAppearance = DevExpress.Utils.DefaultBoolean.True;
             this.pgPropertyGridPanel.SetRow(this.pgcPropertyGrid, 0);
-            this.pgcPropertyGrid.Size = new System.Drawing.Size(534, 350);
+            this.pgcPropertyGrid.Size = new System.Drawing.Size(667, 310);
             this.pgcPropertyGrid.TabIndex = 0;
+            this.pgcPropertyGrid.UseDisabledStatePainter = false;
+            this.pgcPropertyGrid.CustomPropertyDescriptors += new DevExpress.XtraVerticalGrid.Events.CustomPropertyDescriptorsEventHandler(this.pgcPropertyGrid_CustomPropertyDescriptors);
             // 
             // pgcDescription
             // 
             this.pgcDescription.AutoHeight = true;
             this.pgPropertyGridPanel.SetColumn(this.pgcDescription, 0);
-            this.pgcDescription.Location = new System.Drawing.Point(3, 359);
+            this.pgcDescription.Location = new System.Drawing.Point(3, 319);
             this.pgcDescription.Name = "pgcDescription";
             this.pgcDescription.PropertyGrid = this.pgcPropertyGrid;
             this.pgPropertyGridPanel.SetRow(this.pgcDescription, 1);
-            this.pgcDescription.Size = new System.Drawing.Size(534, 100);
+            this.pgcDescription.Size = new System.Drawing.Size(667, 161);
             this.pgcDescription.TabIndex = 1;
             // 
             // PropertyGrid
@@ -81,7 +84,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.pgPropertyGridPanel);
             this.Name = "PropertyGrid";
-            this.Size = new System.Drawing.Size(540, 462);
+            this.Size = new System.Drawing.Size(673, 483);
             ((System.ComponentModel.ISupportInitialize)(this.pgPropertyGridPanel)).EndInit();
             this.pgPropertyGridPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pgcPropertyGrid)).EndInit();

@@ -7,11 +7,26 @@ using System.Threading.Tasks;
 using YoutubeDLSharp;
 using HtmlAgilityPack;
 using Newtonsoft.Json;
+using YT_RED.Logging;
 
 namespace YT_RED.Utils
 {
     public static class HtmlUtil
     {
+        /// <summary>
+        /// Checks if the passed url is a reddit or youtube url
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public static DownloadType CheckUrl(string url)
+        {
+            if (url.StartsWith(@"https://www.youtube.com") || url.StartsWith("https://youtu.be") || url.StartsWith(@"https://youtube.com"))
+                return DownloadType.YouTube;
+            if (url.StartsWith(@"https://reddit.com") || url.StartsWith(@"https://www.reddit.com"))
+                return DownloadType.Reddit;
+            return DownloadType.Unknown;
+        }
+
         /// <summary>
         /// Searches the Video Post Html for known elements that contain the M3U8 url
         /// </summary>

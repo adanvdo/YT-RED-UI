@@ -74,7 +74,7 @@ namespace YT_RED.Utils
             return await PrepareStreamConversion("", getUrl, parameters.ToArray(), VideoFormat.UNSPECIFIED, usePreferences ? AppSettings.ConvertAudioConversionFormatToAudioFormat(AppSettings.Default.Advanced.PreferredYoutubeAudioFormat) : AudioFormat.MP3);
         }
 
-        private static int[] convertCrop(int[] crops, int videoWidth, int videoHeight)
+        public static int[] ConvertCrop(int[] crops, int videoWidth, int videoHeight)
         {
             if (crops.Length > 0 && videoWidth > 0 && videoHeight > 0)
             {
@@ -114,7 +114,7 @@ namespace YT_RED.Utils
 
             if(crops != null && crops.Length == 4 && formatData.Width != null && formatData.Height != null)
             {
-                int[] ffmpegCrop = convertCrop(crops, (int)formatData.Width, (int)formatData.Height);
+                int[] ffmpegCrop = ConvertCrop(crops, (int)formatData.Width, (int)formatData.Height);
                 x = ffmpegCrop[0];
                 y = ffmpegCrop[1];
                 outWidth = ffmpegCrop[2];
@@ -197,7 +197,7 @@ namespace YT_RED.Utils
 
             if (crops != null && crops.Length == 4 && videoStream != null)
             {
-                int[] ffmpegCrop = convertCrop(crops, videoStream.Width, videoStream.Height);
+                int[] ffmpegCrop = ConvertCrop(crops, videoStream.Width, videoStream.Height);
                 x = ffmpegCrop[0];
                 y = ffmpegCrop[1];
                 outWidth = ffmpegCrop[2];
@@ -411,7 +411,7 @@ namespace YT_RED.Utils
             return null;
         }
 
-        public static async Task<RunResult<string>> DownloadBestYT(string url, Classes.StreamType streamType)
+        public static async Task<RunResult<string>> DownloadBestYT(string url, Classes.StreamType streamType, IProgress<DownloadProgress> dlProgress = null, IProgress<string> progressText = null)
         {
             try
             {
@@ -419,10 +419,10 @@ namespace YT_RED.Utils
                 var options = YoutubeDLSharp.Options.OptionSet.Default;
                 options.RestrictFilenames = true;
                 if (streamType == Classes.StreamType.AudioAndVideo)
-                    return await ytdl.RunVideoDownload(url, "bestvideo+bestaudio", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress, null, options);
+                    return await ytdl.RunVideoDownload(url, "bestvideo+bestaudio", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, dlProgress == null ? ytProgress : dlProgress, progressText, options);
                 if (streamType == Classes.StreamType.Video)
-                    return await ytdl.RunVideoDownload(url, "bestvideo", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress, null, options);
-                return await ytdl.RunVideoDownload(url, "bestaudio", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress, null, options);
+                    return await ytdl.RunVideoDownload(url, "bestvideo", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, dlProgress == null ? ytProgress : dlProgress, progressText, options);
+                return await ytdl.RunVideoDownload(url, "bestaudio", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, dlProgress == null ? ytProgress : dlProgress, progressText, options);
             }
             catch(Exception ex)
             {
@@ -431,17 +431,41 @@ namespace YT_RED.Utils
             return null;
         }
 
-        public static async Task<RunResult<string>> DownloadPreferred(string url, Classes.StreamType streamType)
+        public static async Task<RunResult<string>> DownloadPreferred(string url, Classes.StreamType streamType, IProgress<DownloadProgress> dlProgress = null, IProgress<string> progressText = null)
         {
             try
             {
                 ytdl.OutputFolder = streamType == Classes.StreamType.Audio ? AppSettings.Default.General.AudioDownloadPath : AppSettings.Default.General.VideoDownloadPath;
                 var options = YoutubeDLSharp.Options.OptionSet.Default;
                 options.RestrictFilenames = true;
+                VideoRecodeFormat videoRecodeFormat = VideoRecodeFormat.None;
+                switch (AppSettings.Default.Advanced.PreferredYoutubeVideoFormat)
+                {
+                    case DownloadMergeFormat.Mp4:
+                        videoRecodeFormat = VideoRecodeFormat.Mp4;
+                        break;
+                    case DownloadMergeFormat.Mkv:
+                        videoRecodeFormat = VideoRecodeFormat.Mkv;
+                        break;
+                    case DownloadMergeFormat.Flv:
+                        videoRecodeFormat= VideoRecodeFormat.Flv;
+                        break;
+                    case DownloadMergeFormat.Webm:
+                        videoRecodeFormat= VideoRecodeFormat.Webm;
+                        break;
+                    case DownloadMergeFormat.Unspecified:
+                        videoRecodeFormat = VideoRecodeFormat.None;
+                        break;
+                    default:
+                        videoRecodeFormat = VideoRecodeFormat.None;
+                        break;
+                }
+                
+
                 if (streamType == Classes.StreamType.AudioAndVideo)
-                    return await ytdl.RunVideoDownload(url, "bestvideo+bestaudio", AppSettings.Default.Advanced.PreferredYoutubeVideoFormat, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress, null, options);
+                    return await ytdl.RunVideoDownload(url, "bestvideo+bestaudio", AppSettings.Default.Advanced.PreferredYoutubeVideoFormat, videoRecodeFormat, default, dlProgress == null ? ytProgress : dlProgress, progressText, options);
                 else if (streamType == Classes.StreamType.Video)
-                    return await ytdl.RunVideoDownload(url, "bestvideo", AppSettings.Default.Advanced.PreferredYoutubeVideoFormat, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress, null, options);
+                    return await ytdl.RunVideoDownload(url, "bestvideo", AppSettings.Default.Advanced.PreferredYoutubeVideoFormat, videoRecodeFormat, default, dlProgress == null ? ytProgress : dlProgress, progressText, options);
                 else
                     return await DownloadAudioYT(url, AppSettings.Default.Advanced.PreferredYoutubeAudioFormat);
 

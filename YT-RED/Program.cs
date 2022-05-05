@@ -37,7 +37,7 @@ namespace YT_RED
 
             if(args.Length > 0)
             {
-                System.Windows.Forms.MessageBox.Show(String.Join(" ", args));
+                //System.Windows.Forms.MessageBox.Show(String.Join(" ", args));
                 try
                 {
                     foreach (string s in args)
