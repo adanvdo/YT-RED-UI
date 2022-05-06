@@ -53,15 +53,15 @@
             this.pnlButtons.Controls.Add(this.btnOk);
             this.pnlButtons.Controls.Add(this.btnCancel);
             this.pnlButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlButtons.Location = new System.Drawing.Point(0, 184);
+            this.pnlButtons.Location = new System.Drawing.Point(0, 129);
             this.pnlButtons.Name = "pnlButtons";
-            this.pnlButtons.Size = new System.Drawing.Size(450, 30);
+            this.pnlButtons.Size = new System.Drawing.Size(383, 30);
             this.pnlButtons.TabIndex = 0;
             // 
             // btnUpload
             // 
             this.btnUpload.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnUpload.Location = new System.Drawing.Point(-2, 2);
+            this.btnUpload.Location = new System.Drawing.Point(-69, 2);
             this.btnUpload.Name = "btnUpload";
             this.btnUpload.Size = new System.Drawing.Size(75, 26);
             this.btnUpload.TabIndex = 5;
@@ -72,7 +72,7 @@
             // btnRetry
             // 
             this.btnRetry.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnRetry.Location = new System.Drawing.Point(73, 2);
+            this.btnRetry.Location = new System.Drawing.Point(6, 2);
             this.btnRetry.Name = "btnRetry";
             this.btnRetry.Size = new System.Drawing.Size(75, 26);
             this.btnRetry.TabIndex = 4;
@@ -83,7 +83,7 @@
             // btnYes
             // 
             this.btnYes.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnYes.Location = new System.Drawing.Point(148, 2);
+            this.btnYes.Location = new System.Drawing.Point(81, 2);
             this.btnYes.Name = "btnYes";
             this.btnYes.Size = new System.Drawing.Size(75, 26);
             this.btnYes.TabIndex = 3;
@@ -94,7 +94,7 @@
             // btnNo
             // 
             this.btnNo.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnNo.Location = new System.Drawing.Point(223, 2);
+            this.btnNo.Location = new System.Drawing.Point(156, 2);
             this.btnNo.Name = "btnNo";
             this.btnNo.Size = new System.Drawing.Size(75, 26);
             this.btnNo.TabIndex = 2;
@@ -105,7 +105,7 @@
             // btnOk
             // 
             this.btnOk.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnOk.Location = new System.Drawing.Point(298, 2);
+            this.btnOk.Location = new System.Drawing.Point(231, 2);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 26);
             this.btnOk.TabIndex = 1;
@@ -116,7 +116,7 @@
             // btnCancel
             // 
             this.btnCancel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnCancel.Location = new System.Drawing.Point(373, 2);
+            this.btnCancel.Location = new System.Drawing.Point(306, 2);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 26);
             this.btnCancel.TabIndex = 0;
@@ -129,20 +129,27 @@
             this.memoMessage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.memoMessage.Location = new System.Drawing.Point(0, 0);
             this.memoMessage.Name = "memoMessage";
+            this.memoMessage.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.memoMessage.Properties.Appearance.Options.UseFont = true;
+            this.memoMessage.Properties.Appearance.Options.UseTextOptions = true;
+            this.memoMessage.Properties.Appearance.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center;
+            this.memoMessage.Properties.Padding = new System.Windows.Forms.Padding(5, 10, 5, 10);
             this.memoMessage.Properties.ReadOnly = true;
             this.memoMessage.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.memoMessage.Properties.UseReadOnlyAppearance = false;
-            this.memoMessage.Size = new System.Drawing.Size(450, 146);
+            this.memoMessage.Size = new System.Drawing.Size(383, 91);
             this.memoMessage.TabIndex = 1;
+            this.memoMessage.EditValueChanged += new System.EventHandler(this.memoMessage_EditValueChanged);
             this.memoMessage.EditValueChanging += new DevExpress.XtraEditors.Controls.ChangingEventHandler(this.memoMessage_EditValueChanging);
             // 
             // uploadMarquee
             // 
             this.uploadMarquee.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.uploadMarquee.Location = new System.Drawing.Point(0, 146);
+            this.uploadMarquee.EditValue = 0;
+            this.uploadMarquee.Location = new System.Drawing.Point(0, 91);
             this.uploadMarquee.Name = "uploadMarquee";
             this.uploadMarquee.Properties.ShowTitle = true;
-            this.uploadMarquee.Size = new System.Drawing.Size(450, 18);
+            this.uploadMarquee.Size = new System.Drawing.Size(383, 18);
             this.uploadMarquee.TabIndex = 2;
             this.uploadMarquee.Visible = false;
             // 
@@ -153,9 +160,9 @@
             this.lblIndicator.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
             this.lblIndicator.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.lblIndicator.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.lblIndicator.Location = new System.Drawing.Point(0, 164);
+            this.lblIndicator.Location = new System.Drawing.Point(0, 109);
             this.lblIndicator.Name = "lblIndicator";
-            this.lblIndicator.Size = new System.Drawing.Size(450, 20);
+            this.lblIndicator.Size = new System.Drawing.Size(383, 20);
             this.lblIndicator.TabIndex = 3;
             this.lblIndicator.Visible = false;
             // 
@@ -164,7 +171,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(450, 214);
+            this.ClientSize = new System.Drawing.Size(383, 159);
             this.ControlBox = false;
             this.Controls.Add(this.memoMessage);
             this.Controls.Add(this.uploadMarquee);

@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
+using System.Reflection;
 
 namespace YT_RED.Settings
 {
@@ -12,9 +13,9 @@ namespace YT_RED.Settings
 
 		[Browsable(false)]
 		[JsonIgnore]
-		public string ExePath { get; set; }
+		public string ExeDirectoryPath { get; set; }
 
-		[Category("Preferences")]
+		[Category("Error Logs")]
 		[DisplayName("Error Log Path")]
 		[Description("The destination folder to store error logs")]
 		[EditorAttribute(typeof(System.Windows.Forms.Design.FolderNameEditor), typeof(System.Drawing.Design.UITypeEditor))]
@@ -90,7 +91,16 @@ namespace YT_RED.Settings
 
         public GeneralSettings()
         {
-			ErrorLogPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "YT-RED");
+            try
+            {
+				ExeDirectoryPath = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.FullName;
+				ErrorLogPath = Path.Combine(ExeDirectoryPath, "ErrorLogs");
+			}
+			catch(Exception ex)
+            {
+				YT_RED.Controls.YTRMessageBox.ErrorMessageBox(ex).ShowDialog();
+				ErrorLogPath = "./ErrorLogs";
+			}
 			ActiveSkin = "DevExpress Dark Style";
 			EnableDownloadHistory = true;
 			HistoryAge = 30;

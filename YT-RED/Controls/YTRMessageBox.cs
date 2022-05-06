@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using YT_RED.Utils;
@@ -172,6 +172,11 @@ namespace YT_RED.Controls
         {
             int setHeight = memoMessage.CalcAutoHeight();
             memoMessage.Height = setHeight;
+        }
+
+        private void memoMessage_EditValueChanged(object sender, EventArgs e)
+        {
+            memoMessage.Text = Regex.Replace(memoMessage.Text, "(?<!\r)\n", "\r\n");
         }
     }
 }

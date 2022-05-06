@@ -184,12 +184,6 @@ namespace YT_RED
             base.OnLoad(e);
         }
 
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            //uriService.Delete();
-            base.OnClosing(e);
-        }
-
         protected override void OnResize(EventArgs e)
         {
             if (this.WindowState == FormWindowState.Minimized)
