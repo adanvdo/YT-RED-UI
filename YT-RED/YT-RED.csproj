@@ -160,6 +160,7 @@
     <Compile Include="Classes\FFmpegParam.cs" />
     <Compile Include="Classes\HotkeyConverter.cs" />
     <Compile Include="Classes\KeyboardHook.cs" />
+    <Compile Include="Classes\LogPostRequest.cs" />
     <Compile Include="Classes\MediaSource.cs" />
     <Compile Include="Classes\RedditEmbedObject.cs" />
     <Compile Include="Classes\MediaStream.cs" />
@@ -168,6 +169,12 @@
     <Compile Include="Classes\UIBlockDetector.cs" />
     <Compile Include="Controls\CustomTabFormPage.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\YTRMessageBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\YTRMessageBox.Designer.cs">
+      <DependentUpon>YTRMessageBox.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\PropertyGrid.cs">
       <SubType>UserControl</SubType>
@@ -189,6 +196,7 @@
     </Compile>
     <Compile Include="Extensions\EnumExtension.cs" />
     <Compile Include="Logging\DownloadLog.cs" />
+    <Compile Include="Logging\ExceptionHandler.cs" />
     <Compile Include="Logging\Historian.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -204,8 +212,13 @@
     <Compile Include="Settings\FeatureSettings.cs" />
     <Compile Include="Settings\GeneralSettings.cs" />
     <Compile Include="Utils\HtmlUtil.cs" />
+    <Compile Include="Utils\HttpUtil.cs" />
+    <Compile Include="Utils\ReportingUtil.cs" />
     <Compile Include="Utils\StringUtil.cs" />
     <Compile Include="Utils\VideoUtil.cs" />
+    <EmbeddedResource Include="Controls\YTRMessageBox.resx">
+      <DependentUpon>YTRMessageBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\PropertyGrid.resx">
       <DependentUpon>PropertyGrid.cs</DependentUpon>
     </EmbeddedResource>
@@ -245,6 +258,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Media\CDM.png" />
     <None Include="Resources\download.svg" />
     <None Include="Resources\actions_remove.svg" />
     <None Include="Resources\actions_add.svg" />

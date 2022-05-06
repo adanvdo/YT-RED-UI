@@ -1,13 +1,7 @@
-﻿using DevExpress.LookAndFeel;
-using DevExpress.Skins;
-using DevExpress.UserSkins;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 using Xabe.FFmpeg;
-using YT_RED.Utils;
-using URIScheme;
 
 namespace YT_RED
 {
@@ -69,7 +63,7 @@ namespace YT_RED
                 }
                 catch(Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    Logging.ExceptionHandler.LogException(ex);
                 }
             }
 

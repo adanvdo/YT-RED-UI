@@ -46,7 +46,7 @@ namespace YT_RED.Logging
             }
             catch(Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message); 
+                ExceptionHandler.LogException(ex);
             }
             return false;
         }
@@ -89,7 +89,7 @@ namespace YT_RED.Logging
             }
             catch(Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
+                ExceptionHandler.LogException(ex);
             }
         }
 
@@ -110,7 +110,7 @@ namespace YT_RED.Logging
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
+                ExceptionHandler.LogException(ex);
             }
             return false;
         }
@@ -125,7 +125,7 @@ namespace YT_RED.Logging
             }
             catch(Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
+                ExceptionHandler.LogException(ex);
             }
             return false;
         }

@@ -141,7 +141,7 @@ namespace YT_RED.Controls
                             }
                             catch (Exception ex)
                             {
-                                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                ExceptionHandler.LogException(ex);
                             }
                             bool saved = await Historian.RecordDownload(new DownloadLog(
                                 DownloadType.Reddit, bestDash.Item2, Classes.StreamType.AudioAndVideo, DateTime.Now, destination
@@ -167,7 +167,7 @@ namespace YT_RED.Controls
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                ExceptionHandler.LogException(ex);
             }
         }
 

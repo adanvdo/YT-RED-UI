@@ -128,7 +128,8 @@ namespace YT_RED
                 await Task.Delay(500);
                 if (Clipboard.ContainsText())
                     copiedText = Clipboard.GetText();
-                Clipboard.SetText(tempText);
+                if(!string.IsNullOrEmpty(tempText))
+                    Clipboard.SetText(tempText);
 
                 if (HtmlUtil.CheckUrl(copiedText) == DownloadType.Unknown)
                 {
@@ -156,7 +157,7 @@ namespace YT_RED
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message);
+                        ExceptionHandler.LogException(ex);
                     }
                 }
             }
@@ -388,7 +389,7 @@ namespace YT_RED
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ExceptionHandler.LogException(ex);
                 }
                 bool saved = await Historian.RecordDownload(new DownloadLog(
                     DownloadType.Reddit,
@@ -519,7 +520,7 @@ namespace YT_RED
                                 }
                                 catch (Exception ex)
                                 {
-                                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    ExceptionHandler.LogException(ex);
                                 }
                                 bool saved = await Historian.RecordDownload(new DownloadLog(
                                     DownloadType.Reddit, bestDash.Item2, Classes.StreamType.AudioAndVideo, DateTime.Now, destination
@@ -548,7 +549,7 @@ namespace YT_RED
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                ExceptionHandler.LogException(ex);
             }
             lblSelect.Visible = true;
             this.UseWaitCursor = false;
@@ -826,7 +827,7 @@ namespace YT_RED
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                ExceptionHandler.LogException(ex);
             }
         }
 
@@ -957,7 +958,6 @@ namespace YT_RED
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
                     result = new RunResult<string>(false, new string[] { ex.Message }, null);
                 }
                 this.pbYTProgress.Hide();
@@ -1040,7 +1040,6 @@ namespace YT_RED
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show(ex.Message);
                             result = new RunResult<string>(false, new string[] { ex.Message }, null);
                         }
                         downloadingSegment = false;
@@ -1145,7 +1144,7 @@ namespace YT_RED
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    ExceptionHandler.LogException(ex);
                     result = new RunResult<string>(false, new string[] { ex.Message }, null);
                 }
                 this.pbYTProgress.Hide();
@@ -1195,9 +1194,28 @@ namespace YT_RED
             pnlYTOptionPanel.Height = gcYTSegments.MinimumSize.Height + lblYTSelectionText.Height;
         }
 
-        private async void bbiSettings_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        private void bbiSettings_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            openSettings();
+        }
+
+        private async void openSettings(OpenPosition openPosition = OpenPosition.Unspecified)
         {
             SettingsDialog dlg = new SettingsDialog();
+            if(openPosition != OpenPosition.Unspecified)
+            {
+                if (openPosition == OpenPosition.BottomRight)
+                {
+                    Rectangle workingArea = Screen.GetWorkingArea(this);
+                    var loc = new Point(workingArea.Right - (dlg.Size.Width + 100), workingArea.Bottom - (dlg.Size.Height + 100));
+                    dlg.StartPosition = FormStartPosition.Manual;
+                    dlg.Location = loc;
+                }
+                else
+                {
+                    // not supported yet
+                }
+            }
             DialogResult res = dlg.ShowDialog();
             gcYTHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.YouTube).ToList();
             refreshRedditHistory();
@@ -1443,7 +1461,7 @@ namespace YT_RED
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    ExceptionHandler.LogException(ex);
                 }
             }
         }
@@ -1478,6 +1496,39 @@ namespace YT_RED
             txtRedCropTop.Enabled = toggleRedditCrop.IsOn;
             btnRedditList.Invalidate();
             gcRedCrop.CustomHeaderButtons[0].Properties.Enabled = !toggleRedditCrop.IsOn;
+        }
+
+        private void tsiSettings_Click(object sender, EventArgs e)
+        {
+            openSettings(OpenPosition.BottomRight);
+        }
+
+        private async void txtRedCropBottom_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.P && e.Modifiers == (Keys.Control | Keys.Shift))
+            {
+                using (DevExpress.XtraEditors.XtraForm tempForm = new DevExpress.XtraEditors.XtraForm())
+                {
+                    tempForm.Parent = this;
+                    tempForm.Size = new System.Drawing.Size(302, 145);
+                    tempForm.FormBorderStyle = FormBorderStyle.FixedDialog;
+                    tempForm.ControlBox = false;
+                    tempForm.StartPosition = FormStartPosition.CenterParent;
+                    DevExpress.XtraEditors.PictureEdit pictureEdit = new DevExpress.XtraEditors.PictureEdit();
+                    pictureEdit.Image = Properties.Resources.CDM;
+                    pictureEdit.Properties.PictureAlignment = ContentAlignment.MiddleCenter;
+                    pictureEdit.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Stretch;
+                    pictureEdit.Size = new Size(302, 125);
+                    pictureEdit.MinimumSize = new Size(302, 125);
+                    pictureEdit.Dock = DockStyle.Fill;
+                    pictureEdit.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+                    pictureEdit.Margin = new System.Windows.Forms.Padding(0);
+                    tempForm.Controls.Add(pictureEdit);
+                    tempForm.Show();
+                    await Task.Delay(2000);
+                    tempForm.Close();
+                }
+            }
         }
     }
 }

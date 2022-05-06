@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DevExpress.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Windows.Forms;
-using DevExpress.Utils;
+using YT_RED.Logging;
 
 namespace YT_RED.Classes
 {
@@ -19,13 +16,23 @@ namespace YT_RED.Classes
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            JToken token = JToken.Load(reader);
+            try
+            {
+                JToken token = JToken.Load(reader);
 
-            string keys = token.ToString();
-            KeysConverter keysConverter = new KeysConverter();
-            Keys dlKey = (Keys)keysConverter.ConvertFrom(keys);
-            KeyShortcut keyShortcut = new KeyShortcut(dlKey);
-            return keyShortcut;
+                string keys = token.ToString();
+                if (keys.ToLower() == "(none)")
+                    keys = "None";
+                KeysConverter keysConverter = new KeysConverter();
+                Keys dlKey = (Keys)keysConverter.ConvertFrom(keys);
+                KeyShortcut keyShortcut = new KeyShortcut(dlKey);
+                return keyShortcut;
+            }
+            catch(Exception ex)
+            {
+                ExceptionHandler.LogException(ex);
+            }
+            return null;
         }
 
         public override bool CanWrite

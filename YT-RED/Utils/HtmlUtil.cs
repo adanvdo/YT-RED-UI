@@ -1,12 +1,10 @@
-﻿using System;
+﻿using HtmlAgilityPack;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using YoutubeDLSharp;
-using HtmlAgilityPack;
-using Newtonsoft.Json;
 using YT_RED.Logging;
 
 namespace YT_RED.Utils
@@ -91,7 +89,7 @@ namespace YT_RED.Utils
             }
             catch(Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                ExceptionHandler.LogException(ex);
             }
 
             return result;
@@ -129,7 +127,7 @@ namespace YT_RED.Utils
             }
             catch(Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                ExceptionHandler.LogException(ex);
             }
             return null;
         }        
@@ -152,7 +150,7 @@ namespace YT_RED.Utils
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                ExceptionHandler.LogException(ex);
             }
 
             return false;

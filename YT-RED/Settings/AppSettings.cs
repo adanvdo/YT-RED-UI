@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using Newtonsoft.Json;
+using System;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
 using YT_RED.Classes;
+using YT_RED.Logging;
 
 namespace YT_RED.Settings
 {
-	public class AppSettings
+    public class AppSettings
 	{
 		private static string SettingsFile = "settings.json";
 		private static bool initialLoad = true;
@@ -41,7 +37,7 @@ namespace YT_RED.Settings
 						}
 						catch (Exception ex)
 						{
-							System.Windows.Forms.MessageBox.Show(ex.Message);
+							ExceptionHandler.LogException(ex);
 						}
 					}
 
@@ -183,7 +179,7 @@ namespace YT_RED.Settings
 			}
 			catch (Exception ex)
 			{
-				System.Windows.Forms.MessageBox.Show(ex.Message);
+				ExceptionHandler.LogException(ex);
 			}
 		}
 	}

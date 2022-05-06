@@ -1,21 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace YT_RED.Settings
 {
-	public class GeneralSettings : FeatureSettings
+    public class GeneralSettings : FeatureSettings
 	{
 		public override AppFeature Feature => AppFeature.General;
 
 		[Browsable(false)]
 		[JsonIgnore]
 		public string ExePath { get; set; }
+
+		[Category("Preferences")]
+		[DisplayName("Error Log Path")]
+		[Description("The destination folder to store error logs")]
+		[EditorAttribute(typeof(System.Windows.Forms.Design.FolderNameEditor), typeof(System.Drawing.Design.UITypeEditor))]
+		[JsonProperty("error_logs")]
+		public string ErrorLogPath { get; set; }
 
 		[Browsable(false)]
 		[JsonProperty("active_skin")]
@@ -86,6 +90,7 @@ namespace YT_RED.Settings
 
         public GeneralSettings()
         {
+			ErrorLogPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "YT-RED");
 			ActiveSkin = "DevExpress Dark Style";
 			EnableDownloadHistory = true;
 			HistoryAge = 30;
@@ -102,6 +107,8 @@ namespace YT_RED.Settings
 
 		public override async Task<string> ValidateSettings()
         {
+			if (string.IsNullOrEmpty(ErrorLogPath))
+				return "Error Log Path is required";
 			if (string.IsNullOrEmpty(VideoDownloadPath))
 				return "You must specify a video download folder";
 			if (string.IsNullOrEmpty(AudioDownloadPath))

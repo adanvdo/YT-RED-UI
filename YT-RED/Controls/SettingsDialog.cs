@@ -91,4 +91,14 @@ namespace YT_RED.Controls
             MessageBox.Show("Downloads Cleared");
         }
     }
+
+    public enum OpenPosition
+    {
+        Center = 0,
+        BottomRight = 1,
+        BottomLeft = 2,
+        TopRight = 3,
+        TopLeft = 4,
+        Unspecified = 5
+    }
 }

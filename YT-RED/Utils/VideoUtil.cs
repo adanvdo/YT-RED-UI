@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xabe.FFmpeg;
 using YoutubeDLSharp;
 using YoutubeDLSharp.Metadata;
 using YoutubeDLSharp.Options;
-using Newtonsoft.Json;
+using YT_RED.Logging;
 using YT_RED.Settings;
 
 namespace YT_RED.Utils
@@ -291,7 +290,7 @@ namespace YT_RED.Utils
             }
             catch(Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
+                ExceptionHandler.LogException(ex);
             }
             return null;
         }
@@ -406,7 +405,7 @@ namespace YT_RED.Utils
             }
             catch(Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message, "Error");
+                ExceptionHandler.LogException(ex);
             }
             return null;
         }
@@ -426,7 +425,7 @@ namespace YT_RED.Utils
             }
             catch(Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
+                ExceptionHandler.LogException(ex);
             }
             return null;
         }
@@ -472,7 +471,7 @@ namespace YT_RED.Utils
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
+                ExceptionHandler.LogException(ex);
             }
             return null;
         }
@@ -488,7 +487,7 @@ namespace YT_RED.Utils
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
+                ExceptionHandler.LogException(ex);
             }
             return null;
         }
@@ -521,7 +520,7 @@ namespace YT_RED.Utils
             }
             catch(Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
+                ExceptionHandler.LogException(ex);
             }
             return null;
         }

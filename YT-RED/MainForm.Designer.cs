@@ -132,6 +132,7 @@
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.taskBarMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsiDownload = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsiSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.tsiExit = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.tcMainTabControl)).BeginInit();
             this.ytTabContainer.SuspendLayout();
@@ -235,7 +236,7 @@
             this.tcMainTabControl.Name = "tcMainTabControl";
             this.tcMainTabControl.Pages.Add(this.tfpYouTube);
             this.tcMainTabControl.Pages.Add(this.tfpReddit);
-            this.tcMainTabControl.SelectedPage = this.tfpYouTube;
+            this.tcMainTabControl.SelectedPage = this.tfpReddit;
             this.tcMainTabControl.ShowAddPageButton = false;
             this.tcMainTabControl.Size = new System.Drawing.Size(1059, 50);
             this.tcMainTabControl.TabForm = this;
@@ -1321,6 +1322,7 @@
             this.txtRedCropBottom.Properties.NullText = "0";
             this.txtRedCropBottom.Size = new System.Drawing.Size(75, 20);
             this.txtRedCropBottom.TabIndex = 15;
+            this.txtRedCropBottom.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtRedCropBottom_KeyDown);
             // 
             // txtRedCropLeft
             // 
@@ -1549,9 +1551,10 @@
             // 
             this.taskBarMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsiDownload,
+            this.tsiSettings,
             this.tsiExit});
             this.taskBarMenu.Name = "taskBarMenu";
-            this.taskBarMenu.Size = new System.Drawing.Size(163, 48);
+            this.taskBarMenu.Size = new System.Drawing.Size(163, 70);
             // 
             // tsiDownload
             // 
@@ -1560,6 +1563,13 @@
             this.tsiDownload.Size = new System.Drawing.Size(162, 22);
             this.tsiDownload.Text = "Quick Download";
             this.tsiDownload.Click += new System.EventHandler(this.tsiDownload_Click);
+            // 
+            // tsiSettings
+            // 
+            this.tsiSettings.Name = "tsiSettings";
+            this.tsiSettings.Size = new System.Drawing.Size(162, 22);
+            this.tsiSettings.Text = "Settings";
+            this.tsiSettings.Click += new System.EventHandler(this.tsiSettings_Click);
             // 
             // tsiExit
             // 
@@ -1574,7 +1584,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1059, 784);
-            this.Controls.Add(this.ytTabContainer);
+            this.Controls.Add(this.tabFormContentContainer3);
             this.Controls.Add(this.tcMainTabControl);
             this.IconOptions.Icon = ((System.Drawing.Icon)(resources.GetObject("MainForm.IconOptions.Icon")));
             this.IconOptions.Image = ((System.Drawing.Image)(resources.GetObject("MainForm.IconOptions.Image")));
@@ -1787,6 +1797,7 @@
         private DevExpress.XtraEditors.LabelControl labelControl12;
         private DevExpress.XtraEditors.LabelControl labelControl13;
         private DevExpress.XtraEditors.LabelControl labelControl14;
+        private System.Windows.Forms.ToolStripMenuItem tsiSettings;
     }
 }
 
