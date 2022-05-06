@@ -25,11 +25,16 @@ This project is UNLICENSED and uses licensed DevExpress WinForms Controls.
 ### Known Issues
 - Reddit GIF downloads are not supported
 
-
-
-
-
 ## YT-RED Youtube & Reddit Video Downloader
+
+![2022-05-05_12-10-29](https://user-images.githubusercontent.com/26498008/166973443-6cc68ede-96fe-4ce8-bfa3-6203e20e20f4.png)
+
+![2022-05-05_12-14-17](https://user-images.githubusercontent.com/26498008/166973228-e64e1a88-921e-44a6-80c0-edd6cc1fb858.png)
+
+![2022-05-05_12-10-52](https://user-images.githubusercontent.com/26498008/166973239-0cd2291e-89fc-4566-adad-b5c79825a497.png)
+
+![2022-05-05_12-11-32](https://user-images.githubusercontent.com/26498008/166973254-85302e72-cdc2-4c7c-b1ab-52ff1c70d223.png)
+
 ### How To Use
 
 YT-RED's main interface is pretty straight forward. Simply enter the URL of any Youtube video or reddit video post in address bar of the corresponding tab.
