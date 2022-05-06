@@ -69,6 +69,13 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG
 
+### 5/6/2022 v1.0.0.8
+- Added Error Logging
+- Added Voluntary Log Reporting
+- Added Settings to System Tray Menu
+- Fixed bug where hotkey crashed app if clipboard was empty
+- Fixed bug where settings failed to load if hotkey was set to (none)
+
 ### 5/5/2022 v1.0.0.7
 - Added System Tray Support - Can now be minimized to System Tray
 - Added Quick Download Hotkey Feature
