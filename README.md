@@ -74,6 +74,10 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 5/8/2022 v1.0.0.9
+- Fixed bug where error log file name contained illegal characters
+- Fixed bug where the Download Hotkey was not serialized correctly on some machines
+
 ### 5/6/2022 v1.0.0.8
 - Added Error Logging
 - Added Voluntary Log Reporting
