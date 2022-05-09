@@ -1,14 +1,29 @@
 # YT-RED-UI ALPHA BRANCH
 
+![ytr-promo1](https://user-images.githubusercontent.com/26498008/167324218-a222b6b3-1a32-4aa5-966a-13357cec72e0.jpg)
+
 ## Windows .NET Framework GUI Application for Downloading Video and Audio Files from YouTube and Reddit
 
 This project is UNLICENSED and uses licensed DevExpress WinForms Controls. 
 
-### Requirements
+- [ABOUT](#about)
+- [REQUIREMENTS](#requirements)
+- [CURRENT FEATURES](#current-features)
+- [KNOWN ISSUES](#known-issues)
+- [HOW TO USE](#how-to-use)
+- [CHANGELOG](#changelog)
+
+### About the Program <a name="about"></a>
+
+YT-RED is a safe alternative to other popular youtube and reddit video downloaders found online.  Other popular reddit downlaod tools are full of trackers and data collection that the end user is not aware of.  YT-RED was personally built with a no-tracking and no-data-collection policy.  By keeping the source code open to the public, it is meant to be published as a safe and versatile media downloader for Windows
+
+![ytr-promo2](https://user-images.githubusercontent.com/26498008/167324533-f962636c-be97-4210-ac38-cbad8cf2195a.jpg)
+
+### Requirements <a name="requirements"></a>
 - Windows 7, 8, 10
 - .NET Framework 4.8
 
-### Current Features (Scroll Down for More Info)
+### Current Features (more info further below) <a name="current-features"></a>
 - List Video Format Options
 - Download Selected Format
 - Download Best Quality Video
@@ -22,20 +37,10 @@ This project is UNLICENSED and uses licensed DevExpress WinForms Controls.
 - Quick Download while in System Tray
 - Quick Download Hotkey
 
-### Known Issues
+### Known Issues <a name="known-issues"></a>
 - Reddit GIF downloads are not supported
 
-## YT-RED Youtube & Reddit Video Downloader
-
-![2022-05-05_12-10-29](https://user-images.githubusercontent.com/26498008/166973443-6cc68ede-96fe-4ce8-bfa3-6203e20e20f4.png)
-
-![2022-05-05_12-14-17](https://user-images.githubusercontent.com/26498008/166973228-e64e1a88-921e-44a6-80c0-edd6cc1fb858.png)
-
-![2022-05-05_12-10-52](https://user-images.githubusercontent.com/26498008/166973239-0cd2291e-89fc-4566-adad-b5c79825a497.png)
-
-![2022-05-05_12-11-32](https://user-images.githubusercontent.com/26498008/166973254-85302e72-cdc2-4c7c-b1ab-52ff1c70d223.png)
-
-### How To Use
+### How To Use <a name="how-to-use"></a>
 
 YT-RED's main interface is pretty straight forward. Simply enter the URL of any Youtube video or reddit video post in address bar of the corresponding tab.
 
@@ -67,7 +72,7 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
   To use, Highlight a youtube or reddit media post url in your browser, and press the configured hotkey. This will perform an automatic "Best Download" with the progress displayed above the system tray.
 
-## CHANGELOG
+## CHANGELOG <a name="changelog"></a>
 
 ### 5/6/2022 v1.0.0.8
 - Added Error Logging
