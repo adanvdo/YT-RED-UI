@@ -55,6 +55,8 @@ namespace YT_RED
 		/// <returns></returns>
 		public static T ToEnum<T>(this string value)
 		{
+			if (string.IsNullOrEmpty(value))
+				throw new ArgumentNullException("value");
 			return (T)Enum.Parse(typeof(T), value, true);
 		}
 	}
