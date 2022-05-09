@@ -167,7 +167,10 @@ namespace YT_RED.Settings
 
 		public void Save()
 		{
-			var json = JsonConvert.SerializeObject(this, Formatting.Indented);
+			JsonSerializerSettings settings = new JsonSerializerSettings();
+			settings.Converters.Add(new HotkeyConverter());
+			settings.Formatting = Formatting.Indented;
+			var json = JsonConvert.SerializeObject(this, settings);
 
 			try
 			{

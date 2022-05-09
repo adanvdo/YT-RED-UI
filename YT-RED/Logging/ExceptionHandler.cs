@@ -22,7 +22,7 @@ namespace YT_RED.Logging
                 {
                     Directory.CreateDirectory(AppSettings.Default.General.ErrorLogPath);
                 }
-                string logFile = Path.Combine(AppSettings.Default.General.ErrorLogPath, $"ErrorLogs_{DateTime.Today.ToShortDateString()}.txt");
+                string logFile = Path.Combine(AppSettings.Default.General.ErrorLogPath, $"ErrorLogs_{DateTime.Today.Month}{DateTime.Today.Day}{DateTime.Today.Year}.txt");
 
                 if (!File.Exists(logFile))
                 {

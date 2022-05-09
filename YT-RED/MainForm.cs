@@ -92,24 +92,28 @@ namespace YT_RED
         public static void UpdateDownloadHotkey()
         {
             MainForm.hook.UnregisterHotKey();
-            if (AppSettings.Default.Advanced.EnableHotKeys && AppSettings.Default.Advanced.DownloadHotKey != KeyShortcut.Empty && !string.IsNullOrEmpty(AppSettings.Default.Advanced.DownloadHotKey.ToString()))
+            if (AppSettings.Default.Advanced.EnableHotKeys && AppSettings.Default.Advanced.DownloadHotKey != Shortcut.None)
             {
+                KeyShortcut shortcut = new KeyShortcut(AppSettings.Default.Advanced.DownloadHotKey);
+                string[] listKeys = shortcut.Key.ToString().Replace(" ", "").Split(',');
+
+                string modifierKeys = "";
+                string keys = "";
+
                 ModifierKeysConverter modifierKeysConverter = new ModifierKeysConverter();
                 KeysConverter keysConverter = new KeysConverter();
-                string modifierKeys = "";
-                foreach (string s in AppSettings.Default.Advanced.DownloadHotKey.ToString().Replace(" ", "").Split('+'))
+
+
+                for (int i = listKeys.Length - 1; i >= 0; i--)
                 {
-                    if (modifierKeysConverter.IsValid(s))
-                        modifierKeys += $"{s}+";
+                    if (modifierKeysConverter.IsValid(listKeys[i]))
+                        modifierKeys += $"{listKeys[i]}+";
+                    else if (keysConverter.IsValid(listKeys[i]))
+                        keys += $"{listKeys[i]}+";
                 }
                 modifierKeys = modifierKeys.Remove(modifierKeys.Length - 1, 1);
-                string keys = "";
-                foreach (string s in AppSettings.Default.Advanced.DownloadHotKey.ToString().Replace(" ", "").Split('+'))
-                {
-                    if (keysConverter.IsValid(s) && !modifierKeysConverter.IsValid(s))
-                        keys += $"{s}+";
-                }
                 keys = keys.Remove(keys.Length - 1, 1);
+
                 ModifierKeys dlModifier = (ModifierKeys)modifierKeysConverter.ConvertFrom(modifierKeys);
                 Keys dlKey = (Keys)keysConverter.ConvertFrom(keys);
 

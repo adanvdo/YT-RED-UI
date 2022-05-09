@@ -1,7 +1,7 @@
-﻿using DevExpress.Utils;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace YT_RED.Settings
 {
@@ -26,9 +26,8 @@ Highlight the YouTube or Reddit Media URL in your browser address bar and press 
 YT-DLP will store the highlighted URL on your clipboard, and use the clipboard value to start a download from the System Tray.
 If there is existing text in your clipboard, YT-RED will restore it after starting the download.
 ")]
-        [EditorAttribute(typeof(DevExpress.XtraEditors.Repository.RepositoryItemPopupContainerEdit), typeof(System.Drawing.Design.UITypeEditor))]
         [JsonProperty("dl_hotkey")]
-        public KeyShortcut DownloadHotKey { get; set; }
+        public Shortcut DownloadHotKey { get; set; }
 
         
         [Category("Processing")]
@@ -46,7 +45,7 @@ If there is existing text in your clipboard, YT-RED will restore it after starti
         public AdvancedSettings()
         {
             EnableHotKeys = false;
-            DownloadHotKey = KeyShortcut.Empty;
+            DownloadHotKey = Shortcut.None;
             PreferredYoutubeVideoFormat = YoutubeDLSharp.Options.DownloadMergeFormat.Mp4;
             PreferredYoutubeAudioFormat = YoutubeDLSharp.Options.AudioConversionFormat.Mp3;
         }

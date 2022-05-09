@@ -1,9 +1,10 @@
-﻿using DevExpress.Utils;
+﻿
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Windows.Forms;
 using YT_RED.Logging;
+using DevExpress.Utils;
 
 namespace YT_RED.Classes
 {
@@ -11,7 +12,7 @@ namespace YT_RED.Classes
     {
         public override bool CanConvert(Type objectType)
         {
-            return (objectType == typeof(KeyShortcut));
+            return (objectType == typeof(Shortcut));
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -19,14 +20,11 @@ namespace YT_RED.Classes
             try
             {
                 JToken token = JToken.Load(reader);
-
-                string keys = token.ToString();
-                if (keys.ToLower() == "(none)")
-                    keys = "None";
-                KeysConverter keysConverter = new KeysConverter();
-                Keys dlKey = (Keys)keysConverter.ConvertFrom(keys);
-                KeyShortcut keyShortcut = new KeyShortcut(dlKey);
-                return keyShortcut;
+                Shortcut? shortcut = EnumExtensions.ToEnum<Shortcut>(token.ToString());
+                if (shortcut != null)
+                {
+                    return shortcut;
+                }
             }
             catch(Exception ex)
             {
@@ -37,12 +35,19 @@ namespace YT_RED.Classes
 
         public override bool CanWrite
         {
-            get { return false; }
+            get { return true; }
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            throw new NotImplementedException();
+            try
+            {
+                writer.WriteValue(value.ToString());
+            }
+            catch(Exception ex)
+            {
+                ExceptionHandler.LogException(ex);
+            }
         }
     }
 }
