@@ -114,6 +114,7 @@
     <Reference Include="HtmlAgilityPack, Version=1.11.42.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.11.42\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Microsoft.Win32.Registry, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Win32.Registry.5.0.0\lib\net461\Microsoft.Win32.Registry.dll</HintPath>
     </Reference>
@@ -156,6 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppFeature.cs" />
+    <Compile Include="Classes\ApplicationController.cs" />
     <Compile Include="Classes\AssemblyBuildAttribute.cs" />
     <Compile Include="Classes\FFmpegParam.cs" />
     <Compile Include="Classes\HotkeyConverter.cs" />
@@ -169,6 +171,12 @@
     <Compile Include="Classes\UIBlockDetector.cs" />
     <Compile Include="Controls\CustomTabFormPage.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\MsgBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\MsgBox.Designer.cs">
+      <DependentUpon>MsgBox.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\YTRMessageBox.cs">
       <SubType>Form</SubType>
@@ -216,6 +224,9 @@
     <Compile Include="Utils\ReportingUtil.cs" />
     <Compile Include="Utils\StringUtil.cs" />
     <Compile Include="Utils\VideoUtil.cs" />
+    <EmbeddedResource Include="Controls\MsgBox.resx">
+      <DependentUpon>MsgBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\YTRMessageBox.resx">
       <DependentUpon>YTRMessageBox.cs</DependentUpon>
     </EmbeddedResource>
@@ -258,12 +269,20 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\exclamation.svg" />
+    <None Include="Resources\shield.svg" />
+    <None Include="Resources\enablesearch.svg" />
+    <None Include="Resources\highimportance.svg" />
+    <None Include="Resources\bo_attention.svg" />
     <None Include="Resources\Media\CDM.png" />
     <None Include="Resources\download.svg" />
     <None Include="Resources\actions_remove.svg" />
     <None Include="Resources\actions_add.svg" />
     <None Include="Resources\actions_add1.svg" />
     <None Include="Resources\actions_add2.svg" />
+    <None Include="Resources\about.svg" />
+    <None Include="Resources\actions_question.svg" />
+    <None Include="Resources\application.svg" />
     <Content Include="Resources\App\ffmpeg.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

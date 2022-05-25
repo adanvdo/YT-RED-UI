@@ -35,9 +35,9 @@
             DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions3 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions4 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             this.tcMainTabControl = new DevExpress.XtraBars.TabFormControl();
-            this.bbiSettings = new DevExpress.XtraBars.BarButtonItem();
             this.bsiMessage = new DevExpress.XtraBars.BarStaticItem();
             this.skinBarSubItem1 = new DevExpress.XtraBars.SkinBarSubItem();
+            this.bbiSettings = new DevExpress.XtraBars.BarButtonItem();
             this.tfpYouTube = new YT_RED.Controls.CustomTabFormPage();
             this.ytTabContainer = new DevExpress.XtraBars.TabFormContentContainer();
             this.ytSplitContainer = new DevExpress.XtraEditors.SplitContainerControl();
@@ -229,14 +229,14 @@
             this.tcMainTabControl.AllowMoreTabsButton = DevExpress.Utils.DefaultBoolean.False;
             this.tcMainTabControl.AllowMoveTabsToOuterForm = false;
             this.tcMainTabControl.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
-            this.bbiSettings,
             this.bsiMessage,
-            this.skinBarSubItem1});
+            this.skinBarSubItem1,
+            this.bbiSettings});
             this.tcMainTabControl.Location = new System.Drawing.Point(0, 0);
             this.tcMainTabControl.Name = "tcMainTabControl";
             this.tcMainTabControl.Pages.Add(this.tfpYouTube);
             this.tcMainTabControl.Pages.Add(this.tfpReddit);
-            this.tcMainTabControl.SelectedPage = this.tfpReddit;
+            this.tcMainTabControl.SelectedPage = this.tfpYouTube;
             this.tcMainTabControl.ShowAddPageButton = false;
             this.tcMainTabControl.Size = new System.Drawing.Size(1059, 50);
             this.tcMainTabControl.TabForm = this;
@@ -247,16 +247,6 @@
             this.tcMainTabControl.TabStop = false;
             this.tcMainTabControl.PageClosing += new DevExpress.XtraBars.PageClosingEventHandler(this.tabFormControl1_PageClosing);
             this.tcMainTabControl.SelectedPageChanged += new DevExpress.XtraBars.TabFormSelectedPageChangedEventHandler(this.tabFormControl1_SelectedPageChanged);
-            // 
-            // bbiSettings
-            // 
-            this.bbiSettings.Hint = "Settings";
-            this.bbiSettings.Id = 0;
-            this.bbiSettings.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
-            this.bbiSettings.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("bbiSettings.ImageOptions.SvgImage")));
-            this.bbiSettings.Name = "bbiSettings";
-            this.bbiSettings.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
-            this.bbiSettings.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiSettings_ItemClick);
             // 
             // bsiMessage
             // 
@@ -272,6 +262,16 @@
             this.skinBarSubItem1.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("skinBarSubItem1.ImageOptions.SvgImage")));
             this.skinBarSubItem1.Name = "skinBarSubItem1";
             this.skinBarSubItem1.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
+            // 
+            // bbiSettings
+            // 
+            this.bbiSettings.Hint = "Settings";
+            this.bbiSettings.Id = 0;
+            this.bbiSettings.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
+            this.bbiSettings.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("bbiSettings.ImageOptions.SvgImage")));
+            this.bbiSettings.Name = "bbiSettings";
+            this.bbiSettings.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
+            this.bbiSettings.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiSettings_ItemClick);
             // 
             // tfpYouTube
             // 
@@ -646,6 +646,7 @@
             this.gcYTCrop.TabIndex = 8;
             this.gcYTCrop.Text = "Crop Video";
             this.gcYTCrop.CustomButtonClick += new DevExpress.XtraBars.Docking2010.BaseButtonEventHandler(this.gcYTCrop_CustomButtonClick);
+            this.gcYTCrop.Click += new System.EventHandler(this.gcYTCrop_Click);
             // 
             // pnlYTCropPanel
             // 
@@ -702,6 +703,7 @@
             // teYTCropTop
             // 
             this.teYTCropTop.EditValue = "0";
+            this.teYTCropTop.Enabled = false;
             this.teYTCropTop.Location = new System.Drawing.Point(68, 33);
             this.teYTCropTop.Name = "teYTCropTop";
             this.teYTCropTop.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
@@ -726,6 +728,7 @@
             // teYTCropBottom
             // 
             this.teYTCropBottom.EditValue = "0";
+            this.teYTCropBottom.Enabled = false;
             this.teYTCropBottom.Location = new System.Drawing.Point(208, 33);
             this.teYTCropBottom.Name = "teYTCropBottom";
             this.teYTCropBottom.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
@@ -750,6 +753,7 @@
             // teYTCropLeft
             // 
             this.teYTCropLeft.EditValue = "0";
+            this.teYTCropLeft.Enabled = false;
             this.teYTCropLeft.Location = new System.Drawing.Point(68, 62);
             this.teYTCropLeft.Name = "teYTCropLeft";
             this.teYTCropLeft.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
@@ -774,6 +778,7 @@
             // teYTCropRight
             // 
             this.teYTCropRight.EditValue = "0";
+            this.teYTCropRight.Enabled = false;
             this.teYTCropRight.Location = new System.Drawing.Point(208, 62);
             this.teYTCropRight.Name = "teYTCropRight";
             this.teYTCropRight.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
@@ -805,6 +810,7 @@
             this.gcYTSegments.TabIndex = 4;
             this.gcYTSegments.Text = "Download Segment";
             this.gcYTSegments.CustomButtonClick += new DevExpress.XtraBars.Docking2010.BaseButtonEventHandler(this.gcYTSegments_CustomButtonClick);
+            this.gcYTSegments.Click += new System.EventHandler(this.gcYTSegments_Click);
             // 
             // lblSegmentDisclaimer
             // 
@@ -843,6 +849,8 @@
             // 
             this.toggleYTSegment.Location = new System.Drawing.Point(7, 4);
             this.toggleYTSegment.Name = "toggleYTSegment";
+            this.toggleYTSegment.Properties.ContentAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.toggleYTSegment.Properties.GlyphAlignment = DevExpress.Utils.HorzAlignment.Default;
             this.toggleYTSegment.Properties.OffText = "Off";
             this.toggleYTSegment.Properties.OnText = "On";
             this.toggleYTSegment.Size = new System.Drawing.Size(95, 24);
@@ -1272,6 +1280,7 @@
             this.gcRedCrop.TabIndex = 9;
             this.gcRedCrop.Text = "Crop";
             this.gcRedCrop.CustomButtonClick += new DevExpress.XtraBars.Docking2010.BaseButtonEventHandler(this.gcRedCrop_CustomButtonClick);
+            this.gcRedCrop.Click += new System.EventHandler(this.gcRedCrop_Click);
             // 
             // pnlRedCropPanel
             // 
@@ -1424,6 +1433,7 @@
             this.gcRedSegment.TabIndex = 5;
             this.gcRedSegment.Text = "Download Segment";
             this.gcRedSegment.CustomButtonClick += new DevExpress.XtraBars.Docking2010.BaseButtonEventHandler(this.gcRedSegment_CustomButtonClick);
+            this.gcRedSegment.Click += new System.EventHandler(this.gcRedSegment_Click);
             // 
             // lblRedSegDisclaimer
             // 
@@ -1462,6 +1472,8 @@
             // 
             this.toggleRedSegment.Location = new System.Drawing.Point(7, 4);
             this.toggleRedSegment.Name = "toggleRedSegment";
+            this.toggleRedSegment.Properties.ContentAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.toggleRedSegment.Properties.GlyphAlignment = DevExpress.Utils.HorzAlignment.Default;
             this.toggleRedSegment.Properties.OffText = "Off";
             this.toggleRedSegment.Properties.OnText = "On";
             this.toggleRedSegment.Size = new System.Drawing.Size(95, 24);
@@ -1584,8 +1596,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1059, 784);
-            this.Controls.Add(this.tabFormContentContainer3);
+            this.Controls.Add(this.ytTabContainer);
             this.Controls.Add(this.tcMainTabControl);
+            this.DoubleBuffered = true;
             this.IconOptions.Icon = ((System.Drawing.Icon)(resources.GetObject("MainForm.IconOptions.Icon")));
             this.IconOptions.Image = ((System.Drawing.Image)(resources.GetObject("MainForm.IconOptions.Image")));
             this.Name = "MainForm";
@@ -1755,7 +1768,6 @@
         private DevExpress.XtraBars.SkinBarSubItem skinBarSubItem1;
         private DevExpress.XtraEditors.SimpleButton btnYTListFormats;
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repCheckEdit;
-        private DevExpress.Utils.ToolTipController toolTipController;
         private DevExpress.XtraEditors.LabelControl lblSegmentDisclaimer;
         private DevExpress.XtraEditors.PanelControl pnlYTSegPanel;
         private DevExpress.XtraEditors.PanelControl panelControl4;
@@ -1798,6 +1810,7 @@
         private DevExpress.XtraEditors.LabelControl labelControl13;
         private DevExpress.XtraEditors.LabelControl labelControl14;
         private System.Windows.Forms.ToolStripMenuItem tsiSettings;
+        private DevExpress.Utils.ToolTipController toolTipController;
     }
 }
 

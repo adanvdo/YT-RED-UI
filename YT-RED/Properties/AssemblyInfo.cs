@@ -8,7 +8,7 @@ using YT_RED.Classes;
 [assembly: AssemblyTitle("YT_RED")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("JAMGALACTIC")]
 [assembly: AssemblyProduct("YT_RED")]
 [assembly: AssemblyCopyright("Copyright ©  2022")]
 [assembly: AssemblyTrademark("")]
@@ -29,6 +29,6 @@ using YT_RED.Classes;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.9")]
+[assembly: AssemblyVersion("1.0.0.10")]
 [assembly: AssemblyBuild("Alpha") ]
 [assembly: AssemblyFileVersion("1.0.0.0")]

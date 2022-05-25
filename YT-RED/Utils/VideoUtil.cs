@@ -410,28 +410,35 @@ namespace YT_RED.Utils
             return null;
         }
 
-        public static async Task<RunResult<string>> DownloadBestYT(string url, Classes.StreamType streamType, IProgress<DownloadProgress> dlProgress = null, IProgress<string> progressText = null)
+        public static async Task<RunResult<string>> DownloadBestYT(string url, Classes.StreamType streamType, IProgress<DownloadProgress> dlProgress = null, IProgress<string> progressText = null, System.Threading.CancellationToken? cancellationToken = null)
         {
+            bool cancelled = false;
             try
             {
                 ytdl.OutputFolder = streamType == Classes.StreamType.Audio ? AppSettings.Default.General.AudioDownloadPath : AppSettings.Default.General.VideoDownloadPath;
                 var options = YoutubeDLSharp.Options.OptionSet.Default;
                 options.RestrictFilenames = true;
                 if (streamType == Classes.StreamType.AudioAndVideo)
-                    return await ytdl.RunVideoDownload(url, "bestvideo+bestaudio", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, dlProgress == null ? ytProgress : dlProgress, progressText, options);
+                    return await ytdl.RunVideoDownload(url, "bestvideo+bestaudio", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, cancellationToken != null ? (System.Threading.CancellationToken)cancellationToken : default, dlProgress == null ? ytProgress : dlProgress, progressText, options);
                 if (streamType == Classes.StreamType.Video)
-                    return await ytdl.RunVideoDownload(url, "bestvideo", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, dlProgress == null ? ytProgress : dlProgress, progressText, options);
-                return await ytdl.RunVideoDownload(url, "bestaudio", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, dlProgress == null ? ytProgress : dlProgress, progressText, options);
+                    return await ytdl.RunVideoDownload(url, "bestvideo", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, cancellationToken != null ? (System.Threading.CancellationToken)cancellationToken : default, dlProgress == null ? ytProgress : dlProgress, progressText, options);
+                return await ytdl.RunVideoDownload(url, "bestaudio", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, cancellationToken != null ? (System.Threading.CancellationToken)cancellationToken : default, dlProgress == null ? ytProgress : dlProgress, progressText, options);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                ExceptionHandler.LogException(ex);
+                if (ex.Message.ToLower() != "a task was canceled.")
+                    ExceptionHandler.LogException(ex);
+                else cancelled = true;
             }
-            return null;
+            if (cancelled)
+                return new RunResult<string>(false, new string[] { "a task was canceled." }, "canceled");
+            else
+                return null;
         }
 
-        public static async Task<RunResult<string>> DownloadPreferred(string url, Classes.StreamType streamType, IProgress<DownloadProgress> dlProgress = null, IProgress<string> progressText = null)
+        public static async Task<RunResult<string>> DownloadPreferred(string url, Classes.StreamType streamType, IProgress<DownloadProgress> dlProgress = null, IProgress<string> progressText = null, System.Threading.CancellationToken? cancellationToken = null)
         {
+            bool cancelled = false;
             try
             {
                 ytdl.OutputFolder = streamType == Classes.StreamType.Audio ? AppSettings.Default.General.AudioDownloadPath : AppSettings.Default.General.VideoDownloadPath;
@@ -459,37 +466,50 @@ namespace YT_RED.Utils
                         videoRecodeFormat = VideoRecodeFormat.None;
                         break;
                 }
-                
+
 
                 if (streamType == Classes.StreamType.AudioAndVideo)
-                    return await ytdl.RunVideoDownload(url, "bestvideo+bestaudio", AppSettings.Default.Advanced.PreferredYoutubeVideoFormat, videoRecodeFormat, default, dlProgress == null ? ytProgress : dlProgress, progressText, options);
+                    return await ytdl.RunVideoDownload(url, "bestvideo+bestaudio", AppSettings.Default.Advanced.PreferredYoutubeVideoFormat, videoRecodeFormat, cancellationToken != null ? (System.Threading.CancellationToken)cancellationToken : default, dlProgress == null ? ytProgress : dlProgress, progressText, options);
                 else if (streamType == Classes.StreamType.Video)
-                    return await ytdl.RunVideoDownload(url, "bestvideo", AppSettings.Default.Advanced.PreferredYoutubeVideoFormat, videoRecodeFormat, default, dlProgress == null ? ytProgress : dlProgress, progressText, options);
+                    return await ytdl.RunVideoDownload(url, "bestvideo", AppSettings.Default.Advanced.PreferredYoutubeVideoFormat, videoRecodeFormat, cancellationToken != null ? (System.Threading.CancellationToken)cancellationToken : default, dlProgress == null ? ytProgress : dlProgress, progressText, options);
                 else
-                    return await DownloadAudioYT(url, AppSettings.Default.Advanced.PreferredYoutubeAudioFormat);
+                    return await DownloadAudioYT(url, AppSettings.Default.Advanced.PreferredYoutubeAudioFormat, cancellationToken);
 
             }
             catch (Exception ex)
             {
-                ExceptionHandler.LogException(ex);
+                if (ex.Message.ToLower() != "a task was canceled.")
+                    ExceptionHandler.LogException(ex);
+                else
+                    cancelled = true;
             }
-            return null;
+            if (cancelled)
+                return new RunResult<string>(false, new string[] { "a task was canceled." }, "canceled");
+            else
+                return null;
         }
 
-        public static async Task<RunResult<string>> DownloadAudioYT(string url, YoutubeDLSharp.Options.AudioConversionFormat audioFormat)
+        public static async Task<RunResult<string>> DownloadAudioYT(string url, YoutubeDLSharp.Options.AudioConversionFormat audioFormat, System.Threading.CancellationToken? cancellationToken = null)
         {
+            bool cancelled = false;
             try
             {
                 ytdl.OutputFolder = AppSettings.Default.General.AudioDownloadPath;
                 var options = YoutubeDLSharp.Options.OptionSet.Default;
                 options.RestrictFilenames = true;
-                return await ytdl.RunAudioDownload(url, audioFormat, default, ytProgress, null, options);
+                return await ytdl.RunAudioDownload(url, audioFormat, cancellationToken != null ? (System.Threading.CancellationToken)cancellationToken : default, ytProgress, null, options);
             }
             catch (Exception ex)
             {
-                ExceptionHandler.LogException(ex);
+                if (ex.Message.ToLower() != "a task was canceled.")
+                    ExceptionHandler.LogException(ex);
+                else
+                    cancelled = true;
             }
-            return null;
+            if (cancelled)
+                return new RunResult<string>(false, new string[] { "a task was canceled." }, "canceled");
+            else
+                return null;
         }
 
         public static async Task<RunResult<string>> DownloadYTFormat(string videoUrl, FormatData formatData)

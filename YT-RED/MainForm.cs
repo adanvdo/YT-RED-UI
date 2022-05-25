@@ -54,28 +54,32 @@ namespace YT_RED
         private MediaSource initialSource = MediaSource.None;
         private URISchemeService uriService = null;
         private bool enableQuickDownload = false;
+        private bool trayBalloonShown = false;
         static KeyboardHook hook = new KeyboardHook();
 
         public MainForm()
         {
             InitializeComponent();
-            initializeProgram();
+            this.initialFunction = InitialFunction.None;
+            this.initialLink = "";
+            this.initialSource = MediaSource.None;
         }
 
         public MainForm(InitialFunction initialFunction, string initialLink, Classes.MediaSource mediaSource)
         {
             InitializeComponent();
-            initializeProgram(initialFunction, initialLink, mediaSource);
+            this.initialFunction = initialFunction;
+            this.initialLink = initialLink;
+            this.initialSource = mediaSource;
         }
 
-        private void initializeProgram(InitialFunction initialFunction = InitialFunction.None, string initialLink = "", MediaSource mediaSource = MediaSource.None)
+        private void initializeProgram()
         {
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
             AppSettings.Default.About.Version = assembly.GetName().Version.ToString();
             AppSettings.Default.About.Build = assembly.GetCustomAttributes(typeof(AssemblyBuildAttribute), false).Cast<AssemblyBuildAttribute>().FirstOrDefault().Value;
             MainForm.hook.KeyPressed += new EventHandler<KeyPressedEventArgs>(Hook_KeyPressed);
             MainForm.UpdateDownloadHotkey();
-            registerURIScheme();
             this.historyTimer = new Timer();
             this.historyTimer.Interval = 10000;
             this.historyTimer.Tick += HistoryTimer_Tick;
@@ -84,9 +88,6 @@ namespace YT_RED
             Historian.Init();
             Init();
             _blockDetector = new UIBlockDetector();
-            this.initialFunction = initialFunction;
-            this.initialLink = initialLink;
-            initialSource = mediaSource;
         }
 
         public static void UpdateDownloadHotkey()
@@ -146,7 +147,7 @@ namespace YT_RED
                     try
                     {
                         TrayForm trayForm = new TrayForm();
-
+                        activeTrayForm = trayForm;
                         trayForm.FormClosed += TrayForm_FormClosed;
                         trayForm.StartPosition = FormStartPosition.Manual;
                         Rectangle workingArea = Screen.GetWorkingArea(this);
@@ -179,13 +180,19 @@ namespace YT_RED
 
         protected override void OnLoad(EventArgs e)
         {
+            initializeProgram();
             if (Program.DevRun)
             {
                 txtYTUrl.Text = AppSettings.Default.General.YouTubeSampleUrl;
                 txtRedditPost.Text = AppSettings.Default.General.RedditSampleUrl;
             }
-            chkUsePrefs.Checked = AppSettings.Default.General.UsePreferredFormat;
+            chkUsePrefs.Checked = AppSettings.Default.General.UsePreferredFormat;            
             base.OnLoad(e);
+        }
+
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            this.notifyIcon.Visible = !this.Visible;
         }
 
         protected override void OnResize(EventArgs e)
@@ -194,7 +201,11 @@ namespace YT_RED
             {
                 enableQuickDownload = true;
                 notifyIcon.Visible = true;
-                notifyIcon.ShowBalloonTip(3000);
+                if (!trayBalloonShown)
+                {
+                    notifyIcon.ShowBalloonTip(3000);
+                    trayBalloonShown = true;
+                }
                 this.ShowInTaskbar = false;
             }
             else
@@ -204,19 +215,19 @@ namespace YT_RED
             base.OnResize(e);
         }
 
-        private void registerURIScheme()
-        {
-            const string key = @"ytred";
-            string exeLocation = Assembly.GetEntryAssembly().Location;
-            uriService = new URISchemeService(key, @"URL:ytred", $"{exeLocation}");
-            var isSet = uriService.Check();
-            if (isSet)
-                uriService.Delete();
+        //private void registerURIScheme()
+        //{
+        //    const string key = @"ytred";
+        //    string exeLocation = Assembly.GetEntryAssembly().Location;
+        //    uriService = new URISchemeService(key, @"URL:ytred", $"{exeLocation}");
+        //    var isSet = uriService.Check();
+        //    if (isSet)
+        //        uriService.Delete();
 
 
-            uriService.Set();
+        //    uriService.Set();
 
-        }
+        //}
 
         private async void Init()
         {
@@ -588,7 +599,7 @@ namespace YT_RED
         {
             if (this.IsLocked)
             {
-                DialogResult res = MessageBox.Show("A Task is currently in progress. Would you like to cancel the task and exit?", "A Task is Busy", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                DialogResult res = MsgBox.Show("A Task is currently in progress. Would you like to cancel the task and exit?", "A Task is Busy", YT_RED.Controls.Buttons.OKCancel, YT_RED.Controls.Icon.Warning);
                 if (res == DialogResult.Cancel)
                 {
                     e.Cancel = true;
@@ -737,8 +748,24 @@ namespace YT_RED
             updateRedditSegmentState();
         }
 
+        private Color originalRedForecolor;
         private void updateRedditSegmentState()
         {
+            if (toggleRedSegment.IsOn)
+            {
+                originalRedForecolor = toggleRedSegment.ForeColor;
+                toggleRedSegment.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.Simple;
+                toggleRedSegment.Properties.Appearance.BorderColor = Color.LightGreen;
+                toggleRedSegment.BackColor = Color.LightGreen;
+                toggleRedSegment.ForeColor = Color.Black;
+            }
+            else
+            {
+                toggleRedSegment.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+                toggleRedSegment.Properties.Appearance.BorderColor = Color.Transparent;
+                toggleRedSegment.BackColor = Color.Transparent;
+                toggleRedSegment.ForeColor = originalRedForecolor;
+            }
             tsRedStart.Enabled = toggleRedSegment.IsOn;
             tsRedDuration.Enabled = toggleRedSegment.IsOn;
             lblRedSegDisclaimer.Visible = toggleRedSegment.IsOn && (gvReddit.RowCount < 1 || selectedStream == null);
@@ -755,8 +782,24 @@ namespace YT_RED
             updateYTSegmentState();
         }
 
+        private Color originalYTForeColor;
         private void updateYTSegmentState()
         {
+            if (toggleYTSegment.IsOn)
+            {
+                originalYTForeColor = toggleYTSegment.ForeColor;
+                toggleYTSegment.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.Simple;
+                toggleYTSegment.Properties.Appearance.BorderColor = Color.LightGreen;
+                toggleYTSegment.BackColor = Color.LightGreen;
+                toggleYTSegment.ForeColor = Color.Black;
+            }
+            else
+            {
+                toggleYTSegment.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+                toggleYTSegment.Properties.Appearance.BorderColor = Color.Transparent;
+                toggleYTSegment.BackColor = Color.Transparent;
+                toggleYTSegment.ForeColor = originalYTForeColor;
+            }
             tsYTStart.Enabled = toggleYTSegment.IsOn;
             tsYTEnd.Enabled = toggleYTSegment.IsOn;
             lblSegmentDisclaimer.Visible = toggleYTSegment.IsOn && (gvYouTube.RowCount < 1 || selectedFormat == null);
@@ -772,6 +815,22 @@ namespace YT_RED
 
         private void updateYTCropState()
         {
+            if (toggleYTCrop.IsOn)
+            {
+                originalYTForeColor = toggleYTCrop.ForeColor;
+                toggleYTCrop.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.Simple;
+                toggleYTCrop.Properties.Appearance.BorderColor = Color.LightGreen;
+                toggleYTCrop.BackColor = Color.LightGreen;
+                toggleYTCrop.ForeColor = Color.Black;
+            }
+            else
+            {
+                toggleYTCrop.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+                toggleYTCrop.Properties.Appearance.BorderColor = Color.Transparent;
+                toggleYTCrop.BackColor = Color.Transparent;
+                toggleYTCrop.ForeColor = originalYTForeColor;
+            }
+
             teYTCropTop.Enabled = toggleYTCrop.IsOn;
             teYTCropBottom.Enabled = toggleYTCrop.IsOn;
             teYTCropLeft.Enabled = toggleYTCrop.IsOn;
@@ -1433,9 +1492,10 @@ namespace YT_RED
 
         private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            this.WindowState = FormWindowState.Normal;
             this.ShowInTaskbar = true;
-            notifyIcon.Visible = false;
+            this.WindowState = FormWindowState.Minimized;
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
         }
 
         private TrayForm activeTrayForm = null;
@@ -1473,7 +1533,7 @@ namespace YT_RED
         {
             if (IsLocked || (activeTrayForm != null && activeTrayForm.Locked))
             {
-                DialogResult res = MessageBox.Show("A download is in progress.\nAre you sure you want to exit?", "Download In Progress", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                DialogResult res = MsgBox.Show("A download is in progress.\nAre you sure you want to exit?", "Download In Progress", YT_RED.Controls.Buttons.OKCancel, YT_RED.Controls.Icon.Warning);
                 if (res != DialogResult.OK)
                     return;
             }
@@ -1488,6 +1548,21 @@ namespace YT_RED
 
         private void updateRedditCropState()
         {
+            if (toggleRedditCrop.IsOn)
+            {
+                originalRedForecolor = toggleRedditCrop.ForeColor;
+                toggleRedditCrop.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.Simple;
+                toggleRedditCrop.Properties.Appearance.BorderColor = Color.LightGreen;
+                toggleRedditCrop.BackColor = Color.LightGreen;
+                toggleRedditCrop.ForeColor = Color.Black;
+            }
+            else
+            {
+                toggleRedditCrop.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+                toggleRedditCrop.Properties.Appearance.BorderColor = Color.Transparent;
+                toggleRedditCrop.BackColor = Color.Transparent;
+                toggleRedditCrop.ForeColor = originalRedForecolor;
+            }
             txtRedCropBottom.Enabled = toggleRedditCrop.IsOn;
             txtRedCropLeft.Enabled = toggleRedditCrop.IsOn;
             txtRedCropRight.Enabled = toggleRedditCrop.IsOn;
@@ -1526,6 +1601,66 @@ namespace YT_RED
                     await Task.Delay(2000);
                     tempForm.Close();
                 }
+            }
+        }
+
+        private void gcRedSegment_Click(object sender, EventArgs e)
+        {
+            if (toggleRedSegment.IsOn) return;
+            if (pnlRedSegPanel.Visible)
+            {
+                pnlRedSegPanel.Visible = false;
+                gcRedSegment.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
+            }
+            else
+            {
+                pnlRedSegPanel.Visible = true;
+                gcRedSegment.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
+            }
+        }
+
+        private void gcRedCrop_Click(object sender, EventArgs e)
+        {
+            if (toggleRedditCrop.IsOn) return;
+            if(pnlRedCropPanel.Visible)
+            {
+                pnlRedCropPanel.Visible = false;
+                gcRedCrop.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
+            }
+            else
+            {
+                pnlRedCropPanel.Visible = true;
+                gcRedCrop.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
+            }
+        }
+
+        private void gcYTSegments_Click(object sender, EventArgs e)
+        {
+            if (toggleYTSegment.IsOn) return;
+            if(pnlYTSegPanel.Visible)
+            {
+                pnlYTSegPanel.Visible = false;
+                gcYTSegments.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
+            }
+            else
+            {
+                pnlYTSegPanel.Visible = true;
+                gcYTSegments.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
+            }
+        }
+
+        private void gcYTCrop_Click(object sender, EventArgs e)
+        {
+            if (toggleYTCrop.IsOn) return;
+            if (pnlYTCropPanel.Visible)
+            {
+                pnlYTCropPanel.Visible = false;
+                gcYTCrop.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
+            }
+            else
+            {
+                pnlYTCropPanel.Visible = true;
+                gcYTCrop.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
             }
         }
     }

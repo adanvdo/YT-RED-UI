@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Threading;
 using Xabe.FFmpeg;
 using YoutubeDLSharp;
 using YT_RED.Logging;
@@ -21,6 +22,7 @@ namespace YT_RED.Controls
 
         protected IProgress<DownloadProgress> ytProgress;
         protected IProgress<string> ytOutput;
+        protected CancellationTokenSource cancellationTokenSource;
         private DownloadType currentDownload;
 
         public TrayForm()
@@ -66,39 +68,46 @@ namespace YT_RED.Controls
             this.progressPanel.Visible = true;
             progressMarquee.Text = "Starting Download Process..";
             progressMarquee.Show();
+
+            cancellationTokenSource = new CancellationTokenSource();
+            CancellationToken cancelToken = cancellationTokenSource.Token;
+
             if (HtmlUtil.CheckUrl(txtUrl.Text) == DownloadType.YouTube)
             {
                 currentDownload = DownloadType.YouTube;
                 RunResult<string> result = null;
                 if(AppSettings.Default.General.UsePreferredFormat)
                 {
-                    result = await VideoUtil.DownloadPreferred(VideoUtil.YouTubeString(txtUrl.Text), Classes.StreamType.AudioAndVideo, ytProgress);
+                    result = await VideoUtil.DownloadPreferred(VideoUtil.YouTubeString(txtUrl.Text), Classes.StreamType.AudioAndVideo, ytProgress, null, cancelToken);
                 }
                 else
                 {
-                    result = await VideoUtil.DownloadBestYT(VideoUtil.YouTubeString(txtUrl.Text), Classes.StreamType.AudioAndVideo, ytProgress);
+                    result = await VideoUtil.DownloadBestYT(VideoUtil.YouTubeString(txtUrl.Text), Classes.StreamType.AudioAndVideo, ytProgress, null, cancelToken);
                 }
-                if (!result.Success)
+                if (!result.Success && result.Data != "canceled")
                 {
                     MessageBox.Show("Download Failed\n" + String.Join("\n", result.ErrorOutput));
                 }
 
                 progressMarquee.Hide();
                 progressMarquee.Text = "";
-                await Historian.RecordDownload(new DownloadLog(
-                    DownloadType.YouTube,
-                    VideoUtil.YouTubeString(txtUrl.Text),
-                    Classes.StreamType.AudioAndVideo,
-                    DateTime.Now,
-                    result.Data));
-
+                if (result.Data != "canceled")
+                {
+                    await Historian.RecordDownload(new DownloadLog(
+                        DownloadType.YouTube,
+                        VideoUtil.YouTubeString(txtUrl.Text),
+                        Classes.StreamType.AudioAndVideo,
+                        DateTime.Now,
+                        result.Data));
+                }
                 btnOpenDL.Text = result.Data;
                 btnOpenDL.Visible = true;
                 this.txtUrl.Text = "";
                 this.txtUrl.Enabled = true;
                 this.Locked = false;
 
-                if(AppSettings.Default.General.AutomaticallyOpenDownloadLocation)
+                cancellationTokenSource.Dispose();
+                if(result.Data != "canceled" && AppSettings.Default.General.AutomaticallyOpenDownloadLocation)
                 {
                     openDLLocation(btnOpenDL.Text);
                     this.Close();
@@ -107,11 +116,11 @@ namespace YT_RED.Controls
             else if (HtmlUtil.CheckUrl(txtUrl.Text) == DownloadType.Reddit)
             {
                 currentDownload = DownloadType.Reddit;
-                redditDL(txtUrl.Text);
+                redditDL(txtUrl.Text, cancelToken);
             }
         }
 
-        private async void redditDL(string playlistUrl)
+        private async void redditDL(string playlistUrl, CancellationToken? cancellationToken = null)
         {
             try
             {
@@ -135,17 +144,27 @@ namespace YT_RED.Controls
                             conversion.OnProgress += Conversion_OnProgress;
                             progressMarquee.Text = string.Empty;
                             pgTrayProgress.Visible = true;
+                            bool cancelled = false;
                             try
                             {
-                                await conversion.Start();
+                                if (cancellationToken != null)
+                                    await conversion.Start((CancellationToken)cancellationToken);
+                                else
+                                    await conversion.Start();
                             }
                             catch (Exception ex)
                             {
-                                ExceptionHandler.LogException(ex);
+                                if (ex.Message.ToLower() != "a task was canceled.")
+                                    ExceptionHandler.LogException(ex);
+                                else
+                                    cancelled = true;
                             }
-                            bool saved = await Historian.RecordDownload(new DownloadLog(
-                                DownloadType.Reddit, bestDash.Item2, Classes.StreamType.AudioAndVideo, DateTime.Now, destination
-                                ));
+                            if (!cancelled)
+                            {
+                                bool saved = await Historian.RecordDownload(new DownloadLog(
+                                    DownloadType.Reddit, bestDash.Item2, Classes.StreamType.AudioAndVideo, DateTime.Now, destination
+                                    ));
+                            }
                             pgTrayProgress.Visible = false;
                             progressMarquee.Hide();
                             progressMarquee.Text = "";
@@ -156,12 +175,18 @@ namespace YT_RED.Controls
                             this.txtUrl.Enabled = true;
                             this.Locked = false;
 
-                            if (AppSettings.Default.General.AutomaticallyOpenDownloadLocation)
+                            cancellationTokenSource.Dispose();
+                            if (!cancelled && AppSettings.Default.General.AutomaticallyOpenDownloadLocation)
                             {
                                 openDLLocation(btnOpenDL.Text);
                                 this.Close();
                             }
                         }
+                    }
+                    else
+                    {
+                        cancellationTokenSource.Dispose();
+                        MessageBox.Show("Failed to acquire Media ID", "Oops", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -211,6 +236,19 @@ namespace YT_RED.Controls
 
         private void btnClose_Click(object sender, EventArgs e)
         {
+            if(this.Locked)
+            {
+                this.StartPosition = FormStartPosition.Manual;
+                System.Drawing.Rectangle workingArea = Screen.GetWorkingArea(this);
+                var loc = new System.Drawing.Point(workingArea.Right - 400, workingArea.Bottom - 200);
+                DialogResult res = MsgBox.Show("A download is in progress. Cancel the current download?", "Download In-Progress", YT_RED.Controls.Buttons.YesNo, YT_RED.Controls.Icon.Warning, loc);
+                if(res == DialogResult.Yes)
+                {
+                    cancellationTokenSource.Cancel();
+                    cancellationTokenSource.Dispose();
+                    this.Close();
+                }
+            }
             this.Close();
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using Xabe.FFmpeg;
 
@@ -31,7 +32,6 @@ namespace YT_RED
 
             if(args.Length > 0)
             {
-                //System.Windows.Forms.MessageBox.Show(String.Join(" ", args));
                 try
                 {
                     foreach (string s in args)
@@ -70,12 +70,16 @@ namespace YT_RED
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             FFmpeg.SetExecutablesPath(@".\Resources\App");
+            MainForm runForm;
             if (!string.IsNullOrEmpty(initialYTLink))
-                Application.Run(new MainForm(initialFunction, initialYTLink, Classes.MediaSource.YouTube));
+                runForm = new MainForm(initialFunction, initialYTLink, Classes.MediaSource.YouTube);
             else if (!string.IsNullOrEmpty(initialRedLink))
-                Application.Run(new MainForm(initialFunction, initialRedLink, Classes.MediaSource.Reddit));
+                runForm = new MainForm(initialFunction, initialRedLink, Classes.MediaSource.Reddit);
             else
-                Application.Run(new MainForm());
+                runForm = new MainForm();
+
+            var controller = new ApplicationController(runForm);            
+            controller.Run(Environment.GetCommandLineArgs());
         }
     }
 
