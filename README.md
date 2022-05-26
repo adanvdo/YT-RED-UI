@@ -74,6 +74,14 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 5/26/2022 v1.0.0.11
+- Added Duration to Youtube Format List
+- Enabled Column Customization in Format Grids. Columns can now be hidden/shown by the user
+- Replaced standard Message Boxes with Custom Message Box
+- Fixed Bug where Segment and Crop panels did not expand/collapse when clicking the header button
+- Fixed bug where "Downloads Cleared" message was displayed even though the clear had been cancelled
+- Various UI and Behavior Tweaks
+
 ### 5/25/2022 v1.0.0.10
 - Launching YT-RED VIA exe or shortcut now opens any running instance
 - Added Download Cancellation support for Quick Downloads / Hotkey Downloads
