@@ -30,10 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions1 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions2 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
-            DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions3 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions4 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
+            DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions1 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
+            DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions5 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             this.tcMainTabControl = new DevExpress.XtraBars.TabFormControl();
             this.bsiMessage = new DevExpress.XtraBars.BarStaticItem();
             this.skinBarSubItem1 = new DevExpress.XtraBars.SkinBarSubItem();
@@ -331,9 +331,7 @@
             this.gvYouTube.Name = "gvYouTube";
             this.gvYouTube.OptionsBehavior.AlignGroupSummaryInGroupRow = DevExpress.Utils.DefaultBoolean.False;
             this.gvYouTube.OptionsBehavior.Editable = false;
-            this.gvYouTube.OptionsCustomization.AllowColumnMoving = false;
             this.gvYouTube.OptionsCustomization.AllowGroup = false;
-            this.gvYouTube.OptionsCustomization.AllowQuickHideColumns = false;
             this.gvYouTube.OptionsDetail.ShowDetailTabs = false;
             this.gvYouTube.OptionsSelection.EnableAppearanceFocusedCell = false;
             this.gvYouTube.OptionsSelection.EnableAppearanceHideSelection = false;
@@ -552,6 +550,8 @@
             // 
             // gcYTDLButtons
             // 
+            this.gcYTDLButtons.AppearanceCaption.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
+            this.gcYTDLButtons.AppearanceCaption.Options.UseFont = true;
             this.gcYTDLButtons.AutoSize = true;
             this.gcYTDLButtons.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gcYTDLButtons.Controls.Add(this.btnYTDownloadBest);
@@ -633,10 +633,10 @@
             this.gcYTCrop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gcYTCrop.CaptionImageOptions.AllowGlyphSkinning = true;
             this.gcYTCrop.Controls.Add(this.pnlYTCropPanel);
-            buttonImageOptions1.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("buttonImageOptions1.SvgImage")));
-            buttonImageOptions1.SvgImageSize = new System.Drawing.Size(18, 18);
+            buttonImageOptions2.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("buttonImageOptions2.SvgImage")));
+            buttonImageOptions2.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcYTCrop.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
-            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions1, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions2, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
             this.gcYTCrop.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
             this.gcYTCrop.Dock = System.Windows.Forms.DockStyle.Top;
             this.gcYTCrop.Location = new System.Drawing.Point(0, 164);
@@ -645,7 +645,6 @@
             this.gcYTCrop.Size = new System.Drawing.Size(323, 136);
             this.gcYTCrop.TabIndex = 8;
             this.gcYTCrop.Text = "Crop Video";
-            this.gcYTCrop.CustomButtonClick += new DevExpress.XtraBars.Docking2010.BaseButtonEventHandler(this.gcYTCrop_CustomButtonClick);
             this.gcYTCrop.Click += new System.EventHandler(this.gcYTCrop_Click);
             // 
             // pnlYTCropPanel
@@ -797,10 +796,10 @@
             this.gcYTSegments.CaptionImageOptions.AllowGlyphSkinning = true;
             this.gcYTSegments.Controls.Add(this.lblSegmentDisclaimer);
             this.gcYTSegments.Controls.Add(this.pnlYTSegPanel);
-            buttonImageOptions2.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
-            buttonImageOptions2.SvgImageSize = new System.Drawing.Size(18, 18);
+            buttonImageOptions4.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
+            buttonImageOptions4.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcYTSegments.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
-            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions2, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, false, true, "ytSegment", -1)});
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions4, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, false, true, "ytSegment", -1)});
             this.gcYTSegments.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
             this.gcYTSegments.Dock = System.Windows.Forms.DockStyle.Top;
             this.gcYTSegments.Location = new System.Drawing.Point(0, 20);
@@ -809,7 +808,6 @@
             this.gcYTSegments.Size = new System.Drawing.Size(323, 144);
             this.gcYTSegments.TabIndex = 4;
             this.gcYTSegments.Text = "Download Segment";
-            this.gcYTSegments.CustomButtonClick += new DevExpress.XtraBars.Docking2010.BaseButtonEventHandler(this.gcYTSegments_CustomButtonClick);
             this.gcYTSegments.Click += new System.EventHandler(this.gcYTSegments_Click);
             // 
             // lblSegmentDisclaimer
@@ -985,9 +983,7 @@
             this.gvReddit.Name = "gvReddit";
             this.gvReddit.OptionsBehavior.AlignGroupSummaryInGroupRow = DevExpress.Utils.DefaultBoolean.False;
             this.gvReddit.OptionsBehavior.Editable = false;
-            this.gvReddit.OptionsCustomization.AllowColumnMoving = false;
             this.gvReddit.OptionsCustomization.AllowGroup = false;
-            this.gvReddit.OptionsCustomization.AllowQuickHideColumns = false;
             this.gvReddit.OptionsDetail.ShowDetailTabs = false;
             this.gvReddit.OptionsSelection.EnableAppearanceFocusedCell = false;
             this.gvReddit.OptionsSelection.EnableAppearanceHideSelection = false;
@@ -1214,6 +1210,8 @@
             // 
             // groupControl2
             // 
+            this.groupControl2.AppearanceCaption.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
+            this.groupControl2.AppearanceCaption.Options.UseFont = true;
             this.groupControl2.AutoSize = true;
             this.groupControl2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupControl2.Controls.Add(this.btnRedditDefault);
@@ -1267,10 +1265,10 @@
             this.gcRedCrop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gcRedCrop.CaptionImageOptions.AllowGlyphSkinning = true;
             this.gcRedCrop.Controls.Add(this.pnlRedCropPanel);
-            buttonImageOptions3.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("buttonImageOptions3.SvgImage")));
-            buttonImageOptions3.SvgImageSize = new System.Drawing.Size(18, 18);
+            buttonImageOptions1.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("buttonImageOptions1.SvgImage")));
+            buttonImageOptions1.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcRedCrop.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
-            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions3, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions1, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
             this.gcRedCrop.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
             this.gcRedCrop.Dock = System.Windows.Forms.DockStyle.Top;
             this.gcRedCrop.Location = new System.Drawing.Point(0, 144);
@@ -1279,7 +1277,6 @@
             this.gcRedCrop.Size = new System.Drawing.Size(323, 135);
             this.gcRedCrop.TabIndex = 9;
             this.gcRedCrop.Text = "Crop";
-            this.gcRedCrop.CustomButtonClick += new DevExpress.XtraBars.Docking2010.BaseButtonEventHandler(this.gcRedCrop_CustomButtonClick);
             this.gcRedCrop.Click += new System.EventHandler(this.gcRedCrop_Click);
             // 
             // pnlRedCropPanel
@@ -1420,10 +1417,10 @@
             this.gcRedSegment.CaptionImageOptions.AllowGlyphSkinning = true;
             this.gcRedSegment.Controls.Add(this.lblRedSegDisclaimer);
             this.gcRedSegment.Controls.Add(this.pnlRedSegPanel);
-            buttonImageOptions4.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
-            buttonImageOptions4.SvgImageSize = new System.Drawing.Size(18, 18);
+            buttonImageOptions5.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
+            buttonImageOptions5.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcRedSegment.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
-            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", true, buttonImageOptions4, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, false, true, null, -1)});
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", true, buttonImageOptions5, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, false, true, null, -1)});
             this.gcRedSegment.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
             this.gcRedSegment.Dock = System.Windows.Forms.DockStyle.Top;
             this.gcRedSegment.Location = new System.Drawing.Point(0, 0);
@@ -1432,7 +1429,6 @@
             this.gcRedSegment.Size = new System.Drawing.Size(323, 144);
             this.gcRedSegment.TabIndex = 5;
             this.gcRedSegment.Text = "Download Segment";
-            this.gcRedSegment.CustomButtonClick += new DevExpress.XtraBars.Docking2010.BaseButtonEventHandler(this.gcRedSegment_CustomButtonClick);
             this.gcRedSegment.Click += new System.EventHandler(this.gcRedSegment_Click);
             // 
             // lblRedSegDisclaimer

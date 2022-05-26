@@ -138,7 +138,7 @@ namespace YT_RED
 
                 if (HtmlUtil.CheckUrl(copiedText) == DownloadType.Unknown)
                 {
-                    MessageBox.Show("The selected text is not a valid Youtube or Reddit media url", "No link detected");
+                    MsgBox.Show("The selected text is not a valid Youtube or Reddit media url", "No link detected");
                     return;
                 }
 
@@ -243,14 +243,14 @@ namespace YT_RED
                     gcYTHistory.DataSource = Historian.DownloadHistory.Where(h => h.DownloadType == DownloadType.YouTube).ToList();
                     gvYTHistory.PopulateColumns();
                     refreshYoutubeHistory();
-                }
-                gcReddit.DataSource = new List<ResultStream>();
-                gvReddit.PopulateColumns();
-                refreshRedditList();
-                gcYoutube.DataSource = new List<YoutubeDLSharp.Metadata.FormatData>();
-                gvYouTube.PopulateColumns();
-                refreshYTGrid();
+                }                
             }
+            gcReddit.DataSource = new List<ResultStream>();
+            gvReddit.PopulateColumns();
+            refreshRedditList();
+            gcYoutube.DataSource = new List<YTFormatData>();
+            gvYouTube.PopulateColumns();
+            refreshYTGrid();
             VideoUtil.Init();
             VideoUtil.ytProgress = new Progress<DownloadProgress>(showYTProgress);
             if (this.initialSource == MediaSource.YouTube)
@@ -298,7 +298,7 @@ namespace YT_RED
                     return;
                 }
             }
-            MessageBox.Show("The url provided is not a valid Youtube or Reddit url", "Unsupported URL", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            MsgBox.Show("The url provided is not a valid Youtube or Reddit url", "Unsupported URL", YT_RED.Controls.Buttons.OK, YT_RED.Controls.Icon.Exclamation);
             return;
         }
 
@@ -324,7 +324,7 @@ namespace YT_RED
                     return;
                 }
             }
-            MessageBox.Show("The url provided is not a valid Youtube or Reddit url", "Unsupported URL", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            MsgBox.Show("The url provided is not a valid Youtube or Reddit url", "Unsupported URL", YT_RED.Controls.Buttons.OK, YT_RED.Controls.Icon.Exclamation);
             return;
         }
 
@@ -550,7 +550,7 @@ namespace YT_RED
                             }
                             else
                             {
-                                MessageBox.Show("Unable to determine best download", "Oops");
+                                MsgBox.Show("Unable to determine best download", "Oops");
                             }
                         }
                     }
@@ -624,7 +624,7 @@ namespace YT_RED
 
             if (page.IsLocked)
             {
-                MessageBox.Show("A Task is currently in progress and cannot be cancelled.\nPlease wait for the operation to complete.", "A Task is Busy", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MsgBox.Show("A Task is currently in progress and cannot be cancelled.\nPlease wait for the operation to complete.", "A Task is Busy", YT_RED.Controls.Buttons.OK, YT_RED.Controls.Icon.Exclamation);
                 e.Cancel = true;
                 return;
             }
@@ -859,7 +859,7 @@ namespace YT_RED
                 }
                 else
                 {
-                    MessageBox.Show("The url provided is not a valid Youtube or Reddit url", "Unsupported URL", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MsgBox.Show("The url provided is not a valid Youtube or Reddit url", "Unsupported URL", YT_RED.Controls.Buttons.OK, YT_RED.Controls.Icon.Exclamation);
                     return;
                 }
             }
@@ -875,7 +875,12 @@ namespace YT_RED
                 this.ytMarquee.Show();
                 var data = await VideoUtil.GetVideoData(url);
                 var formatList = data.Formats.Where(f => f.FormatId != "sb0").OrderBy(f => f.AudioCodec != null ? 0 : 1).ThenBy(f => f.Height).ToList();
-                gcYoutube.DataSource = formatList;
+                List<YTFormatData> converted = new List<YTFormatData>();
+                foreach (YoutubeDLSharp.Metadata.FormatData format in formatList)
+                {                    
+                    converted.Add(new YTFormatData(format, data.Duration));
+                }
+                gcYoutube.DataSource = converted;
                 refreshYTGrid();
                 this.UseWaitCursor = false;
                 (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = false;
@@ -913,6 +918,7 @@ namespace YT_RED
             gvYouTube.Columns["StretchedRatio"].Visible = false;
             gvYouTube.Columns["ApproximateFileSize"].Visible = false;
             gvYouTube.RefreshData();
+            gvYouTube.Columns["Duration"].VisibleIndex = 3;
         }
 
         private void refreshYoutubeHistory()
@@ -987,7 +993,7 @@ namespace YT_RED
             {
                 if (toggleYTSegment.IsOn && this.tsYTEnd.TimeSpan == TimeSpan.Zero)
                 {
-                    MessageBox.Show("Please specify a valid duration for the segment", "Invalid Duration");
+                    MsgBox.Show("Please specify a valid duration for the segment", "Invalid Duration");
                     return;
                 }
                 downloadingSegment = true;
@@ -1026,7 +1032,7 @@ namespace YT_RED
 
                 if (!result.Success)
                 {
-                    MessageBox.Show("Download Failed");
+                    MsgBox.Show("Download Failed");
                 }
             }
 
@@ -1082,7 +1088,7 @@ namespace YT_RED
                     {
                         if (this.tsYTEnd.TimeSpan == TimeSpan.Zero)
                         {
-                            MessageBox.Show("Please specify a valid duration for the segment", "Invalid Duration");
+                            MsgBox.Show("Please specify a valid duration for the segment", "Invalid Duration");
                             return;
                         }
                         downloadingSegment = true;
@@ -1111,7 +1117,7 @@ namespace YT_RED
                             result = await Utils.VideoUtil.DownloadBestYT(VideoUtil.YouTubeString(txtYTUrl.Text), Classes.StreamType.Audio);
                         if (!result.Success)
                         {
-                            MessageBox.Show("Download Failed");
+                            MsgBox.Show("Download Failed");
                         }
                     }
 
@@ -1142,7 +1148,7 @@ namespace YT_RED
                     return;
                 }
             }
-            MessageBox.Show("The url provided is not a valid Youtube url", "Invalid URL", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            MsgBox.Show("The url provided is not a valid Youtube url", "Invalid URL", YT_RED.Controls.Buttons.OK, YT_RED.Controls.Icon.Exclamation);
             return;
         }
 
@@ -1168,7 +1174,7 @@ namespace YT_RED
                     return;
                 }
             }
-            MessageBox.Show("The url provided is not a valid Youtube or Reddit url", "Unsupported URL", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            MsgBox.Show("The url provided is not a valid Youtube or Reddit url", "Unsupported URL", YT_RED.Controls.Buttons.OK, YT_RED.Controls.Icon.Exclamation);
             return;
         }
 
@@ -1220,7 +1226,7 @@ namespace YT_RED
             }
             if (!result.Success)
             {
-                MessageBox.Show("Download Failed\n" + String.Join("\n", result.ErrorOutput));
+                MsgBox.Show("Download Failed\n" + String.Join("\n", result.ErrorOutput));
             }
             ytMarquee.Hide();
             ytMarquee.Text = "";
@@ -1409,62 +1415,6 @@ namespace YT_RED
             else
             {
                 base.OnPaint(e);
-            }
-        }
-
-        private void gcYTSegments_CustomButtonClick(object sender, DevExpress.XtraBars.Docking2010.BaseButtonEventArgs e)
-        {
-            if (pnlYTSegPanel.Visible)
-            {
-                pnlYTSegPanel.Visible = false;
-                e.Button.Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
-            }
-            else
-            {
-                pnlYTSegPanel.Visible = true;
-                e.Button.Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
-            }
-        }
-
-        private void gcYTCrop_CustomButtonClick(object sender, DevExpress.XtraBars.Docking2010.BaseButtonEventArgs e)
-        {
-            if (pnlYTCropPanel.Visible)
-            {
-                pnlYTCropPanel.Visible = false;
-                e.Button.Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
-            }
-            else
-            {
-                pnlYTCropPanel.Visible = true;
-                e.Button.Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
-            }
-        }
-
-        private void gcRedCrop_CustomButtonClick(object sender, DevExpress.XtraBars.Docking2010.BaseButtonEventArgs e)
-        {
-            if (pnlRedCropPanel.Visible)
-            {
-                pnlRedCropPanel.Visible = false;
-                e.Button.Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
-            }
-            else
-            {
-                pnlRedCropPanel.Visible = true;
-                e.Button.Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
-            }
-        }
-
-        private void gcRedSegment_CustomButtonClick(object sender, DevExpress.XtraBars.Docking2010.BaseButtonEventArgs e)
-        {
-            if (pnlRedSegPanel.Visible)
-            {
-                pnlRedSegPanel.Visible = false;
-                e.Button.Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
-            }
-            else
-            {
-                pnlRedSegPanel.Visible = true;
-                e.Button.Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
             }
         }
 

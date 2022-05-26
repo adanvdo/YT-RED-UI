@@ -98,7 +98,7 @@ namespace YT_RED.Settings
 			}
 			catch(Exception ex)
             {
-				YT_RED.Controls.YTRMessageBox.ErrorMessageBox(ex).ShowDialog();
+				YT_RED.Controls.YTRErrorMessageBox.ErrorMessageBox(ex).ShowDialog();
 				ErrorLogPath = "./ErrorLogs";
 			}
 			ActiveSkin = "DevExpress Dark Style";

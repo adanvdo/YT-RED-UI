@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Xabe.FFmpeg;
 
+
 namespace YT_RED
 {
     internal static class Program
@@ -28,6 +29,7 @@ namespace YT_RED
         [STAThread]
         static void Main(string[] args)
         {
+            
             x64 = IntPtr.Size == 8;           
 
             if(args.Length > 0)

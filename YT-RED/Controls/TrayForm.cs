@@ -86,7 +86,7 @@ namespace YT_RED.Controls
                 }
                 if (!result.Success && result.Data != "canceled")
                 {
-                    MessageBox.Show("Download Failed\n" + String.Join("\n", result.ErrorOutput));
+                    MsgBox.Show("Download Failed\n" + String.Join("\n", result.ErrorOutput));
                 }
 
                 progressMarquee.Hide();
@@ -186,7 +186,7 @@ namespace YT_RED.Controls
                     else
                     {
                         cancellationTokenSource.Dispose();
-                        MessageBox.Show("Failed to acquire Media ID", "Oops", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MsgBox.Show("Failed to acquire Media ID", "Oops", Buttons.OK, YT_RED.Controls.Icon.Error);
                     }
                 }
             }

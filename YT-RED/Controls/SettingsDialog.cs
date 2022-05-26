@@ -56,7 +56,7 @@ namespace YT_RED.Controls
             string validate = await AppSettings.Default.General.ValidateSettings();
             if(!string.IsNullOrEmpty(validate))
             {
-                MessageBox.Show(validate, "Invalid Settings", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MsgBox.Show(validate, "Invalid Settings", Buttons.OK, YT_RED.Controls.Icon.Exclamation);
                 return;
             }
             AppSettings.Default.Save();
@@ -78,37 +78,37 @@ namespace YT_RED.Controls
         private async void btnClearHistory_Click(object sender, EventArgs e)
         {
             await Logging.Historian.CleanHistory(Logging.DownloadCategory.All);
-            MessageBox.Show("Download History Cleared");
+            MsgBox.Show("Download History Cleared", FormStartPosition.CenterParent);
         }
 
         private async void bbiDelAll_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            DialogResult res = MsgBox.Show("Files for all recorded downloads will be deleted\nand download history will be reset.\n\nContinue?", "Delete Downloaded Files", YT_RED.Controls.Buttons.OKCancel, YT_RED.Controls.Icon.Warning);
+            DialogResult res = MsgBox.Show("Files for all recorded downloads will be deleted\nand download history will be reset.\n\nContinue?", "Delete Downloaded Files", YT_RED.Controls.Buttons.OKCancel, YT_RED.Controls.Icon.Warning, FormStartPosition.CenterParent);
             if (res == DialogResult.OK)
             {
                 await Logging.Historian.CleanHistory(Logging.DownloadCategory.All, Logging.DownloadCategory.All);
+                MsgBox.Show("Downloads Cleared", FormStartPosition.CenterParent);
             }
-            MessageBox.Show("Downloads Cleared");
         }
 
         private async void bbiDelAudio_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            DialogResult res = MsgBox.Show("Files for all recorded Audio downloads will be deleted\nand Audio download logs will be removed.\n\nContinue?", "Delete Downloaded Files", YT_RED.Controls.Buttons.OKCancel, YT_RED.Controls.Icon.Warning);
+            DialogResult res = MsgBox.Show("Files for all recorded Audio downloads will be deleted\nand Audio download logs will be removed.\n\nContinue?", "Delete Downloaded Files", YT_RED.Controls.Buttons.OKCancel, YT_RED.Controls.Icon.Warning, FormStartPosition.CenterParent);
             if (res == DialogResult.OK)
             {
                 await Logging.Historian.CleanHistory(Logging.DownloadCategory.Audio, Logging.DownloadCategory.Audio);
+                MsgBox.Show("Downloads Cleared", FormStartPosition.CenterParent);
             }
-            MessageBox.Show("Downloads Cleared");
         }
 
         private async void bbiDelVideo_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            DialogResult res = MsgBox.Show("Files for all recorded Video downloads will be deleted\nand Video download logs will be removed.\n\nContinue?", "Delete Downloaded Files", YT_RED.Controls.Buttons.OKCancel, YT_RED.Controls.Icon.Warning);
+            DialogResult res = MsgBox.Show("Files for all recorded Video downloads will be deleted\nand Video download logs will be removed.\n\nContinue?", "Delete Downloaded Files", YT_RED.Controls.Buttons.OKCancel, YT_RED.Controls.Icon.Warning, FormStartPosition.CenterParent);
             if (res == DialogResult.OK)
             {
                 await Logging.Historian.CleanHistory(Logging.DownloadCategory.Video, Logging.DownloadCategory.Video);
+                MsgBox.Show("Downloads Cleared", FormStartPosition.CenterParent);
             }
-            MessageBox.Show("Downloads Cleared");
         }
 
         private void ddDeleteDLs_Click(object sender, EventArgs e)

@@ -148,8 +148,8 @@
       <HintPath>..\packages\URIScheme.5.0.0\lib\netstandard2.0\URIScheme.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
-    <Reference Include="Xabe.FFmpeg, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Xabe.FFmpeg.5.1.0\lib\netstandard2.0\Xabe.FFmpeg.dll</HintPath>
+    <Reference Include="Xabe.FFmpeg, Version=5.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Xabe.FFmpeg.5.2.0\lib\netstandard2.0\Xabe.FFmpeg.dll</HintPath>
     </Reference>
     <Reference Include="YoutubeDLSharp, Version=0.4.2.2271, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\YoutubeDLSharp.0.4.2\lib\net45\YoutubeDLSharp.dll</HintPath>
@@ -169,6 +169,7 @@
     <Compile Include="Classes\ResultStream.cs" />
     <Compile Include="Classes\StreamLink.cs" />
     <Compile Include="Classes\UIBlockDetector.cs" />
+    <Compile Include="Classes\YTFormatData.cs" />
     <Compile Include="Controls\CustomTabFormPage.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -178,11 +179,11 @@
     <Compile Include="Controls\MsgBox.Designer.cs">
       <DependentUpon>MsgBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\YTRMessageBox.cs">
+    <Compile Include="Controls\YTRErrorMessageBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Controls\YTRMessageBox.Designer.cs">
-      <DependentUpon>YTRMessageBox.cs</DependentUpon>
+    <Compile Include="Controls\YTRErrorMessageBox.Designer.cs">
+      <DependentUpon>YTRErrorMessageBox.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\PropertyGrid.cs">
       <SubType>UserControl</SubType>
@@ -227,8 +228,8 @@
     <EmbeddedResource Include="Controls\MsgBox.resx">
       <DependentUpon>MsgBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\YTRMessageBox.resx">
-      <DependentUpon>YTRMessageBox.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\YTRErrorMessageBox.resx">
+      <DependentUpon>YTRErrorMessageBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\PropertyGrid.resx">
       <DependentUpon>PropertyGrid.cs</DependentUpon>

@@ -35,7 +35,7 @@ namespace YT_RED.Logging
 
                 if (showDialog)
                 {
-                    using (YT_RED.Controls.YTRMessageBox errorBox = YT_RED.Controls.YTRMessageBox.ErrorMessageBox(exception))
+                    using (YT_RED.Controls.YTRErrorMessageBox errorBox = YT_RED.Controls.YTRErrorMessageBox.ErrorMessageBox(exception))
                     {
                         errorBox.ShowDialog();
                     }

@@ -28,9 +28,10 @@ namespace YT_RED.Controls
             InitializeComponent();
         }
 
-        public static DialogResult Show(string message)
+        public static DialogResult Show(string message, FormStartPosition startPosition = FormStartPosition.CenterScreen)
         {
             _msgBox = new MsgBox();
+            _msgBox.StartPosition = startPosition;
             _msgBox.lblMessage.Text = message;
             _msgBox.lblCaption.Visible = false;
             _msgBox.initButtons(_buttons);
@@ -43,9 +44,10 @@ namespace YT_RED.Controls
             return _msgBox.DialogResult;
         }
 
-        public static DialogResult Show(string message, string caption)
+        public static DialogResult Show(string message, string caption, FormStartPosition startPosition = FormStartPosition.CenterScreen)
         {
             _msgBox = new MsgBox();
+            _msgBox.StartPosition = startPosition;
             _msgBox.initButtons(_buttons);
             _msgBox.initIcon(_icon);
             _msgBox.lblMessage.Text = message;
@@ -59,9 +61,10 @@ namespace YT_RED.Controls
             return _msgBox.DialogResult;
         }
 
-        public static DialogResult Show(string message, Buttons buttons)
+        public static DialogResult Show(string message, Buttons buttons, FormStartPosition startPosition = FormStartPosition.CenterScreen)
         {
             _msgBox = new MsgBox();
+            _msgBox.StartPosition = startPosition;
             _msgBox.lblMessage.Text = message;
             int addHeight = heightIncrease(message);
             _msgBox.messagePanel.Height = _msgBox.messagePanel.Height + addHeight;
@@ -74,9 +77,10 @@ namespace YT_RED.Controls
             return _msgBox.DialogResult;
         }
 
-        public static DialogResult Show(string message, string caption, Buttons buttons)
+        public static DialogResult Show(string message, string caption, Buttons buttons, FormStartPosition startPosition = FormStartPosition.CenterScreen)
         {            
             _msgBox = new MsgBox();
+            _msgBox.StartPosition = startPosition;
             _msgBox.lblMessage.Text = message;
             int addHeight = heightIncrease(message);
             _msgBox.messagePanel.Height = _msgBox.messagePanel.Height + addHeight;
@@ -90,9 +94,10 @@ namespace YT_RED.Controls
             return _msgBox.DialogResult;
         }
 
-        public static DialogResult Show(string message, Buttons buttons, Icon icon)
+        public static DialogResult Show(string message, Buttons buttons, Icon icon, FormStartPosition startPosition = FormStartPosition.CenterScreen)
         {
             _msgBox = new MsgBox();
+            _msgBox.StartPosition = startPosition;
             _msgBox.lblMessage.Text = message;
             int addHeight = heightIncrease(message);
             _msgBox.messagePanel.Height = _msgBox.messagePanel.Height + addHeight;
@@ -105,9 +110,10 @@ namespace YT_RED.Controls
             return _msgBox.DialogResult;
         }
 
-        public static DialogResult Show(string message, string caption, Buttons buttons, Icon icon)
+        public static DialogResult Show(string message, string caption, Buttons buttons, Icon icon, FormStartPosition startPosition = FormStartPosition.CenterScreen)
         {
             _msgBox = new MsgBox();
+            _msgBox.StartPosition = startPosition;
             _msgBox.lblMessage.Text = message;
             int addHeight = heightIncrease(message);
             _msgBox.messagePanel.Height = _msgBox.messagePanel.Height + addHeight;
@@ -121,9 +127,10 @@ namespace YT_RED.Controls
             return _msgBox.DialogResult;
         }
 
-        public static DialogResult Show(string message, string caption, Buttons buttons, Icon icon, Point location)
+        public static DialogResult Show(string message, string caption, Buttons buttons, Icon icon, Point location, FormStartPosition startPosition = FormStartPosition.CenterScreen)
         {
             _msgBox = new MsgBox();
+            _msgBox.StartPosition = startPosition;
             _msgBox.StartPosition = FormStartPosition.Manual;
             _msgBox.lblMessage.Text = message;
             int addHeight = heightIncrease(message);

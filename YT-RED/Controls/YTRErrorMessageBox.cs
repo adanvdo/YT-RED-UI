@@ -12,7 +12,7 @@ using YT_RED.Utils;
 
 namespace YT_RED.Controls
 {
-    public partial class YTRMessageBox : DevExpress.XtraEditors.XtraForm
+    public partial class YTRErrorMessageBox : DevExpress.XtraEditors.XtraForm
     {
         private bool logsUploaded = false;
 
@@ -91,23 +91,23 @@ namespace YT_RED.Controls
             set { memoMessage.Text = value; }
         } 
 
-        public static YTRMessageBox ErrorMessageBox(Exception ex)
+        public static YTRErrorMessageBox ErrorMessageBox(Exception ex)
         {
-            YTRMessageBox box = new YTRMessageBox(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            YTRErrorMessageBox box = new YTRErrorMessageBox(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             box.btnUpload.Visible = true;
             return box;
         }
 
-        public YTRMessageBox()
+        public YTRErrorMessageBox()
         {
             InitializeComponent();
         }
 
-        public YTRMessageBox(string message) : this(message, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information) { }
-        public YTRMessageBox(string message, string caption) : this(message, caption, MessageBoxButtons.OK, MessageBoxIcon.Information) { }
-        public YTRMessageBox(string message, string caption, MessageBoxButtons boxButtons) : this(message, caption, boxButtons, MessageBoxIcon.Information) { }
+        public YTRErrorMessageBox(string message) : this(message, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information) { }
+        public YTRErrorMessageBox(string message, string caption) : this(message, caption, MessageBoxButtons.OK, MessageBoxIcon.Information) { }
+        public YTRErrorMessageBox(string message, string caption, MessageBoxButtons boxButtons) : this(message, caption, boxButtons, MessageBoxIcon.Information) { }
 
-        public YTRMessageBox(string message, string caption, MessageBoxButtons boxButtons, MessageBoxIcon boxIcon)
+        public YTRErrorMessageBox(string message, string caption, MessageBoxButtons boxButtons, MessageBoxIcon boxIcon)
         {
             InitializeComponent();
             Message = message;

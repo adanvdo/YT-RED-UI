@@ -89,7 +89,7 @@ namespace YT_RED.Classes
 
             // register the hot key.
             if (!RegisterHotKey(_window.Handle, _currentId, (uint)modifier, (uint)key))
-                MessageBox.Show("Failed to register Hotkey");
+                Controls.MsgBox.Show("Failed to register Hotkey");
         }
 
         public void UnregisterHotKey()

@@ -1,6 +1,6 @@
 ﻿namespace YT_RED.Controls
 {
-    partial class YTRMessageBox
+    partial class YTRErrorMessageBox
     {
         /// <summary>
         /// Required designer variable.
