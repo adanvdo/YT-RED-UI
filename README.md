@@ -1,4 +1,4 @@
-# YT-RED-UI ALPHA BRANCH
+# YT-RED-UI BETA BRANCH
 
 ![ytr-promo1](https://user-images.githubusercontent.com/26498008/167324218-a222b6b3-1a32-4aa5-966a-13357cec72e0.jpg)
 
@@ -74,66 +74,8 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG <a name="changelog"></a>
 
-### 5/26/2022 v1.0.0.11
-- Added Duration to Youtube Format List
-- Enabled Column Customization in Format Grids. Columns can now be hidden/shown by the user
-- Replaced standard Message Boxes with Custom Message Box
-- Fixed Bug where Segment and Crop panels did not expand/collapse when clicking the header button
-- Fixed bug where "Downloads Cleared" message was displayed even though the clear had been cancelled
-- Various UI and Behavior Tweaks
+### 5/26/2022
+- Beta Branch Created from v1.0.0.11-alpha
 
-### 5/25/2022 v1.0.0.10
-- Launching YT-RED VIA exe or shortcut now opens any running instance
-- Added Download Cancellation support for Quick Downloads / Hotkey Downloads
-- Added options to delete Video, Audio or All downloads to Settings Form
-- Added Visual Style to Segment and Crop Toggles when they are enabled
-- Clicking the Segment / Crop Headers now Collapse/Expand their panels
-- Fixed bug where multiple instances of YT-RED could be run which resulted in HotKey registration errors
-- Fixed bug where active downloads continued running if the Quick Download form was closed
-- Fixed bug where Youtube Crop panel allowed crop input when it was not toggled on
-- Various UI and Behavior Tweaks
-
-### 5/8/2022 v1.0.0.9
-- Fixed bug where error log file name contained illegal characters
-- Fixed bug where the Download Hotkey was not serialized correctly on some machines
-
-### 5/6/2022 v1.0.0.8
-- Added Error Logging
-- Added Voluntary Log Reporting
-- Added Settings to System Tray Menu
-- Fixed bug where hotkey crashed app if clipboard was empty
-- Fixed bug where settings failed to load if hotkey was set to (none)
-
-### 5/5/2022 v1.0.0.7
-- Added System Tray Support - Can now be minimized to System Tray
-- Added Quick Download Hotkey Feature
-- Added "About" Section in Settings
-- Fully Implemented Crop Feature for Youtube and Reddit downloads
-- Fixed bug where youtube "Best" downloads were not converted to preferred format
-
-### 4/27/2022 v1.0.0.6
-- Added Video Cropping for YouTube Downloads
-- Added Function in Settings to Delete Downloaded Files
-- Fixed bug where expired download history logs were not removed
-- Fixed bug where audio segments were saved in the wrong location with the wrong file extension
-- Fixed bug where videos processed in ffmpeg were not located by the auto-explorer after downloading
-- Behavior and UI Tweaks
-
-### 3/30/2022 v1.0.0.5
-- Added Reddit Segment Download Support
-- Added Settings Option to automatically open the location of completed downloads in Windows Explorer
-- Fixed bug where "Use Preferences" option is not saved
-- Fixed bug where double-clicking a download log does not open the correct folder
-- Fixed bug where downloads are not saved to the correct folder
-- Fixed bug where emoji in YT Video Titles prevent downloads from being located
-- Fixed bug where download history is not consistently updated
-- Fixed bug where various YT URL formats caused the application to crash
-
-### 3/4/2022 v1.0.0.4
-- Added Download History File Status Indicator
-- Added Partial Segment Download support for YouTube
-- Added Program Icon
-- UI and Behavior Tweaks
-
-## This is an experimental build.  Bugs and/or crashes are possible.  
+## This is a beta build.  Bugs and/or crashes are possible.  
 Report new issues [here](https://github.com/adanvdo/YT-RED-UI/issues/new)
