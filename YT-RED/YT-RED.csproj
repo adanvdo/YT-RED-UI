@@ -99,6 +99,9 @@
   <PropertyGroup>
     <ApplicationIcon>Resources\Media\ytr.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>YT_RED.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="DevExpress.BonusSkins.v21.2" />
     <Reference Include="DevExpress.Data.Desktop.v21.2, Version=21.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
@@ -319,18 +322,9 @@
 		  $(PostBuildEventDependsOn);
 		  PostBuildMacros;
 	  </PostBuildEventDependsOn>
-    <PostBuildEvent>if $(ConfigurationName) == Release (
-  @echo off
-  rmdir de /s /q
-  rmdir es /s /q
-  rmdir ja /s /q
-  rmdir ru /s /q
-  del *.xml
-  cd..
-  rmdir E:\Dev\Releases\YT-RED /s /q
-  xcopy Release E:\Dev\Releases\YT-RED /E/H/C/I
-  cd E:\Dev\Releases
-  7z a -r YT-RED_Alpha_$(PlatformName)_@(VersionNumber).zip -tzip YT-RED
-)</PostBuildEvent>
+    <PostBuildEvent>set configName=$(ConfigurationName)
+set platformName=$(PlatformName)
+set versionNumber=@(VersionNumber)
+call "E:\Dev\BuildAndSignYTR.bat"</PostBuildEvent>
   </PropertyGroup>
 </Project>
