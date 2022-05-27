@@ -1,6 +1,6 @@
 # YT-RED-UI
 
-## Windows .NET Framework GUI Application for Downloading Video and Audio Files from YouTube and Reddit  
+### Windows .NET Framework GUI Application for Downloading Video and Audio Files from YouTube and Reddit  
 
 
 ![ytr-banner](https://user-images.githubusercontent.com/26498008/170678451-c993fe6e-3399-4949-969e-d6d18ab2aa56.png)
