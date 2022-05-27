@@ -7,9 +7,9 @@
 
 # **News**
 ## **5/26/2022 : YT-RED IS NOW IN BETA STAGE!**
-We are out of alpha testing and moving to Beta. I am doing some tidying up and will release the first beta build in the coming days
+We are out of alpha testing and moving to Beta.  Please send any issues or enhancement requests by adding a new issue on GitHub.
 
-[View Alpha Releases on GitHub](https://github.com/adanvdo/YT-RED-UI/releases)
+[View All Releases on GitHub](https://github.com/adanvdo/YT-RED-UI/releases)
 
 # Table of Contents
 - [PROJECT STATUS](#status)
@@ -26,9 +26,9 @@ We are out of alpha testing and moving to Beta. I am doing some tidying up and w
 
 ### **Latest Stable**: *N/A*
 
-### **Latest Beta**: *Pending Release*
+### **Latest Beta: [v1.0.1.0](https://github.com/adanvdo/YT-RED-UI/releases/tag/v1.0.1.0-beta)**
 
-### **Latest Alpha**: [v1.0.0.11](https://github.com/adanvdo/YT-RED-UI/releases/tag/v1.0.0.11-alpha)
+### **Latest Alpha: [v1.0.0.11](https://github.com/adanvdo/YT-RED-UI/releases/tag/v1.0.0.11-alpha)**
 
 *Updated 5/26/2022*
 
