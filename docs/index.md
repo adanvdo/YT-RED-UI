@@ -3,7 +3,7 @@
 ## Windows .NET Framework GUI Application for Downloading Video and Audio Files from YouTube and Reddit  
 
 
-![ytr-promo1](https://user-images.githubusercontent.com/26498008/167324218-a222b6b3-1a32-4aa5-966a-13357cec72e0.jpg)
+![ytr-banner](https://user-images.githubusercontent.com/26498008/170678451-c993fe6e-3399-4949-969e-d6d18ab2aa56.png)
 
 # **News**
 ## **5/26/2022 : YT-RED IS NOW IN BETA STAGE!**
