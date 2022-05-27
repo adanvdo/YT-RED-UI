@@ -112,4 +112,9 @@ A lot of magic happens behind the scenes.
   To use, Highlight a youtube or reddit media post url in your browser, and press the configured hotkey. This will perform an automatic "Best Download" with the progress displayed above the system tray.
 
 ## **Contact**
-### **To report bugs or request enhancements
+### **To report bugs or request enhancements, please  [submit a new Issue on GitHub](https://github.com/adanvdo/YT-RED-UI/issues/new)**
+### **For all other inquiries, email [jesse@jmconcepts.net](mailto:jesse@jmconcepts.net)**
+
+Thank you for your support!
+  
+### YT-RED -  Copyright © 2022 JAMGALACTIC - [WEAKNPC.COM](https://www.weaknpc.com)
