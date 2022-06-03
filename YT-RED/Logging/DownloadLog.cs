@@ -47,6 +47,10 @@ namespace YT_RED.Logging
     {
         YouTube = 0,
         Reddit = 1,
-        Unknown = 2
+        Twitter = 2,
+        Vimeo = 3,
+        Instagram = 4,
+        Twitch = 5,
+        Unknown = 6
     }
 }

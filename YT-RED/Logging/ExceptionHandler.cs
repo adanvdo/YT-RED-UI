@@ -7,7 +7,12 @@ namespace YT_RED.Logging
 {
     public static class ExceptionHandler
     {
-        public static bool LogException(Exception exception, bool showDialog = true)
+        public static bool LogFFmpegException(Exception exception, bool showDialog = true)
+        {
+            return LogException(exception, showDialog, true);
+        }
+
+        public static bool LogException(Exception exception, bool showDialog = true, bool ffmpeg = false)
         {
             string formattedException = $@"
 {DateTime.Now.ToString()} ----------------------------
@@ -35,9 +40,19 @@ namespace YT_RED.Logging
 
                 if (showDialog)
                 {
-                    using (YT_RED.Controls.YTRErrorMessageBox errorBox = YT_RED.Controls.YTRErrorMessageBox.ErrorMessageBox(exception))
+                    if (ffmpeg)
                     {
-                        errorBox.ShowDialog();
+                        using (Controls.YTRErrorMessageBox errorBox = Controls.YTRErrorMessageBox.FFMpegErrorBox(exception))
+                        {
+                            errorBox.ShowDialog();
+                        }
+                    }
+                    else
+                    {
+                        using (YT_RED.Controls.YTRErrorMessageBox errorBox = new Controls.YTRErrorMessageBox(exception))
+                        {
+                            errorBox.ShowDialog();
+                        }
                     }
                 }
 
@@ -45,7 +60,10 @@ namespace YT_RED.Logging
             }
             catch (Exception ex)
             {
-                Logging.ExceptionHandler.LogException(ex);
+                using (YT_RED.Controls.YTRErrorMessageBox errorBox = new Controls.YTRErrorMessageBox(exception))
+                {
+                    errorBox.ShowDialog();
+                }
             }
             return false;            
         }

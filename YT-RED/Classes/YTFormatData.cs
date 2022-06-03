@@ -8,14 +8,14 @@ using YoutubeDLSharp.Metadata;
 
 namespace YT_RED.Classes
 {
-    public class YTFormatData : FormatData
+    public class YTDLFormatData : FormatData
     {
         public TimeSpan? Duration { get; set; }
 
-        public YTFormatData() : base()
+        public YTDLFormatData() : base()
         { }
 
-        public YTFormatData(FormatData formatData, float? duration) : base()
+        public YTDLFormatData(FormatData formatData, float? duration) : base()
         {
             this.Url = formatData.Url;
             this.ManifestUrl = formatData.ManifestUrl;
@@ -48,5 +48,17 @@ namespace YT_RED.Classes
             this.StretchedRatio = formatData.StretchedRatio;
             this.NoResume = formatData.NoResume;
         }
-    }
+
+        public static List<string> ExcludeFormatIDs = new List<string>()
+        {
+            "sb0",
+            "sb1",
+            "sb2",
+            "http-240p",
+            "http-360p",
+            "http-540p",
+            "http-720p",
+            "http-1080p"
+        };
+    }    
 }

@@ -1,0 +1,64 @@
+
+<svg xmlns="http://www.w3.org/2000/svg"
+     class="svg-snoweb svg-theme-light"
+     x="0"
+     y="0"
+     width="100%"
+     height="100%"
+     viewBox="0 0 100 100"
+     preserveAspectRatio="xMidYMid meet"
+>
+<defs>
+    <style>
+        .svg-fill-primary {
+            fill: #ffffff;
+        }
+
+        .svg-fill-secondary {
+            fill: #65CDAE;
+        }
+
+        .svg-fill-tertiary {
+            fill: #E5E7EB;
+        }
+
+        .svg-stroke-primary {
+            stroke: #090D49;
+        }
+
+        .svg-stroke-secondary {
+            stroke: #65CDAE;
+        }
+
+        .svg-stroke-tertiary {
+            stroke: #E5E7EB;
+        }
+    </style>
+</defs>
+    
+
+<clipPath id="clip-path-202205-2910-5254-fff078c8-e0ae-495f-ac80-ffa11e45fbb7">
+    <circle cx="50" cy="50" r="50"></circle>
+</clipPath>
+
+<circle 
+        class="svg-fill-tertiary"
+        cx="50"
+        cy="50"
+        r="50">
+</circle>
+<circle 
+        class="svg-fill-secondary svg-builder-circle"
+        cx="50"
+        cy="50"
+        r="50">
+</circle>
+
+    <g transform="translate(12.50, 12.50) scale(0.75, 0.75)">
+        
+    <path class="svg-fill-primary"
+      d="M76.4,20.21H68.86V41.63H76.4Zm-20.74-.09H48.12V41.55h7.54ZM23.6,0,4.75,17.86V82.14H27.37V100L46.22,82.14H61.31L95.25,50V0ZM87.71,46.44,72.63,60.72H57.54l-13.2,12.5V60.72h-17V7.14H87.71Z">
+</path>
+
+    </g>
+</svg>

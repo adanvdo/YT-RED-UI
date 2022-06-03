@@ -42,6 +42,8 @@
             this.btnOk = new DevExpress.XtraEditors.SimpleButton();
             this.btnCancel = new DevExpress.XtraEditors.SimpleButton();
             this.lblCaption = new DevExpress.XtraEditors.LabelControl();
+            this.pnlSuppressPanel = new DevExpress.XtraEditors.PanelControl();
+            this.chkSuppress = new DevExpress.XtraEditors.CheckEdit();
             ((System.ComponentModel.ISupportInitialize)(this.messagePanel)).BeginInit();
             this.messagePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.msgIcon.Properties)).BeginInit();
@@ -50,6 +52,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.buttonPanel)).BeginInit();
             this.buttonPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlSuppressPanel)).BeginInit();
+            this.pnlSuppressPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chkSuppress.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // messagePanel
@@ -64,14 +69,14 @@
             this.messagePanel.MinimumSize = new System.Drawing.Size(394, 102);
             this.messagePanel.Name = "messagePanel";
             this.messagePanel.Padding = new System.Windows.Forms.Padding(0, 15, 15, 15);
-            this.messagePanel.Size = new System.Drawing.Size(394, 102);
+            this.messagePanel.Size = new System.Drawing.Size(394, 130);
             this.messagePanel.TabIndex = 0;
             // 
             // msgIcon
             // 
             this.msgIcon.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.msgIcon.EditValue = global::YT_RED.Properties.Resources.exclamation;
-            this.msgIcon.Location = new System.Drawing.Point(24, 29);
+            this.msgIcon.Location = new System.Drawing.Point(24, 43);
             this.msgIcon.Margin = new System.Windows.Forms.Padding(0);
             this.msgIcon.Name = "msgIcon";
             this.msgIcon.Properties.Appearance.BackColor = System.Drawing.Color.Transparent;
@@ -95,7 +100,7 @@
             this.panelControl1.Location = new System.Drawing.Point(92, 15);
             this.panelControl1.Margin = new System.Windows.Forms.Padding(0);
             this.panelControl1.Name = "panelControl1";
-            this.panelControl1.Size = new System.Drawing.Size(287, 72);
+            this.panelControl1.Size = new System.Drawing.Size(287, 100);
             this.panelControl1.TabIndex = 0;
             // 
             // lblMessage
@@ -110,7 +115,7 @@
             this.lblMessage.Location = new System.Drawing.Point(0, 0);
             this.lblMessage.MinimumSize = new System.Drawing.Size(287, 72);
             this.lblMessage.Name = "lblMessage";
-            this.lblMessage.Size = new System.Drawing.Size(287, 72);
+            this.lblMessage.Size = new System.Drawing.Size(287, 100);
             this.lblMessage.TabIndex = 0;
             // 
             // pictureEdit1
@@ -132,7 +137,7 @@
             this.buttonPanel.Controls.Add(this.btnOk);
             this.buttonPanel.Controls.Add(this.btnCancel);
             this.buttonPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.buttonPanel.Location = new System.Drawing.Point(3, 130);
+            this.buttonPanel.Location = new System.Drawing.Point(3, 182);
             this.buttonPanel.Margin = new System.Windows.Forms.Padding(0);
             this.buttonPanel.Name = "buttonPanel";
             this.buttonPanel.Padding = new System.Windows.Forms.Padding(5);
@@ -234,13 +239,35 @@
             this.lblCaption.TabIndex = 3;
             this.lblCaption.Visible = false;
             // 
+            // pnlSuppressPanel
+            // 
+            this.pnlSuppressPanel.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.pnlSuppressPanel.Controls.Add(this.chkSuppress);
+            this.pnlSuppressPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlSuppressPanel.Location = new System.Drawing.Point(3, 158);
+            this.pnlSuppressPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlSuppressPanel.Name = "pnlSuppressPanel";
+            this.pnlSuppressPanel.Size = new System.Drawing.Size(394, 24);
+            this.pnlSuppressPanel.TabIndex = 4;
+            // 
+            // chkSuppress
+            // 
+            this.chkSuppress.Dock = System.Windows.Forms.DockStyle.Right;
+            this.chkSuppress.Location = new System.Drawing.Point(259, 0);
+            this.chkSuppress.Name = "chkSuppress";
+            this.chkSuppress.Properties.Caption = "   Don\'t Show Again";
+            this.chkSuppress.Size = new System.Drawing.Size(135, 24);
+            this.chkSuppress.TabIndex = 0;
+            this.chkSuppress.CheckedChanged += new System.EventHandler(this.chkSuppress_CheckedChanged);
+            // 
             // MsgBox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(400, 175);
+            this.ClientSize = new System.Drawing.Size(400, 227);
             this.Controls.Add(this.messagePanel);
+            this.Controls.Add(this.pnlSuppressPanel);
             this.Controls.Add(this.lblCaption);
             this.Controls.Add(this.buttonPanel);
             this.Controls.Add(this.pictureEdit1);
@@ -258,6 +285,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.buttonPanel)).EndInit();
             this.buttonPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pnlSuppressPanel)).EndInit();
+            this.pnlSuppressPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.chkSuppress.Properties)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -279,5 +309,7 @@
         private DevExpress.XtraEditors.LabelControl lblMessage;
         private DevExpress.XtraEditors.SimpleButton btnIgnore;
         private DevExpress.XtraEditors.LabelControl lblCaption;
+        private DevExpress.XtraEditors.PanelControl pnlSuppressPanel;
+        private DevExpress.XtraEditors.CheckEdit chkSuppress;
     }
 }

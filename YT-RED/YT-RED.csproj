@@ -162,6 +162,7 @@
     <Compile Include="AppFeature.cs" />
     <Compile Include="Classes\ApplicationController.cs" />
     <Compile Include="Classes\AssemblyBuildAttribute.cs" />
+    <Compile Include="Classes\SystemCodec.cs" />
     <Compile Include="Classes\FFmpegParam.cs" />
     <Compile Include="Classes\HotkeyConverter.cs" />
     <Compile Include="Classes\KeyboardHook.cs" />
@@ -173,8 +174,20 @@
     <Compile Include="Classes\StreamLink.cs" />
     <Compile Include="Classes\UIBlockDetector.cs" />
     <Compile Include="Classes\YTFormatData.cs" />
+    <Compile Include="Controls\ControlPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ControlPanel.Designer.cs">
+      <DependentUpon>ControlPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\CustomTabFormPage.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\InputPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\InputPanel.Designer.cs">
+      <DependentUpon>InputPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\MsgBox.cs">
       <SubType>Form</SubType>
@@ -228,6 +241,12 @@
     <Compile Include="Utils\ReportingUtil.cs" />
     <Compile Include="Utils\StringUtil.cs" />
     <Compile Include="Utils\VideoUtil.cs" />
+    <EmbeddedResource Include="Controls\ControlPanel.resx">
+      <DependentUpon>ControlPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\InputPanel.resx">
+      <DependentUpon>InputPanel.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\MsgBox.resx">
       <DependentUpon>MsgBox.cs</DependentUpon>
     </EmbeddedResource>
@@ -273,6 +292,13 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\security_warningcircled2.svg" />
+    <None Include="Resources\Media\twitch-circle.svg" />
+    <None Include="Resources\Media\instagram-circle.svg" />
+    <None Include="Resources\Media\vimeo-circle.svg" />
+    <None Include="Resources\Media\twitter-circle.svg" />
+    <None Include="Resources\Media\reddit-circle.svg" />
+    <None Include="Resources\Media\youtube-circle.svg" />
     <None Include="Resources\exclamation.svg" />
     <None Include="Resources\shield.svg" />
     <None Include="Resources\enablesearch.svg" />
@@ -287,6 +313,7 @@
     <None Include="Resources\about.svg" />
     <None Include="Resources\actions_question.svg" />
     <None Include="Resources\application.svg" />
+    <None Include="Resources\actions_checkcircled.svg" />
     <Content Include="Resources\App\ffmpeg.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

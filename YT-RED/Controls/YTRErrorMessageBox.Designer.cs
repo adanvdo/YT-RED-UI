@@ -135,7 +135,6 @@
             this.memoMessage.Properties.Appearance.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center;
             this.memoMessage.Properties.Padding = new System.Windows.Forms.Padding(5, 10, 5, 10);
             this.memoMessage.Properties.ReadOnly = true;
-            this.memoMessage.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.memoMessage.Properties.UseReadOnlyAppearance = false;
             this.memoMessage.Size = new System.Drawing.Size(383, 91);
             this.memoMessage.TabIndex = 1;
@@ -166,7 +165,7 @@
             this.lblIndicator.TabIndex = 3;
             this.lblIndicator.Visible = false;
             // 
-            // YTRMessageBox
+            // YTRErrorMessageBox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -177,7 +176,8 @@
             this.Controls.Add(this.uploadMarquee);
             this.Controls.Add(this.lblIndicator);
             this.Controls.Add(this.pnlButtons);
-            this.Name = "YTRMessageBox";
+            this.Name = "YTRErrorMessageBox";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ErrorMessageBox";
             ((System.ComponentModel.ISupportInitialize)(this.pnlButtons)).EndInit();
             this.pnlButtons.ResumeLayout(false);

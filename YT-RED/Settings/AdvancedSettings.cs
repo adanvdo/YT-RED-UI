@@ -29,25 +29,33 @@ If there is existing text in your clipboard, YT-RED will restore it after starti
         [JsonProperty("dl_hotkey")]
         public Shortcut DownloadHotKey { get; set; }
 
-        
+        [Category("Processing")]
+        [DisplayName("Always Convert Format")]
+        [Description("Always convert video and audio downloads to your preferred format")]
+        [JsonProperty("always_convert")]
+        public bool AlwaysConvertToPreferredFormat { get; set; }
+
         [Category("Processing")]
         [DisplayName("Preferred Video Format")]
         [Description("Prefer this format when downloading \"Preferred\" video")]
         [JsonProperty("preferred_video_format")]
-        public YoutubeDLSharp.Options.DownloadMergeFormat PreferredYoutubeVideoFormat { get; set; }
+        public VideoFormat PreferredVideoFormat { get; set; }
+        //public YoutubeDLSharp.Options.DownloadMergeFormat PreferredYoutubeVideoFormat { get; set; }
 
         [Category("Processing")]
         [DisplayName("Preferred Audio Format")]
         [Description("Prefer this format when downloading \"preferred\" audio")]
         [JsonProperty("preferred_audio_format")]
-        public YoutubeDLSharp.Options.AudioConversionFormat PreferredYoutubeAudioFormat { get; set; }
+        public AudioFormat PreferredAudioFormat { get; set; }
+        //public YoutubeDLSharp.Options.AudioConversionFormat PreferredYoutubeAudioFormat { get; set; }
 
         public AdvancedSettings()
         {
             EnableHotKeys = false;
             DownloadHotKey = Shortcut.None;
-            PreferredYoutubeVideoFormat = YoutubeDLSharp.Options.DownloadMergeFormat.Mp4;
-            PreferredYoutubeAudioFormat = YoutubeDLSharp.Options.AudioConversionFormat.Mp3;
+            AlwaysConvertToPreferredFormat = false;
+            PreferredVideoFormat = VideoFormat.UNSPECIFIED;
+            PreferredAudioFormat = AudioFormat.UNSPECIFIED;
         }
 
         public override async Task<string> ValidateSettings()

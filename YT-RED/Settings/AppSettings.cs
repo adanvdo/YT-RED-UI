@@ -30,6 +30,7 @@ namespace YT_RED.Settings
 							var json = File.ReadAllText(SettingsFile);
 							JsonSerializerSettings settings = new JsonSerializerSettings();
 							settings.Converters.Add(new HotkeyConverter());
+							settings.MissingMemberHandling = MissingMemberHandling.Ignore;
 							_default = JsonConvert.DeserializeObject<AppSettings>(json, settings);
 
 							// re-save the file so we add any new settings
@@ -76,7 +77,7 @@ namespace YT_RED.Settings
 				case "":
 					return VideoFormat.UNSPECIFIED;
 				default:
-					return VideoFormat.BESTVIDEO;
+					return VideoFormat.UNSPECIFIED;
             }
         }
 
@@ -97,7 +98,7 @@ namespace YT_RED.Settings
 				case YoutubeDLSharp.Options.DownloadMergeFormat.Webm:
 					return VideoFormat.WEBM;
 				default:
-					return VideoFormat.BESTVIDEO;
+					return VideoFormat.UNSPECIFIED;
             }
         }
 
@@ -120,7 +121,7 @@ namespace YT_RED.Settings
 				case "wav":
 					return AudioFormat.WAV;
 				default:
-					return AudioFormat.BEST;
+					return AudioFormat.MP3;
 			}
         }
 
@@ -143,9 +144,9 @@ namespace YT_RED.Settings
 				case YoutubeDLSharp.Options.AudioConversionFormat.Wav:
 					return AudioFormat.WAV;
 				case YoutubeDLSharp.Options.AudioConversionFormat.Best:
-					return AudioFormat.BEST;
+					return AudioFormat.MP3;
 				default:
-					return AudioFormat.BEST;
+					return AudioFormat.MP3;
             }
         }
 
@@ -197,7 +198,7 @@ namespace YT_RED.Settings
 		FLAC = 5,
 		OPUS = 6,
 		VORBIS = 7,
-		BEST = 8
+		UNSPECIFIED = 8
     }
 
     public enum VideoFormat
@@ -207,18 +208,6 @@ namespace YT_RED.Settings
 		FLV = 2,
 		MKV = 3,
 		OGG = 4,
-		UNSPECIFIED = 5,
-		BESTVIDEO = 6
+		UNSPECIFIED = 5
 	}
-
-	public enum Resolution
-    {
-		BEST = 0,
-		_2160p = 1,
-		_1080p = 2,
-		_720p = 3,
-		_480p = 4,
-		_360p = 5,
-		_240p = 6
-    }
 }
