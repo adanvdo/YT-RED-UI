@@ -82,6 +82,7 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 - Fixed bug where error log uploader failed to upload logs
 - Fixed bug where using the crop feature forced downloads to be cut to 1 second long
 - Fixed bug where Reddit format list no longer included options with video and audio
+- Minor UI and Behavior Tweaks
 
 ### 6/3/2022 v1.0.1.1
 - Converted Program to Single-Tab Layout. All downloads are handled from the main tab.
