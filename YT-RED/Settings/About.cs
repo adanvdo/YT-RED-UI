@@ -41,7 +41,7 @@ namespace YT_RED.Settings
             Version = "0.0.0.0";
             Build = "Alpha";
             GitHub = @"https://github.com/adanvdo/YT-RED-UI";
-            Contact = @"jesse@jmconcepts.net";
+            Contact = @"jesse@jamgalactic.net";
         }
     }
 }

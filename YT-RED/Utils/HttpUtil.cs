@@ -14,7 +14,7 @@ namespace YT_RED.Utils
 {
     public static class HttpUtil
     {
-        private static string serverUrl = "https://www.weaknpc.com/api2/ytred";
+        private static string serverUrl = "https://www.jamgalactic.com/api/ytred";
         private static async Task<HttpWebResponse> postErrorLogs(DateTime date)
         {
             try
