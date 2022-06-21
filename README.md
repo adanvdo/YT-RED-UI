@@ -1,8 +1,8 @@
 # YT-RED-UI ALPHA BRANCH
 
-![ytr-banner](https://user-images.githubusercontent.com/26498008/170678451-c993fe6e-3399-4949-969e-d6d18ab2aa56.png)
+![ytr-banner-1 0 1 1](https://user-images.githubusercontent.com/26498008/171912293-7d925959-aba1-4826-8da8-8fbbf2a35a8f.png)
 
-## Windows .NET Framework GUI Application for Downloading Video and Audio Files from YouTube and Reddit
+## Windows .NET Framework GUI Application for Downloading Video and Audio Files from YouTube, Reddit, Vimeo, Twitter, Instagram, Twitch, and other popular media hosts.
 
 This project is UNLICENSED and uses licensed DevExpress WinForms Controls. 
 
@@ -17,7 +17,7 @@ This project is UNLICENSED and uses licensed DevExpress WinForms Controls.
 
 YT-RED is a safe alternative to other popular youtube and reddit video downloaders found online.  Other popular reddit downlaod tools are full of trackers and data collection that the end user is not aware of.  YT-RED was personally built with a no-tracking and no-data-collection policy.  By keeping the source code open to the public, it is meant to be published as a safe and versatile media downloader for Windows
 
-![ytr-promo2](https://user-images.githubusercontent.com/26498008/167324533-f962636c-be97-4210-ac38-cbad8cf2195a.jpg)
+![Alpha-1 0 1 1](https://user-images.githubusercontent.com/26498008/171912368-544c8c4a-3389-437a-a758-5fbdf13b7d6f.png)
 
 ### Requirements <a name="requirements"></a>
 - Windows 7, 8, 10
@@ -27,25 +27,23 @@ YT-RED is a safe alternative to other popular youtube and reddit video downloade
 - List Video Format Options
 - Download Selected Format
 - Download Best Quality Video
-- Download Best Quality in Preferred Format
 - Download Best Quality Audio
 - Download History Log / File Browser
-- File Format Preference for Downloads
-- Segment Downloads for YT and Reddit
+- Segment Downloads
 - Video Cropping
+- Format Conversion
 - Minimize to System Tray
 - Quick Download while in System Tray
 - Quick Download Hotkey
 
 ### Known Issues <a name="known-issues"></a>
-- Reddit GIF downloads are not supported
+- GIF downloads are not supported
 
 ### How To Use <a name="how-to-use"></a>
 
-YT-RED's main interface is pretty straight forward. Simply enter the URL of any Youtube video or reddit video post in address bar of the corresponding tab.
+YT-RED's main interface is pretty straight forward. Simply enter the URL of any video post from Youtube, Reddit, Vimeo, Twitter, Instagram or Twitch in the address bar
 
 - #### List Formats
-  Both Youtube and Reddit tabs have a "List Formats" button.
   This will retrieve all video formats available to download.
   An individual format can be selected and downloaded.
 
@@ -63,6 +61,9 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
   The "Crop Video" option is available for all video downloads. The feature only accepts crop sizes in pixels at this time. 
 
   Enter the number of pixels to crop on each desired side, and then start the download.
+ 
+- #### Convert Format
+  Specify a Video or Audio format for the resulting download.  YT-RED will convert the original media to the format of your choice.
 
 - #### Quick Downloads
   Quick Download is only available when YT-RED has been minimized to the System Tray. Right-click on the YT-RED icon in the tray, and select "Quick Download" to open the Quick Download form.
@@ -73,6 +74,15 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
   To use, Highlight a youtube or reddit media post url in your browser, and press the configured hotkey. This will perform an automatic "Best Download" with the progress displayed above the system tray.
 
 ## CHANGELOG <a name="changelog"></a>
+
+### 6/3/2022 v1.0.1.1
+- Converted Program to Single-Tab Layout. All downloads are handled from the main tab.
+- Added Official Support for Twitter, Vimeo, Instagram, and Twitch.
+- Added Unofficial Support for many other Media Hosts
+- Added Format Conversion to Post-Processing Options
+- Updated yt-dlp and ffmpeg to latest releases
+- Fixed Bug where Youtube storyboards were appearing in the format list
+- Fixed Bug where Error Message was not displayed for failed downloads
 
 ### 5/26/2022 v1.0.0.11
 - Added Duration to Youtube Format List
