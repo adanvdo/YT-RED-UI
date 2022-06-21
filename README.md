@@ -75,6 +75,14 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 6/21/2022 v1.0.1.2
+- Converted all downloads to use unique timestamp filenames
+- Added setting to enable using video titles as file name when no post-processing is used
+- Fixed bug where consecutive hotkey downloads did not work if auto-open was disabled
+- Fixed bug where error log uploader failed to upload logs
+- Fixed bug where using the crop feature forced downloads to be cut to 1 second long
+- Fixed bug where Reddit format list no longer included options with video and audio
+
 ### 6/3/2022 v1.0.1.1
 - Converted Program to Single-Tab Layout. All downloads are handled from the main tab.
 - Added Official Support for Twitter, Vimeo, Instagram, and Twitch.
