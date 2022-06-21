@@ -249,6 +249,7 @@
             this.pnlSuppressPanel.Name = "pnlSuppressPanel";
             this.pnlSuppressPanel.Size = new System.Drawing.Size(394, 24);
             this.pnlSuppressPanel.TabIndex = 4;
+            this.pnlSuppressPanel.Visible = false;
             // 
             // chkSuppress
             // 

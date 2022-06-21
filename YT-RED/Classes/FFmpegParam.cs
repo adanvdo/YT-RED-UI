@@ -26,6 +26,7 @@ namespace YT_RED.Classes
         Size = 3,
         VideoOutFormat = 4,
         AudioOutFormat = 5,
-        Crop = 6
+        Crop = 6,
+        ID3Thumbnail = 7
     }
 }

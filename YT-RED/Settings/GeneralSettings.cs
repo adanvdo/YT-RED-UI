@@ -30,26 +30,32 @@ namespace YT_RED.Settings
 		[JsonProperty("active_skin")]
 		public string ActiveSkin { get; set; }
 
-		[Category("Preferences")]
+		[Category("Downloads")]
 		[DisplayName("Enable Download History")]
 		[Description("Enable YT-RED to keep a list of downloads for quick access on the Home screen")]
 		[DefaultValue(true)]
 		[JsonProperty("history_enabled")]
 		public bool EnableDownloadHistory { get; set; }
 
-		[Category("Preferences")]
+		[Category("Downloads")]
 		[DisplayName("History Age")]
 		[Description("The number of days to keep download history if it is enabled")]
 		[DefaultValue(30)]
 		[JsonProperty("history_age")]
 		public int HistoryAge { get; set; }
 
-		[Category("Preferences")]
+		[Category("Downloads")]
 		[DisplayName("Auto-Open Download Location")]
 		[Description("Automatically Open Completed Downloads in File Explorer")]
 		[DefaultValue(false)]
 		[JsonProperty("auto_open")]
 		public bool AutomaticallyOpenDownloadLocation { get; set; }
+
+        [Category("Downloads")]
+        [DisplayName("Use Title As File Name")]
+        [Description("Use the video title as the filename for all downloads (only available for non-processed downloads)\nA unique filename will be generated if this is disabled, or any post-processing features are used")]
+        [JsonProperty("use_title_filename")]
+        public bool UseTitleAsFileName { get; set; }
 
 		[Category("Downloads")]
 		[DisplayName("Video Download Path")]
@@ -113,6 +119,7 @@ namespace YT_RED.Settings
 			RedditSampleUrl = @"https://www.reddit.com/r/PraiseTheCameraMan/comments/sj7iwr/couldnt_be_more_perfect/";
 			RedditMediaURLPrefix = @"https://v.redd.it/";
 			YouTubeSampleUrl = @"https://www.youtube.com/watch?v=dCAORZphnlY";
+			UseTitleAsFileName = false;
 			VideoDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
 			AudioDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
 			UsePreferredFormat = false;

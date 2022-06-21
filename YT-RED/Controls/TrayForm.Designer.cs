@@ -168,12 +168,12 @@ namespace YT_RED.Controls
             // 
             this.labelControl1.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
             this.labelControl1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-            this.labelControl1.Location = new System.Drawing.Point(3, 5);
+            this.labelControl1.Location = new System.Drawing.Point(10, 5);
             this.labelControl1.Name = "labelControl1";
             this.labelControl1.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.labelControl1.Size = new System.Drawing.Size(180, 25);
             this.labelControl1.TabIndex = 1;
-            this.labelControl1.Text = "Reddit/Youtube URL";
+            this.labelControl1.Text = "Media URL";
             // 
             // TrayForm
             // 
@@ -193,6 +193,7 @@ namespace YT_RED.Controls
             this.ShowInTaskbar = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.TrayForm_MouseMove);
             ((System.ComponentModel.ISupportInitialize)(this.pcMainPanel)).EndInit();
             this.pcMainPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.progressPanel)).EndInit();

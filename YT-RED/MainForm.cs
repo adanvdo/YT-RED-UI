@@ -48,6 +48,7 @@ namespace YT_RED
         private DownloadType currentDownload = DownloadType.Unknown;
         private bool downloadingSegment = false;
         private bool downloadingCropped = false;
+        private bool quickDownloadInProgress = false;
         private InitialFunction initialFunction = InitialFunction.None;
         private string initialLink = string.Empty;
         private DownloadType initialDownloadType = DownloadType.Unknown;
@@ -179,6 +180,13 @@ namespace YT_RED
                     {
                         ExceptionHandler.LogException(ex);
                     }
+                }
+                else if(!activeTrayForm.Locked)
+                {
+                    activeTrayForm.Url = copiedText;
+                    activeTrayForm.BringToFront();
+                    activeTrayForm.TopMost = true;
+                    activeTrayForm.TriggerDownload();
                 }
             }
         }
@@ -342,9 +350,9 @@ namespace YT_RED
                         activeTrayForm = trayForm;
                         trayForm.FormClosed += TrayForm_FormClosed;
                         trayForm.StartPosition = FormStartPosition.Manual;
-                        Rectangle workingArea = Screen.GetWorkingArea(this);                        
-                        var loc = new Point(workingArea.Right - trayForm.Size.Width, workingArea.Bottom - trayForm.Size.Height);
+                        Rectangle workingArea = Screen.GetWorkingArea(this);
                         trayForm.HideProgressPanel();
+                        var loc = new Point(workingArea.Right - trayForm.Size.Width, workingArea.Bottom - (trayForm.Size.Height - 81));
                         trayForm.Location = loc;
                         trayForm.ShowDialog();
                     }
@@ -432,6 +440,7 @@ namespace YT_RED
             gvFormats.Columns.Clear();
             gvFormats.PopulateColumns();
             gvFormats.Columns["Format"].BestFit();
+            gvFormats.Columns["RedditAudioFormat"].Visible = false;
             gvFormats.Columns["Url"].Visible = false;
             gvFormats.Columns["ManifestUrl"].Visible = false;
             gvFormats.Columns["FormatId"].Visible = false;
@@ -510,12 +519,22 @@ namespace YT_RED
                 (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = true;
                 ipMainInput.marqeeMain.Text = "Fetching Available Formats";
                 ipMainInput.marqeeMain.Show();
-                var data = await VideoUtil.GetVideoData(url);
+                var data = await VideoUtil.GetVideoData(url);                
                 var formatList = data.Formats.Where(f => !YTDLFormatData.ExcludeFormatIDs.Contains(f.FormatId)).OrderBy(f => f.VideoCodec == "none" || f.VideoCodec == "" || f.VideoCodec == null ? 0 : 1).ThenBy(f => f.Height).ToList();
                 List<YTDLFormatData> converted = new List<YTDLFormatData>();
                 foreach (YoutubeDLSharp.Metadata.FormatData format in formatList)
                 {
                     converted.Add(new YTDLFormatData(format, data.Duration));
+                }
+                if (this.currentDownload == DownloadType.Reddit)
+                {
+                    var audio = data.Formats.Where(f => f.AudioCodec != null && f.AudioCodec != "none").First();
+                    List<YoutubeDLSharp.Metadata.FormatData> supplemented = new List<YoutubeDLSharp.Metadata.FormatData>();
+                    foreach (var formatItem in data.Formats.Where(f => f.VideoCodec != null && f.VideoCodec != "none"))
+                    {
+                        YoutubeDLSharp.Metadata.FormatData item = formatItem;
+                        converted.Add(new YTDLFormatData(item, data.Duration, audio));
+                    }                    
                 }
                 gcFormats.DataSource = converted;
                 refreshFormatGrid(this.currentDownload);
@@ -544,9 +563,9 @@ namespace YT_RED
             (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = true;
             ipMainInput.marqeeMain.Text = "Sending Download Request..";
             ipMainInput.marqeeMain.Show();
-            int[] crops = null; 
-            TimeSpan start = TimeSpan.Zero;
-            TimeSpan duration = TimeSpan.FromSeconds(1);
+            int[] crops = null;
+            TimeSpan? start = null;
+            TimeSpan? duration = null;
             VideoFormat? videoFormat = null;
             AudioFormat? audioFormat = null;
 
@@ -667,7 +686,7 @@ namespace YT_RED
 
             RunResult<string> result = null;
 
-            if (cpMainControlPanel.PostProcessingEnabled)
+            if (cpMainControlPanel.PostProcessingEnabled || cpMainControlPanel.CurrentFormat.RedditAudioFormat != null)
             {
                 if (cpMainControlPanel.SegmentEnabled && cpMainControlPanel.SegmentStart == TimeSpan.Zero)
                 {
@@ -717,7 +736,7 @@ namespace YT_RED
             else
             {
                 cpMainControlPanel.ShowProgress();
-                result = await Utils.VideoUtil.DownloadYTFormat(VideoUtil.CorrectYouTubeString(ipMainInput.URL), cpMainControlPanel.CurrentFormat);
+                result = await Utils.VideoUtil.DownloadYTDLFormat(VideoUtil.CorrectYouTubeString(ipMainInput.URL), cpMainControlPanel.CurrentFormat);
                 cpMainControlPanel.HideProgress();
                 if (!result.Success)
                 {
@@ -789,7 +808,7 @@ namespace YT_RED
             cpMainControlPanel.DownloadSelectionVisible = true;
             cpMainControlPanel.DownloadBestVisible = false;
             cpMainControlPanel.DownloadAudioVisible = false;
-            YoutubeDLSharp.Metadata.FormatData fd = gvFormats.GetFocusedRow() as YoutubeDLSharp.Metadata.FormatData;
+            Classes.YTDLFormatData fd = gvFormats.GetFocusedRow() as Classes.YTDLFormatData;
             cpMainControlPanel.CurrentFormat = fd;
             if(fd.VideoCodec == "none")
             {

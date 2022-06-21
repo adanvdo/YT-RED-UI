@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 using System.Threading;
 using Xabe.FFmpeg;
@@ -24,6 +25,9 @@ namespace YT_RED.Controls
         protected IProgress<string> ytOutput;
         protected CancellationTokenSource cancellationTokenSource;
         private DownloadType currentDownload;
+        private System.Windows.Forms.Timer activeTimer;
+        private bool inactive = false;
+        private bool hotkeyTriggered = false;
 
         public TrayForm()
         {
@@ -31,12 +35,30 @@ namespace YT_RED.Controls
             ytProgress = new Progress<DownloadProgress>(showProgress);
             ytOutput = null;
             currentDownload = DownloadType.Unknown;
+            this.activeTimer = new System.Windows.Forms.Timer();
+            this.activeTimer.Interval = 10000;
+            this.activeTimer.Tick += ActiveTimer_Tick;
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            this.activeTimer.Start();
+            base.OnLoad(e);
+        }
+
+        private void ActiveTimer_Tick(object sender, EventArgs e)
+        {
+            if (!Locked && inactive)
+                this.Close();
+            else if (!Locked)
+                inactive = true;
         }
 
         public void TriggerDownload()
         {
             if(txtUrl.Text.Length > 3 && !Locked)
             {
+                hotkeyTriggered = true;
                 startDownload();
             }
         }
@@ -68,7 +90,16 @@ namespace YT_RED.Controls
             this.progressPanel.Visible = true;
             progressMarquee.Text = "Starting Download Process..";
             progressMarquee.Show();
-
+            if (hotkeyTriggered)
+            {
+                hotkeyTriggered = false;
+            }
+            else
+            {
+                Rectangle workingArea = Screen.GetWorkingArea(this);
+                var loc = new Point(workingArea.Right - this.Size.Width, workingArea.Bottom - this.Size.Height);
+                this.Location = loc;
+            }
             cancellationTokenSource = new CancellationTokenSource();
             CancellationToken cancelToken = cancellationTokenSource.Token;
             currentDownload = HtmlUtil.CheckUrl(txtUrl.Text);
@@ -181,6 +212,11 @@ namespace YT_RED.Controls
             {
                 startDownload();
             }
+        }
+
+        private void TrayForm_MouseMove(object sender, MouseEventArgs e)
+        {
+            this.inactive = false;
         }
     }
 }

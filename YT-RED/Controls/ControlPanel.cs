@@ -43,8 +43,8 @@ namespace YT_RED.Controls
             get { return toggleConvert.IsOn; }
         }
 
-        private YoutubeDLSharp.Metadata.FormatData currentFormat = null;
-        public YoutubeDLSharp.Metadata.FormatData CurrentFormat 
+        private Classes.YTDLFormatData currentFormat = null;
+        public Classes.YTDLFormatData CurrentFormat 
         { 
             get { return currentFormat; }
             set
@@ -420,6 +420,7 @@ namespace YT_RED.Controls
             txtCropLeft.Enabled = toggleCrop.IsOn;
             txtCropRight.Enabled = toggleCrop.IsOn;
             gcCrop.CustomHeaderButtons[0].Properties.Enabled = !toggleCrop.IsOn;
+            btnDownloadAudio.Enabled = !toggleCrop.IsOn;
         }
 
         private void toggleConvert_Toggled(object sender, EventArgs e)

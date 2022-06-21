@@ -27,7 +27,7 @@ namespace YT_RED.Classes
         {
             MachineID = machineId;
             LogTime = logTime.ToString();
-            LogText = logText;
+            LogText = logText.Replace(@"\", @"\\").Replace("\n", "\\n");
         }
     }
 }

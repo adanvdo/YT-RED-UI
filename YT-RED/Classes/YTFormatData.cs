@@ -10,27 +10,35 @@ namespace YT_RED.Classes
 {
     public class YTDLFormatData : FormatData
     {
+        public FormatData RedditAudioFormat { get; set; }
+
         public TimeSpan? Duration { get; set; }
 
         public YTDLFormatData() : base()
         { }
 
-        public YTDLFormatData(FormatData formatData, float? duration) : base()
+        public YTDLFormatData(FormatData formatData, float? duration, FormatData redditAudioFormat = null) : base()
         {
             this.Url = formatData.Url;
+            this.RedditAudioFormat = redditAudioFormat;
             this.ManifestUrl = formatData.ManifestUrl;
             this.Extension = formatData.Extension;
             this.Format = formatData.Format;
             this.FormatId = formatData.FormatId;
+            if (redditAudioFormat != null)
+            {
+                this.Format += $" + {redditAudioFormat.Format.Replace(" - audio only (audio 0)", "").Replace(" - audio only (DASH audio)", "")}";
+                this.FormatId += $"+{redditAudioFormat.FormatId}";
+            }
             this.FormatNote = formatData.FormatNote;
             this.Duration = duration.HasValue ? (TimeSpan?)TimeSpan.FromSeconds((double)duration) : null;
             this.Width = formatData.Width;
             this.Height = formatData.Height;
             this.Resolution = formatData.Resolution;
             this.Bitrate = formatData.Bitrate;
-            this.AudioBitrate = formatData.AudioBitrate;
-            this.AudioCodec = formatData.AudioCodec;
-            this.AudioSamplingRate = formatData.AudioSamplingRate;
+            this.AudioBitrate = redditAudioFormat != null ? redditAudioFormat.AudioBitrate : formatData.AudioBitrate;
+            this.AudioCodec = redditAudioFormat != null ? redditAudioFormat.AudioCodec : formatData.AudioCodec;
+            this.AudioSamplingRate = redditAudioFormat != null ? redditAudioFormat.AudioSamplingRate : formatData.AudioSamplingRate;
             this.VideoBitrate = formatData.VideoBitrate;
             this.FrameRate = formatData.FrameRate;
             this.VideoCodec = formatData.VideoCodec;

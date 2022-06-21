@@ -35,6 +35,11 @@ namespace YT_RED.Controls
             {
 				this.pgcPropertyGrid.OptionsBehavior.PropertySort = DevExpress.XtraVerticalGrid.PropertySort.NoSort;
 				e.Properties = e.Properties.Sort(new string[] { "Version", "Build", "GitHub", "Contact" });
+            } 
+			if(e.Properties.Find("UseTitleAsFileName", false) != null)
+            {
+				this.pgcPropertyGrid.OptionsBehavior.PropertySort = DevExpress.XtraVerticalGrid.PropertySort.NoSort;
+				e.Properties = e.Properties.Sort(new string[] { "UseTitleAsFileName", "AudioDownloadPath", "VideoDownloadPath", "AutomaticallyOpenDownloadLocation", "EnableDownloadHistory", "HistoryAge", "ErrorLogPath" });
             }
         }
     }
