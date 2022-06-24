@@ -79,6 +79,7 @@
             this.msgIcon.Location = new System.Drawing.Point(24, 43);
             this.msgIcon.Margin = new System.Windows.Forms.Padding(0);
             this.msgIcon.Name = "msgIcon";
+            this.msgIcon.Properties.AllowFocused = false;
             this.msgIcon.Properties.Appearance.BackColor = System.Drawing.Color.Transparent;
             this.msgIcon.Properties.Appearance.BackColor2 = System.Drawing.Color.Transparent;
             this.msgIcon.Properties.Appearance.Options.UseBackColor = true;
@@ -160,6 +161,7 @@
             this.btnNo.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnNo.Location = new System.Drawing.Point(3, 7);
             this.btnNo.Name = "btnNo";
+            this.btnNo.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnNo.Size = new System.Drawing.Size(64, 28);
             this.btnNo.TabIndex = 5;
             this.btnNo.Text = "No";
@@ -171,6 +173,7 @@
             this.btnAbort.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnAbort.Location = new System.Drawing.Point(67, 7);
             this.btnAbort.Name = "btnAbort";
+            this.btnAbort.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnAbort.Size = new System.Drawing.Size(64, 28);
             this.btnAbort.TabIndex = 2;
             this.btnAbort.Text = "Abort";
@@ -182,6 +185,7 @@
             this.btnRetry.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnRetry.Location = new System.Drawing.Point(131, 7);
             this.btnRetry.Name = "btnRetry";
+            this.btnRetry.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnRetry.Size = new System.Drawing.Size(64, 28);
             this.btnRetry.TabIndex = 3;
             this.btnRetry.Text = "Retry";
@@ -193,6 +197,7 @@
             this.btnIgnore.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnIgnore.Location = new System.Drawing.Point(195, 7);
             this.btnIgnore.Name = "btnIgnore";
+            this.btnIgnore.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnIgnore.Size = new System.Drawing.Size(64, 28);
             this.btnIgnore.TabIndex = 6;
             this.btnIgnore.Text = "Ignore";
@@ -204,6 +209,7 @@
             this.btnOk.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnOk.Location = new System.Drawing.Point(259, 7);
             this.btnOk.Name = "btnOk";
+            this.btnOk.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnOk.Size = new System.Drawing.Size(64, 28);
             this.btnOk.TabIndex = 0;
             this.btnOk.Text = "OK";
@@ -215,6 +221,7 @@
             this.btnCancel.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnCancel.Location = new System.Drawing.Point(323, 7);
             this.btnCancel.Name = "btnCancel";
+            this.btnCancel.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnCancel.Size = new System.Drawing.Size(64, 28);
             this.btnCancel.TabIndex = 1;
             this.btnCancel.Text = "Cancel";
@@ -256,6 +263,7 @@
             this.chkSuppress.Dock = System.Windows.Forms.DockStyle.Right;
             this.chkSuppress.Location = new System.Drawing.Point(259, 0);
             this.chkSuppress.Name = "chkSuppress";
+            this.chkSuppress.Properties.AllowFocused = false;
             this.chkSuppress.Properties.Caption = "   Don\'t Show Again";
             this.chkSuppress.Size = new System.Drawing.Size(135, 24);
             this.chkSuppress.TabIndex = 0;

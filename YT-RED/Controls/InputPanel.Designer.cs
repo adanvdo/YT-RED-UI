@@ -79,6 +79,7 @@
             this.marqeeMain.EditValue = 0;
             this.marqeeMain.Location = new System.Drawing.Point(2, 101);
             this.marqeeMain.Name = "marqeeMain";
+            this.marqeeMain.Properties.AllowFocused = false;
             this.marqeeMain.Properties.ShowTitle = true;
             this.marqeeMain.Size = new System.Drawing.Size(396, 20);
             this.marqeeMain.TabIndex = 5;
@@ -266,6 +267,7 @@
             this.btnListReset.ImageOptions.SvgImageSize = new System.Drawing.Size(18, 18);
             this.btnListReset.Location = new System.Drawing.Point(181, 62);
             this.btnListReset.Name = "btnListReset";
+            this.btnListReset.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnListReset.Size = new System.Drawing.Size(31, 32);
             this.btnListReset.TabIndex = 5;
             this.btnListReset.ToolTip = "Clear and Reset";
@@ -293,6 +295,7 @@
             this.btnListFormats.ImageOptions.SvgImageSize = new System.Drawing.Size(25, 25);
             this.btnListFormats.Location = new System.Drawing.Point(218, 62);
             this.btnListFormats.Name = "btnListFormats";
+            this.btnListFormats.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnListFormats.Size = new System.Drawing.Size(175, 32);
             this.btnListFormats.TabIndex = 4;
             this.btnListFormats.Text = "List Available Formats";

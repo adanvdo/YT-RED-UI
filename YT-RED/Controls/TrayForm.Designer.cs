@@ -86,6 +86,7 @@ namespace YT_RED.Controls
             this.btnOpenDL.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnOpenDL.Location = new System.Drawing.Point(0, 56);
             this.btnOpenDL.Name = "btnOpenDL";
+            this.btnOpenDL.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnOpenDL.Size = new System.Drawing.Size(358, 25);
             this.btnOpenDL.TabIndex = 4;
             this.btnOpenDL.Visible = false;
@@ -97,6 +98,7 @@ namespace YT_RED.Controls
             this.pgTrayProgress.Location = new System.Drawing.Point(0, 25);
             this.pgTrayProgress.MaximumSize = new System.Drawing.Size(358, 31);
             this.pgTrayProgress.Name = "pgTrayProgress";
+            this.pgTrayProgress.Properties.AllowFocused = false;
             this.pgTrayProgress.Properties.ShowTitle = true;
             this.pgTrayProgress.Size = new System.Drawing.Size(358, 31);
             this.pgTrayProgress.TabIndex = 0;
@@ -109,6 +111,7 @@ namespace YT_RED.Controls
             this.progressMarquee.Location = new System.Drawing.Point(0, 0);
             this.progressMarquee.MaximumSize = new System.Drawing.Size(358, 25);
             this.progressMarquee.Name = "progressMarquee";
+            this.progressMarquee.Properties.AllowFocused = false;
             this.progressMarquee.Properties.ShowTitle = true;
             this.progressMarquee.Size = new System.Drawing.Size(358, 25);
             this.progressMarquee.TabIndex = 3;
@@ -136,6 +139,7 @@ namespace YT_RED.Controls
             this.btnGo.ImageOptions.SvgImageSize = new System.Drawing.Size(23, 23);
             this.btnGo.Location = new System.Drawing.Point(330, 35);
             this.btnGo.Name = "btnGo";
+            this.btnGo.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnGo.Size = new System.Drawing.Size(25, 25);
             this.btnGo.TabIndex = 3;
             this.btnGo.Click += new System.EventHandler(this.btnGo_Click);
@@ -160,6 +164,7 @@ namespace YT_RED.Controls
             this.btnClose.Location = new System.Drawing.Point(330, 2);
             this.btnClose.Margin = new System.Windows.Forms.Padding(0);
             this.btnClose.Name = "btnClose";
+            this.btnClose.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnClose.Size = new System.Drawing.Size(26, 26);
             this.btnClose.TabIndex = 2;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);

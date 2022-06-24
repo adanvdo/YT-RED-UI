@@ -34,9 +34,9 @@
             DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions2 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             this.lblSelectionText = new DevExpress.XtraEditors.LabelControl();
             this.pnlOptionPanel = new DevExpress.XtraEditors.PanelControl();
-            this.ceAlbumArt = new DevExpress.XtraEditors.CheckEdit();
             this.gcDLButtons = new DevExpress.XtraEditors.GroupControl();
             this.btnDownloadBest = new DevExpress.XtraEditors.SimpleButton();
+            this.ceAlbumArt = new DevExpress.XtraEditors.CheckEdit();
             this.btnDownloadAudio = new DevExpress.XtraEditors.SimpleButton();
             this.btnSelectionDL = new DevExpress.XtraEditors.SimpleButton();
             this.gcConvert = new DevExpress.XtraEditors.GroupControl();
@@ -73,9 +73,9 @@
             this.gvHistory = new DevExpress.XtraGrid.Views.Grid.GridView();
             ((System.ComponentModel.ISupportInitialize)(this.pnlOptionPanel)).BeginInit();
             this.pnlOptionPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ceAlbumArt.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gcDLButtons)).BeginInit();
             this.gcDLButtons.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ceAlbumArt.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gcConvert)).BeginInit();
             this.gcConvert.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pnlConvertPanel)).BeginInit();
@@ -139,24 +139,6 @@
             this.pnlOptionPanel.Size = new System.Drawing.Size(323, 571);
             this.pnlOptionPanel.TabIndex = 8;
             // 
-            // ceAlbumArt
-            // 
-            this.ceAlbumArt.Dock = System.Windows.Forms.DockStyle.Top;
-            this.ceAlbumArt.Location = new System.Drawing.Point(2, 84);
-            this.ceAlbumArt.Margin = new System.Windows.Forms.Padding(0);
-            this.ceAlbumArt.Name = "ceAlbumArt";
-            this.ceAlbumArt.Properties.AutoHeight = false;
-            this.ceAlbumArt.Properties.Caption = "  Use Thumbnail as Cover Art";
-            this.ceAlbumArt.Properties.CheckBoxOptions.Style = DevExpress.XtraEditors.Controls.CheckBoxStyle.SvgCheckBox1;
-            this.ceAlbumArt.Properties.CheckBoxOptions.SvgImageSize = new System.Drawing.Size(15, 15);
-            this.ceAlbumArt.Properties.ContentAlignment = DevExpress.Utils.HorzAlignment.Center;
-            this.ceAlbumArt.Properties.GlyphAlignment = DevExpress.Utils.HorzAlignment.Default;
-            this.ceAlbumArt.Properties.GlyphVerticalAlignment = DevExpress.Utils.VertAlignment.Center;
-            this.ceAlbumArt.Properties.ImageOptions.SvgImageColorizationMode = DevExpress.Utils.SvgImageColorizationMode.Full;
-            this.ceAlbumArt.Size = new System.Drawing.Size(319, 20);
-            this.ceAlbumArt.TabIndex = 10;
-            this.ceAlbumArt.CheckedChanged += new System.EventHandler(this.ceAlbumArt_CheckedChanged);
-            // 
             // gcDLButtons
             // 
             this.gcDLButtons.AppearanceCaption.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
@@ -186,10 +168,30 @@
             this.btnDownloadBest.Location = new System.Drawing.Point(2, 104);
             this.btnDownloadBest.Margin = new System.Windows.Forms.Padding(0);
             this.btnDownloadBest.Name = "btnDownloadBest";
+            this.btnDownloadBest.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnDownloadBest.Size = new System.Drawing.Size(319, 32);
             this.btnDownloadBest.TabIndex = 6;
             this.btnDownloadBest.Text = "DOWNLOAD BEST [audio+video]      ";
             this.btnDownloadBest.Click += new System.EventHandler(this.btnDownloadBest_Click);
+            // 
+            // ceAlbumArt
+            // 
+            this.ceAlbumArt.Dock = System.Windows.Forms.DockStyle.Top;
+            this.ceAlbumArt.Location = new System.Drawing.Point(2, 84);
+            this.ceAlbumArt.Margin = new System.Windows.Forms.Padding(0);
+            this.ceAlbumArt.Name = "ceAlbumArt";
+            this.ceAlbumArt.Properties.AllowFocused = false;
+            this.ceAlbumArt.Properties.AutoHeight = false;
+            this.ceAlbumArt.Properties.Caption = "  Use Thumbnail as Cover Art";
+            this.ceAlbumArt.Properties.CheckBoxOptions.Style = DevExpress.XtraEditors.Controls.CheckBoxStyle.SvgCheckBox1;
+            this.ceAlbumArt.Properties.CheckBoxOptions.SvgImageSize = new System.Drawing.Size(15, 15);
+            this.ceAlbumArt.Properties.ContentAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.ceAlbumArt.Properties.GlyphAlignment = DevExpress.Utils.HorzAlignment.Default;
+            this.ceAlbumArt.Properties.GlyphVerticalAlignment = DevExpress.Utils.VertAlignment.Center;
+            this.ceAlbumArt.Properties.ImageOptions.SvgImageColorizationMode = DevExpress.Utils.SvgImageColorizationMode.Full;
+            this.ceAlbumArt.Size = new System.Drawing.Size(319, 20);
+            this.ceAlbumArt.TabIndex = 10;
+            this.ceAlbumArt.CheckedChanged += new System.EventHandler(this.ceAlbumArt_CheckedChanged);
             // 
             // btnDownloadAudio
             // 
@@ -202,6 +204,7 @@
             this.btnDownloadAudio.Location = new System.Drawing.Point(2, 52);
             this.btnDownloadAudio.Margin = new System.Windows.Forms.Padding(0);
             this.btnDownloadAudio.Name = "btnDownloadAudio";
+            this.btnDownloadAudio.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnDownloadAudio.Size = new System.Drawing.Size(319, 32);
             this.btnDownloadAudio.TabIndex = 7;
             this.btnDownloadAudio.Text = "DOWNLOAD AUDIO       ";
@@ -218,6 +221,7 @@
             this.btnSelectionDL.Location = new System.Drawing.Point(2, 20);
             this.btnSelectionDL.Margin = new System.Windows.Forms.Padding(0);
             this.btnSelectionDL.Name = "btnSelectionDL";
+            this.btnSelectionDL.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnSelectionDL.Size = new System.Drawing.Size(319, 32);
             this.btnSelectionDL.TabIndex = 0;
             this.btnSelectionDL.Text = "DOWNLOAD SELECTED FORMAT    ";
@@ -330,6 +334,7 @@
             // 
             this.toggleConvert.Location = new System.Drawing.Point(7, 3);
             this.toggleConvert.Name = "toggleConvert";
+            this.toggleConvert.Properties.AllowFocused = false;
             this.toggleConvert.Properties.OffText = "Off";
             this.toggleConvert.Properties.OnText = "On";
             this.toggleConvert.Size = new System.Drawing.Size(95, 24);
@@ -379,6 +384,7 @@
             // 
             this.toggleCrop.Location = new System.Drawing.Point(7, 3);
             this.toggleCrop.Name = "toggleCrop";
+            this.toggleCrop.Properties.AllowFocused = false;
             this.toggleCrop.Properties.OffText = "Off";
             this.toggleCrop.Properties.OnText = "On";
             this.toggleCrop.Size = new System.Drawing.Size(95, 24);
@@ -555,6 +561,7 @@
             // 
             this.toggleSegment.Location = new System.Drawing.Point(7, 4);
             this.toggleSegment.Name = "toggleSegment";
+            this.toggleSegment.Properties.AllowFocused = false;
             this.toggleSegment.Properties.ContentAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.toggleSegment.Properties.GlyphAlignment = DevExpress.Utils.HorzAlignment.Default;
             this.toggleSegment.Properties.OffText = "Off";
@@ -640,6 +647,7 @@
             this.btnOpenDL.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnOpenDL.Location = new System.Drawing.Point(0, 31);
             this.btnOpenDL.Name = "btnOpenDL";
+            this.btnOpenDL.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnOpenDL.Size = new System.Drawing.Size(323, 26);
             this.btnOpenDL.TabIndex = 2;
             this.btnOpenDL.Visible = false;
@@ -649,6 +657,7 @@
             this.pbProgress.Dock = System.Windows.Forms.DockStyle.Top;
             this.pbProgress.Location = new System.Drawing.Point(0, 0);
             this.pbProgress.Name = "pbProgress";
+            this.pbProgress.Properties.AllowFocused = false;
             this.pbProgress.Properties.ShowTitle = true;
             this.pbProgress.Size = new System.Drawing.Size(323, 31);
             this.pbProgress.TabIndex = 1;
@@ -699,9 +708,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pnlOptionPanel)).EndInit();
             this.pnlOptionPanel.ResumeLayout(false);
             this.pnlOptionPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ceAlbumArt.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gcDLButtons)).EndInit();
             this.gcDLButtons.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.ceAlbumArt.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gcConvert)).EndInit();
             this.gcConvert.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pnlConvertPanel)).EndInit();
