@@ -14,6 +14,18 @@ namespace YT_RED.Classes
 
         public TimeSpan? Duration { get; set; }
 
+        public StreamType Type
+        {
+            get
+            {
+                if ((this.VideoCodec == null || this.VideoCodec == "none") && (this.AudioCodec != null && this.AudioCodec != "none"))
+                    return StreamType.Audio;
+                else if (this.AudioCodec != null && this.AudioCodec != "none")
+                    return StreamType.Video;
+                else return StreamType.AudioAndVideo;
+            }
+        }
+
         public YTDLFormatData() : base()
         { }
 

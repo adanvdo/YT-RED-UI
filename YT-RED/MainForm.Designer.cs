@@ -238,8 +238,6 @@
             this.cpMainControlPanel.SegmentStart = System.TimeSpan.Parse("00:00:00");
             this.cpMainControlPanel.Size = new System.Drawing.Size(323, 733);
             this.cpMainControlPanel.TabIndex = 0;
-            this.cpMainControlPanel.UseAlbumArt = false;
-            this.cpMainControlPanel.UseAlbumArtVisible = true;
             this.cpMainControlPanel.DownloadSelection_Click += new System.EventHandler(this.cpMainControlPanel_DownloadSelection_Click);
             this.cpMainControlPanel.DownloadAudio_Click += new System.EventHandler(this.cpMainControlPanel_DownloadAudio_Click);
             this.cpMainControlPanel.DownloadBest_Click += new System.EventHandler(this.cpMainControlPanel_DownloadBest_Click);
@@ -251,8 +249,7 @@
             // notifyIcon
             // 
             this.notifyIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.notifyIcon.BalloonTipText = "Quick Download is now enabled.\r\nConfigure Hotkey in Advanced Settings.\r\nDouble Cl" +
-    "ick to open YT-RED";
+            this.notifyIcon.BalloonTipText = "Quick Download is now enabled.\r\nConfigure Hotkey in Advanced Settings.\r\nDouble Click to open YT-RED";
             this.notifyIcon.BalloonTipTitle = "YT-RED is Still Running";
             this.notifyIcon.ContextMenuStrip = this.taskBarMenu;
             this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));

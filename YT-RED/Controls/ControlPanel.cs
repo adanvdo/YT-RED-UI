@@ -43,13 +43,6 @@ namespace YT_RED.Controls
             get { return toggleConvert.IsOn; }
         }
 
-        [Browsable(false)]
-        public bool UseAlbumArt
-        {
-            get { return ceAlbumArt.Checked && ceAlbumArt.Visible; }
-            set { ceAlbumArt.Checked = value; }
-        }
-
         private Classes.YTDLFormatData currentFormat = null;
         public Classes.YTDLFormatData CurrentFormat 
         { 
@@ -60,8 +53,22 @@ namespace YT_RED.Controls
                 lblSelectionText.Text = currentFormat == null ? "" : currentFormat.Format;
                 lblSelectionText.Refresh();
                 formatChanged();
-            } 
-        }     
+            }
+        }
+
+        public bool EmbedThumbnail
+        {
+            get
+            {
+                if (currentFormat == null || currentFormat.Type != Classes.StreamType.Audio)
+                    return false;
+
+                if (currentFormat.AudioCodec == "opus" || currentFormat.ContainerFormat == "webm")
+                    return false;
+
+                return true;
+            }
+        }
         
         private void formatChanged()
         {
@@ -69,9 +76,6 @@ namespace YT_RED.Controls
             {
                 if (currentFormat.VideoCodec == "none")
                 {                   
-
-                    ceAlbumArt.Enabled = currentFormat.AudioCodec != "opus" && !PostProcessingEnabled;
-                    ceAlbumArt.Visible = currentFormat.AudioCodec != "opus" && !PostProcessingEnabled;
                     cbVideoFormat.Properties.Items.Clear();
                     cbAudioFormat.Properties.Items.Clear();
                     cbAudioFormat.Properties.Items.AddRange(audioFormats);
@@ -80,8 +84,6 @@ namespace YT_RED.Controls
                 }
                 else
                 {
-                    ceAlbumArt.Enabled = false;
-                    ceAlbumArt.Visible = false;
                     cbVideoFormat.Properties.Items.Clear();
                     cbVideoFormat.Properties.Items.AddRange(videoFormats);
                     cbAudioFormat.Properties.Items.Clear();
@@ -91,8 +93,6 @@ namespace YT_RED.Controls
             }
             else
             {
-                ceAlbumArt.Enabled = !PostProcessingEnabled;
-                ceAlbumArt.Visible = !PostProcessingEnabled;
                 cbVideoFormat.Properties.Items.Clear();
                 cbVideoFormat.Properties.Items.AddRange(videoFormats);
                 cbAudioFormat.Properties.Items.Clear();
@@ -196,16 +196,6 @@ namespace YT_RED.Controls
         {
             get { return btnDownloadBest.Visible; }
             set { btnDownloadBest.Visible = value; }
-        }
-
-        public bool UseAlbumArtVisible
-        {
-            get { return ceAlbumArt.Visible; }
-            set 
-            { 
-                ceAlbumArt.Visible = value;
-                ceAlbumArt.Enabled = value;
-            }
         }
 
         public void UpdateProgress(int progress = 0, bool hideOnCompletion = true)
@@ -417,8 +407,6 @@ namespace YT_RED.Controls
                 toggleSegment.BackColor = Color.Transparent;
                 toggleSegment.ForeColor = toggleForeColor;
             }
-            ceAlbumArt.Enabled = !PostProcessingEnabled && (currentFormat == null || currentFormat.VideoCodec == "none");
-            ceAlbumArt.Visible = !PostProcessingEnabled && (currentFormat == null || currentFormat.VideoCodec == "none");
             tsStart.Enabled = toggleSegment.IsOn;
             tsDuration.Enabled = toggleSegment.IsOn;
             lblSegmentDisclaimer.Visible = toggleSegment.IsOn && (currentFormat == null || parentMainForm.FormatCount < 1);
@@ -446,8 +434,6 @@ namespace YT_RED.Controls
                 toggleCrop.BackColor = Color.Transparent;
                 toggleCrop.ForeColor = toggleForeColor;
             }
-            ceAlbumArt.Enabled = !PostProcessingEnabled && (currentFormat == null || currentFormat.VideoCodec == "none");
-            ceAlbumArt.Visible = !PostProcessingEnabled && (currentFormat == null || currentFormat.VideoCodec == "none");
             txtCropBottom.Enabled = toggleCrop.IsOn;
             txtCropTop.Enabled = toggleCrop.IsOn;
             txtCropLeft.Enabled = toggleCrop.IsOn;
@@ -477,8 +463,6 @@ namespace YT_RED.Controls
                 toggleConvert.BackColor = Color.Transparent;
                 toggleConvert.ForeColor = toggleForeColor;
             }
-            ceAlbumArt.Enabled = !PostProcessingEnabled && (currentFormat == null || currentFormat.VideoCodec == "none");
-            ceAlbumArt.Visible = !PostProcessingEnabled && (currentFormat == null || currentFormat.VideoCodec == "none");
             cbVideoFormat.Enabled = toggleConvert.IsOn;
             cbAudioFormat.Enabled = toggleConvert.IsOn;
             lblAlwaysConvert.Visible = !toggleConvert.IsOn && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
@@ -555,12 +539,6 @@ namespace YT_RED.Controls
             {
                 Logging.ExceptionHandler.LogException(ex);
             }
-        }
-
-        private void ceAlbumArt_CheckedChanged(object sender, EventArgs e)
-        {
-            AppSettings.Default.General.UseAlbumArt = ceAlbumArt.Checked;
-            AppSettings.Default.Save();
         }
     }
 }
