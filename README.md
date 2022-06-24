@@ -75,6 +75,12 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 6/24/2022 v1.0.1.4
+- Video Thumbnails are now always set as Cover Art for audio downloads (opus and webm audio are not supported)
+- Thumbnail Cover Art is now added to processed audio downloads.
+- Disabled Focus Rectangles that were appearing on some controls
+- Various Minor changes caused by OCD
+
 ### 6/23/2022 v1.0.1.3
 - Created Independent Web Server for Voluntary Log Uploads
 - Fixed bug where error log uploads were still not working

@@ -43,6 +43,7 @@
             this.txtUrl = new DevExpress.XtraEditors.TextEdit();
             this.btnListFormats = new DevExpress.XtraEditors.SimpleButton();
             this.labelControl2 = new DevExpress.XtraEditors.LabelControl();
+            this.btnCrab = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl3)).BeginInit();
             this.panelControl3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.marqeeMain.Properties)).BeginInit();
@@ -88,6 +89,7 @@
             // panelControl4
             // 
             this.panelControl4.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.panelControl4.Controls.Add(this.btnCrab);
             this.panelControl4.Controls.Add(this.panelControl1);
             this.panelControl4.Controls.Add(this.btnListReset);
             this.panelControl4.Controls.Add(this.txtUrl);
@@ -311,6 +313,25 @@
             this.labelControl2.TabIndex = 2;
             this.labelControl2.Text = "Video URL";
             // 
+            // btnCrab
+            // 
+            this.btnCrab.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCrab.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.btnCrab.Appearance.Options.UseFont = true;
+            this.btnCrab.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
+            this.btnCrab.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.LeftCenter;
+            this.btnCrab.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleLeft;
+            this.btnCrab.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("simpleButton1.ImageOptions.SvgImage")));
+            this.btnCrab.ImageOptions.SvgImageSize = new System.Drawing.Size(18, 18);
+            this.btnCrab.Location = new System.Drawing.Point(144, 62);
+            this.btnCrab.Name = "btnCrab";
+            this.btnCrab.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
+            this.btnCrab.Size = new System.Drawing.Size(31, 32);
+            this.btnCrab.TabIndex = 7;
+            this.btnCrab.ToolTip = "Clear and Reset";
+            this.btnCrab.Visible = false;
+            this.btnCrab.Click += new System.EventHandler(this.btnCrab_Click);
+            // 
             // InputPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -358,5 +379,6 @@
         public DevExpress.XtraEditors.SimpleButton btnListReset;
         public DevExpress.XtraEditors.TextEdit txtUrl;
         public DevExpress.XtraEditors.MarqueeProgressBarControl marqeeMain;
+        public DevExpress.XtraEditors.SimpleButton btnCrab;
     }
 }

@@ -427,14 +427,7 @@ namespace YT_RED.Utils
         {
             bool cancelled = false;
             try
-            {
-                string thumbnailUrl = string.Empty;
-                if (embedThumbnail)
-                {
-                    VideoData data = await GetVideoData(url);
-                    var tnt = data.Thumbnail;
-                    thumbnailUrl = data.Thumbnails[0].Url;
-                }
+            {                
                 ytdl.OutputFolder = streamType == Classes.StreamType.Audio ? AppSettings.Default.General.AudioDownloadPath : AppSettings.Default.General.VideoDownloadPath;
                 var options = YoutubeDLSharp.Options.OptionSet.Default;
                 if(options.CustomOptions.Where(o => o.OptionStrings.Contains("-o")).Count() > 0)

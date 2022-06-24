@@ -63,7 +63,10 @@ namespace YT_RED.Controls
                 if (currentFormat == null || currentFormat.Type != Classes.StreamType.Audio)
                     return false;
 
-                if (currentFormat.AudioCodec == "opus" || currentFormat.ContainerFormat == "webm")
+                if (cbAudioFormat.SelectedItem.ToString().ToLower() != "opus")
+                    return true;
+
+                if (currentFormat.AudioCodec == "opus" || currentFormat.Extension == "webm")
                     return false;
 
                 return true;

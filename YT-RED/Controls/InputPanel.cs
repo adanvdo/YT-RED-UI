@@ -24,6 +24,15 @@ namespace YT_RED.Controls
         public event EventHandler Url_Changed;
 
         [Browsable(true)]
+        public event EventHandler Crab_Click;
+
+        public bool ShowCrab
+        {
+            get { return btnCrab.Visible; }
+            set { btnCrab.Visible = value; }
+        }
+
+        [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Always)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         [Bindable(true)]
@@ -66,6 +75,12 @@ namespace YT_RED.Controls
         private void txtUrl_Click(object sender, EventArgs e)
         {
             txtUrl.SelectAll();
+        }
+
+        private void btnCrab_Click(object sender, EventArgs e)
+        {
+            if(Crab_Click != null)
+                Crab_Click(sender, e);
         }
     }
 }

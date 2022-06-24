@@ -393,11 +393,17 @@ namespace YT_RED
             openSettings(OpenPosition.BottomRight);
         }
 
-        private void ipMainInput_Url_Changed(object sender, EventArgs e)
+        private async void ipMainInput_Url_Changed(object sender, EventArgs e)
         {
             gcFormats.DataSource = null;
             gvFormats.RefreshData();
             cpMainControlPanel.ResetControls();
+            if(ipMainInput.URL == "crab")
+            {
+                ipMainInput.ShowCrab = true;
+                await Task.Delay(3000);
+                ipMainInput.ShowCrab = false;
+            }
         }
 
         private void ipMainInput_ResetList_Click(object sender, EventArgs e)
@@ -748,12 +754,12 @@ namespace YT_RED
                 {
                     await conversion.Start();
 
-                    if (cpMainControlPanel.CurrentFormat.AudioCodec.ToLower() != "opus")
+                    if (cpMainControlPanel.EmbedThumbnail)
                     {
                         var data = await VideoUtil.GetVideoData(VideoUtil.CorrectYouTubeString(ipMainInput.URL));
                         if (data != null)
                         {
-                            var thumb = data.Thumbnails.FirstOrDefault();
+                            var thumb = data.Thumbnails.Where(t => !t.Url.EndsWith("webp")).OrderByDescending(t => t.Height).ToArray()[0];
                             bool addArt = await TagUtil.AddAlbumCover(destination, thumb.Url);
                         }
                     }
@@ -855,6 +861,30 @@ namespace YT_RED
                 cpMainControlPanel.EnableToggle(false, true, false);
             }
 
+        }
+
+        private void ipMainInput_Crab_Click(object sender, EventArgs e)
+        {
+            using (DevExpress.XtraEditors.XtraForm dlg = new DevExpress.XtraEditors.XtraForm())
+            {
+                using (ImageControl ctrl = new ImageControl(this, Properties.Resources.CDM))
+                {
+                    dlg.AutoSize = true;
+                    dlg.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+                    dlg.ControlBox = false;
+                    dlg.SizeGripStyle = SizeGripStyle.Hide;
+                    dlg.FormBorderStyle = FormBorderStyle.None;
+                    dlg.MaximizeBox = false;
+                    dlg.MinimizeBox = false;
+                    dlg.StartPosition = FormStartPosition.CenterScreen;
+                    dlg.Controls.Add(ctrl);
+                    dlg.Show();
+                    dlg.BringToFront();
+                    dlg.TopMost = true;
+                    System.Threading.Thread.Sleep(3000);
+                    dlg.Close();
+                }
+            }
         }
     }
 }

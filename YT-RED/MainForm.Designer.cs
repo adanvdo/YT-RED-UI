@@ -219,6 +219,7 @@
             this.ipMainInput.ListFormats_Click += new System.EventHandler(this.ipMainInput_ListFormats_Click);
             this.ipMainInput.ResetList_Click += new System.EventHandler(this.ipMainInput_ResetList_Click);
             this.ipMainInput.Url_Changed += new System.EventHandler(this.ipMainInput_Url_Changed);
+            this.ipMainInput.Crab_Click += new System.EventHandler(this.ipMainInput_Crab_Click);
             // 
             // cpMainControlPanel
             // 
@@ -249,7 +250,8 @@
             // notifyIcon
             // 
             this.notifyIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.notifyIcon.BalloonTipText = "Quick Download is now enabled.\r\nConfigure Hotkey in Advanced Settings.\r\nDouble Click to open YT-RED";
+            this.notifyIcon.BalloonTipText = "Quick Download is now enabled.\r\nConfigure Hotkey in Advanced Settings.\r\nDouble Cl" +
+    "ick to open YT-RED";
             this.notifyIcon.BalloonTipTitle = "YT-RED is Still Running";
             this.notifyIcon.ContextMenuStrip = this.taskBarMenu;
             this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));

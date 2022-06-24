@@ -188,6 +188,12 @@
     <Compile Include="Controls\CustomTabFormPage.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\ImageControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ImageControl.Designer.cs">
+      <DependentUpon>ImageControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\InputPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -249,6 +255,9 @@
     <Compile Include="Utils\VideoUtil.cs" />
     <EmbeddedResource Include="Controls\ControlPanel.resx">
       <DependentUpon>ControlPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImageControl.resx">
+      <DependentUpon>ImageControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\InputPanel.resx">
       <DependentUpon>InputPanel.cs</DependentUpon>
