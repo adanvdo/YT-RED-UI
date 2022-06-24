@@ -6,7 +6,7 @@ using YT_RED.Classes;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("YT_RED")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Alpha")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("JAMGALACTIC")]
 [assembly: AssemblyProduct("YT_RED")]

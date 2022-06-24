@@ -159,7 +159,7 @@ namespace YT_RED.Controls
 
             this.uploadMarquee.Text = "Sending Logs...";
             this.uploadMarquee.Show();
-            bool uploaded = await HttpUtil.UploadErrorLogs(DateTime.Today);
+            bool uploaded = await HttpUtil.UploadErrorLogs(1);
             if(uploaded)
             {
                 this.logsUploaded = true;

@@ -29,11 +29,12 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ControlPanel));
+            DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions4 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions1 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions2 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
-            DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions3 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             this.lblSelectionText = new DevExpress.XtraEditors.LabelControl();
             this.pnlOptionPanel = new DevExpress.XtraEditors.PanelControl();
+            this.ceAlbumArt = new DevExpress.XtraEditors.CheckEdit();
             this.gcDLButtons = new DevExpress.XtraEditors.GroupControl();
             this.btnDownloadBest = new DevExpress.XtraEditors.SimpleButton();
             this.btnDownloadAudio = new DevExpress.XtraEditors.SimpleButton();
@@ -72,6 +73,7 @@
             this.gvHistory = new DevExpress.XtraGrid.Views.Grid.GridView();
             ((System.ComponentModel.ISupportInitialize)(this.pnlOptionPanel)).BeginInit();
             this.pnlOptionPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ceAlbumArt.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gcDLButtons)).BeginInit();
             this.gcDLButtons.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gcConvert)).BeginInit();
@@ -134,8 +136,26 @@
             this.pnlOptionPanel.Margin = new System.Windows.Forms.Padding(0);
             this.pnlOptionPanel.MinimumSize = new System.Drawing.Size(323, 136);
             this.pnlOptionPanel.Name = "pnlOptionPanel";
-            this.pnlOptionPanel.Size = new System.Drawing.Size(323, 551);
+            this.pnlOptionPanel.Size = new System.Drawing.Size(323, 571);
             this.pnlOptionPanel.TabIndex = 8;
+            // 
+            // ceAlbumArt
+            // 
+            this.ceAlbumArt.Dock = System.Windows.Forms.DockStyle.Top;
+            this.ceAlbumArt.Location = new System.Drawing.Point(2, 84);
+            this.ceAlbumArt.Margin = new System.Windows.Forms.Padding(0);
+            this.ceAlbumArt.Name = "ceAlbumArt";
+            this.ceAlbumArt.Properties.AutoHeight = false;
+            this.ceAlbumArt.Properties.Caption = "  Use Thumbnail as Cover Art";
+            this.ceAlbumArt.Properties.CheckBoxOptions.Style = DevExpress.XtraEditors.Controls.CheckBoxStyle.SvgCheckBox1;
+            this.ceAlbumArt.Properties.CheckBoxOptions.SvgImageSize = new System.Drawing.Size(15, 15);
+            this.ceAlbumArt.Properties.ContentAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.ceAlbumArt.Properties.GlyphAlignment = DevExpress.Utils.HorzAlignment.Default;
+            this.ceAlbumArt.Properties.GlyphVerticalAlignment = DevExpress.Utils.VertAlignment.Center;
+            this.ceAlbumArt.Properties.ImageOptions.SvgImageColorizationMode = DevExpress.Utils.SvgImageColorizationMode.Full;
+            this.ceAlbumArt.Size = new System.Drawing.Size(319, 20);
+            this.ceAlbumArt.TabIndex = 10;
+            this.ceAlbumArt.CheckedChanged += new System.EventHandler(this.ceAlbumArt_CheckedChanged);
             // 
             // gcDLButtons
             // 
@@ -144,13 +164,14 @@
             this.gcDLButtons.AutoSize = true;
             this.gcDLButtons.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gcDLButtons.Controls.Add(this.btnDownloadBest);
+            this.gcDLButtons.Controls.Add(this.ceAlbumArt);
             this.gcDLButtons.Controls.Add(this.btnDownloadAudio);
             this.gcDLButtons.Controls.Add(this.btnSelectionDL);
             this.gcDLButtons.Dock = System.Windows.Forms.DockStyle.Top;
             this.gcDLButtons.Location = new System.Drawing.Point(0, 433);
             this.gcDLButtons.Margin = new System.Windows.Forms.Padding(0);
             this.gcDLButtons.Name = "gcDLButtons";
-            this.gcDLButtons.Size = new System.Drawing.Size(323, 118);
+            this.gcDLButtons.Size = new System.Drawing.Size(323, 138);
             this.gcDLButtons.TabIndex = 7;
             this.gcDLButtons.Text = "Execute Download";
             // 
@@ -162,7 +183,7 @@
             this.btnDownloadBest.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
             this.btnDownloadBest.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("btnDownloadBest.ImageOptions.SvgImage")));
             this.btnDownloadBest.ImageOptions.SvgImageSize = new System.Drawing.Size(25, 25);
-            this.btnDownloadBest.Location = new System.Drawing.Point(2, 84);
+            this.btnDownloadBest.Location = new System.Drawing.Point(2, 104);
             this.btnDownloadBest.Margin = new System.Windows.Forms.Padding(0);
             this.btnDownloadBest.Name = "btnDownloadBest";
             this.btnDownloadBest.Size = new System.Drawing.Size(319, 32);
@@ -210,10 +231,10 @@
             this.gcConvert.CaptionImageOptions.AllowGlyphSkinning = true;
             this.gcConvert.Controls.Add(this.lblAlwaysConvert);
             this.gcConvert.Controls.Add(this.pnlConvertPanel);
-            buttonImageOptions1.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
-            buttonImageOptions1.SvgImageSize = new System.Drawing.Size(18, 18);
+            buttonImageOptions4.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
+            buttonImageOptions4.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcConvert.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
-            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions1, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions4, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
             this.gcConvert.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
             this.gcConvert.Dock = System.Windows.Forms.DockStyle.Top;
             this.gcConvert.Location = new System.Drawing.Point(0, 280);
@@ -321,10 +342,10 @@
             this.gcCrop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gcCrop.CaptionImageOptions.AllowGlyphSkinning = true;
             this.gcCrop.Controls.Add(this.pnlCropPanel);
-            buttonImageOptions2.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
-            buttonImageOptions2.SvgImageSize = new System.Drawing.Size(18, 18);
+            buttonImageOptions1.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
+            buttonImageOptions1.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcCrop.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
-            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions2, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions1, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
             this.gcCrop.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
             this.gcCrop.Dock = System.Windows.Forms.DockStyle.Top;
             this.gcCrop.Location = new System.Drawing.Point(0, 144);
@@ -483,10 +504,10 @@
             this.gcSegments.CaptionImageOptions.AllowGlyphSkinning = true;
             this.gcSegments.Controls.Add(this.lblSegmentDisclaimer);
             this.gcSegments.Controls.Add(this.pnlSegPanel);
-            buttonImageOptions3.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
-            buttonImageOptions3.SvgImageSize = new System.Drawing.Size(18, 18);
+            buttonImageOptions2.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
+            buttonImageOptions2.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcSegments.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
-            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions3, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, false, true, "ytSegment", -1)});
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions2, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, false, true, "ytSegment", -1)});
             this.gcSegments.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
             this.gcSegments.Dock = System.Windows.Forms.DockStyle.Top;
             this.gcSegments.Location = new System.Drawing.Point(0, 0);
@@ -608,7 +629,7 @@
             this.pnlProgressPanel.Controls.Add(this.btnOpenDL);
             this.pnlProgressPanel.Controls.Add(this.pbProgress);
             this.pnlProgressPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlProgressPanel.Location = new System.Drawing.Point(0, 551);
+            this.pnlProgressPanel.Location = new System.Drawing.Point(0, 571);
             this.pnlProgressPanel.Margin = new System.Windows.Forms.Padding(0);
             this.pnlProgressPanel.Name = "pnlProgressPanel";
             this.pnlProgressPanel.Size = new System.Drawing.Size(323, 57);
@@ -636,10 +657,10 @@
             // gcHistory
             // 
             this.gcHistory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcHistory.Location = new System.Drawing.Point(0, 608);
+            this.gcHistory.Location = new System.Drawing.Point(0, 628);
             this.gcHistory.MainView = this.gvHistory;
             this.gcHistory.Name = "gcHistory";
-            this.gcHistory.Size = new System.Drawing.Size(323, 227);
+            this.gcHistory.Size = new System.Drawing.Size(323, 207);
             this.gcHistory.TabIndex = 10;
             this.gcHistory.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvHistory});
@@ -678,6 +699,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pnlOptionPanel)).EndInit();
             this.pnlOptionPanel.ResumeLayout(false);
             this.pnlOptionPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ceAlbumArt.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gcDLButtons)).EndInit();
             this.gcDLButtons.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gcConvert)).EndInit();
@@ -756,5 +778,6 @@
         private DevExpress.XtraEditors.ComboBoxEdit cbAudioFormat;
         private DevExpress.XtraEditors.ComboBoxEdit cbVideoFormat;
         private DevExpress.XtraEditors.ToggleSwitch toggleConvert;
+        private DevExpress.XtraEditors.CheckEdit ceAlbumArt;
     }
 }

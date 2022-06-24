@@ -85,6 +85,7 @@
     <LangVersion>8.0</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -147,6 +148,9 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="TagLibSharp, Version=2.2.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
+      <HintPath>..\packages\TagLibSharp.2.2.0\lib\net45\TagLibSharp.dll</HintPath>
+    </Reference>
     <Reference Include="URIScheme, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\URIScheme.5.0.0\lib\netstandard2.0\URIScheme.dll</HintPath>
     </Reference>
@@ -155,6 +159,7 @@
       <HintPath>..\packages\Xabe.FFmpeg.5.2.0\lib\netstandard2.0\Xabe.FFmpeg.dll</HintPath>
     </Reference>
     <Reference Include="YoutubeDLSharp, Version=0.4.2.2271, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\YoutubeDLSharp.0.4.2\lib\net45\YoutubeDLSharp.dll</HintPath>
     </Reference>
   </ItemGroup>
@@ -240,6 +245,7 @@
     <Compile Include="Utils\HttpUtil.cs" />
     <Compile Include="Utils\ReportingUtil.cs" />
     <Compile Include="Utils\StringUtil.cs" />
+    <Compile Include="Utils\TagUtil.cs" />
     <Compile Include="Utils\VideoUtil.cs" />
     <EmbeddedResource Include="Controls\ControlPanel.resx">
       <DependentUpon>ControlPanel.cs</DependentUpon>
@@ -276,6 +282,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include=".editorconfig" />
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -292,6 +299,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\stop.svg" />
+    <None Include="Resources\checkbox.svg" />
     <None Include="Resources\security_warningcircled2.svg" />
     <None Include="Resources\Media\twitch-circle.svg" />
     <None Include="Resources\Media\instagram-circle.svg" />
@@ -352,6 +361,8 @@
     <PostBuildEvent>set configName=$(ConfigurationName)
 set platformName=$(PlatformName)
 set versionNumber=@(VersionNumber)
-call "E:\Dev\BuildAndSignYTR.bat"</PostBuildEvent>
+set releaseChannel=alpha
+call "E:\Dev\BuildAndSignYTR.bat"
+</PostBuildEvent>
   </PropertyGroup>
 </Project>

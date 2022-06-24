@@ -83,20 +83,16 @@ namespace YT_RED.Settings
 		[Browsable(false)]
 		[JsonIgnore]
 		public string RedditMediaURLPrefix { get; set; }
-
-		[Browsable(false)]
-		[JsonIgnore]
-		public string RedditDefaultVideoSuffix { get; set; }
-
-		[Browsable(false)]
-		[JsonIgnore]
-		public string RedditDefaultAudioSuffix { get; set; }
 		#endregion
 
 		#region youtube
 		[Browsable(false)]
 		[JsonIgnore]
 		public string YouTubeSampleUrl { get; set; } = @"";
+
+        [Browsable(false)]
+        [JsonProperty("use_album_art")]
+		public bool UseAlbumArt { get; set; }
         #endregion;
 
         public GeneralSettings()
@@ -119,6 +115,7 @@ namespace YT_RED.Settings
 			RedditSampleUrl = @"https://www.reddit.com/r/PraiseTheCameraMan/comments/sj7iwr/couldnt_be_more_perfect/";
 			RedditMediaURLPrefix = @"https://v.redd.it/";
 			YouTubeSampleUrl = @"https://www.youtube.com/watch?v=dCAORZphnlY";
+			UseAlbumArt = false;
 			UseTitleAsFileName = false;
 			VideoDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
 			AudioDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);

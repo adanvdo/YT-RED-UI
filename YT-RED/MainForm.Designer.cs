@@ -113,6 +113,7 @@
             // 
             this.tfpMain.ContentContainer = this.tabFormContentContainer1;
             this.tfpMain.Name = "tfpMain";
+            this.tfpMain.ShowCloseButton = DevExpress.Utils.DefaultBoolean.False;
             this.tfpMain.Text = "Download";
             // 
             // tabFormContentContainer1
@@ -237,6 +238,8 @@
             this.cpMainControlPanel.SegmentStart = System.TimeSpan.Parse("00:00:00");
             this.cpMainControlPanel.Size = new System.Drawing.Size(323, 733);
             this.cpMainControlPanel.TabIndex = 0;
+            this.cpMainControlPanel.UseAlbumArt = false;
+            this.cpMainControlPanel.UseAlbumArtVisible = true;
             this.cpMainControlPanel.DownloadSelection_Click += new System.EventHandler(this.cpMainControlPanel_DownloadSelection_Click);
             this.cpMainControlPanel.DownloadAudio_Click += new System.EventHandler(this.cpMainControlPanel_DownloadAudio_Click);
             this.cpMainControlPanel.DownloadBest_Click += new System.EventHandler(this.cpMainControlPanel_DownloadBest_Click);

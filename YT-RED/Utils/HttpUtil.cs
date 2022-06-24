@@ -14,24 +14,34 @@ namespace YT_RED.Utils
 {
     public static class HttpUtil
     {
-        private static string serverUrl = "https://www.jamgalactic.com/api/ytred";
+        private static string serverUrl = @"https://www.jamgalactic.com/api/ytred";
         private static async Task<HttpWebResponse> postErrorLogs(DateTime date)
         {
             try
             {
-                string logs = string.Empty;
-                if (File.Exists(Path.Combine(AppSettings.Default.General.ErrorLogPath, $"ErrorLogs_{date.ToShortDateString()}.txt")))
+                string tidyLogs = string.Empty;
+                string logFile = Path.Combine(AppSettings.Default.General.ErrorLogPath, $"ErrorLogs_{date.ToShortDateString()}.txt");
+                if (File.Exists(logFile))
                 {
-                    logs = File.ReadAllText(Path.Combine(AppSettings.Default.General.ErrorLogPath, $"ErrorLogs_{date.ToShortDateString()}.txt"));
+                    string rawLogs = File.ReadAllText(logFile);
+                    tidyLogs = rawLogs.Replace(@"\", @"\\").Replace(System.Environment.NewLine, @"\n").Replace("\n", @"\n").Trim();
+                    if (tidyLogs.StartsWith("\n"))
+                    {
+                        tidyLogs = tidyLogs.Remove(0, 1);
+                    }
+                    if (tidyLogs.StartsWith("\\n"))
+                    {
+                        tidyLogs = tidyLogs.Remove(0, 2);
+                    }                    
                 }
 
                 HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(serverUrl);
-                httpWebRequest.ContentType = "application /json";
+                httpWebRequest.ContentType = "application/json";
                 httpWebRequest.Method = "POST";
 
                 using (var streamWriter = new StreamWriter(await httpWebRequest.GetRequestStreamAsync()))
                 {
-                    LogPostRequest request = new LogPostRequest(ReportingUtil.GetMac(), DateTime.Now, logs);
+                    LogPostRequest request = new LogPostRequest(ReportingUtil.GetMac(), DateTime.Now, tidyLogs);
                     string json = JsonConvert.SerializeObject(request);
 
                     streamWriter.Write(json);
@@ -59,13 +69,22 @@ namespace YT_RED.Utils
 
             try
             {
+                string tidyLogs = logs.Replace(@"\", @"\\").Replace(System.Environment.NewLine, @"\n").Replace("\n", @"\n").Trim();
+                if (tidyLogs.StartsWith("\n"))
+                {
+                    tidyLogs = tidyLogs.Remove(0, 1);
+                }
+                if (tidyLogs.StartsWith("\\n"))
+                {
+                    tidyLogs = tidyLogs.Remove(0, 2);
+                }
                 HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(serverUrl);
-                httpWebRequest.ContentType = "application /json";
+                httpWebRequest.ContentType = "application/json";
                 httpWebRequest.Method = "POST";
 
                 using (var streamWriter = new StreamWriter(await httpWebRequest.GetRequestStreamAsync()))
                 {
-                    LogPostRequest request = new LogPostRequest(ReportingUtil.GetMac(), DateTime.Now, logs);
+                    LogPostRequest request = new LogPostRequest(ReportingUtil.GetMac(), DateTime.Now, tidyLogs);
                     string json = JsonConvert.SerializeObject(request);
 
                     streamWriter.Write(json);
@@ -112,7 +131,7 @@ namespace YT_RED.Utils
                     string logs = string.Empty;
                     if (File.Exists(file.FullName))
                     {
-                        logs = await Task.Run(() => File.ReadAllText(file.FullName));
+                        logs = await Task.Run(() => File.ReadAllText(file.FullName)); 
                         HttpWebResponse postResponse = await postErrorLogs(logs);
                         if (postResponse.StatusCode != HttpStatusCode.Created)
                             return false;

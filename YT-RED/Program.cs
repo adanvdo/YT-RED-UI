@@ -20,7 +20,8 @@ namespace YT_RED
             "lf",
             "listformats",
             "dlb",
-            "downloadbest"
+            "downloadbest",
+            "uploadtest"
         };
 
         /// <summary>
@@ -61,6 +62,10 @@ namespace YT_RED
                             DevRun = false;
                             initialRedLink = s.Remove(0, 5);
                         }
+                        if(s.StartsWith("-uploadtest") || s.StartsWith("-ut"))
+                        {
+                            initialFunction = InitialFunction.UploadTest;
+                        }
                     }
                 }
                 catch(Exception ex)
@@ -89,6 +94,7 @@ namespace YT_RED
     {
         ListFormats = 0,
         DownloadBest = 1,
-        None = 2
+        UploadTest = 2,
+        None = 3
     }
 }

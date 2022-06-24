@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Xabe.FFmpeg;
 using YoutubeDLSharp;
@@ -18,6 +20,9 @@ namespace YT_RED.Utils
 
         public static IProgress<DownloadProgress> ytProgress;
         public static IProgress<string> ytOutput;
+        private static CancellationTokenSource cancellationTokenSource;
+        private static YoutubeDLSharp.Helpers.ProcessRunner runner;
+        private static Regex rgxFile = new Regex(@"\[download\] Destination: [a-zA-Z]:\\\S+\.\S{3,}", RegexOptions.Compiled);
 
         public static void Init()
         {
@@ -29,6 +34,7 @@ namespace YT_RED.Utils
             ytdl.OutputFileTemplate = "%(title)s_%(id)s.%(ext)s";
             ytdl.RestrictFilenames = true;
             ytdl.OverwriteFiles = false;
+            runner = new YoutubeDLSharp.Helpers.ProcessRunner(4);
         }
 
         public static string GenerateUniqueYtdlFileName(Classes.StreamType streamType)
@@ -173,8 +179,8 @@ namespace YT_RED.Utils
             return await PrepareStreamConversion(videoUrl, audioUrl, parameters.ToArray(), vFormat, aFormat);
         }
 
-        public static async Task<IConversion> PrepareBestYtdlConversion(string url, string format, TimeSpan? start = null, TimeSpan? duration = null, bool usePreferences = false, int[] crops = null, VideoFormat convertVideo = VideoFormat.UNSPECIFIED, AudioFormat convertAudio = AudioFormat.UNSPECIFIED)
-        {
+        public static async Task<IConversion> PrepareBestYtdlConversion(string url, string format, TimeSpan? start = null, TimeSpan? duration = null, bool usePreferences = false, int[] crops = null, VideoFormat convertVideo = VideoFormat.UNSPECIFIED, AudioFormat convertAudio = AudioFormat.UNSPECIFIED, bool embedThumbnail = false)
+        {        
             var getUrls = await GetFormatUrls(url, format);
             if (getUrls == null || getUrls.Count < 1)
                 return null;
@@ -185,7 +191,7 @@ namespace YT_RED.Utils
                 videoInfo = await FFmpeg.GetMediaInfo(getUrls[0]);
             else if (format == "bestaudio")
             {
-                audioInfo = await FFmpeg.GetMediaInfo(getUrls[1]);
+                audioInfo = await FFmpeg.GetMediaInfo(getUrls[0]);
             }
             if (format == "bestvideo+bestaudio")
             {
@@ -263,7 +269,7 @@ namespace YT_RED.Utils
                 }
             }
 
-            List<Classes.FFmpegParam> parameters = new List<Classes.FFmpegParam>();
+            List<Classes.FFmpegParam> parameters = new List<Classes.FFmpegParam>(); 
             if (start != null)
             {
                 parameters.Add(new Classes.FFmpegParam(Classes.ParamType.StartTime, $"-ss {((TimeSpan)start)}"));
@@ -279,7 +285,7 @@ namespace YT_RED.Utils
             if(aCodec != null)
             {
                 parameters.Add(new Classes.FFmpegParam(Classes.ParamType.AudioOutFormat, $"-c:a {aCodec.Encoder}"));
-            }
+            }            
 
             if (outWidth >= 0 && outHeight >= 0 && x >= 0 && y >= 0)
             {
@@ -417,26 +423,48 @@ namespace YT_RED.Utils
             return null;
         }
 
-        public static async Task<RunResult<string>> DownloadBestYtdl(string url, Classes.StreamType streamType, IProgress<DownloadProgress> dlProgress = null, IProgress<string> progressText = null, System.Threading.CancellationToken? cancellationToken = null)
+        public static async Task<RunResult<string>> DownloadBestYtdl(string url, Classes.StreamType streamType, IProgress<DownloadProgress> dlProgress = null, IProgress<string> progressText = null, System.Threading.CancellationToken? cancellationToken = null, bool embedThumbnail = false)
         {
             bool cancelled = false;
             try
             {
+                string thumbnailUrl = string.Empty;
+                if (embedThumbnail)
+                {
+                    VideoData data = await GetVideoData(url);
+                    var tnt = data.Thumbnail;
+                    thumbnailUrl = data.Thumbnails[0].Url;
+                }
                 ytdl.OutputFolder = streamType == Classes.StreamType.Audio ? AppSettings.Default.General.AudioDownloadPath : AppSettings.Default.General.VideoDownloadPath;
                 var options = YoutubeDLSharp.Options.OptionSet.Default;
                 if(options.CustomOptions.Where(o => o.OptionStrings.Contains("-o")).Count() > 0)
                 {
                     options.DeleteCustomOption("-o");
                 }
+                if (options.CustomOptions.Where(o => o.OptionStrings.Contains("-")).Count() > 0)
+                {
+                    options.DeleteCustomOption("--postprocessor-args");
+                    options.DeleteCustomOption("--convert-thumbnails");
+                }
                 if (!AppSettings.Default.General.UseTitleAsFileName)
                 {
                     options.AddCustomOption<string>("-o", GenerateUniqueYtdlFileName(streamType));
                 }
+                AudioConversionFormat audioConversionFormat = AudioConversionFormat.Best;
+                if (streamType == Classes.StreamType.Audio && embedThumbnail)
+                {
+                    audioConversionFormat = AudioConversionFormat.Mp3;
+                    options.EmbedThumbnail = true;
+                    options.AddMetadata = true;
+                    options.AddCustomOption<string>("--postprocessor-args", "-write_id3v1 1 -id3v2_version 3");
+                    options.AddCustomOption<string>("--convert-thumbnails", "jpg");
+                }
+                
                 if (streamType == Classes.StreamType.AudioAndVideo)
                     return await ytdl.RunVideoDownload(url, "bestvideo+bestaudio", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, cancellationToken != null ? (System.Threading.CancellationToken)cancellationToken : default, dlProgress == null ? ytProgress : dlProgress, progressText, options);
                 if (streamType == Classes.StreamType.Video)
                     return await ytdl.RunVideoDownload(url, "bestvideo", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, cancellationToken != null ? (System.Threading.CancellationToken)cancellationToken : default, dlProgress == null ? ytProgress : dlProgress, progressText, options);
-                return await ytdl.RunAudioDownload(url, AudioConversionFormat.Best, cancellationToken != null ? (System.Threading.CancellationToken)cancellationToken : default, dlProgress == null ? ytProgress : dlProgress, progressText, options);
+                return await ytdl.RunAudioDownload(url, audioConversionFormat, cancellationToken != null ? (System.Threading.CancellationToken)cancellationToken : default, dlProgress == null ? ytProgress : dlProgress, progressText, options);
             }
             catch (Exception ex)
             {
@@ -450,7 +478,7 @@ namespace YT_RED.Utils
                 return null;
         }
 
-        public static async Task<RunResult<string>> DownloadPreferredYtdl(string url, Classes.StreamType streamType, IProgress<DownloadProgress> dlProgress = null, IProgress<string> progressText = null, System.Threading.CancellationToken? cancellationToken = null)
+        public static async Task<RunResult<string>> DownloadPreferredYtdl(string url, Classes.StreamType streamType, IProgress<DownloadProgress> dlProgress = null, IProgress<string> progressText = null, System.Threading.CancellationToken? cancellationToken = null, bool embedThumbnail = false)
         {
             bool cancelled = false;
             try
@@ -500,7 +528,7 @@ namespace YT_RED.Utils
                 else if (streamType == Classes.StreamType.Video)
                     return await ytdl.RunVideoDownload(url, "bestvideo", mergeFormat, videoRecodeFormat, cancellationToken != null ? (System.Threading.CancellationToken)cancellationToken : default, dlProgress == null ? ytProgress : dlProgress, progressText, options);
                 else
-                    return await DownloadAudioYTDL(url, AppSettings.Default.Advanced.PreferredAudioFormat, cancellationToken);
+                    return await DownloadAudioYTDL(url, AppSettings.Default.Advanced.PreferredAudioFormat, cancellationToken, embedThumbnail);
 
             }
             catch (Exception ex)
@@ -516,7 +544,7 @@ namespace YT_RED.Utils
                 return null;
         }
 
-        public static async Task<RunResult<string>> DownloadAudioYTDL(string url, AudioFormat audioFormat, System.Threading.CancellationToken? cancellationToken = null)
+        public static async Task<RunResult<string>> DownloadAudioYTDL(string url, AudioFormat audioFormat, System.Threading.CancellationToken? cancellationToken = null, bool embedThumbnail = false)
         {
             bool cancelled = false;
             try
@@ -556,15 +584,26 @@ namespace YT_RED.Utils
                         break;
                 }
 
-                ytdl.OutputFolder = AppSettings.Default.General.AudioDownloadPath;
                 var options = YoutubeDLSharp.Options.OptionSet.Default;
                 if (options.CustomOptions.Where(o => o.OptionStrings.Contains("-o")).Count() > 0)
                 {
                     options.DeleteCustomOption("-o");
                 }
+                if (options.CustomOptions.Where(o => o.OptionStrings.Contains("-")).Count() > 0)
+                {
+                    options.DeleteCustomOption("--postprocessor-args");
+                    options.DeleteCustomOption("--convert-thumbnails");
+                }
                 if (!AppSettings.Default.General.UseTitleAsFileName)
                 {
                     options.AddCustomOption<string>("-o", GenerateUniqueYtdlFileName(Classes.StreamType.Audio));
+                }
+                if (embedThumbnail && audioConversion != AudioConversionFormat.Opus && audioConversion != AudioConversionFormat.Aac)
+                {
+                    options.EmbedThumbnail = true;
+                    options.AddMetadata = true;
+                    options.AddCustomOption<string>("--postprocessor-args", "-write_id3v1 1 -id3v2_version 3");
+                    options.AddCustomOption<string>("--convert-thumbnails", "jpg");
                 }
                 return await ytdl.RunAudioDownload(url, audioConversion, cancellationToken != null ? (System.Threading.CancellationToken)cancellationToken : default, ytProgress, null, options);
             }
@@ -581,8 +620,9 @@ namespace YT_RED.Utils
                 return null;
         }
 
-        public static async Task<RunResult<string>> DownloadYTDLFormat(string videoUrl, Classes.YTDLFormatData formatData)
+        public static async Task<RunResult<string>> DownloadYTDLFormat(string videoUrl, Classes.YTDLFormatData formatData, bool embedThumbnail = false)
         {
+            string outputFile = string.Empty;
             if (string.IsNullOrEmpty(videoUrl))
             {
                 throw new ArgumentException("Invalid Video Url");
@@ -591,11 +631,67 @@ namespace YT_RED.Utils
             {
                 throw new ArgumentNullException("FormatData is null");
             }
+            var options = YoutubeDLSharp.Options.OptionSet.Default;
+            if (options.CustomOptions.Where(o => o.OptionStrings.Contains("-o")).Count() > 0)
+            {
+                options.DeleteCustomOption("-o");
+            }
+            if (options.CustomOptions.Where(o => o.OptionStrings.Contains("-")).Count() > 0)
+            {
+                options.DeleteCustomOption("--postprocessor-args");
+                options.DeleteCustomOption("--convert-thumbnails");
+            }
             if (formatData.VideoCodec == "none")
             {
-                return await DownloadAudioYTDL(videoUrl, AppSettings.Default.Advanced.PreferredAudioFormat);
+                options.Format = formatData.FormatId;
+                outputFile = GenerateUniqueYtdlFileName(Classes.StreamType.Audio);
+                options.AddCustomOption<string>("-o", outputFile);
+                
+                if (embedThumbnail)
+                {
+                    options.EmbedThumbnail = true;
+                    options.AddMetadata = true;
+                    options.AddCustomOption<string>("--postprocessor-args", "-write_id3v1 1 -id3v2_version 3");
+                    options.AddCustomOption<string>("--convert-thumbnails", "jpg");
+                }
+                return await downloadYTDLAudio(videoUrl, options);
             }
             return await downloadYTDLVideo(videoUrl, formatData.FormatId);
+        }
+
+        private static string convertToArgs(string[] urls, OptionSet options)
+            => (urls != null ? String.Join(" ", urls) : String.Empty) + options.ToString();
+
+        private static async Task<RunResult<string>> downloadYTDLAudio(string url, OptionSet options)
+        {
+            if(options == null) throw new ArgumentNullException("options");
+            ytdl.OutputFolder = AppSettings.Default.General.AudioDownloadPath;
+            try
+            {
+                cancellationTokenSource = new CancellationTokenSource();
+                CancellationToken cancelToken = cancellationTokenSource.Token;
+                string outFile = string.Empty;
+                var process = new YoutubeDLProcess(ytdl.YoutubeDLPath);
+
+                ytOutput?.Report($"Arguments: {convertToArgs(new[] { url }, options)}\n");
+                process.OutputReceived += (o, e) =>
+                {
+                    var match = rgxFile.Match(e.Data);
+                    if (match.Success)
+                    {
+                        outFile = match.Groups[0].ToString().Replace("[download] Destination:", "").Replace(" ", "");
+                        ytProgress?.Report(new DownloadProgress(DownloadState.Success, data: outFile));
+                    }
+                    ytOutput?.Report(e.Data);
+                };
+                (int code, string[] errors) = await runner.RunThrottled(process, new[] { url }, options, cancelToken, ytProgress);
+                return new RunResult<string>(code == 0, errors, outFile);
+            }
+            catch(Exception ex)
+            {
+                ExceptionHandler.LogException(ex);
+            }
+            return null;
         }
 
         private static async Task<RunResult<string>> downloadYTDLVideo(string url, string format)
@@ -604,10 +700,6 @@ namespace YT_RED.Utils
             {
                 ytdl.OutputFolder = AppSettings.Default.General.VideoDownloadPath;
                 var options = YoutubeDLSharp.Options.OptionSet.Default;
-                if (options.CustomOptions.Where(o => o.OptionStrings.Contains("-o")).Count() > 0)
-                {
-                    options.DeleteCustomOption("-o");
-                }
                 if (!AppSettings.Default.General.UseTitleAsFileName)
                 {
                     options.AddCustomOption<string>("-o", GenerateUniqueYtdlFileName(Classes.StreamType.Video));
