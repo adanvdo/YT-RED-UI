@@ -75,6 +75,12 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 6/23/2022 v1.0.1.3
+- Created Independent Web Server for Voluntary Log Uploads
+- Fixed bug where error log uploads were still not working
+- Added Thumbnail Cover Art option for un-processed Audio Downloads (only enabled for some audio formats)
+- Various UI and Behavior Tweaks
+
 ### 6/21/2022 v1.0.1.2
 - Converted all downloads to use unique timestamp filenames
 - Added setting to enable using video titles as file name when no post-processing is used
