@@ -76,7 +76,7 @@
             this.tcMainTabControl.Pages.Add(this.tfpMain);
             this.tcMainTabControl.SelectedPage = this.tfpMain;
             this.tcMainTabControl.ShowAddPageButton = false;
-            this.tcMainTabControl.Size = new System.Drawing.Size(1188, 50);
+            this.tcMainTabControl.Size = new System.Drawing.Size(1188, 66);
             this.tcMainTabControl.TabForm = this;
             this.tcMainTabControl.TabIndex = 0;
             this.tcMainTabControl.TabRightItemLinks.Add(this.bsiMessage);
@@ -120,9 +120,9 @@
             // 
             this.tabFormContentContainer1.Controls.Add(this.sccMainSplitter);
             this.tabFormContentContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabFormContentContainer1.Location = new System.Drawing.Point(0, 50);
+            this.tabFormContentContainer1.Location = new System.Drawing.Point(0, 66);
             this.tabFormContentContainer1.Name = "tabFormContentContainer1";
-            this.tabFormContentContainer1.Size = new System.Drawing.Size(1188, 733);
+            this.tabFormContentContainer1.Size = new System.Drawing.Size(1188, 717);
             this.tabFormContentContainer1.TabIndex = 3;
             // 
             // sccMainSplitter
@@ -145,7 +145,7 @@
             this.sccMainSplitter.Panel2.Controls.Add(this.cpMainControlPanel);
             this.sccMainSplitter.Panel2.MinSize = 323;
             this.sccMainSplitter.Panel2.Text = "Panel2";
-            this.sccMainSplitter.Size = new System.Drawing.Size(1188, 733);
+            this.sccMainSplitter.Size = new System.Drawing.Size(1188, 717);
             this.sccMainSplitter.SplitterPosition = 860;
             this.sccMainSplitter.TabIndex = 0;
             // 
@@ -159,7 +159,7 @@
             this.lblSelectAFormat.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblSelectAFormat.Location = new System.Drawing.Point(0, 123);
             this.lblSelectAFormat.Name = "lblSelectAFormat";
-            this.lblSelectAFormat.Size = new System.Drawing.Size(860, 25);
+            this.lblSelectAFormat.Size = new System.Drawing.Size(849, 25);
             this.lblSelectAFormat.TabIndex = 5;
             this.lblSelectAFormat.Text = "Select a Video and/or Audio Format";
             this.lblSelectAFormat.Visible = false;
@@ -170,8 +170,9 @@
             this.marqueeProgressBarControl1.EditValue = 0;
             this.marqueeProgressBarControl1.Location = new System.Drawing.Point(0, 103);
             this.marqueeProgressBarControl1.Name = "marqueeProgressBarControl1";
+            this.marqueeProgressBarControl1.Properties.AllowFocused = false;
             this.marqueeProgressBarControl1.Properties.ShowTitle = true;
-            this.marqueeProgressBarControl1.Size = new System.Drawing.Size(860, 20);
+            this.marqueeProgressBarControl1.Size = new System.Drawing.Size(849, 20);
             this.marqueeProgressBarControl1.TabIndex = 7;
             this.marqueeProgressBarControl1.Visible = false;
             // 
@@ -181,7 +182,7 @@
             this.gcFormats.Location = new System.Drawing.Point(0, 103);
             this.gcFormats.MainView = this.gvFormats;
             this.gcFormats.Name = "gcFormats";
-            this.gcFormats.Size = new System.Drawing.Size(860, 630);
+            this.gcFormats.Size = new System.Drawing.Size(849, 614);
             this.gcFormats.TabIndex = 6;
             this.gcFormats.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvFormats});
@@ -213,7 +214,8 @@
             this.ipMainInput.Margin = new System.Windows.Forms.Padding(0);
             this.ipMainInput.MinimumSize = new System.Drawing.Size(400, 100);
             this.ipMainInput.Name = "ipMainInput";
-            this.ipMainInput.Size = new System.Drawing.Size(860, 103);
+            this.ipMainInput.ShowCrab = false;
+            this.ipMainInput.Size = new System.Drawing.Size(849, 103);
             this.ipMainInput.TabIndex = 0;
             this.ipMainInput.URL = "";
             this.ipMainInput.ListFormats_Click += new System.EventHandler(this.ipMainInput_ListFormats_Click);
@@ -237,7 +239,7 @@
             this.cpMainControlPanel.Name = "cpMainControlPanel";
             this.cpMainControlPanel.SegmentDuration = System.TimeSpan.Parse("00:00:01");
             this.cpMainControlPanel.SegmentStart = System.TimeSpan.Parse("00:00:00");
-            this.cpMainControlPanel.Size = new System.Drawing.Size(323, 733);
+            this.cpMainControlPanel.Size = new System.Drawing.Size(323, 717);
             this.cpMainControlPanel.TabIndex = 0;
             this.cpMainControlPanel.DownloadSelection_Click += new System.EventHandler(this.cpMainControlPanel_DownloadSelection_Click);
             this.cpMainControlPanel.DownloadAudio_Click += new System.EventHandler(this.cpMainControlPanel_DownloadAudio_Click);
