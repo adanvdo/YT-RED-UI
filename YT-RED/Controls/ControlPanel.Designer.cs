@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ControlPanel));
             DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions1 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions2 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions3 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
@@ -117,7 +116,7 @@
             this.lblSelectionText.Margin = new System.Windows.Forms.Padding(0);
             this.lblSelectionText.Name = "lblSelectionText";
             this.lblSelectionText.Size = new System.Drawing.Size(323, 0);
-            this.lblSelectionText.TabIndex = 6;
+            this.lblSelectionText.TabIndex = 0;
             this.lblSelectionText.TextChanged += new System.EventHandler(this.lblSelectionText_TextChanged);
             // 
             // pnlOptionPanel
@@ -135,7 +134,7 @@
             this.pnlOptionPanel.MinimumSize = new System.Drawing.Size(323, 136);
             this.pnlOptionPanel.Name = "pnlOptionPanel";
             this.pnlOptionPanel.Size = new System.Drawing.Size(323, 563);
-            this.pnlOptionPanel.TabIndex = 8;
+            this.pnlOptionPanel.TabIndex = 0;
             // 
             // gcDLButtons
             // 
@@ -151,7 +150,7 @@
             this.gcDLButtons.Margin = new System.Windows.Forms.Padding(0);
             this.gcDLButtons.Name = "gcDLButtons";
             this.gcDLButtons.Size = new System.Drawing.Size(323, 127);
-            this.gcDLButtons.TabIndex = 7;
+            this.gcDLButtons.TabIndex = 0;
             this.gcDLButtons.Text = "Execute Download";
             // 
             // btnDownloadBest
@@ -160,14 +159,14 @@
             this.btnDownloadBest.Appearance.Options.UseFont = true;
             this.btnDownloadBest.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnDownloadBest.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
-            this.btnDownloadBest.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("btnDownloadBest.ImageOptions.SvgImage")));
+            this.btnDownloadBest.ImageOptions.SvgImage = global::YT_RED.Properties.Resources.VideoSound;
             this.btnDownloadBest.ImageOptions.SvgImageSize = new System.Drawing.Size(25, 25);
             this.btnDownloadBest.Location = new System.Drawing.Point(2, 93);
             this.btnDownloadBest.Margin = new System.Windows.Forms.Padding(0);
             this.btnDownloadBest.Name = "btnDownloadBest";
             this.btnDownloadBest.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnDownloadBest.Size = new System.Drawing.Size(319, 32);
-            this.btnDownloadBest.TabIndex = 6;
+            this.btnDownloadBest.TabIndex = 14;
             this.btnDownloadBest.Text = "DOWNLOAD BEST [audio+video]      ";
             this.btnDownloadBest.Click += new System.EventHandler(this.btnDownloadBest_Click);
             // 
@@ -177,14 +176,14 @@
             this.btnDownloadAudio.Appearance.Options.UseFont = true;
             this.btnDownloadAudio.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnDownloadAudio.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
-            this.btnDownloadAudio.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("btnDownloadAudio.ImageOptions.SvgImage")));
+            this.btnDownloadAudio.ImageOptions.SvgImage = global::YT_RED.Properties.Resources.sound;
             this.btnDownloadAudio.ImageOptions.SvgImageSize = new System.Drawing.Size(25, 25);
             this.btnDownloadAudio.Location = new System.Drawing.Point(2, 61);
             this.btnDownloadAudio.Margin = new System.Windows.Forms.Padding(0);
             this.btnDownloadAudio.Name = "btnDownloadAudio";
             this.btnDownloadAudio.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnDownloadAudio.Size = new System.Drawing.Size(319, 32);
-            this.btnDownloadAudio.TabIndex = 7;
+            this.btnDownloadAudio.TabIndex = 13;
             this.btnDownloadAudio.Text = "DOWNLOAD AUDIO       ";
             this.btnDownloadAudio.Click += new System.EventHandler(this.btnDownloadAudio_Click);
             // 
@@ -194,14 +193,13 @@
             this.btnSelectionDL.Appearance.Options.UseFont = true;
             this.btnSelectionDL.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnSelectionDL.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
-            this.btnSelectionDL.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("btnSelectionDL.ImageOptions.SvgImage")));
             this.btnSelectionDL.ImageOptions.SvgImageSize = new System.Drawing.Size(25, 25);
             this.btnSelectionDL.Location = new System.Drawing.Point(2, 29);
             this.btnSelectionDL.Margin = new System.Windows.Forms.Padding(0);
             this.btnSelectionDL.Name = "btnSelectionDL";
             this.btnSelectionDL.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnSelectionDL.Size = new System.Drawing.Size(319, 32);
-            this.btnSelectionDL.TabIndex = 0;
+            this.btnSelectionDL.TabIndex = 12;
             this.btnSelectionDL.Text = "DOWNLOAD SELECTED FORMAT    ";
             this.btnSelectionDL.Visible = false;
             this.btnSelectionDL.Click += new System.EventHandler(this.btnSelectionDL_Click);
@@ -223,7 +221,7 @@
             this.gcConvert.Margin = new System.Windows.Forms.Padding(0);
             this.gcConvert.Name = "gcConvert";
             this.gcConvert.Size = new System.Drawing.Size(323, 151);
-            this.gcConvert.TabIndex = 9;
+            this.gcConvert.TabIndex = 0;
             this.gcConvert.Text = "Conversion Override";
             this.gcConvert.Click += new System.EventHandler(this.gcConvert_Click);
             // 
@@ -240,7 +238,7 @@
             this.lblAlwaysConvert.Name = "lblAlwaysConvert";
             this.lblAlwaysConvert.Padding = new System.Windows.Forms.Padding(3);
             this.lblAlwaysConvert.Size = new System.Drawing.Size(319, 53);
-            this.lblAlwaysConvert.TabIndex = 9;
+            this.lblAlwaysConvert.TabIndex = 0;
             this.lblAlwaysConvert.Text = "YT-RED is currently set to Always Convert to your \r\nPreferred Video and Audio For" +
     "mat. \r\nThis can be changed in Advanced Settings";
             this.lblAlwaysConvert.Visible = false;
@@ -258,7 +256,7 @@
             this.pnlConvertPanel.Margin = new System.Windows.Forms.Padding(0);
             this.pnlConvertPanel.Name = "pnlConvertPanel";
             this.pnlConvertPanel.Size = new System.Drawing.Size(319, 67);
-            this.pnlConvertPanel.TabIndex = 9;
+            this.pnlConvertPanel.TabIndex = 0;
             // 
             // labelControl7
             // 
@@ -268,7 +266,7 @@
             this.labelControl7.Location = new System.Drawing.Point(170, 35);
             this.labelControl7.Name = "labelControl7";
             this.labelControl7.Size = new System.Drawing.Size(32, 16);
-            this.labelControl7.TabIndex = 12;
+            this.labelControl7.TabIndex = 0;
             this.labelControl7.Text = "Audio";
             // 
             // labelControl6
@@ -279,7 +277,7 @@
             this.labelControl6.Location = new System.Drawing.Point(17, 35);
             this.labelControl6.Name = "labelControl6";
             this.labelControl6.Size = new System.Drawing.Size(32, 16);
-            this.labelControl6.TabIndex = 11;
+            this.labelControl6.TabIndex = 0;
             this.labelControl6.Text = "Video";
             // 
             // cbAudioFormat
@@ -293,7 +291,7 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.cbAudioFormat.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cbAudioFormat.Size = new System.Drawing.Size(100, 25);
-            this.cbAudioFormat.TabIndex = 10;
+            this.cbAudioFormat.TabIndex = 11;
             this.cbAudioFormat.SelectedIndexChanged += new System.EventHandler(this.cbAudioFormat_SelectedIndexChanged);
             // 
             // cbVideoFormat
@@ -307,7 +305,7 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.cbVideoFormat.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cbVideoFormat.Size = new System.Drawing.Size(100, 25);
-            this.cbVideoFormat.TabIndex = 1;
+            this.cbVideoFormat.TabIndex = 10;
             this.cbVideoFormat.SelectedIndexChanged += new System.EventHandler(this.cbVideoFormat_SelectedIndexChanged);
             // 
             // toggleConvert
@@ -318,7 +316,7 @@
             this.toggleConvert.Properties.OffText = "Off";
             this.toggleConvert.Properties.OnText = "On";
             this.toggleConvert.Size = new System.Drawing.Size(95, 24);
-            this.toggleConvert.TabIndex = 0;
+            this.toggleConvert.TabIndex = 9;
             this.toggleConvert.Toggled += new System.EventHandler(this.toggleConvert_Toggled);
             // 
             // gcCrop
@@ -337,7 +335,7 @@
             this.gcCrop.Margin = new System.Windows.Forms.Padding(0);
             this.gcCrop.Name = "gcCrop";
             this.gcCrop.Size = new System.Drawing.Size(323, 134);
-            this.gcCrop.TabIndex = 8;
+            this.gcCrop.TabIndex = 0;
             this.gcCrop.Text = "Crop Video";
             this.gcCrop.Click += new System.EventHandler(this.gcCrop_Click);
             // 
@@ -358,7 +356,7 @@
             this.pnlCropPanel.Margin = new System.Windows.Forms.Padding(0);
             this.pnlCropPanel.Name = "pnlCropPanel";
             this.pnlCropPanel.Size = new System.Drawing.Size(319, 103);
-            this.pnlCropPanel.TabIndex = 9;
+            this.pnlCropPanel.TabIndex = 0;
             // 
             // toggleCrop
             // 
@@ -368,7 +366,7 @@
             this.toggleCrop.Properties.OffText = "Off";
             this.toggleCrop.Properties.OnText = "On";
             this.toggleCrop.Size = new System.Drawing.Size(95, 24);
-            this.toggleCrop.TabIndex = 0;
+            this.toggleCrop.TabIndex = 4;
             this.toggleCrop.Toggled += new System.EventHandler(this.toggleCrop_Toggled);
             // 
             // labelControl10
@@ -379,13 +377,13 @@
             this.labelControl10.Location = new System.Drawing.Point(173, 63);
             this.labelControl10.Name = "labelControl10";
             this.labelControl10.Size = new System.Drawing.Size(29, 16);
-            this.labelControl10.TabIndex = 8;
+            this.labelControl10.TabIndex = 0;
             this.labelControl10.Text = "Right";
             // 
             // txtCropTop
             // 
             this.txtCropTop.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtCropTop.EditValue = "0";
+            this.txtCropTop.EditValue = "4";
             this.txtCropTop.Enabled = false;
             this.txtCropTop.Location = new System.Drawing.Point(69, 29);
             this.txtCropTop.Name = "txtCropTop";
@@ -398,7 +396,7 @@
             this.txtCropTop.Properties.NullText = "0";
             this.txtCropTop.Properties.UseMaskAsDisplayFormat = true;
             this.txtCropTop.Size = new System.Drawing.Size(75, 25);
-            this.txtCropTop.TabIndex = 1;
+            this.txtCropTop.TabIndex = 5;
             // 
             // labelControl9
             // 
@@ -408,13 +406,13 @@
             this.labelControl9.Location = new System.Drawing.Point(42, 63);
             this.labelControl9.Name = "labelControl9";
             this.labelControl9.Size = new System.Drawing.Size(21, 16);
-            this.labelControl9.TabIndex = 7;
+            this.labelControl9.TabIndex = 0;
             this.labelControl9.Text = "Left";
             // 
             // txtCropBottom
             // 
             this.txtCropBottom.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtCropBottom.EditValue = "0";
+            this.txtCropBottom.EditValue = "5";
             this.txtCropBottom.Enabled = false;
             this.txtCropBottom.Location = new System.Drawing.Point(208, 29);
             this.txtCropBottom.Name = "txtCropBottom";
@@ -427,7 +425,7 @@
             this.txtCropBottom.Properties.NullText = "0";
             this.txtCropBottom.Properties.UseMaskAsDisplayFormat = true;
             this.txtCropBottom.Size = new System.Drawing.Size(75, 25);
-            this.txtCropBottom.TabIndex = 2;
+            this.txtCropBottom.TabIndex = 6;
             // 
             // labelControl8
             // 
@@ -437,13 +435,13 @@
             this.labelControl8.Location = new System.Drawing.Point(162, 34);
             this.labelControl8.Name = "labelControl8";
             this.labelControl8.Size = new System.Drawing.Size(40, 16);
-            this.labelControl8.TabIndex = 6;
+            this.labelControl8.TabIndex = 0;
             this.labelControl8.Text = "Bottom";
             // 
             // txtCropLeft
             // 
             this.txtCropLeft.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtCropLeft.EditValue = "0";
+            this.txtCropLeft.EditValue = "6";
             this.txtCropLeft.Enabled = false;
             this.txtCropLeft.Location = new System.Drawing.Point(69, 60);
             this.txtCropLeft.Name = "txtCropLeft";
@@ -456,7 +454,7 @@
             this.txtCropLeft.Properties.NullText = "0";
             this.txtCropLeft.Properties.UseMaskAsDisplayFormat = true;
             this.txtCropLeft.Size = new System.Drawing.Size(75, 25);
-            this.txtCropLeft.TabIndex = 3;
+            this.txtCropLeft.TabIndex = 7;
             // 
             // labelControl5
             // 
@@ -466,13 +464,13 @@
             this.labelControl5.Location = new System.Drawing.Point(41, 34);
             this.labelControl5.Name = "labelControl5";
             this.labelControl5.Size = new System.Drawing.Size(22, 16);
-            this.labelControl5.TabIndex = 5;
+            this.labelControl5.TabIndex = 0;
             this.labelControl5.Text = "Top";
             // 
             // txtCropRight
             // 
             this.txtCropRight.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtCropRight.EditValue = "0";
+            this.txtCropRight.EditValue = "7";
             this.txtCropRight.Enabled = false;
             this.txtCropRight.Location = new System.Drawing.Point(208, 60);
             this.txtCropRight.Name = "txtCropRight";
@@ -485,7 +483,7 @@
             this.txtCropRight.Properties.NullText = "0";
             this.txtCropRight.Properties.UseMaskAsDisplayFormat = true;
             this.txtCropRight.Size = new System.Drawing.Size(75, 25);
-            this.txtCropRight.TabIndex = 4;
+            this.txtCropRight.TabIndex = 8;
             // 
             // gcSegments
             // 
@@ -504,7 +502,7 @@
             this.gcSegments.Margin = new System.Windows.Forms.Padding(0);
             this.gcSegments.Name = "gcSegments";
             this.gcSegments.Size = new System.Drawing.Size(323, 151);
-            this.gcSegments.TabIndex = 4;
+            this.gcSegments.TabIndex = 0;
             this.gcSegments.Text = "Download Segment";
             this.gcSegments.Click += new System.EventHandler(this.gcSegments_Click);
             // 
@@ -521,7 +519,7 @@
             this.lblSegmentDisclaimer.Name = "lblSegmentDisclaimer";
             this.lblSegmentDisclaimer.Padding = new System.Windows.Forms.Padding(3);
             this.lblSegmentDisclaimer.Size = new System.Drawing.Size(319, 51);
-            this.lblSegmentDisclaimer.TabIndex = 7;
+            this.lblSegmentDisclaimer.TabIndex = 0;
             this.lblSegmentDisclaimer.Text = "CAUTION: Segment Downloads will use CPU/GPU\r\n for encoding and can be resource in" +
     "tensive \r\nwhen downloading Best Audio+Video";
             this.lblSegmentDisclaimer.Visible = false;
@@ -539,7 +537,7 @@
             this.pnlSegPanel.Margin = new System.Windows.Forms.Padding(0);
             this.pnlSegPanel.Name = "pnlSegPanel";
             this.pnlSegPanel.Size = new System.Drawing.Size(319, 69);
-            this.pnlSegPanel.TabIndex = 8;
+            this.pnlSegPanel.TabIndex = 0;
             // 
             // toggleSegment
             // 
@@ -550,7 +548,7 @@
             this.toggleSegment.Properties.OffText = "Off";
             this.toggleSegment.Properties.OnText = "On";
             this.toggleSegment.Size = new System.Drawing.Size(95, 24);
-            this.toggleSegment.TabIndex = 6;
+            this.toggleSegment.TabIndex = 1;
             this.toggleSegment.Toggled += new System.EventHandler(this.toggleSegment_Toggled);
             // 
             // labelControl3
@@ -561,7 +559,7 @@
             this.labelControl3.Location = new System.Drawing.Point(10, 36);
             this.labelControl3.Name = "labelControl3";
             this.labelControl3.Size = new System.Drawing.Size(28, 16);
-            this.labelControl3.TabIndex = 3;
+            this.labelControl3.TabIndex = 0;
             this.labelControl3.Text = "Start";
             // 
             // labelControl4
@@ -572,7 +570,7 @@
             this.labelControl4.Location = new System.Drawing.Point(160, 36);
             this.labelControl4.Name = "labelControl4";
             this.labelControl4.Size = new System.Drawing.Size(48, 16);
-            this.labelControl4.TabIndex = 5;
+            this.labelControl4.TabIndex = 0;
             this.labelControl4.Text = "Duration";
             // 
             // tsStart
@@ -592,7 +590,7 @@
             this.tsStart.Properties.MaskSettings.Set("mask", "hh\\h mm\\m ss\\s");
             this.tsStart.Properties.MinValue = System.TimeSpan.Parse("00:00:00");
             this.tsStart.Size = new System.Drawing.Size(100, 25);
-            this.tsStart.TabIndex = 0;
+            this.tsStart.TabIndex = 2;
             // 
             // tsDuration
             // 
@@ -611,7 +609,7 @@
             this.tsDuration.Properties.MaskSettings.Set("mask", "hh\\h mm\\m ss\\s");
             this.tsDuration.Properties.MinValue = System.TimeSpan.Parse("00:00:01");
             this.tsDuration.Size = new System.Drawing.Size(100, 25);
-            this.tsDuration.TabIndex = 4;
+            this.tsDuration.TabIndex = 3;
             // 
             // pnlProgressPanel
             // 
@@ -625,7 +623,7 @@
             this.pnlProgressPanel.Margin = new System.Windows.Forms.Padding(0);
             this.pnlProgressPanel.Name = "pnlProgressPanel";
             this.pnlProgressPanel.Size = new System.Drawing.Size(323, 57);
-            this.pnlProgressPanel.TabIndex = 9;
+            this.pnlProgressPanel.TabIndex = 0;
             // 
             // btnOpenDL
             // 
@@ -634,7 +632,7 @@
             this.btnOpenDL.Name = "btnOpenDL";
             this.btnOpenDL.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnOpenDL.Size = new System.Drawing.Size(323, 26);
-            this.btnOpenDL.TabIndex = 2;
+            this.btnOpenDL.TabIndex = 0;
             this.btnOpenDL.Visible = false;
             // 
             // pbProgress
@@ -645,7 +643,7 @@
             this.pbProgress.Properties.AllowFocused = false;
             this.pbProgress.Properties.ShowTitle = true;
             this.pbProgress.Size = new System.Drawing.Size(323, 31);
-            this.pbProgress.TabIndex = 1;
+            this.pbProgress.TabIndex = 0;
             this.pbProgress.Visible = false;
             // 
             // gcHistory
@@ -655,7 +653,7 @@
             this.gcHistory.MainView = this.gvHistory;
             this.gcHistory.Name = "gcHistory";
             this.gcHistory.Size = new System.Drawing.Size(323, 215);
-            this.gcHistory.TabIndex = 10;
+            this.gcHistory.TabIndex = 0;
             this.gcHistory.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvHistory});
             // 

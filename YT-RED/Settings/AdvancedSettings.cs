@@ -9,6 +9,12 @@ namespace YT_RED.Settings
     {
         public override AppFeature Feature => AppFeature.Advanced;
 
+        [Category("Updates")]
+        [DisplayName("Release Channel")]
+        [Description("The type of releases to include when checking for updates.\nSelecting the Beta channel will include Beta and Stable. Alpha will include all releases.")]
+        [JsonProperty("release_channel")]
+        public ReleaseChannel Channel { get; set; }
+
         [Category("Hotkeys")]
         [DisplayName("Enable Hotkeys")]
         [Description(@"Enables and Registers Hotkey for Quick Download Feature
@@ -51,6 +57,7 @@ If there is existing text in your clipboard, YT-RED will restore it after starti
 
         public AdvancedSettings()
         {
+            Channel = ReleaseChannel.Stable;
             EnableHotKeys = false;
             DownloadHotKey = Shortcut.None;
             AlwaysConvertToPreferredFormat = false;

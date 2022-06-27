@@ -20,9 +20,9 @@ namespace YT_RED.Classes
             {
                 if ((this.VideoCodec == null || this.VideoCodec == "none") && (this.AudioCodec != null && this.AudioCodec != "none"))
                     return StreamType.Audio;
-                else if (this.AudioCodec != null && this.AudioCodec != "none")
-                    return StreamType.Video;
-                else return StreamType.AudioAndVideo;
+                else if (this.VideoCodec != null && this.AudioCodec != null && this.AudioCodec != "none")
+                    return StreamType.AudioAndVideo;
+                else return StreamType.Video;
             }
         }
 

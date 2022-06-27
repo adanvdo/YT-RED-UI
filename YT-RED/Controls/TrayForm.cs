@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Windows.Forms;
 using System.Threading;
-using Xabe.FFmpeg;
+using System.Windows.Forms;
 using YoutubeDLSharp;
 using YT_RED.Logging;
 using YT_RED.Settings;

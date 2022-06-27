@@ -75,6 +75,16 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 6/27/2022 v1.0.1.5
+- Updated UI Control Library (includes new skin)
+- Added Update Helper Features
+  - Added Release Channel option to Advanced Settings (Stable, Beta, Alpha)
+  - Check for Updated Version based on preferred release channel
+  - Download releases packages within YT-RED
+- Fixed tab order of main form controls and settings controls
+- The process Marquee now displays output for all processes
+- Various UI and Behavior Tweaks
+
 ### 6/24/2022 v1.0.1.4
 - Video Thumbnails are now always set as Cover Art for audio downloads (opus and webm audio are not supported)
 - Thumbnail Cover Art is now added to processed audio downloads.

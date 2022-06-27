@@ -1,17 +1,15 @@
 ﻿using DevExpress.Utils;
+using DevExpress.Utils.Drawing;
+using DevExpress.Utils.Svg;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Input;
 using URIScheme;
 using Xabe.FFmpeg;
 using YoutubeDLSharp;
@@ -116,7 +114,7 @@ namespace YT_RED
                 string modifierKeys = "";
                 string keys = "";
 
-                ModifierKeysConverter modifierKeysConverter = new ModifierKeysConverter();
+                System.Windows.Input.ModifierKeysConverter modifierKeysConverter = new System.Windows.Input.ModifierKeysConverter();
                 KeysConverter keysConverter = new KeysConverter();
 
 
@@ -130,7 +128,7 @@ namespace YT_RED
                 modifierKeys = modifierKeys.Remove(modifierKeys.Length - 1, 1);
                 keys = keys.Remove(keys.Length - 1, 1);
 
-                ModifierKeys dlModifier = (ModifierKeys)modifierKeysConverter.ConvertFrom(modifierKeys);
+                System.Windows.Input.ModifierKeys dlModifier = (System.Windows.Input.ModifierKeys)modifierKeysConverter.ConvertFrom(modifierKeys);
                 Keys dlKey = (Keys)keysConverter.ConvertFrom(keys);
 
                 MainForm.hook.RegisterHotKey(dlModifier, dlKey);
@@ -254,7 +252,8 @@ namespace YT_RED
             }
             gcFormats.DataSource = new List<YTDLFormatData>();
             gvFormats.PopulateColumns();
-            refreshFormatGrid(DownloadType.YouTube);
+            gvFormats.Columns["Type"].Caption = "";
+            refreshFormatGrid(DownloadType.Unknown);
             VideoUtil.Init();
             VideoUtil.ytProgress = new Progress<DownloadProgress>(updateProgress);
             VideoUtil.ytOutput = new Progress<string>(processOutput);
@@ -454,6 +453,8 @@ namespace YT_RED
 
             gvFormats.Columns.Clear();
             gvFormats.PopulateColumns();
+            gvFormats.Columns["Type"].Width = 25;
+            gvFormats.Columns["Type"].Caption = "";
             gvFormats.Columns["Format"].BestFit();
             gvFormats.Columns["RedditAudioFormat"].Visible = false;
             gvFormats.Columns["Url"].Visible = false;
@@ -835,6 +836,14 @@ namespace YT_RED
                 }
                 e.DisplayText = size.Substring(0, size.IndexOf('.') + 2) + "MB";
             }
+            if(e.Column.FieldName == "Bitrate" || e.Column.FieldName == "VideoBitrate")
+            {
+                if(e.Value != null)
+                {
+                    string br = e.Value.ToString().Substring(0, e.Value.ToString().IndexOf("."));
+                    e.DisplayText = $"{br}k";
+                }
+            }
         }
         private void gvFormats_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e)
         {
@@ -884,6 +893,37 @@ namespace YT_RED
                     System.Threading.Thread.Sleep(3000);
                     dlg.Close();
                 }
+            }
+        }
+
+        private void ipMainInput_Url_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter && !string.IsNullOrEmpty(ipMainInput.URL))
+            {
+                cpMainControlPanel.CurrentFormat = null;
+                ytdlDownloadBest(ipMainInput.URL);
+            }            
+        }
+
+        private void gvFormats_CustomDrawCell(object sender, DevExpress.XtraGrid.Views.Base.RowCellCustomDrawEventArgs e)
+        {
+            if(e.Column.FieldName == "Type")
+            {
+                var palette = SvgPaletteHelper.GetSvgPalette(this.LookAndFeel, ObjectState.Normal);
+                YT_RED.Classes.StreamType? type = e.CellValue as Classes.StreamType?;
+                switch (type)
+                {
+                    case Classes.StreamType.AudioAndVideo:
+                        e.Cache.DrawSvgImage(Properties.Resources.VideoSound, e.Bounds, palette);
+                        break;
+                    case Classes.StreamType.Video:
+                        e.Cache.DrawSvgImage(Properties.Resources.glyph_video, e.Bounds, palette);
+                        break;
+                    case Classes.StreamType.Audio:
+                        e.Cache.DrawSvgImage(Properties.Resources.sound, e.Bounds, palette);
+                        break;
+                }
+                e.Handled = true;
             }
         }
     }

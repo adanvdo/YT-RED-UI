@@ -1,20 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using YT_RED.Classes;
 using YT_RED.Logging;
 using YT_RED.Settings;
-using Newtonsoft.Json;
 
 namespace YT_RED.Utils
 {
     public static class HttpUtil
     {
-        private static string serverUrl = @"https://www.jamgalactic.com/api/ytred";
+        private static string serverUrl = Program.DevRun ? @"http://localhost:3000/api" : @"https://www.jamgalactic.com/api";
         private static async Task<HttpWebResponse> postErrorLogs(DateTime date)
         {
             try
@@ -35,7 +33,7 @@ namespace YT_RED.Utils
                     }                    
                 }
 
-                HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(serverUrl);
+                HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create($"{serverUrl}/ytred");
                 httpWebRequest.ContentType = "application/json";
                 httpWebRequest.Method = "POST";
 
@@ -78,7 +76,7 @@ namespace YT_RED.Utils
                 {
                     tidyLogs = tidyLogs.Remove(0, 2);
                 }
-                HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(serverUrl);
+                HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create($"{serverUrl}/ytred");
                 httpWebRequest.ContentType = "application/json";
                 httpWebRequest.Method = "POST";
 
@@ -145,5 +143,24 @@ namespace YT_RED.Utils
             }
             return false;
         }        
+
+        public static async Task<HttpResponseMessage> Get(string endpoint, string query)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    UriBuilder baseUri = new UriBuilder($"{serverUrl}/{endpoint}");
+                    baseUri.Query = query;
+                    HttpResponseMessage response = await client.GetAsync(baseUri.ToString());
+                    return response;
+                }
+            }
+            catch(Exception ex)
+            {
+                ExceptionHandler.LogException(ex);
+            }
+            return null;
+        }
     }
 }

@@ -426,6 +426,8 @@ namespace YT_RED.Utils
         public static async Task<RunResult<string>> DownloadBestYtdl(string url, Classes.StreamType streamType, IProgress<DownloadProgress> dlProgress = null, IProgress<string> progressText = null, System.Threading.CancellationToken? cancellationToken = null, bool embedThumbnail = false)
         {
             bool cancelled = false;
+            if (dlProgress == null) dlProgress = ytProgress;
+            if (progressText == null) progressText = ytOutput;
             try
             {                
                 ytdl.OutputFolder = streamType == Classes.StreamType.Audio ? AppSettings.Default.General.AudioDownloadPath : AppSettings.Default.General.VideoDownloadPath;
@@ -474,6 +476,8 @@ namespace YT_RED.Utils
         public static async Task<RunResult<string>> DownloadPreferredYtdl(string url, Classes.StreamType streamType, IProgress<DownloadProgress> dlProgress = null, IProgress<string> progressText = null, System.Threading.CancellationToken? cancellationToken = null, bool embedThumbnail = false)
         {
             bool cancelled = false;
+            if (dlProgress == null) dlProgress = ytProgress;
+            if (progressText == null) progressText = ytOutput;
             try
             {
                 ytdl.OutputFolder = streamType == Classes.StreamType.Audio ? AppSettings.Default.General.AudioDownloadPath : AppSettings.Default.General.VideoDownloadPath;
@@ -598,7 +602,7 @@ namespace YT_RED.Utils
                     options.AddCustomOption<string>("--postprocessor-args", "-write_id3v1 1 -id3v2_version 3");
                     options.AddCustomOption<string>("--convert-thumbnails", "jpg");
                 }
-                return await ytdl.RunAudioDownload(url, audioConversion, cancellationToken != null ? (System.Threading.CancellationToken)cancellationToken : default, ytProgress, null, options);
+                return await ytdl.RunAudioDownload(url, audioConversion, cancellationToken != null ? (System.Threading.CancellationToken)cancellationToken : default, ytProgress, ytOutput, options);
             }
             catch (Exception ex)
             {
@@ -697,7 +701,7 @@ namespace YT_RED.Utils
                 {
                     options.AddCustomOption<string>("-o", GenerateUniqueYtdlFileName(Classes.StreamType.Video));
                 }
-                return await ytdl.RunVideoDownload(url, format, YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress, null, options);
+                return await ytdl.RunVideoDownload(url, format, YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress, ytOutput, options);
             }
             catch(Exception ex)
             {

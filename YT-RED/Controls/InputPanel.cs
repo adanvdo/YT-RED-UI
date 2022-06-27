@@ -1,19 +1,11 @@
-﻿using DevExpress.XtraEditors;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace YT_RED.Controls
 {
     public partial class InputPanel : DevExpress.XtraEditors.XtraUserControl
     {
-
         [Browsable(true)]
         public event EventHandler ListFormats_Click;
 
@@ -25,6 +17,9 @@ namespace YT_RED.Controls
 
         [Browsable(true)]
         public event EventHandler Crab_Click;
+
+        [Browsable(true)]
+        public event KeyEventHandler Url_KeyDown;
 
         public bool ShowCrab
         {
@@ -81,6 +76,12 @@ namespace YT_RED.Controls
         {
             if(Crab_Click != null)
                 Crab_Click(sender, e);
+        }
+
+        private void txtUrl_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            if (Url_KeyDown != null)
+                Url_KeyDown(sender, e);
         }
     }
 }

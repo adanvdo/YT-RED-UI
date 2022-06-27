@@ -32,6 +32,7 @@
             this.panelControl3 = new DevExpress.XtraEditors.PanelControl();
             this.marqeeMain = new DevExpress.XtraEditors.MarqueeProgressBarControl();
             this.panelControl4 = new DevExpress.XtraEditors.PanelControl();
+            this.btnCrab = new DevExpress.XtraEditors.SimpleButton();
             this.panelControl1 = new DevExpress.XtraEditors.PanelControl();
             this.pictureEdit6 = new DevExpress.XtraEditors.PictureEdit();
             this.pictureEdit5 = new DevExpress.XtraEditors.PictureEdit();
@@ -43,7 +44,6 @@
             this.txtUrl = new DevExpress.XtraEditors.TextEdit();
             this.btnListFormats = new DevExpress.XtraEditors.SimpleButton();
             this.labelControl2 = new DevExpress.XtraEditors.LabelControl();
-            this.btnCrab = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl3)).BeginInit();
             this.panelControl3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.marqeeMain.Properties)).BeginInit();
@@ -72,7 +72,7 @@
             this.panelControl3.MinimumSize = new System.Drawing.Size(400, 100);
             this.panelControl3.Name = "panelControl3";
             this.panelControl3.Size = new System.Drawing.Size(400, 123);
-            this.panelControl3.TabIndex = 2;
+            this.panelControl3.TabIndex = 0;
             // 
             // marqeeMain
             // 
@@ -83,7 +83,7 @@
             this.marqeeMain.Properties.AllowFocused = false;
             this.marqeeMain.Properties.ShowTitle = true;
             this.marqeeMain.Size = new System.Drawing.Size(396, 20);
-            this.marqeeMain.TabIndex = 5;
+            this.marqeeMain.TabIndex = 0;
             this.marqeeMain.Visible = false;
             // 
             // panelControl4
@@ -100,7 +100,26 @@
             this.panelControl4.Margin = new System.Windows.Forms.Padding(0);
             this.panelControl4.Name = "panelControl4";
             this.panelControl4.Size = new System.Drawing.Size(396, 99);
-            this.panelControl4.TabIndex = 6;
+            this.panelControl4.TabIndex = 0;
+            // 
+            // btnCrab
+            // 
+            this.btnCrab.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCrab.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.btnCrab.Appearance.Options.UseFont = true;
+            this.btnCrab.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
+            this.btnCrab.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.LeftCenter;
+            this.btnCrab.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleLeft;
+            this.btnCrab.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("btnCrab.ImageOptions.SvgImage")));
+            this.btnCrab.ImageOptions.SvgImageSize = new System.Drawing.Size(18, 18);
+            this.btnCrab.Location = new System.Drawing.Point(144, 62);
+            this.btnCrab.Name = "btnCrab";
+            this.btnCrab.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
+            this.btnCrab.Size = new System.Drawing.Size(31, 32);
+            this.btnCrab.TabIndex = 0;
+            this.btnCrab.ToolTip = "Clear and Reset";
+            this.btnCrab.Visible = false;
+            this.btnCrab.Click += new System.EventHandler(this.btnCrab_Click);
             // 
             // panelControl1
             // 
@@ -117,7 +136,7 @@
             this.panelControl1.Name = "panelControl1";
             this.panelControl1.Padding = new System.Windows.Forms.Padding(75, 2, 0, 0);
             this.panelControl1.Size = new System.Drawing.Size(396, 25);
-            this.panelControl1.TabIndex = 6;
+            this.panelControl1.TabIndex = 0;
             // 
             // pictureEdit6
             // 
@@ -140,7 +159,7 @@
             this.pictureEdit6.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Zoom;
             this.pictureEdit6.Properties.SvgImageColorizationMode = DevExpress.Utils.SvgImageColorizationMode.Full;
             this.pictureEdit6.Size = new System.Drawing.Size(25, 23);
-            this.pictureEdit6.TabIndex = 5;
+            this.pictureEdit6.TabIndex = 0;
             // 
             // pictureEdit5
             // 
@@ -163,7 +182,7 @@
             this.pictureEdit5.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Zoom;
             this.pictureEdit5.Properties.SvgImageColorizationMode = DevExpress.Utils.SvgImageColorizationMode.Full;
             this.pictureEdit5.Size = new System.Drawing.Size(25, 23);
-            this.pictureEdit5.TabIndex = 4;
+            this.pictureEdit5.TabIndex = 0;
             // 
             // pictureEdit4
             // 
@@ -186,7 +205,7 @@
             this.pictureEdit4.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Zoom;
             this.pictureEdit4.Properties.SvgImageColorizationMode = DevExpress.Utils.SvgImageColorizationMode.Full;
             this.pictureEdit4.Size = new System.Drawing.Size(25, 23);
-            this.pictureEdit4.TabIndex = 3;
+            this.pictureEdit4.TabIndex = 0;
             // 
             // pictureEdit3
             // 
@@ -209,7 +228,7 @@
             this.pictureEdit3.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Zoom;
             this.pictureEdit3.Properties.SvgImageColorizationMode = DevExpress.Utils.SvgImageColorizationMode.Full;
             this.pictureEdit3.Size = new System.Drawing.Size(25, 23);
-            this.pictureEdit3.TabIndex = 2;
+            this.pictureEdit3.TabIndex = 0;
             // 
             // pictureEdit2
             // 
@@ -232,7 +251,7 @@
             this.pictureEdit2.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Zoom;
             this.pictureEdit2.Properties.SvgImageColorizationMode = DevExpress.Utils.SvgImageColorizationMode.Full;
             this.pictureEdit2.Size = new System.Drawing.Size(25, 23);
-            this.pictureEdit2.TabIndex = 1;
+            this.pictureEdit2.TabIndex = 0;
             // 
             // pictureEdit1
             // 
@@ -271,7 +290,7 @@
             this.btnListReset.Name = "btnListReset";
             this.btnListReset.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnListReset.Size = new System.Drawing.Size(31, 32);
-            this.btnListReset.TabIndex = 5;
+            this.btnListReset.TabIndex = 3;
             this.btnListReset.ToolTip = "Clear and Reset";
             this.btnListReset.Click += new System.EventHandler(this.btnListReset_Click);
             // 
@@ -286,6 +305,7 @@
             this.txtUrl.TabIndex = 1;
             this.txtUrl.EditValueChanged += new System.EventHandler(this.txtUrl_EditValueChanged);
             this.txtUrl.Click += new System.EventHandler(this.txtUrl_Click);
+            this.txtUrl.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUrl_KeyDown);
             // 
             // btnListFormats
             // 
@@ -299,7 +319,7 @@
             this.btnListFormats.Name = "btnListFormats";
             this.btnListFormats.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnListFormats.Size = new System.Drawing.Size(175, 32);
-            this.btnListFormats.TabIndex = 4;
+            this.btnListFormats.TabIndex = 2;
             this.btnListFormats.Text = "List Available Formats";
             this.btnListFormats.Click += new System.EventHandler(this.btnListFormats_Click);
             // 
@@ -310,27 +330,8 @@
             this.labelControl2.Location = new System.Drawing.Point(10, 34);
             this.labelControl2.Name = "labelControl2";
             this.labelControl2.Size = new System.Drawing.Size(58, 16);
-            this.labelControl2.TabIndex = 2;
+            this.labelControl2.TabIndex = 0;
             this.labelControl2.Text = "Video URL";
-            // 
-            // btnCrab
-            // 
-            this.btnCrab.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCrab.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
-            this.btnCrab.Appearance.Options.UseFont = true;
-            this.btnCrab.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
-            this.btnCrab.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.LeftCenter;
-            this.btnCrab.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleLeft;
-            this.btnCrab.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("simpleButton1.ImageOptions.SvgImage")));
-            this.btnCrab.ImageOptions.SvgImageSize = new System.Drawing.Size(18, 18);
-            this.btnCrab.Location = new System.Drawing.Point(144, 62);
-            this.btnCrab.Name = "btnCrab";
-            this.btnCrab.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
-            this.btnCrab.Size = new System.Drawing.Size(31, 32);
-            this.btnCrab.TabIndex = 7;
-            this.btnCrab.ToolTip = "Clear and Reset";
-            this.btnCrab.Visible = false;
-            this.btnCrab.Click += new System.EventHandler(this.btnCrab_Click);
             // 
             // InputPanel
             // 

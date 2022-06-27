@@ -123,7 +123,7 @@
             this.tabFormContentContainer1.Location = new System.Drawing.Point(0, 66);
             this.tabFormContentContainer1.Name = "tabFormContentContainer1";
             this.tabFormContentContainer1.Size = new System.Drawing.Size(1188, 717);
-            this.tabFormContentContainer1.TabIndex = 3;
+            this.tabFormContentContainer1.TabIndex = 0;
             // 
             // sccMainSplitter
             // 
@@ -160,7 +160,7 @@
             this.lblSelectAFormat.Location = new System.Drawing.Point(0, 123);
             this.lblSelectAFormat.Name = "lblSelectAFormat";
             this.lblSelectAFormat.Size = new System.Drawing.Size(849, 25);
-            this.lblSelectAFormat.TabIndex = 5;
+            this.lblSelectAFormat.TabIndex = 0;
             this.lblSelectAFormat.Text = "Select a Video and/or Audio Format";
             this.lblSelectAFormat.Visible = false;
             // 
@@ -173,7 +173,7 @@
             this.marqueeProgressBarControl1.Properties.AllowFocused = false;
             this.marqueeProgressBarControl1.Properties.ShowTitle = true;
             this.marqueeProgressBarControl1.Size = new System.Drawing.Size(849, 20);
-            this.marqueeProgressBarControl1.TabIndex = 7;
+            this.marqueeProgressBarControl1.TabIndex = 0;
             this.marqueeProgressBarControl1.Visible = false;
             // 
             // gcFormats
@@ -183,12 +183,13 @@
             this.gcFormats.MainView = this.gvFormats;
             this.gcFormats.Name = "gcFormats";
             this.gcFormats.Size = new System.Drawing.Size(849, 614);
-            this.gcFormats.TabIndex = 6;
+            this.gcFormats.TabIndex = 0;
             this.gcFormats.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvFormats});
             // 
             // gvFormats
             // 
+            this.gvFormats.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFullFocus;
             this.gvFormats.GridControl = this.gcFormats;
             this.gvFormats.Name = "gvFormats";
             this.gvFormats.OptionsBehavior.AlignGroupSummaryInGroupRow = DevExpress.Utils.DefaultBoolean.False;
@@ -202,6 +203,7 @@
             this.gvFormats.OptionsView.ShowDetailButtons = false;
             this.gvFormats.OptionsView.ShowGroupExpandCollapseButtons = false;
             this.gvFormats.OptionsView.ShowGroupPanel = false;
+            this.gvFormats.CustomDrawCell += new DevExpress.XtraGrid.Views.Base.RowCellCustomDrawEventHandler(this.gvFormats_CustomDrawCell);
             this.gvFormats.FocusedRowChanged += new DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventHandler(this.gvFormats_FocusedRowChanged);
             this.gvFormats.CustomColumnDisplayText += new DevExpress.XtraGrid.Views.Base.CustomColumnDisplayTextEventHandler(this.gvFormats_CustomColumnDisplayText);
             // 
@@ -216,12 +218,13 @@
             this.ipMainInput.Name = "ipMainInput";
             this.ipMainInput.ShowCrab = false;
             this.ipMainInput.Size = new System.Drawing.Size(849, 103);
-            this.ipMainInput.TabIndex = 0;
+            this.ipMainInput.TabIndex = 1;
             this.ipMainInput.URL = "";
             this.ipMainInput.ListFormats_Click += new System.EventHandler(this.ipMainInput_ListFormats_Click);
             this.ipMainInput.ResetList_Click += new System.EventHandler(this.ipMainInput_ResetList_Click);
             this.ipMainInput.Url_Changed += new System.EventHandler(this.ipMainInput_Url_Changed);
             this.ipMainInput.Crab_Click += new System.EventHandler(this.ipMainInput_Crab_Click);
+            this.ipMainInput.Url_KeyDown += new System.Windows.Forms.KeyEventHandler(this.ipMainInput_Url_KeyDown);
             // 
             // cpMainControlPanel
             // 
@@ -240,7 +243,7 @@
             this.cpMainControlPanel.SegmentDuration = System.TimeSpan.Parse("00:00:01");
             this.cpMainControlPanel.SegmentStart = System.TimeSpan.Parse("00:00:00");
             this.cpMainControlPanel.Size = new System.Drawing.Size(323, 717);
-            this.cpMainControlPanel.TabIndex = 0;
+            this.cpMainControlPanel.TabIndex = 2;
             this.cpMainControlPanel.DownloadSelection_Click += new System.EventHandler(this.cpMainControlPanel_DownloadSelection_Click);
             this.cpMainControlPanel.DownloadAudio_Click += new System.EventHandler(this.cpMainControlPanel_DownloadAudio_Click);
             this.cpMainControlPanel.DownloadBest_Click += new System.EventHandler(this.cpMainControlPanel_DownloadBest_Click);

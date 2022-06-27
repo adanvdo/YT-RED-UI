@@ -62,7 +62,7 @@
             this.panelControl1.Margin = new System.Windows.Forms.Padding(0);
             this.panelControl1.Name = "panelControl1";
             this.panelControl1.Size = new System.Drawing.Size(509, 30);
-            this.panelControl1.TabIndex = 2;
+            this.panelControl1.TabIndex = 0;
             // 
             // ddDeleteDLs
             // 
@@ -74,7 +74,7 @@
             this.ddDeleteDLs.Name = "ddDeleteDLs";
             this.ddDeleteDLs.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.ddDeleteDLs.Size = new System.Drawing.Size(135, 26);
-            this.ddDeleteDLs.TabIndex = 4;
+            this.ddDeleteDLs.TabIndex = 3;
             this.ddDeleteDLs.Text = "Delete Downloads";
             this.ddDeleteDLs.Click += new System.EventHandler(this.ddDeleteDLs_Click);
             // 
@@ -160,7 +160,7 @@
             this.btnClearHistory.Name = "btnClearHistory";
             this.btnClearHistory.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnClearHistory.Size = new System.Drawing.Size(75, 26);
-            this.btnClearHistory.TabIndex = 2;
+            this.btnClearHistory.TabIndex = 4;
             this.btnClearHistory.Text = "Clear History";
             this.btnClearHistory.Click += new System.EventHandler(this.btnClearHistory_Click);
             // 
@@ -171,7 +171,7 @@
             this.btnSave.Name = "btnSave";
             this.btnSave.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnSave.Size = new System.Drawing.Size(75, 26);
-            this.btnSave.TabIndex = 1;
+            this.btnSave.TabIndex = 2;
             this.btnSave.Text = "OK";
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
@@ -182,7 +182,7 @@
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnCancel.Size = new System.Drawing.Size(75, 26);
-            this.btnCancel.TabIndex = 0;
+            this.btnCancel.TabIndex = 1;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
@@ -193,7 +193,7 @@
             this.tcSettingsTabControl.Margin = new System.Windows.Forms.Padding(0);
             this.tcSettingsTabControl.Name = "tcSettingsTabControl";
             this.tcSettingsTabControl.Size = new System.Drawing.Size(509, 391);
-            this.tcSettingsTabControl.TabIndex = 3;
+            this.tcSettingsTabControl.TabIndex = 0;
             // 
             // SettingsDialog
             // 
@@ -210,6 +210,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(511, 455);
             this.Name = "SettingsDialog";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
