@@ -17,7 +17,7 @@ This project is UNLICENSED and uses licensed DevExpress WinForms Controls.
 
 YT-RED is a safe alternative to other popular youtube and reddit video downloaders found online.  Other popular reddit downlaod tools are full of trackers and data collection that the end user is not aware of.  YT-RED was personally built with a no-tracking and no-data-collection policy.  By keeping the source code open to the public, it is meant to be published as a safe and versatile media downloader for Windows
 
-![Alpha-1 0 1 1](https://user-images.githubusercontent.com/26498008/171912368-544c8c4a-3389-437a-a758-5fbdf13b7d6f.png)
+![unknown](https://user-images.githubusercontent.com/26498008/175982323-68544feb-8851-4ba5-95db-42212a1ef3d8.png)
 
 ### Requirements <a name="requirements"></a>
 - Windows 7, 8, 10
@@ -57,6 +57,9 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
   Specify the start time of the segment, and the duration.
 
+- #### Automatic ID3 Tagging
+  When downloading audio, video thumbnails are automatically embedded as cover art, and titles are set to the video title.
+
 - #### Crop Video
   The "Crop Video" option is available for all video downloads. The feature only accepts crop sizes in pixels at this time. 
 
@@ -73,6 +76,10 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
   To use, Highlight a youtube or reddit media post url in your browser, and press the configured hotkey. This will perform an automatic "Best Download" with the progress displayed above the system tray.
 
+- Update Assistant
+  Check for updates and download release packages directly in the app. 
+  Open Settings -> About and click the "Check for Update" button.
+
 ## CHANGELOG <a name="changelog"></a>
 
 ### 6/27/2022 v1.0.1.5
@@ -82,7 +89,9 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
   - Check for Updated Version based on preferred release channel
   - Download releases packages within YT-RED
 - Fixed tab order of main form controls and settings controls
-- The process Marquee now displays output for all processes
+- Fixed bug where process Marquee did not always display progress output
+- Fixed bug where selected format downloads were not converted with Always Convert enabled
+- Sorted and filtered Format Grid columns
 - Various UI and Behavior Tweaks
 
 ### 6/24/2022 v1.0.1.4
