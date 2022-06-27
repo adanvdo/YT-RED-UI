@@ -295,7 +295,7 @@ namespace YT_RED.Utils
             return await PrepareStreamConversion(videoUrl, audioUrl, parameters.ToArray(), vFormat, aFormat);
         }
 
-        public static async Task<IConversion> PrepareStreamConversion(string videoUrl = "", string audioUrl = "", Classes.FFmpegParam[] parameters = null, VideoFormat format = VideoFormat.MP4, AudioFormat aformat = AudioFormat.MP3)
+        public static async Task<IConversion> PrepareStreamConversion(string videoUrl = "", string audioUrl = "", Classes.FFmpegParam[] parameters = null, VideoFormat format = VideoFormat.UNSPECIFIED, AudioFormat aformat = AudioFormat.UNSPECIFIED)
         {
             try
             {
@@ -628,6 +628,7 @@ namespace YT_RED.Utils
             {
                 throw new ArgumentNullException("FormatData is null");
             }
+
             var options = YoutubeDLSharp.Options.OptionSet.Default;
             if (options.CustomOptions.Where(o => o.OptionStrings.Contains("-o")).Count() > 0)
             {
@@ -638,6 +639,7 @@ namespace YT_RED.Utils
                 options.DeleteCustomOption("--postprocessor-args");
                 options.DeleteCustomOption("--convert-thumbnails");
             }
+
             if (formatData.VideoCodec == "none")
             {
                 options.Format = formatData.FormatId;
@@ -652,7 +654,8 @@ namespace YT_RED.Utils
                     options.AddCustomOption<string>("--convert-thumbnails", "jpg");
                 }
                 return await downloadYTDLAudio(videoUrl, options);
-            }
+            }           
+
             return await downloadYTDLVideo(videoUrl, formatData.FormatId);
         }
 

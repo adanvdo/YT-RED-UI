@@ -201,6 +201,7 @@ namespace YT_RED
         protected override async void OnLoad(EventArgs e)
         {
             initializeProgram();
+            cpMainControlPanel.UpdateConvertState();
             if (Program.DevRun)
             {
                 ipMainInput.URL = AppSettings.Default.General.YouTubeSampleUrl;
@@ -251,8 +252,6 @@ namespace YT_RED
                 }                
             }
             gcFormats.DataSource = new List<YTDLFormatData>();
-            gvFormats.PopulateColumns();
-            gvFormats.Columns["Type"].Caption = "";
             refreshFormatGrid(DownloadType.Unknown);
             VideoUtil.Init();
             VideoUtil.ytProgress = new Progress<DownloadProgress>(updateProgress);
@@ -448,22 +447,34 @@ namespace YT_RED
 
         private void refreshFormatGrid(DownloadType downloadType)
         {
-            if (downloadType == DownloadType.Unknown)
-                return;
-
             gvFormats.Columns.Clear();
             gvFormats.PopulateColumns();
+            gvFormats.RefreshData();
+            gvFormats.Columns["Type"].VisibleIndex = 0;
+            gvFormats.Columns["Format"].VisibleIndex = 1;
+            gvFormats.Columns["Duration"].VisibleIndex = 2;
+            gvFormats.Columns["Bitrate"].VisibleIndex = 3;
+            gvFormats.Columns["ContainerFormat"].VisibleIndex = 4;
+            gvFormats.Columns["VideoCodec"].VisibleIndex = 5;
+            gvFormats.Columns["ContainerFormat"].Caption = "Container";
+            gvFormats.Columns["FrameRate"].VisibleIndex = 6;
+            gvFormats.Columns["FrameRate"].Caption = "FPS";
+            gvFormats.Columns["AudioCodec"].VisibleIndex = 7;
+            gvFormats.Columns["AudioSamplingRate"].VisibleIndex = 8;
+            gvFormats.Columns["FileSize"].VisibleIndex = 9;
             gvFormats.Columns["Type"].Width = 25;
             gvFormats.Columns["Type"].Caption = "";
             gvFormats.Columns["Format"].BestFit();
+            gvFormats.Columns["VideoCodec"].BestFit();
+            gvFormats.Columns["FrameRate"].Width = 50;
             gvFormats.Columns["RedditAudioFormat"].Visible = false;
             gvFormats.Columns["Url"].Visible = false;
             gvFormats.Columns["ManifestUrl"].Visible = false;
             gvFormats.Columns["FormatId"].Visible = false;
             gvFormats.Columns["FormatNote"].Visible = false;
             gvFormats.Columns["Resolution"].Visible = false;
-            gvFormats.Columns["ContainerFormat"].Visible = false;
             gvFormats.Columns["AudioBitrate"].Visible = false;
+            gvFormats.Columns["VideoBitrate"].Visible = false;
             gvFormats.Columns["Extension"].Visible = false;
             gvFormats.Columns["FragmentBaseUrl"].Visible = false;
             gvFormats.Columns["Language"].Visible = false;
@@ -478,8 +489,6 @@ namespace YT_RED
             gvFormats.Columns["Height"].Visible = false;
             gvFormats.Columns["StretchedRatio"].Visible = false;
             gvFormats.Columns["ApproximateFileSize"].Visible = false;
-            gvFormats.Columns["Duration"].VisibleIndex = 3;
-            gvFormats.RefreshData();
         }
 
         private void refreshHistory()
@@ -714,7 +723,7 @@ namespace YT_RED
 
             RunResult<string> result = null;
 
-            if (cpMainControlPanel.PostProcessingEnabled || cpMainControlPanel.CurrentFormat.RedditAudioFormat != null)
+            if (cpMainControlPanel.PostProcessingEnabled || cpMainControlPanel.CurrentFormat.RedditAudioFormat != null || AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
             {
                 if (cpMainControlPanel.SegmentEnabled && cpMainControlPanel.SegmentDuration == TimeSpan.Zero)
                 {
@@ -741,8 +750,8 @@ namespace YT_RED
 
                 if (cpMainControlPanel.ConversionEnabled)
                 {
-                    videoFormat = cpMainControlPanel.ConvertVideoFormat == null ? VideoFormat.UNSPECIFIED : cpMainControlPanel.ConvertVideoFormat;
-                    audioFormat = cpMainControlPanel.ConvertAudioFormat == null ? AudioFormat.UNSPECIFIED : cpMainControlPanel.ConvertAudioFormat;
+                    videoFormat = cpMainControlPanel.ConvertVideoFormat == null ? AppSettings.Default.Advanced.PreferredVideoFormat : cpMainControlPanel.ConvertVideoFormat;
+                    audioFormat = cpMainControlPanel.ConvertAudioFormat == null ? AppSettings.Default.Advanced.PreferredAudioFormat : cpMainControlPanel.ConvertAudioFormat;
                 }
 
                 IConversion conversion = await Utils.VideoUtil.PrepareYoutubeConversion(VideoUtil.CorrectYouTubeString(ipMainInput.URL), cpMainControlPanel.CurrentFormat, 
@@ -751,17 +760,28 @@ namespace YT_RED
                 string destination = conversion.OutputFilePath;
                 conversion.OnProgress += Conversion_OnProgress;
                 cpMainControlPanel.ShowProgress();
+
                 try
                 {
                     await conversion.Start();
 
                     if (cpMainControlPanel.EmbedThumbnail)
                     {
+                        if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
+                            audioFormat = AppSettings.Default.Advanced.PreferredAudioFormat;
+
                         var data = await VideoUtil.GetVideoData(VideoUtil.CorrectYouTubeString(ipMainInput.URL));
                         if (data != null)
                         {
                             var thumb = data.Thumbnails.Where(t => !t.Url.EndsWith("webp")).OrderByDescending(t => t.Height).ToArray()[0];
-                            bool addArt = await TagUtil.AddAlbumCover(destination, thumb.Url);
+                            if (audioFormat == AudioFormat.MP3)
+                            {
+                                await TagUtil.AddMp3Tags(destination, thumb.Url, data.Title, "", -1, data.UploadDate != null ? ((DateTime)data.UploadDate).Year : -1);
+                            }
+                            else
+                            {
+                                await TagUtil.AddAlbumCover(destination, thumb.Url);
+                            }
                         }
                     }
                     

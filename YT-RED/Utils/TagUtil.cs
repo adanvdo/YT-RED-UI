@@ -52,7 +52,7 @@ namespace YT_RED.Utils
         /// <param name="year"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public static async Task<bool> AddMp3Tags(string mp3Path, string artPath, string title = "", string album = "", int track = -1, int year = -1)
+        public static async Task<bool> AddMp3Tags(string mp3Path, string artPath, string title = "", string album = "", int track = -1, int year = -1, string[] artists = null)
         {
             if (!File.Exists(mp3Path))
                 throw new Exception($"The file {mp3Path} does not exist");
@@ -75,6 +75,8 @@ namespace YT_RED.Utils
                     file.Tag.Track = (uint)track;
                 if (year > -1)
                     file.Tag.Year = (uint)year;
+                if (artists != null)
+                    file.Tag.AlbumArtists = artists;
 
                 file.RemoveTags(file.TagTypes & ~file.TagTypesOnDisk);
                 await Task.Run(() => file.Save());

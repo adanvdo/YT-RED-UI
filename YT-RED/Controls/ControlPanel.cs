@@ -48,6 +48,22 @@ namespace YT_RED.Controls
             {
                 currentFormat = value;
                 lblSelectionText.Text = currentFormat == null ? "" : currentFormat.Format;
+                if (currentFormat != null)
+                {
+                    switch (currentFormat.Type)
+                    {
+                        case Classes.StreamType.Video:
+                            btnSelectionDL.ImageOptions.SvgImage = Properties.Resources.glyph_video;
+                            break;
+                        case Classes.StreamType.Audio:
+                            btnSelectionDL.ImageOptions.SvgImage = Properties.Resources.sound;
+                            break;
+                        case Classes.StreamType.AudioAndVideo:
+                            btnSelectionDL.ImageOptions.SvgImage = Properties.Resources.VideoSound;
+                            break;
+                    }
+                }
+                
                 lblSelectionText.Refresh();
                 formatChanged();
             }
@@ -383,7 +399,7 @@ namespace YT_RED.Controls
         {
             updateSegmentState();
             updateCropState();
-            updateConvertState();
+            UpdateConvertState();
         }
 
         private void toggleSegment_Toggled(object sender, EventArgs e)
@@ -444,10 +460,10 @@ namespace YT_RED.Controls
 
         private void toggleConvert_Toggled(object sender, EventArgs e)
         {
-            updateConvertState();
+            UpdateConvertState();
         }
 
-        private void updateConvertState()
+        public void UpdateConvertState()
         {
             if (toggleConvert.IsOn)
             {
