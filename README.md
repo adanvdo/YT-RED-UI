@@ -29,12 +29,14 @@ YT-RED is a safe alternative to other popular youtube and reddit video downloade
 - Download Best Quality Video
 - Download Best Quality Audio
 - Download History Log / File Browser
+- Automatic ID3 Tagging for Audio Downloads
 - Segment Downloads
 - Video Cropping
 - Format Conversion
 - Minimize to System Tray
 - Quick Download while in System Tray
 - Quick Download Hotkey
+- Update Assistant
 
 ### Known Issues <a name="known-issues"></a>
 - GIF downloads are not supported
