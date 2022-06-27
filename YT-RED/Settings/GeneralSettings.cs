@@ -104,7 +104,7 @@ namespace YT_RED.Settings
 				ErrorLogPath = "./ErrorLogs";
 			}
 			ShowHostWarning = true;
-			ActiveSkin = "DevExpress Dark Style";
+			ActiveSkin = "WXI";
 			EnableDownloadHistory = true;
 			HistoryAge = 30;
 			AutomaticallyOpenDownloadLocation = false;
