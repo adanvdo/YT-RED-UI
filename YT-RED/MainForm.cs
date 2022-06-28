@@ -96,10 +96,9 @@ namespace YT_RED
             this.historyTimer = new Timer();
             this.historyTimer.Interval = 10000;
             this.historyTimer.Tick += HistoryTimer_Tick;
+            Init();
             if (AppSettings.Default.General.EnableDownloadHistory)
                 this.historyTimer.Start();
-            Historian.Init();
-            Init();
             _blockDetector = new UIBlockDetector();
         }
 
@@ -191,7 +190,7 @@ namespace YT_RED
 
         private async void HistoryTimer_Tick(object sender, EventArgs e)
         {
-            if (AppSettings.Default.General.EnableDownloadHistory)
+            if (AppSettings.Default.General.EnableDownloadHistory && Historian.Loaded)
             {
                 await Historian.CleanHistory();
                 refreshHistory();
