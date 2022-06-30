@@ -3,6 +3,8 @@ using DevExpress.XtraVerticalGrid;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using YT_RED.Settings;
+using YT_RED.Logging;
 using YT_RED.Utils;
 
 namespace YT_RED.Controls
@@ -202,10 +204,32 @@ namespace YT_RED.Controls
             repButtonEdit.Buttons[2].Caption = $"Downloading.. ";
             pgcPropertyGrid.Refresh();
 
-            if (location != "cancelled")
+            if (location == "cancelled")
+                return;
+
+            DialogResult res = MsgBox.Show("Update Package Downloaded\nInstall Update Now?", "Download Complete", Buttons.YesNo, Icon.Question, FormStartPosition.CenterParent);
+            if(res == DialogResult.Yes)
             {
-                string argument = "/select, \"" + location + "\"";
-                System.Diagnostics.Process.Start("explorer.exe", argument);
+                try
+                {
+                    string args = $"-dir={Settings.AppSettings.Default.General.ExeDirectoryPath} -pkg={location} -skin={Settings.AppSettings.Default.General.ActiveSkin} -pal={AppSettings.Default.General.SkinPalette}";
+                    if (pendingReleaseInfo.ReplaceUpdater)
+                        args += " -updater";
+                    string updaterProcess = System.IO.Path.Combine(Settings.AppSettings.Default.General.ExeDirectoryPath, "YT-RED_Updater.exe");
+                    System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo(
+                        updaterProcess,
+                        args
+                    );
+                    System.Diagnostics.Process.Start(startInfo);
+                }
+                catch(Exception ex)
+                {
+                    ExceptionHandler.LogException(ex);
+                }
+            }
+            else
+            {
+                MsgBox.Show($"Update Package Location:\n{location}", "Download Location", Buttons.OK, Icon.Info, FormStartPosition.CenterParent);
             }
         }
 

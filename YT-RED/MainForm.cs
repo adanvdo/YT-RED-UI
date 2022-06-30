@@ -44,13 +44,10 @@ namespace YT_RED
         public YoutubeDLSharp.Metadata.FormatData SelectedFormat { get { return selectedFormat; } }
         public int FormatCount { get { return gvFormats.RowCount; } }
         private DownloadType currentDownload = DownloadType.Unknown;
-        private bool downloadingSegment = false;
-        private bool downloadingCropped = false;
-        private bool quickDownloadInProgress = false;
         private InitialFunction initialFunction = InitialFunction.None;
         private string initialLink = string.Empty;
         private DownloadType initialDownloadType = DownloadType.Unknown;
-        private MediaSource initialSource = MediaSource.None;
+        private bool newUpdater = false;
         private URISchemeService uriService = null;
         private bool enableQuickDownload = false;
         private bool trayBalloonShown = false;
@@ -63,7 +60,6 @@ namespace YT_RED
             InitializeComponent();
             this.initialFunction = InitialFunction.None;
             this.initialLink = "";
-            this.initialSource = MediaSource.None;
             cpMainControlPanel.ParentMainForm = this;
             repHistoryCheckEdit = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             repHistoryCheckEdit.CheckBoxOptions.Style = DevExpress.XtraEditors.Controls.CheckBoxStyle.Custom;
@@ -72,12 +68,26 @@ namespace YT_RED
             repHistoryCheckEdit.ImageOptions.SvgImageSize = new Size(20, 20);
         }
 
-        public MainForm(InitialFunction initialFunction, string initialLink, Classes.MediaSource mediaSource)
+        public MainForm(bool newUpdater)
+        {
+            InitializeComponent();
+            this.initialFunction = InitialFunction.None;
+            this.initialLink = "";
+            this.newUpdater = newUpdater;
+            cpMainControlPanel.ParentMainForm = this;
+            repHistoryCheckEdit = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
+            repHistoryCheckEdit.CheckBoxOptions.Style = DevExpress.XtraEditors.Controls.CheckBoxStyle.Custom;
+            repHistoryCheckEdit.ImageOptions.SvgImageChecked = Properties.Resources.actions_checkcircled;
+            repHistoryCheckEdit.ImageOptions.SvgImageUnchecked = Properties.Resources.security_warningcircled2;
+            repHistoryCheckEdit.ImageOptions.SvgImageSize = new Size(20, 20);
+        }
+
+        public MainForm(InitialFunction initialFunction, string initialLink, bool newUpdater = false)
         {
             InitializeComponent();
             this.initialFunction = initialFunction;
             this.initialLink = initialLink;
-            this.initialSource = mediaSource;
+            this.newUpdater = newUpdater;
             cpMainControlPanel.ParentMainForm = this;
             repHistoryCheckEdit = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             repHistoryCheckEdit.CheckBoxOptions.Style = DevExpress.XtraEditors.Controls.CheckBoxStyle.Custom;
@@ -241,7 +251,7 @@ namespace YT_RED
 
         private async void Init()
         {
-            DevExpress.LookAndFeel.UserLookAndFeel.Default.SetSkinStyle(AppSettings.Default.General.ActiveSkin);
+            DevExpress.LookAndFeel.UserLookAndFeel.Default.SetSkinStyle(AppSettings.Default.General.ActiveSkin, AppSettings.Default.General.SkinPalette); 
             if (AppSettings.Default.General.EnableDownloadHistory)
             {
                 bool loadDownloadHistory = await Historian.LoadDownloadHistory();
@@ -275,6 +285,11 @@ namespace YT_RED
                     getYtdlFormatList(ipMainInput.URL);
                 else
                     return;
+            }
+            
+            if (newUpdater)
+            {
+                bool updaterReplaced = await UpdateHelper.ReplaceUpdater();
             }
         }
         
@@ -331,6 +346,7 @@ namespace YT_RED
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             AppSettings.Default.General.ActiveSkin = this.LookAndFeel.ActiveSkinName;
+            AppSettings.Default.General.SkinPalette = this.LookAndFeel.ActiveSvgPaletteName;
             AppSettings.Default.Save();
         }
 
@@ -623,7 +639,6 @@ namespace YT_RED
             {
                 if (streamType != Classes.StreamType.Audio)
                 {
-                    this.downloadingCropped = true;
                     IConversion conversion = await VideoUtil.PrepareBestYtdlConversion(url, "bestvideo+bestaudio", start, duration, 
                         AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat, crops, videoFormat == null ? VideoFormat.UNSPECIFIED : (VideoFormat)videoFormat, 
                         audioFormat == null ? AudioFormat.UNSPECIFIED : (AudioFormat)audioFormat);
@@ -641,7 +656,6 @@ namespace YT_RED
                         ExceptionHandler.LogFFmpegException(ex);
                         result = new RunResult<string>(false, new string[] { ex.Message }, null);
                     }
-                    this.downloadingCropped = false;
                 }
                 else
                 {
@@ -730,7 +744,6 @@ namespace YT_RED
                     return;
                 }
 
-                downloadingSegment = true;
                 int[] crops = null;
 
                 if (cpMainControlPanel.CropEnabled)
@@ -792,7 +805,6 @@ namespace YT_RED
                     ExceptionHandler.LogFFmpegException(ex);
                 }
                 cpMainControlPanel.HideProgress();
-                downloadingSegment = false;
             }
             else
             {

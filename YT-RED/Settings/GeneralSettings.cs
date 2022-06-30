@@ -30,6 +30,10 @@ namespace YT_RED.Settings
 		[JsonProperty("active_skin")]
 		public string ActiveSkin { get; set; }
 
+        [Browsable(false)]
+        [JsonProperty("skin_palette")]
+		public string SkinPalette { get; set; }
+
 		[Category("Downloads")]
 		[DisplayName("Enable Download History")]
 		[Description("Enable YT-RED to keep a list of downloads for quick access on the Home screen")]
@@ -105,6 +109,7 @@ namespace YT_RED.Settings
 			}
 			ShowHostWarning = true;
 			ActiveSkin = "WXI";
+			SkinPalette = "";
 			EnableDownloadHistory = true;
 			HistoryAge = 30;
 			AutomaticallyOpenDownloadLocation = false;

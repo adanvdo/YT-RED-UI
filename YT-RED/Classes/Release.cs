@@ -39,6 +39,9 @@ namespace YT_RED.Classes
         [JsonProperty("x64Url")]
         public string x64Url { get; set; }
 
+        [JsonProperty("ReplaceUpdater")]
+        public bool ReplaceUpdater { get; set; }
+
         [JsonIgnore]
         public Version Version
         {

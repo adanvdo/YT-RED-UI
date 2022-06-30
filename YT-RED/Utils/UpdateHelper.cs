@@ -69,8 +69,6 @@ namespace YT_RED.Utils
             return null;
         }
 
-        public delegate void ProgressChanged();
-
         public static async Task<YT_RED.Classes.Release> GetLatestRelease(Settings.ReleaseChannel channel)
         {
             try
@@ -91,6 +89,32 @@ namespace YT_RED.Utils
                 ExceptionHandler.LogException(ex);
             }
             return null;
+        }
+
+        public static async Task<bool> ReplaceUpdater()
+        {
+            bool result = false;
+            try
+            {
+                await Task.Delay(1000);
+                await Task.Run(() =>
+                {
+                    string oldPath = Path.Combine(AppSettings.Default.General.ExeDirectoryPath, "YT-RED_Updater.exe");
+                    string newPath = Path.Combine(AppSettings.Default.General.ExeDirectoryPath, "YT-RED_Updater.exe.new");
+                    if (File.Exists(newPath))
+                    {
+                        if (File.Exists(oldPath))
+                            File.Delete(oldPath);
+                        File.Move(newPath, oldPath);
+                        result = true;
+                    }
+                });
+            }
+            catch(Exception ex)
+            {
+                ExceptionHandler.LogException(ex);
+            }
+            return result;
         }
     }
 }

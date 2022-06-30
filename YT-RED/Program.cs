@@ -13,6 +13,7 @@ namespace YT_RED
         public static bool x64 = false;
         public static string initialYTLink = string.Empty;
         public static string initialRedLink = string.Empty;
+        public static bool newUpdater = false;
         public static InitialFunction initialFunction = InitialFunction.None;
 
         private static List<string> functions = new List<string>()
@@ -66,6 +67,10 @@ namespace YT_RED
                         {
                             initialFunction = InitialFunction.UploadTest;
                         }
+                        if (s.StartsWith("-updater"))
+                        {
+                            newUpdater = true;
+                        }
                     }
                 }
                 catch(Exception ex)
@@ -79,11 +84,11 @@ namespace YT_RED
             FFmpeg.SetExecutablesPath(@".\Resources\App");
             MainForm runForm;
             if (!string.IsNullOrEmpty(initialYTLink))
-                runForm = new MainForm(initialFunction, initialYTLink, Classes.MediaSource.YouTube);
+                runForm = new MainForm(initialFunction, initialYTLink, newUpdater);
             else if (!string.IsNullOrEmpty(initialRedLink))
-                runForm = new MainForm(initialFunction, initialRedLink, Classes.MediaSource.Reddit);
+                runForm = new MainForm(initialFunction, initialRedLink, newUpdater);
             else
-                runForm = new MainForm();
+                runForm = new MainForm(newUpdater);
 
             var controller = new ApplicationController(runForm);            
             controller.Run(Environment.GetCommandLineArgs());
