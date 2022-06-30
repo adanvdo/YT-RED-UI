@@ -31,6 +31,7 @@ namespace YT_RED.Controls
         {
             InitializeComponent();
             ytProgress = new Progress<DownloadProgress>(showProgress);
+            ytOutput = new Progress<string>(showProgressOutput);
             ytOutput = null;
             currentDownload = DownloadType.Unknown;
             this.activeTimer = new System.Windows.Forms.Timer();
@@ -81,6 +82,11 @@ namespace YT_RED.Controls
             }
         }
 
+        private void showProgressOutput(string output)
+        {
+            progressMarquee.Text = output;            
+        }
+
         private async void startDownload()
         {
             this.Locked = true;
@@ -111,11 +117,11 @@ namespace YT_RED.Controls
             RunResult<string> result = null;
             if (AppSettings.Default.General.UsePreferredFormat)
             {
-                result = await VideoUtil.DownloadPreferredYtdl(VideoUtil.CorrectYouTubeString(txtUrl.Text), Classes.StreamType.AudioAndVideo, ytProgress, null, cancelToken);
+                result = await VideoUtil.DownloadPreferredYtdl(VideoUtil.CorrectYouTubeString(txtUrl.Text), Classes.StreamType.AudioAndVideo, ytProgress, ytOutput, cancelToken);
             }
             else
             {
-                result = await VideoUtil.DownloadBestYtdl(VideoUtil.CorrectYouTubeString(txtUrl.Text), Classes.StreamType.AudioAndVideo, ytProgress, null, cancelToken);
+                result = await VideoUtil.DownloadBestYtdl(VideoUtil.CorrectYouTubeString(txtUrl.Text), Classes.StreamType.AudioAndVideo, ytProgress, ytOutput, cancelToken);
             }
             if (!result.Success && result.Data != "canceled")
             {

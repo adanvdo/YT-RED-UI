@@ -78,11 +78,17 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
   To use, Highlight a youtube or reddit media post url in your browser, and press the configured hotkey. This will perform an automatic "Best Download" with the progress displayed above the system tray.
 
-- Update Assistant
+- #### Update Assistant
   Check for updates and download release packages directly in the app. 
+  Optional Updater for one-click update installs
   Open Settings -> About and click the "Check for Update" button.
 
 ## CHANGELOG <a name="changelog"></a>
+
+### 6/30/2022 v1.0.1.6
+- Added YT-RED Updater for one-click update installs (optional, not automatic)
+- Fixed bug where client would try to clean download history while it was being loaded
+- Fixed bug where progress output text was not displayed in Quick Download form.
 
 ### 6/27/2022 v1.0.1.5
 - Updated UI Control Library (includes new skin)
