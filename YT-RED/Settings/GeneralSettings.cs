@@ -109,7 +109,7 @@ namespace YT_RED.Settings
 			}
 			ShowHostWarning = true;
 			ActiveSkin = "WXI";
-			SkinPalette = "";
+			SkinPalette = "Darkness";
 			EnableDownloadHistory = true;
 			HistoryAge = 30;
 			AutomaticallyOpenDownloadLocation = false;
