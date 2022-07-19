@@ -14,6 +14,7 @@ namespace YT_RED
         public static string initialYTLink = string.Empty;
         public static string initialRedLink = string.Empty;
         public static bool newUpdater = false;
+        public static bool updated = false;
         public static InitialFunction initialFunction = InitialFunction.None;
 
         private static List<string> functions = new List<string>()
@@ -70,6 +71,10 @@ namespace YT_RED
                         if (s.StartsWith("-updater"))
                         {
                             newUpdater = true;
+                        }
+                        if(s.StartsWith("-updated"))
+                        {
+                            updated = true;
                         }
                     }
                 }

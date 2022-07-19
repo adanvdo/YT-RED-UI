@@ -48,6 +48,7 @@ namespace YT_RED
         private string initialLink = string.Empty;
         private DownloadType initialDownloadType = DownloadType.Unknown;
         private bool newUpdater = false;
+        private bool updated = false;
         private URISchemeService uriService = null;
         private bool enableQuickDownload = false;
         private bool trayBalloonShown = false;
@@ -55,9 +56,10 @@ namespace YT_RED
 
         static KeyboardHook hook = new KeyboardHook();
 
-        public MainForm()
+        public MainForm(bool updated = false)
         {
             InitializeComponent();
+            this.updated = updated;
             this.initialFunction = InitialFunction.None;
             this.initialLink = "";
             cpMainControlPanel.ParentMainForm = this;
@@ -68,9 +70,10 @@ namespace YT_RED
             repHistoryCheckEdit.ImageOptions.SvgImageSize = new Size(20, 20);
         }
 
-        public MainForm(bool newUpdater)
+        public MainForm(bool newUpdater, bool updated = false)
         {
             InitializeComponent();
+            this.updated = updated;
             this.initialFunction = InitialFunction.None;
             this.initialLink = "";
             this.newUpdater = newUpdater;
@@ -82,9 +85,10 @@ namespace YT_RED
             repHistoryCheckEdit.ImageOptions.SvgImageSize = new Size(20, 20);
         }
 
-        public MainForm(InitialFunction initialFunction, string initialLink, bool newUpdater = false)
+        public MainForm(InitialFunction initialFunction, string initialLink, bool newUpdater = false, bool updated = false)
         {
             InitializeComponent();
+            this.updated = updated;
             this.initialFunction = initialFunction;
             this.initialLink = initialLink;
             this.newUpdater = newUpdater;
@@ -290,6 +294,11 @@ namespace YT_RED
             if (newUpdater)
             {
                 bool updaterReplaced = await UpdateHelper.ReplaceUpdater();
+            }
+
+            if (updated)
+            {
+                bool replaceDependency = await UpdateHelper.ReplaceZipDependency();
             }
         }
         

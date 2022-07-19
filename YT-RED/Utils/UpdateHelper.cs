@@ -99,18 +99,46 @@ namespace YT_RED.Utils
                 await Task.Delay(1000);
                 await Task.Run(() =>
                 {
-                    string oldPath = Path.Combine(AppSettings.Default.General.ExeDirectoryPath, "YT-RED_Updater.exe");
-                    string newPath = Path.Combine(AppSettings.Default.General.ExeDirectoryPath, "YT-RED_Updater.exe.new");
+                    string path = AppSettings.Default.General.ExeDirectoryPath;
+                    string oldPath = Path.Combine(path, "YT-RED_Updater.exe");
+                    string newPath = Path.Combine(path, "YT-RED_Updater.exe.new");
                     if (File.Exists(newPath))
                     {
                         if (File.Exists(oldPath))
                             File.Delete(oldPath);
                         File.Move(newPath, oldPath);
-                        result = true;
-                    }
+                    }                    
+                    result = true;
                 });
             }
             catch(Exception ex)
+            {
+                ExceptionHandler.LogException(ex);
+            }
+            return result;
+        }
+
+        public static async Task<bool> ReplaceZipDependency()
+        {
+            bool result = false;
+            try
+            {
+                await Task.Delay(1000);
+                await Task.Run(() =>
+                {
+                    string path = AppSettings.Default.General.ExeDirectoryPath;
+                    string oldPath = Path.Combine(path, "Ionic.Zip.Reduced.dll");
+                    string newPath = Path.Combine(path, "Ionic.Zip.Reduced.dll.new");
+                    if (File.Exists(newPath))
+                    {
+                        if (File.Exists(oldPath))
+                            File.Delete(oldPath);
+                        File.Move(newPath, oldPath);
+                    }
+                    result = true;
+                });
+            }
+            catch (Exception ex)
             {
                 ExceptionHandler.LogException(ex);
             }

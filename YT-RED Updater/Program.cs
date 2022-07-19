@@ -10,6 +10,8 @@ namespace YT_RED_Updater
 {
     internal static class Program
     {
+        public static bool devRun = false;
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -26,6 +28,8 @@ namespace YT_RED_Updater
 
             foreach (string s in args)
             {
+                if (s == "-dev")
+                    devRun = true;
                 if (s.StartsWith("-skin"))
                     skin = s.Remove(0, 6);
                 if (s.StartsWith("-pal"))

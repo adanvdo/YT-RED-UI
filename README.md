@@ -85,6 +85,9 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 7/19/2022 v1.0.1.8
+- Fixed Bug where Updater Failed to complete due to dependencies being in use
+
 ### 7/19/2022 v1.0.1.7
 - Added Reddit GIF Download Support
 - Fixed Bug where missing FileSize or Bitrate resulted in a crash

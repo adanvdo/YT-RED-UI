@@ -178,7 +178,7 @@ namespace YT_RED_Updater
                     DirectoryInfo baseDir = new DirectoryInfo(BaseDir);
                     List<FileInfo> files = baseDir.GetFiles("*", SearchOption.AllDirectories)
                         .Where(f => f.Name != "YT-RED_Updater.exe"
-                            && f.Name != "Ionic.Zip.Reduced.dll"
+                            && !f.Name.Contains("Ionic.Zip")
                             && !f.Name.EndsWith(".json")
                             && f.Directory.Name != "ErrorLogs"
                             && !f.DirectoryName.Contains(@"\ErrorLogs\")
@@ -224,6 +224,21 @@ namespace YT_RED_Updater
                     if (dir.Exists)
                     {
                         dir.Delete(true);
+                    }
+                    if (!Program.devRun)
+                    {
+                        FileInfo[] files = dir.GetFiles();
+                        foreach(FileInfo f in files)
+                        {
+                            try
+                            {
+                                f.Delete();
+                            }
+                            catch(Exception ex)
+                            {
+                                System.Windows.Forms.MessageBox.Show(ex.Message, "Error");
+                            }
+                        }
                     }
                     result.Output = "Completed";
                     reportProgress(100);
@@ -275,6 +290,10 @@ namespace YT_RED_Updater
                     foreach (string newPath in files)
                     {
                         if (newPath.EndsWith("Updater.exe"))
+                        {
+                            File.Copy(newPath, $"{newPath.Replace(ExtractionFolder, BaseDir)}.new");
+                        }
+                        else if(newPath.EndsWith("Ionic.Zip.Reduced.dll"))
                         {
                             File.Copy(newPath, $"{newPath.Replace(ExtractionFolder, BaseDir)}.new");
                         }

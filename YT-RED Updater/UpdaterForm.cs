@@ -162,9 +162,9 @@ namespace YT_RED_Updater
             {
                 ProcessStartInfo processStart;
                 if (requiresUpdaterReplacement)
-                    processStart = new ProcessStartInfo(Path.Combine(this.appBase.FullName, "YT-RED.exe"), "-updater");
+                    processStart = new ProcessStartInfo(Path.Combine(this.appBase.FullName, "YT-RED.exe"), "-updater -updated");
                 else
-                    processStart = new ProcessStartInfo(Path.Combine(this.appBase.FullName, "YT-RED.exe"));
+                    processStart = new ProcessStartInfo(Path.Combine(this.appBase.FullName, "YT-RED.exe"), "-updated");
                 Process.Start(processStart);
                 await Task.Delay(1000);
             }
