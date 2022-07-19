@@ -26,7 +26,7 @@ YT-RED is a safe alternative to other popular youtube and reddit video downloade
 ### Current Features (more info further below) <a name="current-features"></a>
 - List Video Format Options
 - Download Selected Format
-- Download Best Quality Video
+- Download Best Quality Video (or Gif)
 - Download Best Quality Audio
 - Download History Log / File Browser
 - Automatic ID3 Tagging for Audio Downloads
@@ -39,7 +39,7 @@ YT-RED is a safe alternative to other popular youtube and reddit video downloade
 - Update Assistant
 
 ### Known Issues <a name="known-issues"></a>
-- GIF downloads are not supported
+- None At This Time
 
 ### How To Use <a name="how-to-use"></a>
 
