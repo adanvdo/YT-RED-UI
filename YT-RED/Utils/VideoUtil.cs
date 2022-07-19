@@ -662,6 +662,38 @@ namespace YT_RED.Utils
         private static string convertToArgs(string[] urls, OptionSet options)
             => (urls != null ? String.Join(" ", urls) : String.Empty) + options.ToString();
 
+        public static async Task<RunResult<string>> DownloadYTDLGif(string url, OptionSet options)
+        {
+            if (options == null) options = new OptionSet();
+            ytdl.OutputFolder = AppSettings.Default.General.VideoDownloadPath;
+            try
+            {
+                cancellationTokenSource = new CancellationTokenSource();
+                CancellationToken cancelToken = cancellationTokenSource.Token;
+                string outFile = string.Empty;
+                var process = new YoutubeDLProcess(ytdl.YoutubeDLPath);
+
+                ytOutput?.Report($"Arguments: {convertToArgs(new[] { url }, options)}\n");
+                process.OutputReceived += (o, e) =>
+                {
+                    var match = rgxFile.Match(e.Data);
+                    if (match.Success)
+                    {
+                        outFile = match.Groups[0].ToString().Replace("[download] Destination:", "").Replace(" ", "");
+                        ytProgress?.Report(new DownloadProgress(DownloadState.Success, data: outFile));
+                    }
+                    ytOutput?.Report(e.Data);
+                };
+                (int code, string[] errors) = await runner.RunThrottled(process, new[] { url }, options, cancelToken, ytProgress);
+                return new RunResult<string>(code == 0, errors, outFile);
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.LogException(ex);
+            }
+            return null;
+        }
+
         private static async Task<RunResult<string>> downloadYTDLAudio(string url, OptionSet options)
         {
             if(options == null) throw new ArgumentNullException("options");
@@ -700,9 +732,17 @@ namespace YT_RED.Utils
             {
                 ytdl.OutputFolder = AppSettings.Default.General.VideoDownloadPath;
                 var options = YoutubeDLSharp.Options.OptionSet.Default;
+                if (options.CustomOptions.Where(o => o.OptionStrings.Contains("-o")).Count() > 0)
+                {
+                    options.DeleteCustomOption("-o");
+                }
                 if (!AppSettings.Default.General.UseTitleAsFileName)
                 {
                     options.AddCustomOption<string>("-o", GenerateUniqueYtdlFileName(Classes.StreamType.Video));
+                }
+                if(format == "gif")
+                {
+                    return await DownloadYTDLGif(url, options);
                 }
                 return await ytdl.RunVideoDownload(url, format, YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress, ytOutput, options);
             }

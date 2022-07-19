@@ -29,6 +29,31 @@ namespace YT_RED.Classes
         public YTDLFormatData() : base()
         { }
 
+        public YTDLFormatData(YoutubeDLSharp.Metadata.VideoData gifData, Xabe.FFmpeg.IMediaInfo iMediaInfo = null)
+        {
+            this.Url = gifData.Url;
+            this.RedditAudioFormat = null;
+            if(iMediaInfo != null && iMediaInfo.VideoStreams.Count() > 0)
+            {
+                this.Duration = (TimeSpan?)iMediaInfo.Duration;
+                var stream = iMediaInfo.VideoStreams.First();
+                this.VideoCodec = "gif";
+                this.Width = stream.Width;
+                this.Height = stream.Height;
+                this.FileSize = (long?)iMediaInfo.Size;
+                this.FrameRate = (float?)stream.Framerate;
+            }
+            this.AudioCodec = "none";
+            this.ManifestUrl = String.Empty;
+            this.Extension = gifData.Extension;
+            this.Format = iMediaInfo != null ? $"GIF - {this.Width}x{this.Height}" : "Unknown";
+            this.FormatId = "gif";
+            this.FormatNote = "Animated GIF";
+            this.Duration = gifData.Duration.HasValue ? (TimeSpan?)TimeSpan.FromSeconds((double)gifData.Duration) : null;
+            this.ContainerFormat = "gif";
+
+        }
+
         public YTDLFormatData(FormatData formatData, float? duration, FormatData redditAudioFormat = null) : base()
         {
             this.Url = formatData.Url;

@@ -90,8 +90,16 @@ namespace YT_RED
             else
                 runForm = new MainForm(newUpdater);
 
-            var controller = new ApplicationController(runForm);            
-            controller.Run(Environment.GetCommandLineArgs());
+            try
+            {
+                var controller = new ApplicationController(runForm);
+                string[] argList = Environment.GetCommandLineArgs();
+                controller.Run(argList);
+            }
+            catch(Exception ex)
+            {
+                bool logged = Logging.ExceptionHandler.LogException(ex);
+            }
         }
     }
 

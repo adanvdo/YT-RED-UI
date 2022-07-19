@@ -564,25 +564,39 @@ namespace YT_RED
                 (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = true;
                 ipMainInput.marqeeMain.Text = "Fetching Available Formats";
                 ipMainInput.marqeeMain.Show();
-                var data = await VideoUtil.GetVideoData(url);                
-                var formatList = data.Formats.Where(f => !YTDLFormatData.ExcludeFormatIDs.Contains(f.FormatId))
-                    .OrderBy(f => f.VideoCodec == "none" || f.VideoCodec == "" || f.VideoCodec == null ? 0 : 1)
-                    .ThenBy(f => f.Height).ToList();
+                var data = await VideoUtil.GetVideoData(url);
+                List<YoutubeDLSharp.Metadata.FormatData> formatList = new List<YoutubeDLSharp.Metadata.FormatData>();
                 List<YTDLFormatData> converted = new List<YTDLFormatData>();
-                foreach (YoutubeDLSharp.Metadata.FormatData format in formatList)
+                if (this.currentDownload == DownloadType.Reddit && data.Formats == null && data.Extension.ToLower() == "gif")
                 {
-                    converted.Add(new YTDLFormatData(format, data.Duration));
-                }
-                if (this.currentDownload == DownloadType.Reddit)
-                {
-                    var audio = data.Formats.Where(f => f.AudioCodec != null && f.AudioCodec != "none").First();
-                    List<YoutubeDLSharp.Metadata.FormatData> supplemented = new List<YoutubeDLSharp.Metadata.FormatData>();
-                    foreach (var formatItem in data.Formats.Where(f => f.VideoCodec != null && f.VideoCodec != "none"))
+                    IMediaInfo gifMeta = await FFmpeg.GetMediaInfo(data.Url);
+                    if(gifMeta != null)
                     {
-                        YoutubeDLSharp.Metadata.FormatData item = formatItem;
-                        converted.Add(new YTDLFormatData(item, data.Duration, audio));
-                    }                    
+                        converted.Add(new YTDLFormatData(data, gifMeta));
+                    }
+                    else converted.Add(new YTDLFormatData(data));
                 }
+                else if(data.Formats != null)
+                {
+                    formatList = data.Formats.Where(f => !YTDLFormatData.ExcludeFormatIDs.Contains(f.FormatId))
+                        .OrderBy(f => f.VideoCodec == "none" || f.VideoCodec == "" || f.VideoCodec == null ? 0 : 1)
+                        .ThenBy(f => f.Height).ToList(); 
+                    foreach (YoutubeDLSharp.Metadata.FormatData format in formatList)
+                    {
+                        converted.Add(new YTDLFormatData(format, data.Duration));
+                    }
+                    if (this.currentDownload == DownloadType.Reddit)
+                    {
+                        var audio = data.Formats.Where(f => f.AudioCodec != null && f.AudioCodec != "none").First();
+                        List<YoutubeDLSharp.Metadata.FormatData> supplemented = new List<YoutubeDLSharp.Metadata.FormatData>();
+                        foreach (var formatItem in data.Formats.Where(f => f.VideoCodec != null && f.VideoCodec != "none"))
+                        {
+                            YoutubeDLSharp.Metadata.FormatData item = formatItem;
+                            converted.Add(new YTDLFormatData(item, data.Duration, audio));
+                        }
+                    }
+                }                
+                
                 gcFormats.DataSource = converted;
                 refreshFormatGrid(this.currentDownload);
                 this.UseWaitCursor = false;
@@ -679,9 +693,36 @@ namespace YT_RED
             else
             {
                 cpMainControlPanel.ShowProgress();
+                
                 if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
                 {
-                    result = await Utils.VideoUtil.DownloadPreferredYtdl(VideoUtil.CorrectYouTubeString(url), streamType);
+                    var test = await Utils.VideoUtil.DownloadPreferredYtdl(VideoUtil.CorrectYouTubeString(url), streamType);
+                    if (!test.Success)
+                    {
+                        var data = await Utils.VideoUtil.GetVideoData(VideoUtil.CorrectYouTubeString(url));
+                        List<YTDLFormatData> converted = new List<YTDLFormatData>();
+                        if (this.currentDownload == DownloadType.Reddit && data.Formats == null && data.Extension.ToLower() == "gif")
+                        {
+                            cpMainControlPanel.DisableToggle(true, true, true);
+                            IMediaInfo gifMeta = await FFmpeg.GetMediaInfo(data.Url);
+                            YTDLFormatData dlFormatData;
+                            if (gifMeta != null)
+                            {
+                                dlFormatData = new YTDLFormatData(data, gifMeta);
+                            }
+                            else dlFormatData = new YTDLFormatData(data);
+                            var options = YoutubeDLSharp.Options.OptionSet.Default;
+                            if (options.CustomOptions.Where(o => o.OptionStrings.Contains("-o")).Count() > 0)
+                            {
+                                options.DeleteCustomOption("-o");
+                            }
+                            string outputFile = VideoUtil.GenerateUniqueYtdlFileName(Classes.StreamType.Video);
+                            options.AddCustomOption<string>("-o", outputFile);
+                            result = await Utils.VideoUtil.DownloadYTDLGif(dlFormatData.Url, options);
+                        }
+                        else result = test;
+                    }
+                    else result = test;
                 }
                 else
                 {
@@ -736,7 +777,7 @@ namespace YT_RED
 
             RunResult<string> result = null;
 
-            if (cpMainControlPanel.PostProcessingEnabled || cpMainControlPanel.CurrentFormat.RedditAudioFormat != null || AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
+            if (cpMainControlPanel.PostProcessingEnabled || cpMainControlPanel.CurrentFormat.RedditAudioFormat != null || (cpMainControlPanel.CurrentFormat.VideoCodec != "gif" && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat))
             {
                 if (cpMainControlPanel.SegmentEnabled && cpMainControlPanel.SegmentDuration == TimeSpan.Zero)
                 {
@@ -809,7 +850,7 @@ namespace YT_RED
             else
             {
                 cpMainControlPanel.ShowProgress();
-                result = await Utils.VideoUtil.DownloadYTDLFormat(VideoUtil.CorrectYouTubeString(ipMainInput.URL), cpMainControlPanel.CurrentFormat, cpMainControlPanel.EmbedThumbnail);
+                result = await Utils.VideoUtil.DownloadYTDLFormat(VideoUtil.CorrectYouTubeString(cpMainControlPanel.CurrentFormat.VideoCodec == "gif" ? cpMainControlPanel.CurrentFormat.Url : ipMainInput.URL), cpMainControlPanel.CurrentFormat, cpMainControlPanel.EmbedThumbnail);
                 cpMainControlPanel.HideProgress();
                 if (!result.Success)
                 {
@@ -853,27 +894,42 @@ namespace YT_RED
 
         private void gvFormats_CustomColumnDisplayText(object sender, DevExpress.XtraGrid.Views.Base.CustomColumnDisplayTextEventArgs e)
         {
-            if (e.Column.FieldName == "FileSize")
+            try
             {
-                string size;
-                if (e.Value != null)
+                if (e.Column.FieldName == "FileSize")
                 {
-                    size = ((Convert.ToDecimal(e.Value) / 1024) / 1024).ToString();
+                    string size;
+                    if (e.Value != null)
+                    {
+                        size = ((Convert.ToDecimal(e.Value) / 1024) / 1024).ToString();
 
+                    }
+                    else
+                    {
+                        size = ((Convert.ToDecimal(gvFormats.GetRowCellValue(e.ListSourceRowIndex, "ApproximateFileSize")) / 1024) / 1024).ToString();
+                    }
+                    if (size.IndexOf('.') < 0)
+                        e.DisplayText = size + "MB";
+                    else
+                        e.DisplayText = size.Substring(0, size.IndexOf('.') + 2) + "MB";
                 }
-                else
+                if (e.Column.FieldName == "Bitrate" || e.Column.FieldName == "VideoBitrate")
                 {
-                    size = ((Convert.ToDecimal(gvFormats.GetRowCellValue(e.ListSourceRowIndex, "ApproximateFileSize")) / 1024) / 1024).ToString();
+                    if (e.Value != null)
+                    {
+                        if (e.Value.ToString().IndexOf(".") < 0)
+                            e.DisplayText = e.Value.ToString() + "k";
+                        else
+                        {
+                            string br = e.Value.ToString().Substring(0, e.Value.ToString().IndexOf("."));
+                            e.DisplayText = $"{br}k";
+                        }
+                    }
                 }
-                e.DisplayText = size.Substring(0, size.IndexOf('.') + 2) + "MB";
             }
-            if(e.Column.FieldName == "Bitrate" || e.Column.FieldName == "VideoBitrate")
+            catch(Exception ex)
             {
-                if(e.Value != null)
-                {
-                    string br = e.Value.ToString().Substring(0, e.Value.ToString().IndexOf("."));
-                    e.DisplayText = $"{br}k";
-                }
+                ExceptionHandler.LogException(ex);
             }
         }
         private void gvFormats_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e)
@@ -895,6 +951,10 @@ namespace YT_RED
             if(fd.VideoCodec == "none")
             {
                 cpMainControlPanel.DisableToggle(false, true, false);
+            }
+            else if(fd.VideoCodec == "gif")
+            {
+                cpMainControlPanel.DisableToggle(true, true, true);
             }
             else
             {
