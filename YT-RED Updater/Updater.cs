@@ -177,8 +177,8 @@ namespace YT_RED_Updater
                 {
                     DirectoryInfo baseDir = new DirectoryInfo(BaseDir);
                     List<FileInfo> files = baseDir.GetFiles("*", SearchOption.AllDirectories)
-                        .Where(f => f.Name != "YT-RED_Updater.exe"
-                            && !f.Name.Contains("Ionic.Zip")
+                        .Where(f => !f.Name.EndsWith("YT-RED_Updater.exe")
+                            && !f.Name.EndsWith("Ionic.Zip.Reduced.dll")
                             && !f.Name.EndsWith(".json")
                             && f.Directory.Name != "ErrorLogs"
                             && !f.DirectoryName.Contains(@"\ErrorLogs\")
@@ -289,7 +289,7 @@ namespace YT_RED_Updater
                     //Copy all the files & Replaces any files with the same name
                     foreach (string newPath in files)
                     {
-                        if (newPath.EndsWith("Updater.exe"))
+                        if (newPath.EndsWith("YT-RED_Updater.exe"))
                         {
                             File.Copy(newPath, $"{newPath.Replace(ExtractionFolder, BaseDir)}.new");
                         }
@@ -309,7 +309,8 @@ namespace YT_RED_Updater
                 }
                 catch(Exception ex)
                 {
-                    result.Error = ex.Message;
+                    string message = ex.Message + "\n\nManual Update Required. Update File Location:\n" + ExtractionFolder;
+                    result.Error = message;
                 }
             });
             return result;
