@@ -272,23 +272,17 @@ namespace YT_RED
             if(!Program.DevRun)
                 ipMainInput.URL = initialLink;
 
-            if(initialDownloadType == DownloadType.Unknown)
+            if (initialDownloadType == DownloadType.Unknown)
             {
-                return;
+                
             }
-            else if(initialDownloadType == DownloadType.Reddit)
+            else if (initialDownloadType == DownloadType.Reddit)
             {
-                if (initialFunction == InitialFunction.ListFormats)
-                    return;
-                else if (initialFunction == InitialFunction.DownloadBest)
-                    return;
+
             }
-            else
+            else if (initialFunction == InitialFunction.ListFormats)
             {
-                if (initialFunction == InitialFunction.ListFormats)
-                    getYtdlFormatList(ipMainInput.URL);
-                else
-                    return;
+                getYtdlFormatList(ipMainInput.URL);
             }
             
             if (newUpdater)
@@ -296,9 +290,10 @@ namespace YT_RED
                 bool updaterReplaced = await UpdateHelper.ReplaceUpdater();
             }
 
-            if (updated)
+            if (this.updated || Program.updated)
             {
                 bool replaceDependency = await UpdateHelper.ReplaceZipDependency();
+                bool deleteBackup = await UpdateHelper.DeleteBackup();
             }
         }
         

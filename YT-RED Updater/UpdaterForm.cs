@@ -79,7 +79,7 @@ namespace YT_RED_Updater
             {
                 marquee.Properties.ShowTitle = false;
                 progress.Properties.ShowTitle = false;
-                lblMessage.Text = $"A Task Failed\n{extract.Error}\nYou may close this dialog";
+                lblMessage.Text = $"Extraction Failed\n{extract.Error}\nYou may close this dialog";
                 return;
             }
 
@@ -92,7 +92,7 @@ namespace YT_RED_Updater
             {
                 marquee.Properties.ShowTitle = false;
                 progress.Properties.ShowTitle = false;
-                lblMessage.Text = $"A Task Failed\n{extract.Error}\nYou may close this dialog";
+                lblMessage.Text = $"Failed to End Process\n{extract.Error}\nYou may close this dialog";
                 return;
             }
 
@@ -107,7 +107,7 @@ namespace YT_RED_Updater
             {
                 marquee.Properties.ShowTitle = false;
                 progress.Properties.ShowTitle = false;
-                lblMessage.Text = $"A Task Failed\n{backup.Error}\nYou may close this dialog";
+                lblMessage.Text = $"Backup Failed\n{backup.Error}\nYou may close this dialog";
                 return;
             }
 
@@ -122,7 +122,7 @@ namespace YT_RED_Updater
             {
                 marquee.Properties.ShowTitle = false;
                 progress.Properties.ShowTitle = false;
-                lblMessage.Text = $"A Task Failed\n{clean.Error}\nYou may close this dialog";
+                lblMessage.Text = $"Folder Preparation Failed\n{clean.Error}\nYou may close this dialog";
                 return;
             }
 
@@ -137,7 +137,7 @@ namespace YT_RED_Updater
             {
                 marquee.Properties.ShowTitle = false;
                 progress.Properties.ShowTitle = false;
-                lblMessage.Text = $"A Task Failed\n{install.Error}\nYou may close this dialog";
+                lblMessage.Text = $"Install Failed\n{install.Error}\nYou may close this dialog";
                 return;
             }
 
@@ -152,7 +152,7 @@ namespace YT_RED_Updater
             {
                 marquee.Properties.ShowTitle = false;
                 progress.Properties.ShowTitle = false;
-                lblMessage.Text = $"A Task Failed\n{delete.Error}\nYou may close this dialog";
+                lblMessage.Text = $"Cleanup Failed\n{delete.Error}\nYou may close this dialog";
                 return;
             }
 

@@ -123,7 +123,6 @@ namespace YT_RED.Utils
             bool result = false;
             try
             {
-                await Task.Delay(1000);
                 await Task.Run(() =>
                 {
                     string path = AppSettings.Default.General.ExeDirectoryPath;
@@ -139,6 +138,31 @@ namespace YT_RED.Utils
                 });
             }
             catch (Exception ex)
+            {
+                ExceptionHandler.LogException(ex);
+            }
+            return result;
+        }
+
+        public static async Task<bool> DeleteBackup()
+        {
+            bool result = false;
+            try
+            {
+                await Task.Run(() =>
+                {
+                    DirectoryInfo backup = new DirectoryInfo(Path.Combine(AppSettings.Default.General.ExeDirectoryPath, "Backup"));
+                    if (backup.Exists)
+                    {
+                        foreach (FileInfo f in backup.GetFiles().Where(bf => !bf.Name.EndsWith(".json")))
+                        {
+                            f.Delete();
+                        }
+                    }
+                    result = true;
+                });
+            }
+            catch(Exception ex)
             {
                 ExceptionHandler.LogException(ex);
             }

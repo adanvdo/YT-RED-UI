@@ -72,7 +72,8 @@ namespace YT_RED
                         {
                             newUpdater = true;
                         }
-                        if(s.StartsWith("-updated"))
+
+                        if(s.StartsWith("-updated") || s == "updated")
                         {
                             updated = true;
                         }
@@ -89,11 +90,11 @@ namespace YT_RED
             FFmpeg.SetExecutablesPath(@".\Resources\App");
             MainForm runForm;
             if (!string.IsNullOrEmpty(initialYTLink))
-                runForm = new MainForm(initialFunction, initialYTLink, newUpdater);
+                runForm = new MainForm(initialFunction, initialYTLink, newUpdater, updated);
             else if (!string.IsNullOrEmpty(initialRedLink))
-                runForm = new MainForm(initialFunction, initialRedLink, newUpdater);
+                runForm = new MainForm(initialFunction, initialRedLink, newUpdater, updated);
             else
-                runForm = new MainForm(newUpdater);
+                runForm = new MainForm(newUpdater, updated);
 
             try
             {

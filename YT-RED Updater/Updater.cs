@@ -75,7 +75,7 @@ namespace YT_RED_Updater
                         ExtractionFolder = Path.Combine(baseDir.FullName, "Updates", package.Name.Replace(".zip", ""));
                         if (Directory.Exists(ExtractionFolder))
                             Directory.Delete(ExtractionFolder, true);
- 
+
                         Directory.CreateDirectory(ExtractionFolder);
 
                         List<ZipEntry> entries = zip.Entries.Where(e => (e.IsDirectory && e.FileName != "YT-RED/") || !e.IsDirectory).ToList();
@@ -119,7 +119,7 @@ namespace YT_RED_Updater
 
                     DirectoryInfo baseDir = new DirectoryInfo(BaseDir);
                     List<DirectoryInfo> dirs = baseDir.GetDirectories("*", SearchOption.AllDirectories)
-                        .Where(di => di.Name != "ErrorLogs" 
+                        .Where(di => di.Name != "ErrorLogs"
                             && !di.FullName.Contains(@"\ErrorLogs\")
                             && di.Name != "Backup"
                             && !di.FullName.Contains(@"\Backup\")
@@ -177,15 +177,15 @@ namespace YT_RED_Updater
                 {
                     DirectoryInfo baseDir = new DirectoryInfo(BaseDir);
                     List<FileInfo> files = baseDir.GetFiles("*", SearchOption.AllDirectories)
-                        .Where(f => !f.Name.EndsWith("YT-RED_Updater.exe")
-                            && !f.Name.EndsWith("Ionic.Zip.Reduced.dll")
+                        .Where(f => !f.FullName.EndsWith("YT-RED_Updater.exe")
+                            && !f.FullName.EndsWith("Ionic.Zip.Reduced.dll")
                             && !f.Name.EndsWith(".json")
                             && f.Directory.Name != "ErrorLogs"
-                            && !f.DirectoryName.Contains(@"\ErrorLogs\")
+                            && !f.FullName.Contains(@"\ErrorLogs\")
                             && f.Directory.Name != "Updates"
-                            && !f.DirectoryName.Contains(@"\Updates\")
+                            && !f.FullName.Contains(@"\Updates\")
                             && f.Directory.Name != "Backup"
-                            && !f.DirectoryName.Contains(@"\Backup\")
+                            && !f.FullName.Contains(@"\Backup\")
                         )
                         .ToList();
 
@@ -227,14 +227,14 @@ namespace YT_RED_Updater
                     }
                     if (!Program.devRun)
                     {
-                        FileInfo[] files = dir.GetFiles();
-                        foreach(FileInfo f in files)
+                        FileInfo[] files = dir.Parent.GetFiles();
+                        foreach (FileInfo f in files)
                         {
                             try
                             {
                                 f.Delete();
                             }
-                            catch(Exception ex)
+                            catch (Exception ex)
                             {
                                 System.Windows.Forms.MessageBox.Show(ex.Message, "Error");
                             }
@@ -251,7 +251,7 @@ namespace YT_RED_Updater
             return result;
         }
 
-    public static async Task<ProcessResult> CopyUpdateFiles(Action<int> reportCopyProgress, bool copyUpdater = false)
+        public static async Task<ProcessResult> CopyUpdateFiles(Action<int> reportCopyProgress, bool copyUpdater = false)
         {
             ProcessResult result = new ProcessResult();
             await Task.Run(() =>
@@ -269,7 +269,7 @@ namespace YT_RED_Updater
                     else
                     {
                         dirs = Directory.GetDirectories(ExtractionFolder, "*", SearchOption.AllDirectories).ToList();
-                        files = Directory.GetFiles(ExtractionFolder, "*", SearchOption.AllDirectories).Where(f => !f.EndsWith("Updater.exe")).ToList();
+                        files = Directory.GetFiles(ExtractionFolder, "*", SearchOption.AllDirectories).Where(f => !f.EndsWith("YT-RED_Updater.exe")).ToList();
                     }
 
                     decimal total = dirs.Count + files.Count;
@@ -279,7 +279,7 @@ namespace YT_RED_Updater
                     //Now Create all of the directories
                     foreach (string dirPath in dirs)
                     {
-                        if(!Directory.Exists(dirPath.Replace(ExtractionFolder, BaseDir)))
+                        if (!Directory.Exists(dirPath.Replace(ExtractionFolder, BaseDir)))
                             Directory.CreateDirectory(dirPath.Replace(ExtractionFolder, BaseDir));
                         completed++;
                         percentComplete = Convert.ToInt32((completed / total) * 100);
@@ -293,7 +293,7 @@ namespace YT_RED_Updater
                         {
                             File.Copy(newPath, $"{newPath.Replace(ExtractionFolder, BaseDir)}.new");
                         }
-                        else if(newPath.EndsWith("Ionic.Zip.Reduced.dll"))
+                        else if (newPath.EndsWith("Ionic.Zip.Reduced.dll"))
                         {
                             File.Copy(newPath, $"{newPath.Replace(ExtractionFolder, BaseDir)}.new");
                         }
@@ -307,7 +307,7 @@ namespace YT_RED_Updater
                     }
                     result.Output = $"Copied {total} files";
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     string message = ex.Message + "\n\nManual Update Required. Update File Location:\n" + ExtractionFolder;
                     result.Error = message;
