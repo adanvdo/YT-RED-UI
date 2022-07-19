@@ -580,6 +580,44 @@ namespace YT_RED
                     }
                     else converted.Add(new YTDLFormatData(data));
                 }
+                else if(this.currentDownload == DownloadType.Instagram)
+                {
+                    foreach(var format in data.Formats)
+                    {
+                        float? dur = null;
+                        if(format.VideoCodec == null)
+                        {
+                            var info = await FFmpeg.GetMediaInfo(format.Url);
+                            if (info != null)
+                            {
+                                dur = (float?)info.Duration.TotalSeconds;
+                                format.FileSize = (long?)info.Size;
+                                if (info.VideoStreams.Count() > 0)
+                                {
+                                    var vid = info.VideoStreams.First();
+                                    if (vid != null)
+                                    {
+                                        format.Bitrate = (double?)vid.Bitrate;
+                                        format.VideoCodec = vid.Codec;
+                                        format.VideoBitrate = (double?)vid.Bitrate;
+                                        format.FrameRate = (float?)vid.Framerate;
+                                    }
+                                    if (info.AudioStreams.Count() > 0)
+                                    {
+                                        var aud = info.AudioStreams.First();
+                                        if (aud != null)
+                                        {
+                                            format.AudioCodec = aud.Codec;
+                                            format.AudioBitrate = (double?)aud.Bitrate;
+                                            format.AudioSamplingRate = (double?)aud.SampleRate;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        converted.Add(new YTDLFormatData(format, dur, null));
+                    }                    
+                }
                 else if(data.Formats != null)
                 {
                     formatList = data.Formats.Where(f => !YTDLFormatData.ExcludeFormatIDs.Contains(f.FormatId))
@@ -591,7 +629,10 @@ namespace YT_RED
                     }
                     if (this.currentDownload == DownloadType.Reddit)
                     {
-                        var audio = data.Formats.Where(f => f.AudioCodec != null && f.AudioCodec != "none").First();
+                        var checkAudio = data.Formats.Where(f => f.AudioCodec != null && f.AudioCodec != "none");
+                        YoutubeDLSharp.Metadata.FormatData audio = null;
+                        if (checkAudio != null && checkAudio.Count() > 0)
+                            audio = checkAudio.First();
                         List<YoutubeDLSharp.Metadata.FormatData> supplemented = new List<YoutubeDLSharp.Metadata.FormatData>();
                         foreach (var formatItem in data.Formats.Where(f => f.VideoCodec != null && f.VideoCodec != "none"))
                         {
@@ -697,15 +738,33 @@ namespace YT_RED
             else
             {
                 cpMainControlPanel.ShowProgress();
-                
-                if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
-                {
-                    var test = await Utils.VideoUtil.DownloadPreferredYtdl(VideoUtil.CorrectYouTubeString(url), streamType);
-                    if (!test.Success)
+                RunResult<string> test = null;
+                if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)                
+                    test = await Utils.VideoUtil.DownloadPreferredYtdl(VideoUtil.CorrectYouTubeString(url), streamType);
+                else 
+                    test = await Utils.VideoUtil.DownloadBestYtdl(VideoUtil.CorrectYouTubeString(url), streamType, null, null, null, cpMainControlPanel.EmbedThumbnail);
+
+                if (!test.Success)
+                {                  
+                    // FALLBACK IS CURRENTLY LIMITED TO REDDIT
+                    // THIS SECTION MAY NEED TO BE EXPANDED FOR OTHER SUPPORTED HOSTS
+
+                    if (this.currentDownload == DownloadType.Reddit)
                     {
                         var data = await Utils.VideoUtil.GetVideoData(VideoUtil.CorrectYouTubeString(url));
                         List<YTDLFormatData> converted = new List<YTDLFormatData>();
-                        if (this.currentDownload == DownloadType.Reddit && data.Formats == null && data.Extension.ToLower() == "gif")
+                        if (data.Formats != null && data.Formats.Count() > 0)
+                        {
+                            YT_RED.Classes.StreamType detect = AppSettings.DetectStreamTypeFromExtension(data.Extension);
+                            if (detect != Classes.StreamType.Unknown)
+                            {
+                                if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
+                                    test = await Utils.VideoUtil.DownloadPreferredYtdl(VideoUtil.CorrectYouTubeString(url), detect);
+                                else 
+                                    test = await Utils.VideoUtil.DownloadBestYtdl(VideoUtil.CorrectYouTubeString(url), detect, null, null, null, cpMainControlPanel.EmbedThumbnail);
+                            }
+                        }
+                        else if (data.Formats == null && data.Extension.ToLower() == "gif")
                         {
                             cpMainControlPanel.DisableToggle(true, true, true);
                             IMediaInfo gifMeta = await FFmpeg.GetMediaInfo(data.Url);
@@ -722,16 +781,11 @@ namespace YT_RED
                             }
                             string outputFile = VideoUtil.GenerateUniqueYtdlFileName(Classes.StreamType.Video);
                             options.AddCustomOption<string>("-o", outputFile);
-                            result = await Utils.VideoUtil.DownloadYTDLGif(dlFormatData.Url, options);
+                            test = await Utils.VideoUtil.DownloadYTDLGif(dlFormatData.Url, options);
                         }
-                        else result = test;
                     }
-                    else result = test;
                 }
-                else
-                {
-                    result = await Utils.VideoUtil.DownloadBestYtdl(VideoUtil.CorrectYouTubeString(url), streamType, null, null, null, cpMainControlPanel.EmbedThumbnail);
-                }
+                result = test;
                 cpMainControlPanel.HideProgress();
             }
             if (!result.Success)

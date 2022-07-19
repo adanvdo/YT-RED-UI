@@ -193,7 +193,7 @@ namespace YT_RED.Utils
             {
                 audioInfo = await FFmpeg.GetMediaInfo(getUrls[0]);
             }
-            if (format == "bestvideo+bestaudio")
+            if (format == "bestvideo+bestaudio" && getUrls.Count > 1)
             {
                 audioInfo = await FFmpeg.GetMediaInfo(getUrls[1]);
             }

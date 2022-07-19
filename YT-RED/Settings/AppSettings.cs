@@ -81,6 +81,17 @@ namespace YT_RED.Settings
             }
         }
 
+		public static StreamType DetectStreamTypeFromExtension(string extension)
+        {
+			VideoFormat v = VideoFormatFromExtension(extension);
+			if (v != VideoFormat.UNSPECIFIED) return StreamType.Video;
+
+			AudioFormat a = AudioFormatFromExtension(extension);
+			if (a != AudioFormat.UNSPECIFIED) return StreamType.Audio;
+
+			return StreamType.Unknown;
+        }
+
 		public static VideoFormat ConvertMergeFormatToVideoFormat(YoutubeDLSharp.Options.DownloadMergeFormat downloadMergeFormat)
         {
 			switch(downloadMergeFormat)
@@ -121,7 +132,7 @@ namespace YT_RED.Settings
 				case "wav":
 					return AudioFormat.WAV;
 				default:
-					return AudioFormat.MP3;
+					return AudioFormat.UNSPECIFIED;
 			}
         }
 
