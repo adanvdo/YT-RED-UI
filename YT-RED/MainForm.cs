@@ -568,57 +568,10 @@ namespace YT_RED
                 (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = true;
                 ipMainInput.marqeeMain.Text = "Fetching Available Formats";
                 ipMainInput.marqeeMain.Show();
-                var data = await VideoUtil.GetVideoData(url);
+                var data = await VideoUtil.GetVideoData(url, true);
                 List<YoutubeDLSharp.Metadata.FormatData> formatList = new List<YoutubeDLSharp.Metadata.FormatData>();
-                List<YTDLFormatData> converted = new List<YTDLFormatData>();
-                if (this.currentDownload == DownloadType.Reddit && data.Formats == null && data.Extension.ToLower() == "gif")
-                {
-                    IMediaInfo gifMeta = await FFmpeg.GetMediaInfo(data.Url);
-                    if(gifMeta != null)
-                    {
-                        converted.Add(new YTDLFormatData(data, gifMeta));
-                    }
-                    else converted.Add(new YTDLFormatData(data));
-                }
-                else if(this.currentDownload == DownloadType.Instagram)
-                {
-                    foreach(var format in data.Formats)
-                    {
-                        float? dur = null;
-                        if(format.VideoCodec == null)
-                        {
-                            var info = await FFmpeg.GetMediaInfo(format.Url);
-                            if (info != null)
-                            {
-                                dur = (float?)info.Duration.TotalSeconds;
-                                format.FileSize = (long?)info.Size;
-                                if (info.VideoStreams.Count() > 0)
-                                {
-                                    var vid = info.VideoStreams.First();
-                                    if (vid != null)
-                                    {
-                                        format.Bitrate = (double?)vid.Bitrate;
-                                        format.VideoCodec = vid.Codec;
-                                        format.VideoBitrate = (double?)vid.Bitrate;
-                                        format.FrameRate = (float?)vid.Framerate;
-                                    }
-                                    if (info.AudioStreams.Count() > 0)
-                                    {
-                                        var aud = info.AudioStreams.First();
-                                        if (aud != null)
-                                        {
-                                            format.AudioCodec = aud.Codec;
-                                            format.AudioBitrate = (double?)aud.Bitrate;
-                                            format.AudioSamplingRate = (double?)aud.SampleRate;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        converted.Add(new YTDLFormatData(format, dur, null));
-                    }                    
-                }
-                else if(data.Formats != null)
+                List<YTDLFormatData> converted = new List<YTDLFormatData>();                
+                if(data.Formats != null)
                 {
                     formatList = data.Formats.Where(f => !YTDLFormatData.ExcludeFormatIDs.Contains(f.FormatId))
                         .OrderBy(f => f.VideoCodec == "none" || f.VideoCodec == "" || f.VideoCodec == null ? 0 : 1)
@@ -626,21 +579,13 @@ namespace YT_RED
                     foreach (YoutubeDLSharp.Metadata.FormatData format in formatList)
                     {
                         converted.Add(new YTDLFormatData(format, data.Duration));
-                    }
-                    if (this.currentDownload == DownloadType.Reddit)
-                    {
-                        var checkAudio = data.Formats.Where(f => f.AudioCodec != null && f.AudioCodec != "none");
-                        YoutubeDLSharp.Metadata.FormatData audio = null;
-                        if (checkAudio != null && checkAudio.Count() > 0)
-                            audio = checkAudio.First();
-                        List<YoutubeDLSharp.Metadata.FormatData> supplemented = new List<YoutubeDLSharp.Metadata.FormatData>();
-                        foreach (var formatItem in data.Formats.Where(f => f.VideoCodec != null && f.VideoCodec != "none"))
-                        {
-                            YoutubeDLSharp.Metadata.FormatData item = formatItem;
-                            converted.Add(new YTDLFormatData(item, data.Duration, audio));
-                        }
-                    }
-                }                
+                    }                    
+                }
+                else if(data.Extension.ToLower() == "gif") 
+                {
+                    IMediaInfo gifInfo = await FFmpeg.GetMediaInfo(data.Url);
+                    converted.Add(new YTDLFormatData(data, gifInfo));
+                }
                 
                 gcFormats.DataSource = converted;
                 refreshFormatGrid(this.currentDownload);
@@ -698,9 +643,9 @@ namespace YT_RED
             {
                 if (streamType != Classes.StreamType.Audio)
                 {
-                    IConversion conversion = await VideoUtil.PrepareBestYtdlConversion(url, "bestvideo+bestaudio", start, duration, 
+                    IConversion conversion = await VideoUtil.PrepareBestYtdlConversion(url, "bestvideo+bestaudio/best", start, duration, 
                         AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat, crops, videoFormat == null ? VideoFormat.UNSPECIFIED : (VideoFormat)videoFormat, 
-                        audioFormat == null ? AudioFormat.UNSPECIFIED : (AudioFormat)audioFormat);
+                        audioFormat == null ? AudioFormat.UNSPECIFIED : (AudioFormat)audioFormat, false, processOutput);
                     string destination = conversion.OutputFilePath;
                     conversion.OnProgress += Conversion_OnProgress;
                     try
@@ -720,7 +665,7 @@ namespace YT_RED
                 {
                     IConversion conversion = await VideoUtil.PrepareBestYtdlConversion(url, "bestaudio", start, duration, 
                         AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat, null, VideoFormat.UNSPECIFIED, 
-                        audioFormat == null ? AudioFormat.UNSPECIFIED : (AudioFormat)audioFormat, cpMainControlPanel.EmbedThumbnail);
+                        audioFormat == null ? AudioFormat.UNSPECIFIED : (AudioFormat)audioFormat, cpMainControlPanel.EmbedThumbnail, processOutput);
                     string destination = conversion.OutputFilePath;
                     conversion.OnProgress += Conversion_OnProgress;
                     try
@@ -757,7 +702,7 @@ namespace YT_RED
                         {
                             YT_RED.Classes.StreamType detect = AppSettings.DetectStreamTypeFromExtension(data.Extension);
                             if (detect != Classes.StreamType.Unknown)
-                            {
+                            {                                
                                 if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
                                     test = await Utils.VideoUtil.DownloadPreferredYtdl(VideoUtil.CorrectYouTubeString(url), detect);
                                 else 

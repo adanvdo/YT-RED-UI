@@ -74,6 +74,8 @@ namespace YT_RED.Settings
 					return VideoFormat.OGG;
 				case "webm":
 					return VideoFormat.WEBM;
+				case "gif":
+					return VideoFormat.GIF;
 				case "":
 					return VideoFormat.UNSPECIFIED;
 				default:
@@ -219,6 +221,7 @@ namespace YT_RED.Settings
 		FLV = 2,
 		MKV = 3,
 		OGG = 4,
-		UNSPECIFIED = 5
+		UNSPECIFIED = 5,
+		GIF = 6
 	}
 }

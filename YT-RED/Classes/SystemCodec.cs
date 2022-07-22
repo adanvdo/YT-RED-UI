@@ -21,6 +21,8 @@ namespace YT_RED.Classes
         public static FFmpegAudioCodec MP3 = new FFmpegAudioCodec(AudioFormat.MP3, "libmp3lame");
         public static FFmpegAudioCodec VORBIS = new FFmpegAudioCodec(AudioFormat.VORBIS, "libvorbis -qscale:a 3");
         public static FFmpegAudioCodec WAV = new FFmpegAudioCodec(AudioFormat.WAV, "pcm_s32le");
+        public static FFmpegVideoCodec RGB24 = new FFmpegVideoCodec(SystemVideoCodec.RGB24, "rgb24 -qscale:v 3");
+        public static FFmpegVideoCodec BGRA = new FFmpegVideoCodec(SystemVideoCodec.BGRA, "bgra -qscale:v 3");
 
         public static VideoCodecMap FLV = new VideoCodecMap(VideoFormat.FLV, 
             new List<FFmpegVideoCodec>(){ 
@@ -90,7 +92,15 @@ namespace YT_RED.Classes
                 VORBIS,
                 OPUS
             }
-        );        
+        );
+
+        public static VideoCodecMap GIF = new VideoCodecMap(VideoFormat.GIF,
+            new List<FFmpegVideoCodec>()
+            {
+                BGRA,
+                RGB24
+            },
+            new List<FFmpegAudioCodec>());
 
         public static VideoCodecMap GetMappedCodecs(string format)
         {
@@ -106,6 +116,8 @@ namespace YT_RED.Classes
                     return WEBM;
                 case "OGG":
                     return OGGVideo;
+                case "GIF":
+                    return GIF;
                 default:
                     return null;
             }
@@ -127,6 +139,10 @@ namespace YT_RED.Classes
                     return VideoFormat.OGG;
                 case SystemVideoCodec.VP9:
                     return VideoFormat.WEBM;
+                case SystemVideoCodec.RGB24:
+                    return VideoFormat.GIF;
+                case SystemVideoCodec.BGRA:
+                    return VideoFormat.GIF;
                 default:
                     return VideoFormat.MP4;
             }
@@ -148,6 +164,10 @@ namespace YT_RED.Classes
                     return VideoFormat.OGG;
                 case SystemVideoCodec.VP9:
                     return VideoFormat.WEBM;
+                case SystemVideoCodec.RGB24:
+                    return VideoFormat.GIF;
+                case SystemVideoCodec.BGRA:
+                    return VideoFormat.GIF;
                 default:
                     return VideoFormat.MP4;
             }
@@ -167,8 +187,23 @@ namespace YT_RED.Classes
                     return OGGVideo;
                 case VideoFormat.WEBM:
                     return WEBM;
+                case VideoFormat.GIF:
+                    return GIF;
                 default:
                     return null;
+            }
+        }
+
+        public static FFmpegVideoCodec GetBestCodec(string pixelFormat)
+        {
+            switch (pixelFormat.ToLower()) 
+            {
+                case "bgra":
+                    return BGRA;
+                case "rgb24":
+                    return RGB24;
+                default:
+                    return BGRA;
             }
         }
 
@@ -186,6 +221,8 @@ namespace YT_RED.Classes
                     return VP9;
                 case VideoFormat.WEBM:
                     return VP9;
+                case VideoFormat.GIF:
+                    return BGRA;
                 default:
                     throw new Exception("Unsupported Format");
             }
@@ -248,6 +285,8 @@ namespace YT_RED.Classes
                         return SystemCodecMaps.VP9;
                     case VideoFormat.WEBM:
                         return SystemCodecMaps.VP9;
+                    case VideoFormat.GIF:
+                        return SystemCodecMaps.BGRA;
                     default:
                         throw new Exception("Unsupported Format");
                 }
@@ -270,6 +309,8 @@ namespace YT_RED.Classes
                         return SystemCodecMaps.VORBIS;
                     case VideoFormat.WEBM:
                         return SystemCodecMaps.VORBIS;
+                    case VideoFormat.GIF:
+                        return null;
                     default:
                         throw new Exception("Unsupported Format");
                 }
@@ -309,6 +350,8 @@ namespace YT_RED.Classes
         H265 = 3,
         VP9 = 4,
         MPEG4 = 5,
-        THEORA = 6
+        THEORA = 6,
+        RGB24 = 7,
+        BGRA = 8
     }
 }

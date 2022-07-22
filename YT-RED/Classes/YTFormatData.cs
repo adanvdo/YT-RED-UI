@@ -43,13 +43,16 @@ namespace YT_RED.Classes
                 this.FileSize = (long?)iMediaInfo.Size;
                 this.FrameRate = (float?)stream.Framerate;
             }
+            else
+            {
+                this.Duration = gifData.Duration.HasValue ? (TimeSpan?)TimeSpan.FromSeconds((double)gifData.Duration) : null;
+            }
             this.AudioCodec = "none";
             this.ManifestUrl = String.Empty;
             this.Extension = gifData.Extension;
             this.Format = iMediaInfo != null ? $"GIF - {this.Width}x{this.Height}" : "Unknown";
             this.FormatId = "gif";
             this.FormatNote = "Animated GIF";
-            this.Duration = gifData.Duration.HasValue ? (TimeSpan?)TimeSpan.FromSeconds((double)gifData.Duration) : null;
             this.ContainerFormat = "gif";
 
         }

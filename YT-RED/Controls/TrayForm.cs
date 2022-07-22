@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using YoutubeDLSharp;
+using YT_RED.Classes;
 using YT_RED.Logging;
 using YT_RED.Settings;
 using YT_RED.Utils;
+using Xabe.FFmpeg;
 
 namespace YT_RED.Controls
 {
@@ -72,19 +76,48 @@ namespace YT_RED.Controls
 
         private void showProgress(DownloadProgress progress)
         {
-            if (!pgTrayProgress.Visible)
-                pgTrayProgress.Show();
-            pgTrayProgress.Position = Convert.ToInt32(progress.Progress * 100);
-            if(progress.State == DownloadState.Success)
+            if (pgTrayProgress.InvokeRequired)
             {
-                pgTrayProgress.Position = 0;
-                pgTrayProgress.Hide();
+                Action safeUpdate = delegate
+                {
+                    if (!pgTrayProgress.Visible)
+                        pgTrayProgress.Show();
+                    pgTrayProgress.Position = Convert.ToInt32(progress.Progress * 100);
+                    if (progress.State == DownloadState.Success)
+                    {
+                        pgTrayProgress.Position = 0;
+                        pgTrayProgress.Hide();
+                    }
+                };
+                pgTrayProgress.Invoke(safeUpdate);
+            }
+            else
+            {
+                if (!pgTrayProgress.Visible)
+                    pgTrayProgress.Show();
+                pgTrayProgress.Position = Convert.ToInt32(progress.Progress * 100);
+                if (progress.State == DownloadState.Success)
+                {
+                    pgTrayProgress.Position = 0;
+                    pgTrayProgress.Hide();
+                }
             }
         }
 
         private void showProgressOutput(string output)
         {
-            progressMarquee.Text = output;            
+            if (progressMarquee.InvokeRequired)
+            {
+                Action safeUpdate = delegate
+                {
+                    progressMarquee.Text = output;
+                };
+                progressMarquee.Invoke(safeUpdate);
+            }
+            else 
+            { 
+                progressMarquee.Text = output;
+            }
         }
 
         private async void startDownload()
@@ -115,14 +148,58 @@ namespace YT_RED.Controls
             }
 
             RunResult<string> result = null;
-            if (AppSettings.Default.General.UsePreferredFormat)
-            {
-                result = await VideoUtil.DownloadPreferredYtdl(VideoUtil.CorrectYouTubeString(txtUrl.Text), Classes.StreamType.AudioAndVideo, ytProgress, ytOutput, cancelToken);
-            }
+            RunResult<string> test = null;
+            string url = VideoUtil.CorrectYouTubeString(txtUrl.Text);
+            if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
+                test = await Utils.VideoUtil.DownloadPreferredYtdl(url, Classes.StreamType.AudioAndVideo, ytProgress, ytOutput, cancelToken);
             else
+                test = await VideoUtil.DownloadBestYtdl(url, Classes.StreamType.AudioAndVideo, ytProgress, ytOutput, cancelToken);
+
+            if (!test.Success)
             {
-                result = await VideoUtil.DownloadBestYtdl(VideoUtil.CorrectYouTubeString(txtUrl.Text), Classes.StreamType.AudioAndVideo, ytProgress, ytOutput, cancelToken);
+                // FALLBACK IS CURRENTLY LIMITED TO REDDIT
+                // THIS SECTION MAY NEED TO BE EXPANDED FOR OTHER SUPPORTED HOSTS
+
+                cancellationTokenSource = new CancellationTokenSource();
+                cancelToken = cancellationTokenSource.Token;
+
+                if (this.currentDownload == DownloadType.Reddit)
+                {
+                    var data = await Utils.VideoUtil.GetVideoData(url);
+                    List<YTDLFormatData> converted = new List<YTDLFormatData>();
+                    if (data.Formats != null && data.Formats.Count() > 0)
+                    {
+                        YT_RED.Classes.StreamType detect = AppSettings.DetectStreamTypeFromExtension(data.Extension);
+                        if (detect != Classes.StreamType.Unknown)
+                        {
+                            if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
+                                test = await Utils.VideoUtil.DownloadPreferredYtdl(url, detect, ytProgress, ytOutput, cancelToken);
+                            else
+                                test = await Utils.VideoUtil.DownloadBestYtdl(url, detect, ytProgress, ytOutput, cancelToken);
+                        }
+                    }
+                    else if (data.Formats == null && data.Extension.ToLower() == "gif")
+                    {
+                        IMediaInfo gifMeta = await FFmpeg.GetMediaInfo(data.Url);
+                        YTDLFormatData dlFormatData;
+                        if (gifMeta != null)
+                        {
+                            dlFormatData = new YTDLFormatData(data, gifMeta);
+                        }
+                        else dlFormatData = new YTDLFormatData(data);
+                        var options = YoutubeDLSharp.Options.OptionSet.Default;
+                        if (options.CustomOptions.Where(o => o.OptionStrings.Contains("-o")).Count() > 0)
+                        {
+                            options.DeleteCustomOption("-o");
+                        }
+                        string outputFile = VideoUtil.GenerateUniqueYtdlFileName(Classes.StreamType.Video);
+                        options.AddCustomOption<string>("-o", outputFile);                        
+                        test = await Utils.VideoUtil.DownloadYTDLGif(dlFormatData.Url, options, ytProgress);
+                    }
+                }
             }
+            result = test;
+
             if (!result.Success && result.Data != "canceled")
             {
                 MsgBox.Show("Download Failed\n" + String.Join("\n", result.ErrorOutput));
