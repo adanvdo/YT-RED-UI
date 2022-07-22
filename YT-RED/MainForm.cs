@@ -293,7 +293,7 @@ namespace YT_RED
             if (this.updated || Program.updated)
             {
                 bool replaceDependency = await UpdateHelper.ReplaceZipDependency();
-                bool deleteBackup = await UpdateHelper.DeleteBackup();
+                bool deleteBackup = await UpdateHelper.DeleteRemnants();
             }
         }
         

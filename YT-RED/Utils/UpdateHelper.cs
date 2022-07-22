@@ -144,7 +144,7 @@ namespace YT_RED.Utils
             return result;
         }
 
-        public static async Task<bool> DeleteBackup()
+        public static async Task<bool> DeleteRemnants()
         {
             bool result = false;
             try
@@ -159,6 +159,8 @@ namespace YT_RED.Utils
                             f.Delete();
                         }
                     }
+                    if (File.Exists(Path.Combine(AppSettings.Default.General.ExeDirectoryPath, "Updates", "DeletePending.bat")))
+                        File.Delete(Path.Combine(AppSettings.Default.General.ExeDirectoryPath, "Updates", "DeletePending.bat"));
                     result = true;
                 });
             }

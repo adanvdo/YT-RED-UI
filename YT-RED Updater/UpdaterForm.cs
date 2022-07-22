@@ -126,10 +126,23 @@ namespace YT_RED_Updater
                 return;
             }
 
+            ProcessResult createPostBat = null;
+            
+            string launchArg = requiresUpdaterReplacement ? "-updater -updated" : "-updated";
+            createPostBat = await FileHelper.CreateFileUpdateBatch(clean.Pending, $"{Path.Combine(this.appBase.FullName, "YT-RED.exe")} {launchArg}");
+            if (!string.IsNullOrEmpty(createPostBat.Error))
+            {
+                marquee.Properties.ShowTitle = false;
+                progress.Properties.ShowTitle = false;
+                lblMessage.Text = $"Failed to create post-update script\n{clean.Error}\nYou may close this dialog";
+                return;
+            }
+            
+
             marquee.Text = "Installing Update";
             marquee.Properties.Stopped = false;
             progress.Position = 0;
-            ProcessResult install = await Updater.CopyUpdateFiles(reportProgress, updateUpdater);
+            ProcessResult install = await Updater.CopyUpdateFiles(reportProgress, updateUpdater, clean.Pending);
             progress.Position = 0;
             marquee.Text = "";
             marquee.Properties.Stopped = true;
@@ -160,13 +173,13 @@ namespace YT_RED_Updater
             marquee.Properties.Stopped = false;
             try
             {
-                ProcessStartInfo processStart;
-                if (requiresUpdaterReplacement)
-                    processStart = new ProcessStartInfo(Path.Combine(this.appBase.FullName, "YT-RED.exe"), "-updater -updated");
-                else
-                    processStart = new ProcessStartInfo(Path.Combine(this.appBase.FullName, "YT-RED.exe"), "-updated");
-                Process.Start(processStart);
-                await Task.Delay(1000);
+                Process p = new Process();
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.RedirectStandardOutput = true;
+                p.StartInfo.CreateNoWindow = true;
+                p.StartInfo.FileName = createPostBat.Output;
+                p.Start();
+                await Task.Delay(500);
             }
             catch(Exception ex)
             {

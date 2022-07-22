@@ -173,8 +173,10 @@ namespace YT_RED_Updater
             ProcessResult result = new ProcessResult();
             try
             {
-                await Task.Run(() =>
+                List<FileInfo> pendingDeletes = await Task.Run(async () =>
                 {
+                    List<FileInfo> failed = new List<FileInfo>();
+
                     DirectoryInfo baseDir = new DirectoryInfo(BaseDir);
                     List<FileInfo> files = baseDir.GetFiles("*", SearchOption.AllDirectories)
                         .Where(f => !f.FullName.EndsWith("YT-RED_Updater.exe")
@@ -195,18 +197,24 @@ namespace YT_RED_Updater
 
                     foreach (FileInfo f in files)
                     {
-                        f.Delete();
+                        FileActionResult tryDelete = await FileHelper.DeleteFile(f);
+                        if (!tryDelete.Success)
+                            failed.Add(f);
                         completed++;
                         percentComplete = Convert.ToInt32((completed / total) * 100);
                         reportProgress(percentComplete);
                     }
 
                     result.Output = "Completed";
+                    return failed;
                 });
+
+                if (pendingDeletes.Count > 0)
+                    result.Pending = pendingDeletes;
             }
             catch (Exception ex)
             {
-                result.Error = ex.Message;
+                result.Error = ex.ToString();
             }
 
             return result;
@@ -227,7 +235,7 @@ namespace YT_RED_Updater
                     }
                     if (!Program.devRun)
                     {
-                        FileInfo[] files = dir.Parent.GetFiles();
+                        FileInfo[] files = dir.Parent.GetFiles().Where(f => f.Name != "DeletePending.bat").ToArray();
                         foreach (FileInfo f in files)
                         {
                             try
@@ -251,25 +259,27 @@ namespace YT_RED_Updater
             return result;
         }
 
-        public static async Task<ProcessResult> CopyUpdateFiles(Action<int> reportCopyProgress, bool copyUpdater = false)
+        public static async Task<ProcessResult> CopyUpdateFiles(Action<int> reportCopyProgress, bool copyUpdater = false, List<FileInfo> pendingDelete = null)
         {
             ProcessResult result = new ProcessResult();
             await Task.Run(() =>
             {
                 try
                 {
-                    List<string> dirs = new List<string>();
-                    List<string> files = new List<string>();
+                    DirectoryInfo extractionFolder = new DirectoryInfo(ExtractionFolder);
+
+                    List<DirectoryInfo> dirs = new List<DirectoryInfo>();
+                    List<FileInfo> files = new List<FileInfo>();
 
                     if (copyUpdater)
                     {
-                        dirs = Directory.GetDirectories(ExtractionFolder, "*", SearchOption.AllDirectories).ToList();
-                        files = Directory.GetFiles(ExtractionFolder, "*", SearchOption.AllDirectories).ToList();
+                        dirs = extractionFolder.GetDirectories("*", SearchOption.AllDirectories).ToList();
+                        files = extractionFolder.GetFiles("*", SearchOption.AllDirectories).ToList();
                     }
                     else
                     {
-                        dirs = Directory.GetDirectories(ExtractionFolder, "*", SearchOption.AllDirectories).ToList();
-                        files = Directory.GetFiles(ExtractionFolder, "*", SearchOption.AllDirectories).Where(f => !f.EndsWith("YT-RED_Updater.exe")).ToList();
+                        dirs = extractionFolder.GetDirectories("*", SearchOption.AllDirectories).ToList();
+                        files = extractionFolder.GetFiles("*", SearchOption.AllDirectories).Where(f => f.Name != "YT-RED_Updater.exe").ToList();
                     }
 
                     decimal total = dirs.Count + files.Count;
@@ -277,39 +287,39 @@ namespace YT_RED_Updater
                     int percentComplete = 0;
 
                     //Now Create all of the directories
-                    foreach (string dirPath in dirs)
+                    foreach (DirectoryInfo dir in dirs)
                     {
-                        if (!Directory.Exists(dirPath.Replace(ExtractionFolder, BaseDir)))
-                            Directory.CreateDirectory(dirPath.Replace(ExtractionFolder, BaseDir));
+                        if (!Directory.Exists(dir.FullName.Replace(ExtractionFolder, BaseDir)))
+                            Directory.CreateDirectory(dir.FullName.Replace(ExtractionFolder, BaseDir));
                         completed++;
                         percentComplete = Convert.ToInt32((completed / total) * 100);
                         reportCopyProgress(percentComplete);
                     }
 
                     //Copy all the files & Replaces any files with the same name
-                    foreach (string newPath in files)
+
+                    foreach (FileInfo newFile in files)
                     {
-                        if (newPath.EndsWith("YT-RED_Updater.exe"))
+                        string dest = newFile.FullName.Replace(ExtractionFolder, BaseDir);
+                        if (newFile.Name == "YT-RED_Updater.exe"
+                            || newFile.Name == "Ionic.Zip.Reduced.dll"
+                            || (pendingDelete != null && pendingDelete.Find(fi => fi.Name == newFile.Name) != null))
                         {
-                            File.Copy(newPath, $"{newPath.Replace(ExtractionFolder, BaseDir)}.new");
-                        }
-                        else if (newPath.EndsWith("Ionic.Zip.Reduced.dll"))
-                        {
-                            File.Copy(newPath, $"{newPath.Replace(ExtractionFolder, BaseDir)}.new");
+                            File.Copy(newFile.FullName, $"{dest}.new");
                         }
                         else
                         {
-                            File.Copy(newPath, newPath.Replace(ExtractionFolder, BaseDir), true);
+                            File.Copy(newFile.FullName, dest, true);
                         }
                         completed++;
                         percentComplete = Convert.ToInt32((completed / total) * 100);
                         reportCopyProgress(percentComplete);
                     }
-                    result.Output = $"Copied {total} files";
+                    result.Output = $"Copied {total - pendingDelete.Count} files";
                 }
                 catch (Exception ex)
                 {
-                    string message = ex.Message + "\n\nManual Update Required. Update File Location:\n" + ExtractionFolder;
+                    string message = ex.ToString() + "\n\nManual Update Required. Update File Location:\n" + ExtractionFolder;
                     result.Error = message;
                 }
             });
@@ -321,18 +331,14 @@ namespace YT_RED_Updater
     {
         public string Output { get; set; }
 
+        public List<FileInfo> Pending { get; set; }
         public string Error { get; set; }
 
         public ProcessResult()
         {
             Output = string.Empty;
+            Pending = null;
             Error = string.Empty;
-        }
-
-        public ProcessResult(string message, string error)
-        {
-            Output = message;
-            Error = error;
-        }
+        }       
     }
 }
