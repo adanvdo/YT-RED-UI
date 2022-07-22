@@ -78,16 +78,16 @@ namespace YT_RED.Utils
             if (formatData.RedditAudioFormat != null)
             {
                 getUrls = new List<string>();
-                List<string> vUrls = await GetFormatUrls(url, formatData.FormatId == null ? formatData.Format.Split(' ')[0] : formatData.FormatId.Split('+')[0]);
+                List<string> vUrls = await GetFormatUrls(url, formatData.FormatId == null ? formatData.Format.Split(' ')[0] : formatData.FormatId.Split('+')[0], ytProgress, ytOutput);
                 if (vUrls != null)
                     getUrls.Add(vUrls[0]);
-                List<string> aUrls = await GetFormatUrls(url, formatData.RedditAudioFormat.FormatId);
+                List<string> aUrls = await GetFormatUrls(url, formatData.RedditAudioFormat.FormatId, ytProgress, ytOutput);
                 if (aUrls != null)
                     getUrls.Add(aUrls[0]);
             }
             else
             {
-                getUrls = await GetFormatUrls(url, formatData.FormatId == null ? formatData.Format.Split(' ')[0] : formatData.FormatId);
+                getUrls = await GetFormatUrls(url, formatData.FormatId == null ? formatData.Format.Split(' ')[0] : formatData.FormatId, ytProgress, ytOutput);
             }
             if (getUrls == null || getUrls.Count < 1)
                 return null;

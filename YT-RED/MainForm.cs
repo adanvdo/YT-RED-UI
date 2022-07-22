@@ -573,13 +573,22 @@ namespace YT_RED
                 List<YTDLFormatData> converted = new List<YTDLFormatData>();                
                 if(data.Formats != null)
                 {
+                    YoutubeDLSharp.Metadata.FormatData supplementAudio = null;
+                    if(this.currentDownload == DownloadType.Reddit && data.Formats.Where(f => f.VideoCodec != null && f.VideoCodec != "none" && f.AudioCodec != null && f.AudioCodec != "none").Count() < 1)
+                    {
+                        supplementAudio = data.Formats.Where(af => af.AudioCodec != null && af.AudioCodec != "none" && (af.VideoCodec == null || af.VideoCodec == "none")).First();
+                    }
                     formatList = data.Formats.Where(f => !YTDLFormatData.ExcludeFormatIDs.Contains(f.FormatId))
                         .OrderBy(f => f.VideoCodec == "none" || f.VideoCodec == "" || f.VideoCodec == null ? 0 : 1)
                         .ThenBy(f => f.Height).ToList(); 
                     foreach (YoutubeDLSharp.Metadata.FormatData format in formatList)
                     {
                         converted.Add(new YTDLFormatData(format, data.Duration));
-                    }                    
+                        if(supplementAudio != null)
+                        {
+                            converted.Add(new YTDLFormatData(format, data.Duration, supplementAudio));
+                        }
+                    }
                 }
                 else if(data.Extension.ToLower() == "gif") 
                 {
