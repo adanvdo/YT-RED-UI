@@ -66,6 +66,7 @@
             this.tsDuration = new DevExpress.XtraEditors.TimeSpanEdit();
             this.pnlProgressPanel = new DevExpress.XtraEditors.PanelControl();
             this.btnOpenDL = new DevExpress.XtraEditors.SimpleButton();
+            this.lblLastDL = new DevExpress.XtraEditors.LabelControl();
             this.pbProgress = new DevExpress.XtraEditors.ProgressBarControl();
             this.gcHistory = new DevExpress.XtraGrid.GridControl();
             this.gvHistory = new DevExpress.XtraGrid.Views.Grid.GridView();
@@ -617,23 +618,41 @@
             this.pnlProgressPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.pnlProgressPanel.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.pnlProgressPanel.Controls.Add(this.btnOpenDL);
+            this.pnlProgressPanel.Controls.Add(this.lblLastDL);
             this.pnlProgressPanel.Controls.Add(this.pbProgress);
             this.pnlProgressPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlProgressPanel.Location = new System.Drawing.Point(0, 563);
             this.pnlProgressPanel.Margin = new System.Windows.Forms.Padding(0);
             this.pnlProgressPanel.Name = "pnlProgressPanel";
-            this.pnlProgressPanel.Size = new System.Drawing.Size(323, 57);
+            this.pnlProgressPanel.Size = new System.Drawing.Size(323, 78);
             this.pnlProgressPanel.TabIndex = 0;
             // 
             // btnOpenDL
             // 
             this.btnOpenDL.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnOpenDL.Location = new System.Drawing.Point(0, 31);
+            this.btnOpenDL.Location = new System.Drawing.Point(0, 52);
             this.btnOpenDL.Name = "btnOpenDL";
             this.btnOpenDL.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnOpenDL.Size = new System.Drawing.Size(323, 26);
             this.btnOpenDL.TabIndex = 0;
             this.btnOpenDL.Visible = false;
+            this.btnOpenDL.Click += new System.EventHandler(this.btnOpenDL_Click);
+            // 
+            // lblLastDL
+            // 
+            this.lblLastDL.Appearance.FontStyleDelta = System.Drawing.FontStyle.Bold;
+            this.lblLastDL.Appearance.Options.UseFont = true;
+            this.lblLastDL.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
+            this.lblLastDL.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.lblLastDL.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblLastDL.Location = new System.Drawing.Point(0, 31);
+            this.lblLastDL.Margin = new System.Windows.Forms.Padding(0);
+            this.lblLastDL.Name = "lblLastDL";
+            this.lblLastDL.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.lblLastDL.Size = new System.Drawing.Size(323, 21);
+            this.lblLastDL.TabIndex = 1;
+            this.lblLastDL.Text = "Last Downloaded File";
+            this.lblLastDL.Visible = false;
             // 
             // pbProgress
             // 
@@ -649,10 +668,10 @@
             // gcHistory
             // 
             this.gcHistory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcHistory.Location = new System.Drawing.Point(0, 620);
+            this.gcHistory.Location = new System.Drawing.Point(0, 641);
             this.gcHistory.MainView = this.gvHistory;
             this.gcHistory.Name = "gcHistory";
-            this.gcHistory.Size = new System.Drawing.Size(323, 215);
+            this.gcHistory.Size = new System.Drawing.Size(323, 194);
             this.gcHistory.TabIndex = 0;
             this.gcHistory.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvHistory});
@@ -769,5 +788,6 @@
         private DevExpress.XtraEditors.ComboBoxEdit cbAudioFormat;
         private DevExpress.XtraEditors.ComboBoxEdit cbVideoFormat;
         private DevExpress.XtraEditors.ToggleSwitch toggleConvert;
+        private DevExpress.XtraEditors.LabelControl lblLastDL;
     }
 }

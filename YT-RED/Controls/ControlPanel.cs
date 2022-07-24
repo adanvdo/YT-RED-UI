@@ -246,12 +246,14 @@ namespace YT_RED.Controls
         {
             btnOpenDL.Text = fileLocation;
             btnOpenDL.Visible = true;
+            lblLastDL.Visible = true;
         }
 
         public void HideDownloadLocation()
         {
             btnOpenDL.Visible = false;
             btnOpenDL.Text = string.Empty;
+            lblLastDL.Visible = false;
         }
 
         [Browsable(true)]
@@ -310,6 +312,7 @@ namespace YT_RED.Controls
             txtCropLeft.Text = String.Empty;
             txtCropRight.Text = String.Empty;
             toggleConvert.IsOn = false;
+            EnableToggle(true, true, true);
             cbVideoFormat.SelectedIndex = 0;
             cbAudioFormat.SelectedIndex = 0;
             HideDownloadLocation();
@@ -543,15 +546,28 @@ namespace YT_RED.Controls
                 Logging.DownloadLog row = gvHistory.GetRow(gvHistory.FocusedRowHandle) as Logging.DownloadLog;
                 if(row != null && row.FileExists)
                 {
-                    string argument = "/select, \"" + row.DownloadLocation + "\"";
-
-                    System.Diagnostics.Process.Start("explorer.exe", argument);                    
+                    openFileLocation(row.DownloadLocation);    
                 }
             }
             catch(Exception ex)
             {
                 Logging.ExceptionHandler.LogException(ex);
             }
+        }
+
+        private void btnOpenDL_Click(object sender, EventArgs e)
+        {
+            if(!string.IsNullOrEmpty(btnOpenDL.Text) && System.IO.File.Exists(btnOpenDL.Text))
+            {
+                openFileLocation(btnOpenDL.Text);
+            }
+        }
+
+        private void openFileLocation(string path)
+        {
+            string argument = "/select, \"" + path + "\"";
+
+            System.Diagnostics.Process.Start("explorer.exe", argument);
         }
     }
 }

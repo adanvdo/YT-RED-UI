@@ -128,6 +128,7 @@
             // sccMainSplitter
             // 
             this.sccMainSplitter.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.sccMainSplitter.FixedPanel = DevExpress.XtraEditors.SplitFixedPanel.None;
             this.sccMainSplitter.Location = new System.Drawing.Point(0, 0);
             this.sccMainSplitter.Margin = new System.Windows.Forms.Padding(0);
             this.sccMainSplitter.Name = "sccMainSplitter";
@@ -138,6 +139,7 @@
             this.sccMainSplitter.Panel1.Controls.Add(this.marqueeProgressBarControl1);
             this.sccMainSplitter.Panel1.Controls.Add(this.gcFormats);
             this.sccMainSplitter.Panel1.Controls.Add(this.ipMainInput);
+            this.sccMainSplitter.Panel1.MinSize = 482;
             this.sccMainSplitter.Panel1.Text = "Panel1";
             // 
             // sccMainSplitter.Panel2
@@ -146,8 +148,10 @@
             this.sccMainSplitter.Panel2.MinSize = 323;
             this.sccMainSplitter.Panel2.Text = "Panel2";
             this.sccMainSplitter.Size = new System.Drawing.Size(1188, 717);
-            this.sccMainSplitter.SplitterPosition = 860;
+            this.sccMainSplitter.SplitterPosition = 849;
             this.sccMainSplitter.TabIndex = 0;
+            this.sccMainSplitter.SplitterMoved += new System.EventHandler(this.sccMainSplitter_SplitterMoved);
+            this.sccMainSplitter.Resize += new System.EventHandler(this.sccMainSplitter_Resize);
             // 
             // lblSelectAFormat
             // 
@@ -305,6 +309,7 @@
             this.DoubleBuffered = true;
             this.IconOptions.Icon = ((System.Drawing.Icon)(resources.GetObject("MainForm.IconOptions.Icon")));
             this.IconOptions.Image = ((System.Drawing.Image)(resources.GetObject("MainForm.IconOptions.Image")));
+            this.MinimumSize = new System.Drawing.Size(823, 664);
             this.Name = "MainForm";
             this.TabFormControl = this.tcMainTabControl;
             this.Text = "YT-RED";

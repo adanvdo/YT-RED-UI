@@ -53,6 +53,7 @@ namespace YT_RED
         private bool enableQuickDownload = false;
         private bool trayBalloonShown = false;
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repHistoryCheckEdit;
+        private int splitterNegativePosition = 0;
 
         static KeyboardHook hook = new KeyboardHook();
 
@@ -225,6 +226,7 @@ namespace YT_RED
                 if (!uploaded)
                     MsgBox.Show("Log Upload Failed", FormStartPosition.CenterParent);
             }
+            splitterNegativePosition = sccMainSplitter.Size.Width - sccMainSplitter.SplitterPosition;
             base.OnLoad(e);
         }
 
@@ -576,7 +578,9 @@ namespace YT_RED
                     YoutubeDLSharp.Metadata.FormatData supplementAudio = null;
                     if(this.currentDownload == DownloadType.Reddit && data.Formats.Where(f => f.VideoCodec != null && f.VideoCodec != "none" && f.AudioCodec != null && f.AudioCodec != "none").Count() < 1)
                     {
-                        supplementAudio = data.Formats.Where(af => af.AudioCodec != null && af.AudioCodec != "none" && (af.VideoCodec == null || af.VideoCodec == "none")).First();
+                        var checkAudio = data.Formats.Where(af => af.AudioCodec != null && af.AudioCodec != "none" && (af.VideoCodec == null || af.VideoCodec == "none"));
+                        if (checkAudio != null && checkAudio.Count() > 0)
+                            supplementAudio = checkAudio.First();
                     }
                     formatList = data.Formats.Where(f => !YTDLFormatData.ExcludeFormatIDs.Contains(f.FormatId))
                         .OrderBy(f => f.VideoCodec == "none" || f.VideoCodec == "" || f.VideoCodec == null ? 0 : 1)
@@ -938,6 +942,13 @@ namespace YT_RED
                         }
                     }
                 }
+                if(e.Column.FieldName == "Duration")
+                {
+                    if(e.Value != null)
+                    {
+                        e.DisplayText = ((TimeSpan)e.Value).ToString(@"hh\:mm\:ss");
+                    }
+                }
             }
             catch(Exception ex)
             {
@@ -1028,6 +1039,16 @@ namespace YT_RED
                 }
                 e.Handled = true;
             }
+        }
+
+        private void sccMainSplitter_Resize(object sender, EventArgs e)
+        {
+            sccMainSplitter.SplitterPosition = sccMainSplitter.Size.Width - splitterNegativePosition;
+        }
+
+        private void sccMainSplitter_SplitterMoved(object sender, EventArgs e)
+        {
+            splitterNegativePosition = sccMainSplitter.Size.Width - sccMainSplitter.SplitterPosition;
         }
     }
 }
