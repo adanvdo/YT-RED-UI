@@ -543,12 +543,9 @@ namespace YT_RED.Controls
                 Logging.DownloadLog row = gvHistory.GetRow(gvHistory.FocusedRowHandle) as Logging.DownloadLog;
                 if(row != null && row.FileExists)
                 {
-                    if (AppSettings.Default.General.AutomaticallyOpenDownloadLocation)
-                    {
-                        string argument = "/select, \"" + row.DownloadLocation + "\"";
+                    string argument = "/select, \"" + row.DownloadLocation + "\"";
 
-                        System.Diagnostics.Process.Start("explorer.exe", argument);
-                    }
+                    System.Diagnostics.Process.Start("explorer.exe", argument);                    
                 }
             }
             catch(Exception ex)

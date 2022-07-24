@@ -82,7 +82,7 @@ namespace YT_RED.Classes
             this.VideoBitrate = formatData.VideoBitrate;
             this.FrameRate = formatData.FrameRate;
             this.VideoCodec = formatData.VideoCodec;
-            this.ContainerFormat = formatData.ContainerFormat;
+            this.ContainerFormat = string.IsNullOrEmpty(formatData.ContainerFormat) ? this.Extension : formatData.ContainerFormat;
             this.FileSize = formatData.FileSize;
             this.ApproximateFileSize = formatData.ApproximateFileSize;
             this.PlayerUrl = formatData.PlayerUrl;
