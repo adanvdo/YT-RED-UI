@@ -329,14 +329,14 @@ namespace YT_RED.Utils
                 string extension = "";
 
                 IMediaInfo mediaInfo = null;
-                IStream v = null;
+                IVideoStream v = null;
                 if (!string.IsNullOrEmpty(videoUrl))
                 {
                     mediaInfo = await FFmpeg.GetMediaInfo(videoUrl);
                     v = mediaInfo.VideoStreams.FirstOrDefault();
                 }
 
-                IStream a = null;
+                IAudioStream a = null;
 
                 IMediaInfo audioInfo = null;
                 if (!string.IsNullOrEmpty(audioUrl))
@@ -351,9 +351,20 @@ namespace YT_RED.Utils
 
                 var convert = FFmpeg.Conversions.New();
                 if (v != null)
-                    convert.AddStream(v);
+                    convert.AddStream<Xabe.FFmpeg.IVideoStream>(v);
                 if (a != null)
-                    convert.AddStream(a);
+                {
+                    var segStartParam = parameters.First(p => p.Type == Classes.ParamType.StartTime);
+                    var segDurParam = parameters.First(p => p.Type == Classes.ParamType.Duration);
+                    if(segStartParam != null && segDurParam != null)
+                    {
+                        bool startParse = TimeSpan.TryParse(segStartParam.Value.Replace("-ss ", ""), out TimeSpan startSpan);
+                        bool durParse = TimeSpan.TryParse(segDurParam.Value.Replace("-t ", ""), out TimeSpan durSpan);
+                        if (startParse && durParse)
+                            a = a.Split(startSpan, durSpan);
+                    }
+                    convert.AddStream<Xabe.FFmpeg.IAudioStream>(a);
+                }
 
                 if (parameters != null)
                 {

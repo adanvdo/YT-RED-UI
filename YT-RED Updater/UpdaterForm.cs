@@ -179,7 +179,6 @@ namespace YT_RED_Updater
                 p.StartInfo.CreateNoWindow = true;
                 p.StartInfo.FileName = createPostBat.Output;
                 p.Start();
-                await Task.Delay(500);
             }
             catch(Exception ex)
             {
