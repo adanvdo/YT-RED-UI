@@ -46,14 +46,18 @@ If there is existing text in your clipboard, YT-RED will restore it after starti
         [Description("Prefer this format when downloading \"Preferred\" video")]
         [JsonProperty("preferred_video_format")]
         public VideoFormat PreferredVideoFormat { get; set; }
-        //public YoutubeDLSharp.Options.DownloadMergeFormat PreferredYoutubeVideoFormat { get; set; }
 
         [Category("Processing")]
         [DisplayName("Preferred Audio Format")]
         [Description("Prefer this format when downloading \"preferred\" audio")]
         [JsonProperty("preferred_audio_format")]
         public AudioFormat PreferredAudioFormat { get; set; }
-        //public YoutubeDLSharp.Options.AudioConversionFormat PreferredYoutubeAudioFormat { get; set; }
+
+        [Category("Debug")]
+        [DisplayName("Enable Verbose Output")]
+        [Description("When enabled, displays full downloader arguments when starting a download")]
+        [JsonProperty("verbose_output")]
+        public bool VerboseOutput { get; set; }
 
         public AdvancedSettings()
         {
@@ -63,6 +67,7 @@ If there is existing text in your clipboard, YT-RED will restore it after starti
             AlwaysConvertToPreferredFormat = false;
             PreferredVideoFormat = VideoFormat.UNSPECIFIED;
             PreferredAudioFormat = AudioFormat.UNSPECIFIED;
+            VerboseOutput = false;
         }
 
         public override async Task<string> ValidateSettings()

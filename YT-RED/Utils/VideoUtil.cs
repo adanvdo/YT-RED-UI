@@ -354,8 +354,8 @@ namespace YT_RED.Utils
                     convert.AddStream<Xabe.FFmpeg.IVideoStream>(v);
                 if (a != null)
                 {
-                    var segStartParam = parameters.First(p => p.Type == Classes.ParamType.StartTime);
-                    var segDurParam = parameters.First(p => p.Type == Classes.ParamType.Duration);
+                    var segStartParam = parameters == null ||  parameters.Length < 1 ? null : parameters.First(p => p.Type == Classes.ParamType.StartTime);
+                    var segDurParam = parameters == null || parameters.Length < 1 ? null : parameters.First(p => p.Type == Classes.ParamType.Duration);
                     if(segStartParam != null && segDurParam != null)
                     {
                         bool startParse = TimeSpan.TryParse(segStartParam.Value.Replace("-ss ", ""), out TimeSpan startSpan);
@@ -423,7 +423,7 @@ namespace YT_RED.Utils
 
         public static async Task<YoutubeDLSharp.Metadata.VideoData> GetVideoData(string url, bool useFfmpegMetaDataFallback = false)
         {
-            RunResult<VideoData> res = await ytdl.RunVideoDataFetch(url, default, true, null, ytProgress, ytOutput, useFfmpegMetaDataFallback);
+            RunResult<VideoData> res = await ytdl.RunVideoDataFetch(url, default, true, null, ytProgress, ytOutput, useFfmpegMetaDataFallback, AppSettings.Default.Advanced.VerboseOutput);
             if(res.Success)
             {
                 return res.Data;
@@ -443,7 +443,7 @@ namespace YT_RED.Utils
             };
             try
             {
-                var result = await ytdl.RunWithOptions(new[] { url }, options, default, progress, output);
+                var result = await ytdl.RunWithOptions(new[] { url }, options, default, progress, output, AppSettings.Default.Advanced.VerboseOutput);
                 if (result != null && result.Data.Length > 0)
                 {
                     return result.Data.ToList();
@@ -490,10 +490,14 @@ namespace YT_RED.Utils
                 }
                 
                 if (streamType == Classes.StreamType.AudioAndVideo)
-                    return await ytdl.RunVideoDownload(url, "bestvideo+bestaudio/best", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, cancellationToken != null ? (System.Threading.CancellationToken)cancellationToken : default, dlProgress == null ? ytProgress : dlProgress, progressText, options);
+                    return await ytdl.RunVideoDownload(url, "bestvideo+bestaudio/best", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, 
+                        YoutubeDLSharp.Options.VideoRecodeFormat.None, cancellationToken != null ? (System.Threading.CancellationToken)cancellationToken : default, 
+                        dlProgress == null ? ytProgress : dlProgress, progressText, options, AppSettings.Default.Advanced.VerboseOutput);
                 if (streamType == Classes.StreamType.Video)
-                    return await ytdl.RunVideoDownload(url, "bestvideo", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, cancellationToken != null ? (System.Threading.CancellationToken)cancellationToken : default, dlProgress == null ? ytProgress : dlProgress, progressText, options);
-                return await ytdl.RunAudioDownload(url, audioConversionFormat, cancellationToken != null ? (System.Threading.CancellationToken)cancellationToken : default, dlProgress == null ? ytProgress : dlProgress, progressText, options);
+                    return await ytdl.RunVideoDownload(url, "bestvideo", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, cancellationToken != null ? (System.Threading.CancellationToken)cancellationToken : default, 
+                        dlProgress == null ? ytProgress : dlProgress, progressText, options, AppSettings.Default.Advanced.VerboseOutput);
+                return await ytdl.RunAudioDownload(url, audioConversionFormat, cancellationToken != null ? (System.Threading.CancellationToken)cancellationToken : default, 
+                    dlProgress == null ? ytProgress : dlProgress, progressText, options, AppSettings.Default.Advanced.VerboseOutput);
             }
             catch (Exception ex)
             {
@@ -555,9 +559,11 @@ namespace YT_RED.Utils
                 }                
 
                 if (streamType == Classes.StreamType.AudioAndVideo)
-                    return await ytdl.RunVideoDownload(url, "bestvideo+bestaudio/best", mergeFormat, videoRecodeFormat, cancellationToken != null ? (System.Threading.CancellationToken)cancellationToken : default, dlProgress == null ? ytProgress : dlProgress, progressText, options);
+                    return await ytdl.RunVideoDownload(url, "bestvideo+bestaudio/best", mergeFormat, videoRecodeFormat, cancellationToken != null ? (System.Threading.CancellationToken)cancellationToken : default, 
+                        dlProgress == null ? ytProgress : dlProgress, progressText, options, AppSettings.Default.Advanced.VerboseOutput);
                 else if (streamType == Classes.StreamType.Video)
-                    return await ytdl.RunVideoDownload(url, "bestvideo", mergeFormat, videoRecodeFormat, cancellationToken != null ? (System.Threading.CancellationToken)cancellationToken : default, dlProgress == null ? ytProgress : dlProgress, progressText, options);
+                    return await ytdl.RunVideoDownload(url, "bestvideo", mergeFormat, videoRecodeFormat, cancellationToken != null ? (System.Threading.CancellationToken)cancellationToken : default, 
+                        dlProgress == null ? ytProgress : dlProgress, progressText, options, AppSettings.Default.Advanced.VerboseOutput);
                 else
                     return await DownloadAudioYTDL(url, AppSettings.Default.Advanced.PreferredAudioFormat, cancellationToken, embedThumbnail);
 
@@ -636,7 +642,8 @@ namespace YT_RED.Utils
                     options.AddCustomOption<string>("--postprocessor-args", "-write_id3v1 1 -id3v2_version 3");
                     options.AddCustomOption<string>("--convert-thumbnails", "jpg");
                 }
-                return await ytdl.RunAudioDownload(url, audioConversion, cancellationToken != null ? (System.Threading.CancellationToken)cancellationToken : default, ytProgress, ytOutput, options);
+                return await ytdl.RunAudioDownload(url, audioConversion, cancellationToken != null ? (System.Threading.CancellationToken)cancellationToken : default, 
+                    ytProgress, ytOutput, options, AppSettings.Default.Advanced.VerboseOutput);
             }
             catch (Exception ex)
             {
@@ -709,8 +716,10 @@ namespace YT_RED.Utils
                 CancellationToken cancelToken = cancellationTokenSource.Token;
                 string outFile = string.Empty;
                 var process = new YoutubeDLProcess(ytdl.YoutubeDLPath);
-
-                ytOutput?.Report($"Arguments: {convertToArgs(new[] { url }, options)}\n");
+                if (AppSettings.Default.Advanced.VerboseOutput)
+                    ytOutput?.Report($"Arguments: {convertToArgs(new[] { url }, options)}\n");
+                else
+                    ytOutput?.Report($"Starting Downlaod: {url}");
                 process.OutputReceived += (o, e) =>
                 {
                     var match = rgxFile.Match(e.Data);
@@ -742,7 +751,10 @@ namespace YT_RED.Utils
                 string outFile = string.Empty;
                 var process = new YoutubeDLProcess(ytdl.YoutubeDLPath);
 
-                ytOutput?.Report($"Arguments: {convertToArgs(new[] { url }, options)}\n");
+                if (AppSettings.Default.Advanced.VerboseOutput)
+                    ytOutput?.Report($"Arguments: {convertToArgs(new[] { url }, options)}\n");
+                else
+                    ytOutput?.Report($"Starting Download: {url}");
                 process.OutputReceived += (o, e) =>
                 {
                     var match = rgxFile.Match(e.Data);
@@ -782,7 +794,8 @@ namespace YT_RED.Utils
                     options.Format = format;
                     return await DownloadYTDLGif(url, options);
                 }
-                return await ytdl.RunVideoDownload(url, format, YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, default, ytProgress, ytOutput, options);
+                return await ytdl.RunVideoDownload(url, format, YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, 
+                    default, ytProgress, ytOutput, options, AppSettings.Default.Advanced.VerboseOutput);
             }
             catch(Exception ex)
             {

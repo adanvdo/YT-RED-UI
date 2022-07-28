@@ -90,6 +90,12 @@ namespace YT_RED.Controls
 
         private void pgcPropertyGrid_CustomPropertyDescriptors(object sender, DevExpress.XtraVerticalGrid.Events.CustomPropertyDescriptorsEventArgs e)
         {
+            if (e.Properties.Find("VerboseOutput", false) != null)
+            {
+                this.pgcPropertyGrid.OptionsBehavior.PropertySort = DevExpress.XtraVerticalGrid.PropertySort.NoSort;
+                e.Properties = e.Properties.Sort(new string[] { "Channel", "EnableHotKeys", "DownloadHotKey", "AlwaysConvertToPreferredFormat",
+                    "PreferredVideoFormat", "PreferredAudioFormat", "VerboseOutput" });
+            }
 			if(e.Properties.Find("Version", false) != null)
             {
 				this.pgcPropertyGrid.OptionsBehavior.PropertySort = DevExpress.XtraVerticalGrid.PropertySort.NoSort;
