@@ -85,6 +85,10 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 7/28/2022 v1.0.1.11
+- Fixed bug where audio segment was not synced with video segment if using "Download Best" feature
+- Fixed bug where Updater remained open too long resulting in a file lock
+
 ### 7/24/2022 v1.0.1.10
 - Fixed bug where you could not open downloads from history panel unless Auto-Open setting was enabled
 - Fixed bug where Audio Vimeo formats were identified as Video formats
