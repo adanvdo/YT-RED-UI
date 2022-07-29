@@ -59,6 +59,7 @@ namespace YT_RED_Updater
                             writer.WriteLine($"del \"{fileInfo.FullName}\"");
                             writer.WriteLine($"ren \"{fileInfo.FullName}.new\" \"{fileInfo.Name}\"");
                         }
+                        
                         writer.WriteLine(launchArgs);
                     }
                 });

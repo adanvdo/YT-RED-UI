@@ -69,7 +69,7 @@ namespace YT_RED.Controls
         {
             if (this.tcSettingsTabControl.SelectedTabPage.Name == $"tpg{AppFeature.About}")
             {
-                PropertyGrid pg = (PropertyGrid)this.tcSettingsTabControl.SelectedTabPage.Controls.Find($"pg{AppFeature.About}", true).First();
+                PropertyGrid pg = (PropertyGrid)this.tcSettingsTabControl.SelectedTabPage.Controls.Find($"pg{AppFeature.About}", true).FirstOrDefault();
                 if (pg.IsBusy)
                 {
                     MsgBox.Show("A task is in progress. Please wait.");

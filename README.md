@@ -85,6 +85,10 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 7/28/2022 v1.0.1.13
+- Fixed bug where updater failed if it did not find any locked files
+- Fixed bug where downloads failed if segment post-processing parameters were not included
+
 ### 7/28/2022 v1.0.1.12
 - Fixed bug where downloads failed if no post-processing parameters were included
 - Added Verbose Output option to enable/disable full argument display in the progress marquee

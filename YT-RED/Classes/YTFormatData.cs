@@ -36,7 +36,7 @@ namespace YT_RED.Classes
             if(iMediaInfo != null && iMediaInfo.VideoStreams.Count() > 0)
             {
                 this.Duration = (TimeSpan?)iMediaInfo.Duration;
-                var stream = iMediaInfo.VideoStreams.First();
+                var stream = iMediaInfo.VideoStreams.FirstOrDefault();
                 this.VideoCodec = "gif";
                 this.Width = stream.Width;
                 this.Height = stream.Height;

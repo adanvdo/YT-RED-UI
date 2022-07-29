@@ -209,8 +209,7 @@ namespace YT_RED_Updater
                     return failed;
                 });
 
-                if (pendingDeletes.Count > 0)
-                    result.Pending = pendingDeletes;
+                result.Pending = pendingDeletes;
             }
             catch (Exception ex)
             {

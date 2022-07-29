@@ -290,6 +290,10 @@ namespace YT_RED
             if (newUpdater)
             {
                 bool updaterReplaced = await UpdateHelper.ReplaceUpdater();
+                if (!updaterReplaced)
+                {
+                    YT_RED.Controls.MsgBox.Show($"Failed to Replace Updater", "Something Went Wrong", FormStartPosition.CenterParent);
+                }
             }
 
             if (this.updated || Program.updated)
@@ -580,7 +584,7 @@ namespace YT_RED
                     {
                         var checkAudio = data.Formats.Where(af => af.AudioCodec != null && af.AudioCodec != "none" && (af.VideoCodec == null || af.VideoCodec == "none"));
                         if (checkAudio != null && checkAudio.Count() > 0)
-                            supplementAudio = checkAudio.First();
+                            supplementAudio = checkAudio.FirstOrDefault();
                     }
                     formatList = data.Formats.Where(f => !YTDLFormatData.ExcludeFormatIDs.Contains(f.FormatId))
                         .OrderBy(f => f.VideoCodec == "none" || f.VideoCodec == "" || f.VideoCodec == null ? 0 : 1)

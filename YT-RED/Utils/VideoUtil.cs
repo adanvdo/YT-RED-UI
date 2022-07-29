@@ -354,8 +354,8 @@ namespace YT_RED.Utils
                     convert.AddStream<Xabe.FFmpeg.IVideoStream>(v);
                 if (a != null)
                 {
-                    var segStartParam = parameters == null ||  parameters.Length < 1 ? null : parameters.First(p => p.Type == Classes.ParamType.StartTime);
-                    var segDurParam = parameters == null || parameters.Length < 1 ? null : parameters.First(p => p.Type == Classes.ParamType.Duration);
+                    var segStartParam = parameters == null ||  parameters.Length < 1 ? null : parameters.FirstOrDefault(p => p.Type == Classes.ParamType.StartTime);
+                    var segDurParam = parameters == null || parameters.Length < 1 ? null : parameters.FirstOrDefault(p => p.Type == Classes.ParamType.Duration);
                     if(segStartParam != null && segDurParam != null)
                     {
                         bool startParse = TimeSpan.TryParse(segStartParam.Value.Replace("-ss ", ""), out TimeSpan startSpan);
