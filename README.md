@@ -88,6 +88,7 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 ### 8/18/2022 v1.0.1.15
 - Added Layout Settings (Format List Modes and Panel Positions)
 - Added Multi-Format Selection Mode for downloading and merging Video and Audio Formats
+- Added Setting to Enable/Disable generation of missing metadata when obtaining a list of formats
 - Made the last viewed settings tab persist when settings are opened
 - Minor UI and Behavior Tweaks
 
