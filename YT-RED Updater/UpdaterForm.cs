@@ -39,6 +39,7 @@ namespace YT_RED_Updater
                 marquee.Visible = true;
                 progress.Visible = true;
                 DevExpress.LookAndFeel.UserLookAndFeel.Default.SetSkinStyle(skin, palette);
+                this.requiresUpdaterReplacement = includeUpdater;
                 this.appBase = new DirectoryInfo(appBaseDirectory);
                 this.updatePackage = new FileInfo(updatePackagePath);
             }

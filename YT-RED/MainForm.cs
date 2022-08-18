@@ -57,21 +57,12 @@ namespace YT_RED
 
         static KeyboardHook hook = new KeyboardHook();
 
-        public MainForm(bool updated = false)
+        public MainForm()
         {
             InitializeComponent();
-            this.updated = updated;
-            this.initialFunction = InitialFunction.None;
-            this.initialLink = "";
-            cpMainControlPanel.ParentMainForm = this;
-            repHistoryCheckEdit = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
-            repHistoryCheckEdit.CheckBoxOptions.Style = DevExpress.XtraEditors.Controls.CheckBoxStyle.Custom;
-            repHistoryCheckEdit.ImageOptions.SvgImageChecked = Properties.Resources.actions_checkcircled;
-            repHistoryCheckEdit.ImageOptions.SvgImageUnchecked = Properties.Resources.security_warningcircled2;
-            repHistoryCheckEdit.ImageOptions.SvgImageSize = new Size(20, 20);
         }
 
-        public MainForm(bool newUpdater, bool updated = false)
+        public MainForm(bool newUpdater = false, bool updated = false)
         {
             InitializeComponent();
             this.updated = updated;
@@ -606,7 +597,6 @@ namespace YT_RED
                 
                 gcFormats.DataSource = converted;
                 refreshFormatGrid(this.currentDownload);
-                this.UseWaitCursor = false;
                 (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = false;
                 ipMainInput.marqeeMain.Hide();
                 ipMainInput.marqeeMain.Text = string.Empty;
@@ -615,6 +605,7 @@ namespace YT_RED
             {
                 ExceptionHandler.LogException(ex);
             }
+            this.UseWaitCursor = false;
         }
 
         private async void ytdlDownloadBest(string url, Classes.StreamType streamType = Classes.StreamType.AudioAndVideo)
@@ -801,6 +792,9 @@ namespace YT_RED
             {
                 if (cpMainControlPanel.SegmentEnabled && cpMainControlPanel.SegmentDuration == TimeSpan.Zero)
                 {
+                    this.UseWaitCursor = false;
+                    ipMainInput.marqeeMain.Hide();
+                    ipMainInput.marqeeMain.Text = "";
                     MsgBox.Show("Please specify a valid duration for the segment", "Invalid Duration");
                     return;
                 }

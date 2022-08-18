@@ -54,12 +54,12 @@ namespace YT_RED
                             else if (func == "dlb") func = "DownloadBest";
                             initialFunction = (InitialFunction)Enum.Parse(typeof(InitialFunction), func);
                         }
-                        if (s.StartsWith("-yt"))
+                        if (s.StartsWith("-yt") || s == "yt")
                         {
                             DevRun = false;
                             initialYTLink = s.Remove(0, 4);
                         }
-                        if (s.StartsWith("-red"))
+                        if (s.StartsWith("-red") || s == "red")
                         {
                             DevRun = false;
                             initialRedLink = s.Remove(0, 5);
@@ -68,7 +68,7 @@ namespace YT_RED
                         {
                             initialFunction = InitialFunction.UploadTest;
                         }
-                        if (s.StartsWith("-updater"))
+                        if (s.StartsWith("-updater") || s == "updater")
                         {
                             newUpdater = true;
                         }

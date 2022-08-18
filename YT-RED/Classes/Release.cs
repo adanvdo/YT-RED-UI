@@ -42,6 +42,9 @@ namespace YT_RED.Classes
         [JsonProperty("ReplaceUpdater")]
         public bool ReplaceUpdater { get; set; }
 
+        [JsonProperty("ManualInstallRequired")]
+        public bool ManualInstallRequired { get; set; }
+
         [JsonIgnore]
         public Version Version
         {

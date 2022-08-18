@@ -213,29 +213,47 @@ namespace YT_RED.Controls
             if (location == "cancelled")
                 return;
 
-            DialogResult res = MsgBox.Show("Update Package Downloaded\nInstall Update Now?", "Download Complete", Buttons.YesNo, Icon.Question, FormStartPosition.CenterParent);
-            if(res == DialogResult.Yes)
+            if (pendingReleaseInfo.ManualInstallRequired)
             {
-                try
+                DialogResult res = MsgBox.Show("Update Package Downloaded, but a Manual Install is required.\nOpen Download Location?", "Download Complete", Buttons.YesNo, Icon.Question, FormStartPosition.CenterParent);
+                if (res == DialogResult.Yes)
                 {
-                    string args = $"-dir={Settings.AppSettings.Default.General.ExeDirectoryPath} -pkg={location} -skin={Settings.AppSettings.Default.General.ActiveSkin} -pal={AppSettings.Default.General.SkinPalette}";
-                    if (pendingReleaseInfo.ReplaceUpdater)
-                        args += " -updater";
-                    string updaterProcess = System.IO.Path.Combine(Settings.AppSettings.Default.General.ExeDirectoryPath, "YT-RED_Updater.exe");
-                    System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo(
-                        updaterProcess,
-                        args
-                    );
-                    System.Diagnostics.Process.Start(startInfo);
-                }
-                catch(Exception ex)
-                {
-                    ExceptionHandler.LogException(ex);
+                    try
+                    {
+                        System.Diagnostics.Process.Start(location);
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionHandler.LogException(ex);
+                    }
                 }
             }
             else
             {
-                MsgBox.Show($"Update Package Location:\n{location}", "Download Location", Buttons.OK, Icon.Info, FormStartPosition.CenterParent);
+                DialogResult res = MsgBox.Show("Update Package Downloaded\nInstall Update Now?", "Download Complete", Buttons.YesNo, Icon.Question, FormStartPosition.CenterParent);
+                if (res == DialogResult.Yes)
+                {
+                    try
+                    {
+                        string args = $"-dir={Settings.AppSettings.Default.General.ExeDirectoryPath} -pkg={location} -skin={Settings.AppSettings.Default.General.ActiveSkin} -pal={AppSettings.Default.General.SkinPalette}";
+                        if (pendingReleaseInfo.ReplaceUpdater)
+                            args += " -updater";
+                        string updaterProcess = System.IO.Path.Combine(Settings.AppSettings.Default.General.ExeDirectoryPath, "YT-RED_Updater.exe");
+                        System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo(
+                            updaterProcess,
+                            args
+                        );
+                        System.Diagnostics.Process.Start(startInfo);
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionHandler.LogException(ex);
+                    }
+                }
+                else
+                {
+                    MsgBox.Show($"Update Package Location:\n{location}", "Download Location", Buttons.OK, Icon.Info, FormStartPosition.CenterParent);
+                }
             }
         }
 

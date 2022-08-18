@@ -85,6 +85,11 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 8/17/2022 v1.0.1.14
+- Added Manual Update Requirement to releases. YT-RED will now inform users if a manual update is required.
+- Fixed bug where YT-RED_Updater was not replaced if a new updater was included in a release
+- Fixed bug where the program state was not properly reset after a failed download
+
 ### 7/28/2022 v1.0.1.13
 - Fixed bug where updater failed if it did not find any locked files
 - Fixed bug where downloads failed if segment post-processing parameters were not included
