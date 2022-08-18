@@ -85,6 +85,12 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 8/18/2022 v1.0.1.15
+- Added Layout Settings (Format List Modes and Panel Positions)
+- Added Multi-Format Selection Mode for downloading and merging Video and Audio Formats
+- Made the last viewed settings tab persist when settings are opened
+- Minor UI and Behavior Tweaks
+
 ### 8/17/2022 v1.0.1.14
 - Added Manual Update Requirement to releases. YT-RED will now inform users if a manual update is required.
 - Fixed bug where YT-RED_Updater was not replaced if a new updater was included in a release
