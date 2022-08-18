@@ -37,10 +37,10 @@
             this.tfpMain = new YT_RED.Controls.CustomTabFormPage();
             this.tabFormContentContainer1 = new DevExpress.XtraBars.TabFormContentContainer();
             this.sccMainSplitter = new DevExpress.XtraEditors.SplitContainerControl();
-            this.lblSelectAFormat = new DevExpress.XtraEditors.LabelControl();
-            this.marqueeProgressBarControl1 = new DevExpress.XtraEditors.MarqueeProgressBarControl();
             this.gcFormats = new DevExpress.XtraGrid.GridControl();
             this.gvFormats = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.lblSelectAFormat = new DevExpress.XtraEditors.LabelControl();
+            this.marqueeProgressBarControl1 = new DevExpress.XtraEditors.MarqueeProgressBarControl();
             this.ipMainInput = new YT_RED.Controls.InputPanel();
             this.cpMainControlPanel = new YT_RED.Controls.ControlPanel();
             this.toolTipController = new DevExpress.Utils.ToolTipController(this.components);
@@ -57,9 +57,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.sccMainSplitter.Panel2)).BeginInit();
             this.sccMainSplitter.Panel2.SuspendLayout();
             this.sccMainSplitter.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.marqueeProgressBarControl1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gcFormats)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvFormats)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.marqueeProgressBarControl1.Properties)).BeginInit();
             this.taskBarMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -135,9 +135,9 @@
             // 
             // sccMainSplitter.Panel1
             // 
+            this.sccMainSplitter.Panel1.Controls.Add(this.gcFormats);
             this.sccMainSplitter.Panel1.Controls.Add(this.lblSelectAFormat);
             this.sccMainSplitter.Panel1.Controls.Add(this.marqueeProgressBarControl1);
-            this.sccMainSplitter.Panel1.Controls.Add(this.gcFormats);
             this.sccMainSplitter.Panel1.Controls.Add(this.ipMainInput);
             this.sccMainSplitter.Panel1.MinSize = 482;
             this.sccMainSplitter.Panel1.Text = "Panel1";
@@ -152,6 +152,44 @@
             this.sccMainSplitter.TabIndex = 0;
             this.sccMainSplitter.SplitterMoved += new System.EventHandler(this.sccMainSplitter_SplitterMoved);
             this.sccMainSplitter.Resize += new System.EventHandler(this.sccMainSplitter_Resize);
+            // 
+            // gcFormats
+            // 
+            this.gcFormats.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gcFormats.Location = new System.Drawing.Point(0, 148);
+            this.gcFormats.MainView = this.gvFormats;
+            this.gcFormats.Name = "gcFormats";
+            this.gcFormats.Size = new System.Drawing.Size(849, 569);
+            this.gcFormats.TabIndex = 0;
+            this.gcFormats.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
+            this.gvFormats});
+            // 
+            // gvFormats
+            // 
+            this.gvFormats.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFullFocus;
+            this.gvFormats.GridControl = this.gcFormats;
+            this.gvFormats.Name = "gvFormats";
+            this.gvFormats.OptionsBehavior.AlignGroupSummaryInGroupRow = DevExpress.Utils.DefaultBoolean.False;
+            this.gvFormats.OptionsBehavior.Editable = false;
+            this.gvFormats.OptionsCustomization.AllowGroup = false;
+            this.gvFormats.OptionsDetail.ShowDetailTabs = false;
+            this.gvFormats.OptionsSelection.CheckBoxSelectorColumnWidth = 25;
+            this.gvFormats.OptionsSelection.CheckBoxSelectorField = "Selected";
+            this.gvFormats.OptionsSelection.EnableAppearanceFocusedCell = false;
+            this.gvFormats.OptionsSelection.EnableAppearanceHideSelection = false;
+            this.gvFormats.OptionsSelection.ShowCheckBoxSelectorInColumnHeader = DevExpress.Utils.DefaultBoolean.False;
+            this.gvFormats.OptionsSelection.ShowCheckBoxSelectorInGroupRow = DevExpress.Utils.DefaultBoolean.False;
+            this.gvFormats.OptionsSelection.ShowCheckBoxSelectorInPrintExport = DevExpress.Utils.DefaultBoolean.False;
+            this.gvFormats.OptionsView.BestFitMode = DevExpress.XtraGrid.Views.Grid.GridBestFitMode.Fast;
+            this.gvFormats.OptionsView.ColumnAutoWidth = false;
+            this.gvFormats.OptionsView.ShowDetailButtons = false;
+            this.gvFormats.OptionsView.ShowGroupExpandCollapseButtons = false;
+            this.gvFormats.OptionsView.ShowGroupPanel = false;
+            this.gvFormats.RowClick += new DevExpress.XtraGrid.Views.Grid.RowClickEventHandler(this.gvFormats_RowClick);
+            this.gvFormats.CustomDrawCell += new DevExpress.XtraGrid.Views.Base.RowCellCustomDrawEventHandler(this.gvFormats_CustomDrawCell);
+            this.gvFormats.SelectionChanged += new DevExpress.Data.SelectionChangedEventHandler(this.gvFormats_SelectionChanged);
+            this.gvFormats.FocusedRowChanged += new DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventHandler(this.gvFormats_FocusedRowChanged);
+            this.gvFormats.CustomColumnDisplayText += new DevExpress.XtraGrid.Views.Base.CustomColumnDisplayTextEventHandler(this.gvFormats_CustomColumnDisplayText);
             // 
             // lblSelectAFormat
             // 
@@ -180,37 +218,6 @@
             this.marqueeProgressBarControl1.TabIndex = 0;
             this.marqueeProgressBarControl1.Visible = false;
             // 
-            // gcFormats
-            // 
-            this.gcFormats.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcFormats.Location = new System.Drawing.Point(0, 103);
-            this.gcFormats.MainView = this.gvFormats;
-            this.gcFormats.Name = "gcFormats";
-            this.gcFormats.Size = new System.Drawing.Size(849, 614);
-            this.gcFormats.TabIndex = 0;
-            this.gcFormats.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
-            this.gvFormats});
-            // 
-            // gvFormats
-            // 
-            this.gvFormats.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFullFocus;
-            this.gvFormats.GridControl = this.gcFormats;
-            this.gvFormats.Name = "gvFormats";
-            this.gvFormats.OptionsBehavior.AlignGroupSummaryInGroupRow = DevExpress.Utils.DefaultBoolean.False;
-            this.gvFormats.OptionsBehavior.Editable = false;
-            this.gvFormats.OptionsCustomization.AllowGroup = false;
-            this.gvFormats.OptionsDetail.ShowDetailTabs = false;
-            this.gvFormats.OptionsSelection.EnableAppearanceFocusedCell = false;
-            this.gvFormats.OptionsSelection.EnableAppearanceHideSelection = false;
-            this.gvFormats.OptionsView.BestFitMode = DevExpress.XtraGrid.Views.Grid.GridBestFitMode.Fast;
-            this.gvFormats.OptionsView.ColumnAutoWidth = false;
-            this.gvFormats.OptionsView.ShowDetailButtons = false;
-            this.gvFormats.OptionsView.ShowGroupExpandCollapseButtons = false;
-            this.gvFormats.OptionsView.ShowGroupPanel = false;
-            this.gvFormats.CustomDrawCell += new DevExpress.XtraGrid.Views.Base.RowCellCustomDrawEventHandler(this.gvFormats_CustomDrawCell);
-            this.gvFormats.FocusedRowChanged += new DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventHandler(this.gvFormats_FocusedRowChanged);
-            this.gvFormats.CustomColumnDisplayText += new DevExpress.XtraGrid.Views.Base.CustomColumnDisplayTextEventHandler(this.gvFormats_CustomColumnDisplayText);
-            // 
             // ipMainInput
             // 
             this.ipMainInput.AutoSize = true;
@@ -236,7 +243,6 @@
             this.cpMainControlPanel.CropLeft = "0";
             this.cpMainControlPanel.CropRight = "0";
             this.cpMainControlPanel.CropTop = "0";
-            this.cpMainControlPanel.CurrentFormat = null;
             this.cpMainControlPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cpMainControlPanel.DownloadAudioVisible = true;
             this.cpMainControlPanel.DownloadBestVisible = true;
@@ -323,9 +329,9 @@
             this.sccMainSplitter.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.sccMainSplitter)).EndInit();
             this.sccMainSplitter.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.marqueeProgressBarControl1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gcFormats)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvFormats)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.marqueeProgressBarControl1.Properties)).EndInit();
             this.taskBarMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 

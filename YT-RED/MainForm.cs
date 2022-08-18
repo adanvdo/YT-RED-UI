@@ -39,7 +39,6 @@ namespace YT_RED
         }
 
         private DownloadLog selectedYTLog = null;
-        private Classes.ResultStream selectedStream = null;
         private YoutubeDLSharp.Metadata.FormatData selectedFormat = null;
         public YoutubeDLSharp.Metadata.FormatData SelectedFormat { get { return selectedFormat; } }
         public int FormatCount { get { return gvFormats.RowCount; } }
@@ -49,7 +48,6 @@ namespace YT_RED
         private DownloadType initialDownloadType = DownloadType.Unknown;
         private bool newUpdater = false;
         private bool updated = false;
-        private URISchemeService uriService = null;
         private bool enableQuickDownload = false;
         private bool trayBalloonShown = false;
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repHistoryCheckEdit;
@@ -293,6 +291,61 @@ namespace YT_RED
                 bool deleteBackup = await UpdateHelper.DeleteRemnants();
             }
         }
+
+        private void applyLayout(Settings.LayoutArea layoutArea)
+        {
+            if (layoutArea == LayoutArea.All || layoutArea == LayoutArea.FormatList)
+            {
+                if (AppSettings.Default.Layout.FormatMode == FormatMode.Preset)
+                {
+                    this.gvFormats.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFullFocus;
+                    this.gvFormats.GridControl = this.gcFormats;
+                    this.gvFormats.Name = "gvFormats";
+                    this.gvFormats.OptionsBehavior.AlignGroupSummaryInGroupRow = DevExpress.Utils.DefaultBoolean.False;
+                    this.gvFormats.OptionsBehavior.Editable = false;
+                    this.gvFormats.OptionsCustomization.AllowGroup = false;
+                    this.gvFormats.OptionsDetail.ShowDetailTabs = false;
+                    this.gvFormats.OptionsSelection.MultiSelect = false;
+                    this.gvFormats.OptionsSelection.MultiSelectMode = GridMultiSelectMode.RowSelect;
+                    this.gvFormats.OptionsSelection.UseIndicatorForSelection = true;
+                    this.gvFormats.OptionsSelection.EnableAppearanceFocusedCell = false;
+                    this.gvFormats.OptionsSelection.EnableAppearanceHideSelection = false;
+                    this.gvFormats.OptionsView.BestFitMode = DevExpress.XtraGrid.Views.Grid.GridBestFitMode.Fast;
+                    this.gvFormats.OptionsView.ColumnAutoWidth = false;
+                    this.gvFormats.OptionsView.ShowDetailButtons = false;
+                    this.gvFormats.OptionsView.ShowGroupExpandCollapseButtons = false;
+                    this.gvFormats.OptionsView.ShowGroupPanel = false;
+                    this.gvFormats.OptionsView.ShowIndicator = true;
+                    this.gvFormats.CustomDrawCell += new DevExpress.XtraGrid.Views.Base.RowCellCustomDrawEventHandler(this.gvFormats_CustomDrawCell);
+                    this.gvFormats.FocusedRowChanged += new DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventHandler(this.gvFormats_FocusedRowChanged);
+                    this.gvFormats.CustomColumnDisplayText += new DevExpress.XtraGrid.Views.Base.CustomColumnDisplayTextEventHandler(this.gvFormats_CustomColumnDisplayText);
+                }
+                else if (AppSettings.Default.Layout.FormatMode == FormatMode.Custom)
+                {
+                    this.gvFormats.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFullFocus;
+                    this.gvFormats.GridControl = this.gcFormats;
+                    this.gvFormats.Name = "gvFormats";
+                    this.gvFormats.OptionsBehavior.AlignGroupSummaryInGroupRow = DevExpress.Utils.DefaultBoolean.False;
+                    this.gvFormats.OptionsBehavior.Editable = false;
+                    this.gvFormats.OptionsCustomization.AllowGroup = false;
+                    this.gvFormats.OptionsDetail.ShowDetailTabs = false;
+                    this.gvFormats.OptionsSelection.MultiSelect = true;
+                    this.gvFormats.OptionsSelection.MultiSelectMode = GridMultiSelectMode.CheckBoxRowSelect;
+                    this.gvFormats.OptionsSelection.UseIndicatorForSelection = false;
+                    this.gvFormats.OptionsSelection.EnableAppearanceFocusedCell = false;
+                    this.gvFormats.OptionsSelection.EnableAppearanceHideSelection = false;
+                    this.gvFormats.OptionsView.BestFitMode = DevExpress.XtraGrid.Views.Grid.GridBestFitMode.Fast;
+                    this.gvFormats.OptionsView.ColumnAutoWidth = false;
+                    this.gvFormats.OptionsView.ShowDetailButtons = false;
+                    this.gvFormats.OptionsView.ShowGroupExpandCollapseButtons = false;
+                    this.gvFormats.OptionsView.ShowGroupPanel = false;
+                    this.gvFormats.OptionsView.ShowIndicator = false;
+                    this.gvFormats.CustomDrawCell += new DevExpress.XtraGrid.Views.Base.RowCellCustomDrawEventHandler(this.gvFormats_CustomDrawCell);
+                    this.gvFormats.FocusedRowChanged += new DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventHandler(this.gvFormats_FocusedRowChanged);
+                    this.gvFormats.CustomColumnDisplayText += new DevExpress.XtraGrid.Views.Base.CustomColumnDisplayTextEventHandler(this.gvFormats_CustomColumnDisplayText);
+                }
+            }
+        }
         
         private void bbiSettings_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
@@ -439,7 +492,7 @@ namespace YT_RED
         {
             if (!string.IsNullOrEmpty(ipMainInput.URL))
             {
-                cpMainControlPanel.CurrentFormat = null;
+                cpMainControlPanel.CurrentFormatPair.Clear();
                 ytdlDownloadBest(ipMainInput.URL);
             }
         }
@@ -448,7 +501,7 @@ namespace YT_RED
         {
             if (!string.IsNullOrEmpty(ipMainInput.URL))
             {
-                cpMainControlPanel.CurrentFormat = new YTDLFormatData() { AudioCodec = "best" };
+                cpMainControlPanel.SetCurrentFormats(null, new YTDLFormatData() { AudioCodec = "best" });
                 ytdlDownloadBest(ipMainInput.URL, Classes.StreamType.Audio);
             }
         }
@@ -463,21 +516,29 @@ namespace YT_RED
 
         private void refreshFormatGrid(DownloadType downloadType)
         {
+            this.applyLayout(LayoutArea.FormatList);
             gvFormats.Columns.Clear();
             gvFormats.PopulateColumns();
             gvFormats.RefreshData();
-            gvFormats.Columns["Type"].VisibleIndex = 0;
-            gvFormats.Columns["Format"].VisibleIndex = 1;
-            gvFormats.Columns["Duration"].VisibleIndex = 2;
-            gvFormats.Columns["Bitrate"].VisibleIndex = 3;
-            gvFormats.Columns["ContainerFormat"].VisibleIndex = 4;
-            gvFormats.Columns["VideoCodec"].VisibleIndex = 5;
+            int start = 0;
+            gvFormats.Columns["Selected"].Visible = gvFormats.OptionsSelection.MultiSelect;
+            if (gvFormats.OptionsSelection.MultiSelect) 
+            {
+                gvFormats.Columns["Selected"].VisibleIndex = start;
+                start++;
+            }
+            gvFormats.Columns["Type"].VisibleIndex = start+0;
+            gvFormats.Columns["Format"].VisibleIndex = start + 1;
+            gvFormats.Columns["Duration"].VisibleIndex = start + 2;
+            gvFormats.Columns["Bitrate"].VisibleIndex = start + 3;
+            gvFormats.Columns["ContainerFormat"].VisibleIndex = start + 4;
+            gvFormats.Columns["VideoCodec"].VisibleIndex = start + 5;
             gvFormats.Columns["ContainerFormat"].Caption = "Container";
-            gvFormats.Columns["FrameRate"].VisibleIndex = 6;
+            gvFormats.Columns["FrameRate"].VisibleIndex = start + 6;
             gvFormats.Columns["FrameRate"].Caption = "FPS";
-            gvFormats.Columns["AudioCodec"].VisibleIndex = 7;
-            gvFormats.Columns["AudioSamplingRate"].VisibleIndex = 8;
-            gvFormats.Columns["FileSize"].VisibleIndex = 9;
+            gvFormats.Columns["AudioCodec"].VisibleIndex = start + 7;
+            gvFormats.Columns["AudioSamplingRate"].VisibleIndex = start + 8;
+            gvFormats.Columns["FileSize"].VisibleIndex = start + 9;
             gvFormats.Columns["Type"].Width = 25;
             gvFormats.Columns["Type"].Caption = "";
             gvFormats.Columns["Format"].BestFit();
@@ -571,19 +632,20 @@ namespace YT_RED
                 if(data.Formats != null)
                 {
                     YoutubeDLSharp.Metadata.FormatData supplementAudio = null;
-                    if(this.currentDownload == DownloadType.Reddit && data.Formats.Where(f => f.VideoCodec != null && f.VideoCodec != "none" && f.AudioCodec != null && f.AudioCodec != "none").Count() < 1)
+                    if(AppSettings.Default.Layout.FormatMode == FormatMode.Preset && this.currentDownload == DownloadType.Reddit && data.Formats.Where(f => f.VideoCodec != null && f.VideoCodec != "none" && f.AudioCodec != null && f.AudioCodec != "none").Count() < 1)
                     {
-                        var checkAudio = data.Formats.Where(af => af.AudioCodec != null && af.AudioCodec != "none" && (af.VideoCodec == null || af.VideoCodec == "none"));
+                        var checkAudio = data.Formats.Where(af => af.Format.ToLower().Contains("audio only") || (af.AudioCodec != null && af.AudioCodec != "none" && (af.VideoCodec == null || af.VideoCodec == "none")));
                         if (checkAudio != null && checkAudio.Count() > 0)
-                            supplementAudio = checkAudio.FirstOrDefault();
+                            supplementAudio = checkAudio.LastOrDefault();
                     }
                     formatList = data.Formats.Where(f => !YTDLFormatData.ExcludeFormatIDs.Contains(f.FormatId))
                         .OrderBy(f => f.VideoCodec == "none" || f.VideoCodec == "" || f.VideoCodec == null ? 0 : 1)
                         .ThenBy(f => f.Height).ToList(); 
                     foreach (YoutubeDLSharp.Metadata.FormatData format in formatList)
                     {
-                        converted.Add(new YTDLFormatData(format, data.Duration));
-                        if(supplementAudio != null)
+                        var convert = new YTDLFormatData(format, data.Duration);
+                        converted.Add(convert);
+                        if(convert.Type == Classes.StreamType.Video && supplementAudio != null)
                         {
                             converted.Add(new YTDLFormatData(format, data.Duration, supplementAudio));
                         }
@@ -788,7 +850,9 @@ namespace YT_RED
 
             RunResult<string> result = null;
 
-            if (cpMainControlPanel.PostProcessingEnabled || cpMainControlPanel.CurrentFormat.RedditAudioFormat != null || (cpMainControlPanel.CurrentFormat.VideoCodec != "gif" && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat))
+            if (cpMainControlPanel.PostProcessingEnabled || (cpMainControlPanel.CurrentFormatPair.Type != Classes.StreamType.Video
+                && (cpMainControlPanel.CurrentFormatPair.VideoFormat.RedditAudioFormat != null || cpMainControlPanel.CurrentFormatPair.AudioFormat.RedditAudioFormat != null)) 
+                || (cpMainControlPanel.CurrentFormatPair.VideoFormat.VideoCodec != "gif" && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat))
             {
                 if (cpMainControlPanel.SegmentEnabled && cpMainControlPanel.SegmentDuration == TimeSpan.Zero)
                 {
@@ -821,7 +885,7 @@ namespace YT_RED
                     audioFormat = cpMainControlPanel.ConvertAudioFormat == null ? AppSettings.Default.Advanced.PreferredAudioFormat : cpMainControlPanel.ConvertAudioFormat;
                 }
 
-                IConversion conversion = await Utils.VideoUtil.PrepareYoutubeConversion(VideoUtil.CorrectYouTubeString(ipMainInput.URL), cpMainControlPanel.CurrentFormat, 
+                IConversion conversion = await Utils.VideoUtil.PrepareYoutubeConversion(VideoUtil.CorrectYouTubeString(ipMainInput.URL), cpMainControlPanel.CurrentFormatPair, 
                     start, duration, AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat, crops, videoFormat == null ? VideoFormat.UNSPECIFIED : (VideoFormat)videoFormat, 
                     audioFormat == null ? AudioFormat.UNSPECIFIED : (AudioFormat)audioFormat);
                 string destination = conversion.OutputFilePath;
@@ -864,7 +928,7 @@ namespace YT_RED
             else
             {
                 cpMainControlPanel.ShowProgress();
-                result = await Utils.VideoUtil.DownloadYTDLFormat(VideoUtil.CorrectYouTubeString(cpMainControlPanel.CurrentFormat.VideoCodec == "gif" ? cpMainControlPanel.CurrentFormat.Url : ipMainInput.URL), cpMainControlPanel.CurrentFormat, cpMainControlPanel.EmbedThumbnail);
+                result = await Utils.VideoUtil.DownloadYTDLFormat(VideoUtil.CorrectYouTubeString(cpMainControlPanel.CurrentFormatPair.VideoCodec == "gif" ? cpMainControlPanel.CurrentFormatPair.VideoFormat.Url : ipMainInput.URL), cpMainControlPanel.CurrentFormatPair, cpMainControlPanel.EmbedThumbnail);
                 cpMainControlPanel.HideProgress();
                 if (!result.Success)
                 {
@@ -874,9 +938,9 @@ namespace YT_RED
             }
 
             YT_RED.Classes.StreamType t = Classes.StreamType.Audio;
-            if (cpMainControlPanel.CurrentFormat.AudioCodec == "none")
+            if (cpMainControlPanel.CurrentFormatPair.AudioCodec == "none")
                 t = Classes.StreamType.Video;
-            else if (cpMainControlPanel.CurrentFormat.Resolution == "audio only")
+            else if (cpMainControlPanel.CurrentFormatPair.AudioFormat != null || (cpMainControlPanel.CurrentFormatPair.VideoFormat != null && cpMainControlPanel.CurrentFormatPair.VideoFormat.Resolution == "audio only"))
                 t = Classes.StreamType.Audio;
             else
                 t = Classes.StreamType.AudioAndVideo;
@@ -955,9 +1019,12 @@ namespace YT_RED
         }
         private void gvFormats_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e)
         {
+            if (AppSettings.Default.Layout.FormatMode == FormatMode.Custom)
+                return;
+
             if (e.FocusedRowHandle < 0)
             {
-                cpMainControlPanel.CurrentFormat = null;
+                cpMainControlPanel.CurrentFormatPair.Clear();
                 cpMainControlPanel.DownloadSelectionVisible = false;
                 cpMainControlPanel.DownloadBestVisible = true;
                 cpMainControlPanel.DownloadAudioVisible = true;
@@ -968,7 +1035,7 @@ namespace YT_RED
             cpMainControlPanel.DownloadBestVisible = false;
             cpMainControlPanel.DownloadAudioVisible = false;
             Classes.YTDLFormatData fd = gvFormats.GetFocusedRow() as Classes.YTDLFormatData;
-            cpMainControlPanel.CurrentFormat = fd;
+            cpMainControlPanel.SetCurrentFormats(fd);
             if(fd.VideoCodec == "none")
             {
                 cpMainControlPanel.DisableToggle(false, true, false);
@@ -1012,7 +1079,7 @@ namespace YT_RED
         {
             if (e.KeyCode == Keys.Enter && !string.IsNullOrEmpty(ipMainInput.URL))
             {
-                cpMainControlPanel.CurrentFormat = null;
+                cpMainControlPanel.CurrentFormatPair.Clear();
                 ytdlDownloadBest(ipMainInput.URL);
             }            
         }
@@ -1047,6 +1114,98 @@ namespace YT_RED
         private void sccMainSplitter_SplitterMoved(object sender, EventArgs e)
         {
             splitterNegativePosition = sccMainSplitter.Size.Width - sccMainSplitter.SplitterPosition;
+        }
+
+
+        private int selectedVideoIndex = -1;
+        private int selectedAudioIndex = -1;
+
+        bool deselecting = false;
+        private void gvFormats_SelectionChanged(object sender, DevExpress.Data.SelectionChangedEventArgs e)
+        {
+            
+            if (deselecting || !gvFormats.OptionsSelection.MultiSelect) return;
+            int handle = e.ControllerRow;
+            YTDLFormatData selection = (YTDLFormatData)gvFormats.GetRow(handle);
+
+            if (selection == null) return;
+
+            if (e.Action == System.ComponentModel.CollectionChangeAction.Add)
+            {
+                deselecting = true;
+                if (selection.Type == Classes.StreamType.Audio)
+                {
+                    if(cpMainControlPanel.CurrentFormatPair.Type == Classes.StreamType.AudioAndVideo)
+                    {
+                        gvFormats.UnselectRow(handle);
+                        deselecting = false;
+                        return;
+                    }
+
+                    if(selectedAudioIndex >= 0)
+                        gvFormats.UnselectRow(selectedAudioIndex);
+                    selectedAudioIndex = handle;
+                } else
+                {
+                    if(selectedVideoIndex >= 0)
+                        gvFormats.UnselectRow(selectedVideoIndex);
+                    if (selection.Type == Classes.StreamType.AudioAndVideo && selectedAudioIndex >= 0)
+                    {
+                        gvFormats.UnselectRow(selectedAudioIndex);
+                        cpMainControlPanel.RemoveCurrentFormat(Classes.StreamType.Audio);
+                        selectedAudioIndex = -1;
+                    }
+                    selectedVideoIndex = handle;
+                }
+                deselecting = false;
+                cpMainControlPanel.SetCurrentFormat(selection);
+            }
+            else if(e.Action == System.ComponentModel.CollectionChangeAction.Remove)
+            {
+                if(selection.Type == Classes.StreamType.Audio)
+                    selectedAudioIndex = -1;
+                else
+                    selectedVideoIndex = -1;
+                cpMainControlPanel.RemoveCurrentFormat(selection.Type);
+            }
+
+            if (gvFormats.GetSelectedRows().Length < 1)
+            {
+                cpMainControlPanel.CurrentFormatPair.Clear();
+                cpMainControlPanel.DownloadSelectionVisible = false;
+                cpMainControlPanel.DownloadBestVisible = true;
+                cpMainControlPanel.DownloadAudioVisible = true;
+                return;
+            }
+
+            cpMainControlPanel.DownloadSelectionVisible = true;
+            cpMainControlPanel.DownloadBestVisible = false;
+            cpMainControlPanel.DownloadAudioVisible = false;
+            if (cpMainControlPanel.CurrentFormatPair.VideoCodec == "none")
+            {
+                cpMainControlPanel.DisableToggle(false, true, false);
+            }
+            else if (cpMainControlPanel.CurrentFormatPair.VideoCodec == "gif")
+            {
+                cpMainControlPanel.DisableToggle(true, true, true);
+            }
+            else
+            {
+                cpMainControlPanel.EnableToggle(false, true, false);
+            }
+        }
+
+        private void gvFormats_RowClick(object sender, RowClickEventArgs e)
+        {
+            if (!gvFormats.IsValidRowHandle(e.RowHandle) || gvFormats.IsGroupRow(e.RowHandle)) return;
+            GridHitInfo hit = gvFormats.CalcHitInfo(e.Location);
+            if (hit.Column.FieldName == "Selected") return;
+
+            e.Handled = true;
+            if (selectedAudioIndex == e.RowHandle || selectedVideoIndex == e.RowHandle)
+                gvFormats.UnselectRow(e.RowHandle);
+            else
+                gvFormats.SelectRow(e.RowHandle);
         }
     }
 }

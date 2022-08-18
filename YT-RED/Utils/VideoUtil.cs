@@ -72,23 +72,39 @@ namespace YT_RED.Utils
             return null;
         }
 
-        public static async Task<IConversion> PrepareYoutubeConversion(string url, Classes.YTDLFormatData formatData, TimeSpan? start = null, TimeSpan? duration = null, bool usePreferences = false, int[] crops = null, VideoFormat convertVideo = VideoFormat.UNSPECIFIED, AudioFormat convertAudio = AudioFormat.UNSPECIFIED)
+        public static async Task<IConversion> PrepareYoutubeConversion(string url, Classes.YTDLFormatPair formatPair, TimeSpan? start = null, TimeSpan? duration = null, bool usePreferences = false, int[] crops = null, VideoFormat convertVideo = VideoFormat.UNSPECIFIED, AudioFormat convertAudio = AudioFormat.UNSPECIFIED)
         {
-            List<string> getUrls = null;
-            if (formatData.RedditAudioFormat != null)
+            List<string> getUrls = new List<string>();
+            List<string> vUrls = new List<string>();
+            List<string> aUrls = new List<string>();
+            if (formatPair.RedditAudioFormat != null)
             {
-                getUrls = new List<string>();
-                List<string> vUrls = await GetFormatUrls(url, formatData.FormatId == null ? formatData.Format.Split(' ')[0] : formatData.FormatId.Split('+')[0], ytProgress, ytOutput);
-                if (vUrls != null)
-                    getUrls.Add(vUrls[0]);
-                List<string> aUrls = await GetFormatUrls(url, formatData.RedditAudioFormat.FormatId, ytProgress, ytOutput);
+                if (formatPair.VideoFormat != null)
+                {
+                    vUrls = await GetFormatUrls(url, formatPair.VideoFormat.FormatId == null ? formatPair.VideoFormat.Format.Split(' ')[0] : formatPair.VideoFormat.FormatId.Split('+')[0], ytProgress, ytOutput);
+                    if (vUrls != null)
+                        getUrls.Add(vUrls[0]);
+                }
+                aUrls = await GetFormatUrls(url, formatPair.RedditAudioFormat.FormatId, ytProgress, ytOutput);
                 if (aUrls != null)
                     getUrls.Add(aUrls[0]);
             }
             else
             {
-                getUrls = await GetFormatUrls(url, formatData.FormatId == null ? formatData.Format.Split(' ')[0] : formatData.FormatId, ytProgress, ytOutput);
+                if (formatPair.VideoFormat != null)
+                {
+                    vUrls = await GetFormatUrls(url, formatPair.VideoFormat.FormatId == null ? formatPair.VideoFormat.Format.Split(' ')[0] : formatPair.VideoFormat.FormatId.Split('+')[0], ytProgress, ytOutput);
+                    if (vUrls != null)
+                        getUrls.Add(vUrls[0]);
+                }
+                if (formatPair.AudioFormat != null)
+                {
+                    aUrls = await GetFormatUrls(url, formatPair.AudioFormat.FormatId == null ? formatPair.AudioFormat.Format.Split(' ')[0] : formatPair.AudioFormat.FormatId.Split('+')[0], ytProgress, ytOutput);
+                    if (aUrls != null)
+                        getUrls.Add(aUrls[0]);
+                }
             }
+
             if (getUrls == null || getUrls.Count < 1)
                 return null;
 
@@ -99,9 +115,9 @@ namespace YT_RED.Utils
             int x = -1;
             int y = -1;
 
-            if (crops != null && crops.Length == 4 && formatData.Width != null && formatData.Height != null)
+            if (crops != null && crops.Length == 4 && (formatPair.VideoFormat != null && formatPair.VideoFormat.Width != null && formatPair.VideoFormat.Height != null))
             {
-                int[] ffmpegCrop = ConvertCrop(crops, (int)formatData.Width, (int)formatData.Height);
+                int[] ffmpegCrop = ConvertCrop(crops, (int)formatPair.VideoFormat.Width, (int)formatPair.VideoFormat.Height);
                 x = ffmpegCrop[0];
                 y = ffmpegCrop[1];
                 outWidth = ffmpegCrop[2];
@@ -127,10 +143,10 @@ namespace YT_RED.Utils
                 aCodec = Classes.SystemCodecMaps.GetAudioCodec(convertAudio);
             }            
 
-            if (!string.IsNullOrEmpty(formatData.VideoCodec) && formatData.VideoCodec != "none")
+            if (!string.IsNullOrEmpty(formatPair.VideoCodec) && formatPair.VideoCodec != "none")
             {
                 videoUrl = getUrls[0];
-                if (!string.IsNullOrEmpty(formatData.AudioCodec) && getUrls.Count > 1)
+                if (!string.IsNullOrEmpty(formatPair.AudioCodec) && getUrls.Count > 1)
                 {
                     audioUrl = getUrls[1];
                 }
@@ -143,7 +159,7 @@ namespace YT_RED.Utils
                     aCodec = vMap.BestAudio;
                 }
             }
-            else if (!string.IsNullOrEmpty(formatData.AudioCodec) && formatData.AudioCodec != "none")
+            else if (!string.IsNullOrEmpty(formatPair.AudioCodec) && formatPair.AudioCodec != "none")
             {
                 audioUrl = getUrls[0];
                 if (aCodec == null && usePreferences)
@@ -350,12 +366,21 @@ namespace YT_RED.Utils
                 }
 
                 var convert = FFmpeg.Conversions.New();
+                var segStartParam = parameters == null || parameters.Length < 1 ? null : parameters.FirstOrDefault(p => p.Type == Classes.ParamType.StartTime);
+                var segDurParam = parameters == null || parameters.Length < 1 ? null : parameters.FirstOrDefault(p => p.Type == Classes.ParamType.Duration);
                 if (v != null)
-                    convert.AddStream<Xabe.FFmpeg.IVideoStream>(v);
-                if (a != null)
                 {
-                    var segStartParam = parameters == null ||  parameters.Length < 1 ? null : parameters.FirstOrDefault(p => p.Type == Classes.ParamType.StartTime);
-                    var segDurParam = parameters == null || parameters.Length < 1 ? null : parameters.FirstOrDefault(p => p.Type == Classes.ParamType.Duration);
+                    if (segStartParam != null && segDurParam != null)
+                    {
+                        bool startParse = TimeSpan.TryParse(segStartParam.Value.Replace("-ss ", ""), out TimeSpan startSpan);
+                        bool durParse = TimeSpan.TryParse(segDurParam.Value.Replace("-t ", ""), out TimeSpan durSpan);
+                        if (startParse && durParse)
+                            v = v.Split(startSpan, durSpan);
+                    }
+                    convert.AddStream<Xabe.FFmpeg.IVideoStream>(v);
+                }
+                if (a != null)
+                {                    
                     if(segStartParam != null && segDurParam != null)
                     {
                         bool startParse = TimeSpan.TryParse(segStartParam.Value.Replace("-ss ", ""), out TimeSpan startSpan);
@@ -370,9 +395,7 @@ namespace YT_RED.Utils
                 {
                     foreach (var param in parameters)
                     {
-                        if (param.Type == Classes.ParamType.StartTime)
-                            convert.AddParameter(param.Value, ParameterPosition.PreInput);
-                        else
+                        if (param.Type != Classes.ParamType.StartTime && param.Type != Classes.ParamType.Duration)
                             convert.AddParameter(param.Value, ParameterPosition.PostInput);
                     }
                 }
@@ -658,14 +681,14 @@ namespace YT_RED.Utils
                 return null;
         }
 
-        public static async Task<RunResult<string>> DownloadYTDLFormat(string videoUrl, Classes.YTDLFormatData formatData, bool embedThumbnail = false)
+        public static async Task<RunResult<string>> DownloadYTDLFormat(string videoUrl, Classes.YTDLFormatPair formatPair, bool embedThumbnail = false)
         {
             string outputFile = string.Empty;
             if (string.IsNullOrEmpty(videoUrl))
             {
                 throw new ArgumentException("Invalid Video Url");
             }
-            if(formatData == null)
+            if(formatPair == null || !formatPair.IsValid())
             {
                 throw new ArgumentNullException("FormatData is null");
             }
@@ -681,9 +704,9 @@ namespace YT_RED.Utils
                 options.DeleteCustomOption("--convert-thumbnails");
             }
 
-            if (formatData.VideoCodec == "none")
+            if (formatPair.VideoCodec == "none")
             {
-                options.Format = formatData.FormatId;
+                options.Format = formatPair.AudioFormat.FormatId;
                 outputFile = GenerateUniqueYtdlFileName(Classes.StreamType.Audio);
                 options.AddCustomOption<string>("-o", outputFile);
                 
@@ -697,7 +720,7 @@ namespace YT_RED.Utils
                 return await downloadYTDLAudio(videoUrl, options);
             }           
 
-            return await downloadYTDLVideo(videoUrl, formatData.FormatId);
+            return await downloadYTDLVideo(videoUrl, formatPair.FormatId);
         }
 
         private static string convertToArgs(string[] urls, OptionSet options)

@@ -56,6 +56,8 @@ namespace YT_RED.Settings
 		
 		public GeneralSettings General { get; set; }
 
+		public LayoutSettings Layout { get; set; }
+
 		public AdvancedSettings Advanced { get; set; }
 
 		public About About { get; set; }
@@ -163,10 +165,11 @@ namespace YT_RED.Settings
             }
         }
 
-		public FeatureSettings[] AllSettings => new FeatureSettings[] { General, Advanced, About };
+		public FeatureSettings[] AllSettings => new FeatureSettings[] { General, Layout, Advanced, About };
 		public AppSettings() 
 		{
 			General = new GeneralSettings();
+			Layout = new LayoutSettings();
 			Advanced = new AdvancedSettings();
 			About = new About();
 		}

@@ -40,46 +40,84 @@ namespace YT_RED.Controls
             get { return toggleConvert.IsOn; }
         }
 
-        private Classes.YTDLFormatData currentFormat = null;
-        public Classes.YTDLFormatData CurrentFormat 
-        { 
-            get { return currentFormat; }
-            set
-            {
-                currentFormat = value;
-                lblSelectionText.Text = currentFormat == null ? "" : currentFormat.Format;
-                if (currentFormat != null)
-                {
-                    switch (currentFormat.Type)
-                    {
-                        case Classes.StreamType.Video:
-                            btnSelectionDL.ImageOptions.SvgImage = Properties.Resources.glyph_video;
-                            break;
-                        case Classes.StreamType.Audio:
-                            btnSelectionDL.ImageOptions.SvgImage = Properties.Resources.sound;
-                            break;
-                        case Classes.StreamType.AudioAndVideo:
-                            btnSelectionDL.ImageOptions.SvgImage = Properties.Resources.VideoSound;
-                            break;
-                    }
-                }
-                
-                lblSelectionText.Refresh();
-                formatChanged();
-            }
+        private Classes.YTDLFormatPair currentFormatPair = new Classes.YTDLFormatPair();
+
+        [Browsable(false)]
+        public Classes.YTDLFormatPair CurrentFormatPair
+        {
+            get { return this.currentFormatPair; }
         }
 
+        public void RemoveCurrentFormat(Classes.StreamType type)
+        {
+            if (type == Classes.StreamType.File || type == Classes.StreamType.Unknown) throw new ArgumentException("invalid type");
+
+            if (type == Classes.StreamType.Audio) this.currentFormatPair.AudioFormat = null;
+            else this.currentFormatPair.VideoFormat = null;
+
+            processFormatChange();
+        }
+
+        public void SetCurrentFormat(Classes.YTDLFormatData format)
+        {
+            if(format == null) throw new ArgumentNullException("format");
+            if (format.Type == Classes.StreamType.File || format.Type == Classes.StreamType.Unknown) throw new ArgumentException("type is not valid");
+
+            if (format.Type == Classes.StreamType.Video || format.Type == Classes.StreamType.AudioAndVideo)
+                this.currentFormatPair.VideoFormat = format;
+            else if (format.Type == Classes.StreamType.Audio)
+                this.currentFormatPair.AudioFormat = format;
+
+            processFormatChange();
+        }
+
+        public void SetCurrentFormats(Classes.YTDLFormatData videoFormat = null, Classes.YTDLFormatData audioFormat = null)
+        {
+            if (currentFormatPair == null)
+                currentFormatPair = new Classes.YTDLFormatPair();
+
+            this.currentFormatPair.VideoFormat = videoFormat;
+            this.currentFormatPair.AudioFormat = audioFormat;
+
+            processFormatChange();
+        }        
+
+        private void processFormatChange()
+        {
+            bool invalidFormat = currentFormatPair == null || !currentFormatPair.IsValid();
+            lblSelectionText.Text = invalidFormat ? "" : currentFormatPair.FormatDisplayText;
+            if (currentFormatPair != null && currentFormatPair.IsValid())
+            {
+                switch (currentFormatPair.Type)
+                {
+                    case Classes.StreamType.Video:
+                        btnSelectionDL.ImageOptions.SvgImage = Properties.Resources.glyph_video;
+                        break;
+                    case Classes.StreamType.Audio:
+                        btnSelectionDL.ImageOptions.SvgImage = Properties.Resources.sound;
+                        break;
+                    case Classes.StreamType.AudioAndVideo:
+                        btnSelectionDL.ImageOptions.SvgImage = Properties.Resources.VideoSound;
+                        break;
+                }
+            }
+
+            lblSelectionText.Refresh();
+            formatChanged();
+        }
+
+        [Browsable(false)]
         public bool EmbedThumbnail
         {
             get
             {
-                if (currentFormat == null || currentFormat.Type != Classes.StreamType.Audio)
+                if (currentFormatPair == null || !currentFormatPair.IsValid() || currentFormatPair.Type != Classes.StreamType.Audio)
                     return false;
 
                 if (cbAudioFormat.SelectedItem.ToString().ToLower() != "opus")
                     return true;
 
-                if (currentFormat.AudioCodec == "opus" || currentFormat.Extension == "webm")
+                if (currentFormatPair.AudioCodec == "opus" || currentFormatPair.Extension == "webm")
                     return false;
 
                 return true;
@@ -88,9 +126,9 @@ namespace YT_RED.Controls
         
         private void formatChanged()
         {
-            if (currentFormat != null)
+            if (currentFormatPair != null && currentFormatPair.IsValid())
             {
-                if (currentFormat.VideoCodec == "none")
+                if (currentFormatPair.VideoFormat == null || currentFormatPair.VideoCodec == "none")
                 {                   
                     cbVideoFormat.Properties.Items.Clear();
                     cbAudioFormat.Properties.Items.Clear();
@@ -163,6 +201,7 @@ namespace YT_RED.Controls
             set { txtCropRight.Text = value; }
         }
 
+        [Browsable(false)]
         public Settings.VideoFormat? ConvertVideoFormat
         {
             get
@@ -180,6 +219,7 @@ namespace YT_RED.Controls
             }
         }
 
+        [Browsable(false)]
         public Settings.AudioFormat? ConvertAudioFormat
         {
             get
@@ -307,6 +347,7 @@ namespace YT_RED.Controls
             tsStart.TimeSpan = TimeSpan.Zero;
             tsDuration.TimeSpan = TimeSpan.FromSeconds(1);
             toggleCrop.IsOn = false;
+            lblSelectionText.Text = String.Empty;
             txtCropBottom.Text = String.Empty;
             txtCropTop.Text = String.Empty;
             txtCropLeft.Text = String.Empty;
@@ -316,6 +357,8 @@ namespace YT_RED.Controls
             cbVideoFormat.SelectedIndex = 0;
             cbAudioFormat.SelectedIndex = 0;
             HideDownloadLocation();
+            currentFormatPair.Clear();
+            formatChanged();
         }
 
         public void DisableToggle(bool disableSegment = false, bool disableCrop = false, bool disableConvert = false)
@@ -428,7 +471,7 @@ namespace YT_RED.Controls
             }
             tsStart.Enabled = toggleSegment.IsOn;
             tsDuration.Enabled = toggleSegment.IsOn;
-            lblSegmentDisclaimer.Visible = toggleSegment.IsOn && (currentFormat == null || parentMainForm.FormatCount < 1);
+            lblSegmentDisclaimer.Visible = toggleSegment.IsOn && (currentFormatPair == null || !currentFormatPair.IsValid() || parentMainForm.FormatCount < 1);
             gcSegments.CustomHeaderButtons[0].Properties.Enabled = !toggleSegment.IsOn;
         }
 
@@ -517,7 +560,7 @@ namespace YT_RED.Controls
 
         private void checkConversionOptions()
         {
-            if(!string.IsNullOrEmpty(cbVideoFormat.SelectedItem.ToString()) && !string.IsNullOrEmpty(cbAudioFormat.SelectedItem.ToString()))
+            if(cbVideoFormat.SelectedItem != null && !string.IsNullOrEmpty(cbVideoFormat.SelectedItem.ToString()) && !string.IsNullOrEmpty(cbAudioFormat.SelectedItem.ToString()))
             {
                 lblAlwaysConvert.Text = "Audio Format will be automatically determined\nwhen downloading \"Best [audio+video]\"";
                 lblAlwaysConvert.Visible = true;

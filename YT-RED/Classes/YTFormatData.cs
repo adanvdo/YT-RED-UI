@@ -14,13 +14,15 @@ namespace YT_RED.Classes
 
         public TimeSpan? Duration { get; set; }
 
+        public bool Selected { get; set; }
+
         public StreamType Type
         {
             get
             {
-                if ((this.VideoCodec == null || this.VideoCodec == "none") && (this.AudioCodec != null && this.AudioCodec != "none"))
+                if (this.Format.ToLower().Contains("audio only") || ((this.VideoCodec == null || this.VideoCodec == "none") && (this.AudioCodec != null && this.AudioCodec != "none")))
                     return StreamType.Audio;
-                else if (this.VideoCodec != null && this.AudioCodec != null && this.AudioCodec != "none")
+                else if (this.VideoCodec != null && (this.RedditAudioFormat != null || (this.AudioCodec != null && this.AudioCodec != "none")))
                     return StreamType.AudioAndVideo;
                 else return StreamType.Video;
             }
@@ -31,6 +33,7 @@ namespace YT_RED.Classes
 
         public YTDLFormatData(YoutubeDLSharp.Metadata.VideoData gifData, Xabe.FFmpeg.IMediaInfo iMediaInfo = null)
         {
+            this.Selected = false;
             this.Url = gifData.Url;
             this.RedditAudioFormat = null;
             if(iMediaInfo != null && iMediaInfo.VideoStreams.Count() > 0)
@@ -59,6 +62,7 @@ namespace YT_RED.Classes
 
         public YTDLFormatData(FormatData formatData, float? duration, FormatData redditAudioFormat = null) : base()
         {
+            this.Selected = false;
             this.Url = formatData.Url;
             this.RedditAudioFormat = redditAudioFormat;
             this.ManifestUrl = formatData.ManifestUrl;

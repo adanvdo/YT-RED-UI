@@ -185,6 +185,7 @@
     <Compile Include="Classes\ResultStream.cs" />
     <Compile Include="Classes\StreamLink.cs" />
     <Compile Include="Classes\UIBlockDetector.cs" />
+    <Compile Include="Classes\YTDLFormatPair.cs" />
     <Compile Include="Classes\YTFormatData.cs" />
     <Compile Include="Controls\ControlPanel.cs">
       <SubType>UserControl</SubType>
@@ -260,6 +261,7 @@
     <Compile Include="Settings\AppSettings.cs" />
     <Compile Include="Settings\FeatureSettings.cs" />
     <Compile Include="Settings\GeneralSettings.cs" />
+    <Compile Include="Settings\LayoutSettings.cs" />
     <Compile Include="Utils\HtmlUtil.cs" />
     <Compile Include="Utils\HttpUtil.cs" />
     <Compile Include="Utils\ReportingUtil.cs" />

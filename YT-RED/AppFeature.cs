@@ -8,6 +8,8 @@ namespace YT_RED
 		[Description("Advanced")]
 		Advanced = 1,
 		[Description("About")]
-		About = 2
+		About = 2,
+        [Description("Layout")]
+		Layout = 3
 	}
 }
