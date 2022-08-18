@@ -116,6 +116,7 @@
             this.lblSelectionText.Location = new System.Drawing.Point(0, 0);
             this.lblSelectionText.Margin = new System.Windows.Forms.Padding(0);
             this.lblSelectionText.Name = "lblSelectionText";
+            this.lblSelectionText.Padding = new System.Windows.Forms.Padding(0, 0, 5, 0);
             this.lblSelectionText.Size = new System.Drawing.Size(323, 0);
             this.lblSelectionText.TabIndex = 0;
             this.lblSelectionText.TextChanged += new System.EventHandler(this.lblSelectionText_TextChanged);

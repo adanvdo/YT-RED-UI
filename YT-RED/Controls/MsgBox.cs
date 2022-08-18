@@ -14,8 +14,8 @@ namespace YT_RED.Controls
         private static Buttons _buttons = Buttons.OK;
         private static Icon _icon = YT_RED.Controls.Icon.Warning;
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        private static extern bool MessageBeep(uint type);
+        //[DllImport("user32.dll", CharSet = CharSet.Auto)]
+        //private static extern bool MessageBeep(uint type);
 
         private bool urlCheck = false;
 
@@ -37,7 +37,6 @@ namespace YT_RED.Controls
             _msgBox.messagePanel.Height = _msgBox.messagePanel.Height + addHeight;
             _msgBox.lblMessage.Height = _msgBox.lblMessage.Height + addHeight;
             _msgBox.ShowDialog();
-            MessageBeep(0);
             return _msgBox.DialogResult;
         }
 
@@ -54,7 +53,6 @@ namespace YT_RED.Controls
             _msgBox.lblCaption.Text = caption;
             _msgBox.lblCaption.Visible = true;
             _msgBox.ShowDialog();
-            MessageBeep(0);
             return _msgBox.DialogResult;
         }
 
@@ -70,7 +68,6 @@ namespace YT_RED.Controls
             _msgBox.initButtons(buttons);
             _msgBox.initIcon(_icon);
             _msgBox.ShowDialog();
-            MessageBeep(0);
             return _msgBox.DialogResult;
         }
 
@@ -87,7 +84,6 @@ namespace YT_RED.Controls
             _msgBox.initIcon(_icon);
             _msgBox.lblCaption.Visible = true;
             _msgBox.ShowDialog();
-            MessageBeep(0);
             return _msgBox.DialogResult;
         }
 
@@ -103,7 +99,6 @@ namespace YT_RED.Controls
             _msgBox.initButtons(buttons);
             _msgBox.initIcon(icon);
             _msgBox.ShowDialog();
-            MessageBeep(0);
             return _msgBox.DialogResult;
         }
 
@@ -120,7 +115,6 @@ namespace YT_RED.Controls
             _msgBox.initIcon(icon);
             _msgBox.lblCaption.Visible = true;
             _msgBox.ShowDialog();
-            MessageBeep(0);
             return _msgBox.DialogResult;
         }
 
@@ -138,7 +132,6 @@ namespace YT_RED.Controls
             _msgBox.lblCaption.Visible = true;
             _msgBox.pnlSuppressPanel.Visible = true;
             _msgBox.ShowDialog();
-            MessageBeep(0);
             return _msgBox.DialogResult;
         }
 
@@ -157,7 +150,6 @@ namespace YT_RED.Controls
             _msgBox.initIcon(icon);
             _msgBox.lblCaption.Visible = true;
             _msgBox.ShowDialog();
-            MessageBeep(0);
             return _msgBox.DialogResult;
         }        
             

@@ -12,6 +12,10 @@ namespace YT_RED.Settings
 		public override AppFeature Feature => AppFeature.General;
 
         [Browsable(false)]
+        [JsonProperty("setting_tab")]
+		public AppFeature ActiveFeatureTab { get; set; }
+
+        [Browsable(false)]
         [JsonProperty("show_host_warning")]
 		public bool ShowHostWarning { get; set; }
 
@@ -107,6 +111,7 @@ namespace YT_RED.Settings
 				Logging.ExceptionHandler.LogException(ex);
 				ErrorLogPath = "./ErrorLogs";
 			}
+			ActiveFeatureTab = AppFeature.General;
 			ShowHostWarning = true;
 			ActiveSkin = "WXI";
 			SkinPalette = "Darkness";

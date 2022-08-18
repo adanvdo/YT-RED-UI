@@ -194,6 +194,7 @@
             this.tcSettingsTabControl.Name = "tcSettingsTabControl";
             this.tcSettingsTabControl.Size = new System.Drawing.Size(509, 391);
             this.tcSettingsTabControl.TabIndex = 0;
+            this.tcSettingsTabControl.SelectedPageChanged += new DevExpress.XtraTab.TabPageChangedEventHandler(this.tcSettingsTabControl_SelectedPageChanged);
             // 
             // SettingsDialog
             // 

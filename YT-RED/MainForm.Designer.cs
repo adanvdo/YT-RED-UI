@@ -132,6 +132,7 @@
             this.sccMainSplitter.Location = new System.Drawing.Point(0, 0);
             this.sccMainSplitter.Margin = new System.Windows.Forms.Padding(0);
             this.sccMainSplitter.Name = "sccMainSplitter";
+            this.sccMainSplitter.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
             // 
             // sccMainSplitter.Panel1
             // 
@@ -147,8 +148,9 @@
             this.sccMainSplitter.Panel2.Controls.Add(this.cpMainControlPanel);
             this.sccMainSplitter.Panel2.MinSize = 323;
             this.sccMainSplitter.Panel2.Text = "Panel2";
+            this.sccMainSplitter.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.sccMainSplitter.Size = new System.Drawing.Size(1188, 717);
-            this.sccMainSplitter.SplitterPosition = 849;
+            this.sccMainSplitter.SplitterPosition = 839;
             this.sccMainSplitter.TabIndex = 0;
             this.sccMainSplitter.SplitterMoved += new System.EventHandler(this.sccMainSplitter_SplitterMoved);
             this.sccMainSplitter.Resize += new System.EventHandler(this.sccMainSplitter_Resize);
@@ -159,7 +161,7 @@
             this.gcFormats.Location = new System.Drawing.Point(0, 148);
             this.gcFormats.MainView = this.gvFormats;
             this.gcFormats.Name = "gcFormats";
-            this.gcFormats.Size = new System.Drawing.Size(849, 569);
+            this.gcFormats.Size = new System.Drawing.Size(839, 569);
             this.gcFormats.TabIndex = 0;
             this.gcFormats.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvFormats});
@@ -201,7 +203,7 @@
             this.lblSelectAFormat.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblSelectAFormat.Location = new System.Drawing.Point(0, 123);
             this.lblSelectAFormat.Name = "lblSelectAFormat";
-            this.lblSelectAFormat.Size = new System.Drawing.Size(849, 25);
+            this.lblSelectAFormat.Size = new System.Drawing.Size(839, 25);
             this.lblSelectAFormat.TabIndex = 0;
             this.lblSelectAFormat.Text = "Select a Video and/or Audio Format";
             this.lblSelectAFormat.Visible = false;
@@ -214,7 +216,7 @@
             this.marqueeProgressBarControl1.Name = "marqueeProgressBarControl1";
             this.marqueeProgressBarControl1.Properties.AllowFocused = false;
             this.marqueeProgressBarControl1.Properties.ShowTitle = true;
-            this.marqueeProgressBarControl1.Size = new System.Drawing.Size(849, 20);
+            this.marqueeProgressBarControl1.Size = new System.Drawing.Size(839, 20);
             this.marqueeProgressBarControl1.TabIndex = 0;
             this.marqueeProgressBarControl1.Visible = false;
             // 
@@ -228,7 +230,7 @@
             this.ipMainInput.MinimumSize = new System.Drawing.Size(400, 100);
             this.ipMainInput.Name = "ipMainInput";
             this.ipMainInput.ShowCrab = false;
-            this.ipMainInput.Size = new System.Drawing.Size(849, 103);
+            this.ipMainInput.Size = new System.Drawing.Size(839, 103);
             this.ipMainInput.TabIndex = 1;
             this.ipMainInput.URL = "";
             this.ipMainInput.ListFormats_Click += new System.EventHandler(this.ipMainInput_ListFormats_Click);

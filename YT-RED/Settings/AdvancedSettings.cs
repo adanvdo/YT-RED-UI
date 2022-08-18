@@ -36,6 +36,13 @@ If there is existing text in your clipboard, YT-RED will restore it after starti
         public Shortcut DownloadHotKey { get; set; }
 
         [Category("Processing")]
+        [DisplayName("Generate Missing Metadata")]
+        [Description("When enabled, YT-RED will analyze fetched formats that are missing useful Metadata.\n"
+            +"(Only applies when loading a format list)")]
+        [JsonProperty("fetch_metadata")]
+        public bool GetMissingMetadata { get; set; }
+
+        [Category("Processing")]
         [DisplayName("Always Convert Format")]
         [Description("Always convert video and audio downloads to your preferred format")]
         [JsonProperty("always_convert")]
@@ -64,6 +71,7 @@ If there is existing text in your clipboard, YT-RED will restore it after starti
             Channel = ReleaseChannel.Stable;
             EnableHotKeys = false;
             DownloadHotKey = Shortcut.None;
+            GetMissingMetadata = true;
             AlwaysConvertToPreferredFormat = false;
             PreferredVideoFormat = VideoFormat.UNSPECIFIED;
             PreferredAudioFormat = AudioFormat.UNSPECIFIED;

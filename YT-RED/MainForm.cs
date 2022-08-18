@@ -257,6 +257,7 @@ namespace YT_RED
             }
             gcFormats.DataSource = new List<YTDLFormatData>();
             refreshFormatGrid(DownloadType.Unknown);
+            applyLayout();
             VideoUtil.Init();
             VideoUtil.ytProgress = new Progress<DownloadProgress>(updateProgress);
             VideoUtil.ytOutput = new Progress<string>(processOutput);
@@ -292,8 +293,31 @@ namespace YT_RED
             }
         }
 
-        private void applyLayout(Settings.LayoutArea layoutArea)
+        private void applyLayout(Settings.LayoutArea layoutArea = LayoutArea.All)
         {
+            this.UseWaitCursor = true;
+            cpMainControlPanel.gcHistory.Visible = AppSettings.Default.General.EnableDownloadHistory;
+
+            if(layoutArea == LayoutArea.All || layoutArea == LayoutArea.Panels)
+            {
+                if(AppSettings.Default.Layout.InputPanelPosition == VerticalPanelPosition.Top)
+                {
+                    marqueeProgressBarControl1.Dock = DockStyle.Top;
+                    ipMainInput.Dock = DockStyle.Top;
+                }
+                else
+                {
+                    ipMainInput.Dock = DockStyle.Bottom;
+                    marqueeProgressBarControl1.Dock = DockStyle.Bottom;
+                }
+
+                if (AppSettings.Default.Layout.ControlPanelPosition == HorizontalPanelPosition.Right)
+                    sccMainSplitter.RightToLeft = RightToLeft.No;
+                else
+                    sccMainSplitter.RightToLeft = RightToLeft.Yes;
+                this.Refresh();
+            }
+
             if (layoutArea == LayoutArea.All || layoutArea == LayoutArea.FormatList)
             {
                 if (AppSettings.Default.Layout.FormatMode == FormatMode.Preset)
@@ -345,6 +369,7 @@ namespace YT_RED
                     this.gvFormats.CustomColumnDisplayText += new DevExpress.XtraGrid.Views.Base.CustomColumnDisplayTextEventHandler(this.gvFormats_CustomColumnDisplayText);
                 }
             }
+            this.UseWaitCursor = false;
         }
         
         private void bbiSettings_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -372,10 +397,12 @@ namespace YT_RED
             DialogResult res = dlg.ShowDialog();
             cpMainControlPanel.gcHistory.DataSource = Historian.DownloadHistory;
             refreshHistory();
+            applyLayout(LayoutArea.Panels);
             cpMainControlPanel.UpdatePanelStates();
             if (res == DialogResult.OK)
             {
                 bsiMessage.Caption = "Settings Saved";
+                cpMainControlPanel.gcHistory.Visible = AppSettings.Default.General.EnableDownloadHistory;
                 await Task.Delay(3000);
                 bsiMessage.Caption = String.Empty;
             }
@@ -626,7 +653,7 @@ namespace YT_RED
                 (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = true;
                 ipMainInput.marqeeMain.Text = "Fetching Available Formats";
                 ipMainInput.marqeeMain.Show();
-                var data = await VideoUtil.GetVideoData(url, true);
+                var data = await VideoUtil.GetVideoData(url, AppSettings.Default.Advanced.GetMissingMetadata);
                 List<YoutubeDLSharp.Metadata.FormatData> formatList = new List<YoutubeDLSharp.Metadata.FormatData>();
                 List<YTDLFormatData> converted = new List<YTDLFormatData>();                
                 if(data.Formats != null)
@@ -659,15 +686,15 @@ namespace YT_RED
                 
                 gcFormats.DataSource = converted;
                 refreshFormatGrid(this.currentDownload);
-                (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = false;
-                ipMainInput.marqeeMain.Hide();
-                ipMainInput.marqeeMain.Text = string.Empty;
+                (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = false;                
             }
             catch (Exception ex)
             {
                 ExceptionHandler.LogException(ex);
             }
             this.UseWaitCursor = false;
+            this.ipMainInput.marqeeMain.Hide();
+            ipMainInput.marqeeMain.Text = string.Empty;
         }
 
         private async void ytdlDownloadBest(string url, Classes.StreamType streamType = Classes.StreamType.AudioAndVideo)

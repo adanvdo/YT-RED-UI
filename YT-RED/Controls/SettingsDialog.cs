@@ -14,16 +14,18 @@ namespace YT_RED.Controls
 {
     public partial class SettingsDialog : DevExpress.XtraEditors.XtraForm
     {
+        private bool loading = true;
         public SettingsDialog()
         {
             InitializeComponent();
             Init();
         }
 
-        private void Init()
+        private async void Init()
         {
             createFeatureOptionsPages();
-            this.tcSettingsTabControl.SelectedTabPage = this.tcSettingsTabControl.TabPages[0];
+            DevExpress.XtraTab.XtraTabPage active = this.tcSettingsTabControl.TabPages.FirstOrDefault(tpg => tpg.Name == $"tpg{AppSettings.Default.General.ActiveFeatureTab}");
+            this.tcSettingsTabControl.SelectedTabPage = active;
         }
         private void createFeatureOptionsPages()
         {
@@ -38,7 +40,7 @@ namespace YT_RED.Controls
                 if (setting.Feature == AppFeature.About)
                 {
                     propertyGrid.Grid.OptionsView.ShowFocusedFrame = false;
-                    propertyGrid.Grid.OptionsSelectionAndFocus.EnableAppearanceFocusedRow = false;                    
+                    propertyGrid.Grid.OptionsSelectionAndFocus.EnableAppearanceFocusedRow = false;
                 }
 
                 var tabPage = new DevExpress.XtraTab.XtraTabPage();
@@ -50,6 +52,8 @@ namespace YT_RED.Controls
 
                 propertyGrid.SelectedObject = setting;
             }
+
+            loading = false;
         }
 
         private async void saveSettings()
@@ -124,6 +128,17 @@ namespace YT_RED.Controls
         private void ddDeleteDLs_Click(object sender, EventArgs e)
         {
             ddDeleteDLs.ShowDropDown();
+        }
+
+        private void tcSettingsTabControl_SelectedPageChanged(object sender, DevExpress.XtraTab.TabPageChangedEventArgs e)
+        {
+            if (loading || e.Page == null) return;
+            bool parseFeature = Enum.TryParse(e.Page.Name.Remove(0, 3), out AppFeature featureTab);
+            if (parseFeature)
+            {
+                AppSettings.Default.General.ActiveFeatureTab = featureTab;
+            }
+            else AppSettings.Default.General.ActiveFeatureTab = AppFeature.General;
         }
     }
 
