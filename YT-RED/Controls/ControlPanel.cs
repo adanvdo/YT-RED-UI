@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using YT_RED.Settings;
+using DevExpress.XtraGrid.Views.Grid.ViewInfo;
 
 namespace YT_RED.Controls
 {
@@ -611,6 +612,21 @@ namespace YT_RED.Controls
             string argument = "/select, \"" + path + "\"";
 
             System.Diagnostics.Process.Start("explorer.exe", argument);
+        }
+
+        private void historyTooltip_GetActiveObjectInfo(object sender, DevExpress.Utils.ToolTipControllerGetActiveObjectInfoEventArgs e)
+        {
+            GridHitInfo hitInfo = gvHistory.CalcHitInfo(e.ControlMousePosition);
+            if(hitInfo != null && hitInfo.InRowCell)
+            {
+                if(hitInfo.Column.FieldName == "FileExists")
+                {
+                    bool fileExits = Convert.ToBoolean(gvHistory.GetRowCellValue(hitInfo.RowHandle, "FileExists"));
+                    object o = $"{hitInfo.HitTest}{hitInfo.RowHandle}";
+                    e.Info = new DevExpress.Utils.ToolTipControlInfo(o, fileExits ? "File Exists" : "File Not Found");
+                }
+
+            }
         }
     }
 }
