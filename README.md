@@ -17,7 +17,9 @@ This project is UNLICENSED and uses licensed DevExpress WinForms Controls.
 
 YT-RED is a safe alternative to other popular youtube and reddit video downloaders found online.  Other popular reddit downlaod tools are full of trackers and data collection that the end user is not aware of.  YT-RED was personally built with a no-tracking and no-data-collection policy.  By keeping the source code open to the public, it is meant to be published as a safe and versatile media downloader for Windows
 
-![unknown](https://user-images.githubusercontent.com/26498008/175982323-68544feb-8851-4ba5-95db-42212a1ef3d8.png)
+![2022-08-21_0-03-03](https://user-images.githubusercontent.com/26498008/185775425-e18bda03-e824-4040-8ebf-37cf9da370e8.png)
+
+![2022-08-21_0-03-18](https://user-images.githubusercontent.com/26498008/185775468-58de4d42-dfba-425b-b370-6f59f7091bf7.png)
 
 ### Requirements <a name="requirements"></a>
 - Windows 7, 8, 10
@@ -82,6 +84,8 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
   Check for updates and download release packages directly in the app. 
   Optional Updater for one-click update installs
   Open Settings -> About and click the "Check for Update" button.
+  
+  ![2022-08-21_0-03-35](https://user-images.githubusercontent.com/26498008/185775490-4ab0e3c0-b980-4f4b-8b36-b11f08dad838.png)
 
 ## CHANGELOG <a name="changelog"></a>
 
