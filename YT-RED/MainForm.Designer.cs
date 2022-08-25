@@ -238,6 +238,8 @@
             this.ipMainInput.Url_Changed += new System.EventHandler(this.ipMainInput_Url_Changed);
             this.ipMainInput.Crab_Click += new System.EventHandler(this.ipMainInput_Crab_Click);
             this.ipMainInput.Url_KeyDown += new System.Windows.Forms.KeyEventHandler(this.ipMainInput_Url_KeyDown);
+            this.ipMainInput.ListFormats_MouseMove += new System.EventHandler(this.cancelProcessButtons_MouseMove);
+            this.ipMainInput.ListFormats_MouseLeave += new System.EventHandler(this.cancelProcessButtons_MouseLeave);
             // 
             // cpMainControlPanel
             // 
@@ -256,9 +258,12 @@
             this.cpMainControlPanel.SegmentStart = System.TimeSpan.Parse("00:00:00");
             this.cpMainControlPanel.Size = new System.Drawing.Size(323, 717);
             this.cpMainControlPanel.TabIndex = 2;
+            this.cpMainControlPanel.Cancel_MouseMove += new System.EventHandler(this.cancelProcessButtons_MouseMove);
+            this.cpMainControlPanel.Cancel_MouseLeave += new System.EventHandler(this.cancelProcessButtons_MouseLeave);
             this.cpMainControlPanel.DownloadSelection_Click += new System.EventHandler(this.cpMainControlPanel_DownloadSelection_Click);
             this.cpMainControlPanel.DownloadAudio_Click += new System.EventHandler(this.cpMainControlPanel_DownloadAudio_Click);
             this.cpMainControlPanel.DownloadBest_Click += new System.EventHandler(this.cpMainControlPanel_DownloadBest_Click);
+            this.cpMainControlPanel.CancelProcess_Click += new System.EventHandler(this.cpMainControlPanel_CancelProcess_Click);
             // 
             // toolTipController
             // 

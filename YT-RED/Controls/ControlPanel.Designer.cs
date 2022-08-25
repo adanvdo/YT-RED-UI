@@ -35,6 +35,7 @@
             this.lblSelectionText = new DevExpress.XtraEditors.LabelControl();
             this.pnlOptionPanel = new DevExpress.XtraEditors.PanelControl();
             this.gcDLButtons = new DevExpress.XtraEditors.GroupControl();
+            this.btnCancelProcess = new DevExpress.XtraEditors.SimpleButton();
             this.btnDownloadBest = new DevExpress.XtraEditors.SimpleButton();
             this.btnDownloadAudio = new DevExpress.XtraEditors.SimpleButton();
             this.btnSelectionDL = new DevExpress.XtraEditors.SimpleButton();
@@ -137,7 +138,7 @@
             this.pnlOptionPanel.Margin = new System.Windows.Forms.Padding(0);
             this.pnlOptionPanel.MinimumSize = new System.Drawing.Size(323, 136);
             this.pnlOptionPanel.Name = "pnlOptionPanel";
-            this.pnlOptionPanel.Size = new System.Drawing.Size(323, 563);
+            this.pnlOptionPanel.Size = new System.Drawing.Size(323, 595);
             this.pnlOptionPanel.TabIndex = 0;
             // 
             // gcDLButtons
@@ -146,6 +147,7 @@
             this.gcDLButtons.AppearanceCaption.Options.UseFont = true;
             this.gcDLButtons.AutoSize = true;
             this.gcDLButtons.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.gcDLButtons.Controls.Add(this.btnCancelProcess);
             this.gcDLButtons.Controls.Add(this.btnDownloadBest);
             this.gcDLButtons.Controls.Add(this.btnDownloadAudio);
             this.gcDLButtons.Controls.Add(this.btnSelectionDL);
@@ -153,9 +155,29 @@
             this.gcDLButtons.Location = new System.Drawing.Point(0, 436);
             this.gcDLButtons.Margin = new System.Windows.Forms.Padding(0);
             this.gcDLButtons.Name = "gcDLButtons";
-            this.gcDLButtons.Size = new System.Drawing.Size(323, 127);
+            this.gcDLButtons.Size = new System.Drawing.Size(323, 159);
             this.gcDLButtons.TabIndex = 0;
             this.gcDLButtons.Text = "Execute Download";
+            // 
+            // btnCancelProcess
+            // 
+            this.btnCancelProcess.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.btnCancelProcess.Appearance.Options.UseFont = true;
+            this.btnCancelProcess.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnCancelProcess.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
+            this.btnCancelProcess.ImageOptions.SvgImage = global::YT_RED.Properties.Resources.close;
+            this.btnCancelProcess.ImageOptions.SvgImageSize = new System.Drawing.Size(25, 25);
+            this.btnCancelProcess.Location = new System.Drawing.Point(2, 125);
+            this.btnCancelProcess.Margin = new System.Windows.Forms.Padding(0);
+            this.btnCancelProcess.Name = "btnCancelProcess";
+            this.btnCancelProcess.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
+            this.btnCancelProcess.Size = new System.Drawing.Size(319, 32);
+            this.btnCancelProcess.TabIndex = 15;
+            this.btnCancelProcess.Text = "CANCEL        ";
+            this.btnCancelProcess.Visible = false;
+            this.btnCancelProcess.Click += new System.EventHandler(this.btnCancelProcess_Click);
+            this.btnCancelProcess.MouseLeave += new System.EventHandler(this.btnCancelProcess_MouseLeave);
+            this.btnCancelProcess.MouseMove += new System.Windows.Forms.MouseEventHandler(this.btnCancelProcess_MouseMove);
             // 
             // btnDownloadBest
             // 
@@ -624,7 +646,7 @@
             this.pnlProgressPanel.Controls.Add(this.lblLastDL);
             this.pnlProgressPanel.Controls.Add(this.pbProgress);
             this.pnlProgressPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlProgressPanel.Location = new System.Drawing.Point(0, 563);
+            this.pnlProgressPanel.Location = new System.Drawing.Point(0, 595);
             this.pnlProgressPanel.Margin = new System.Windows.Forms.Padding(0);
             this.pnlProgressPanel.Name = "pnlProgressPanel";
             this.pnlProgressPanel.Size = new System.Drawing.Size(323, 78);
@@ -671,10 +693,10 @@
             // gcHistory
             // 
             this.gcHistory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcHistory.Location = new System.Drawing.Point(0, 641);
+            this.gcHistory.Location = new System.Drawing.Point(0, 673);
             this.gcHistory.MainView = this.gvHistory;
             this.gcHistory.Name = "gcHistory";
-            this.gcHistory.Size = new System.Drawing.Size(323, 194);
+            this.gcHistory.Size = new System.Drawing.Size(323, 162);
             this.gcHistory.TabIndex = 0;
             this.gcHistory.ToolTipController = this.historyTooltip;
             this.gcHistory.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -761,9 +783,6 @@
         private DevExpress.XtraEditors.LabelControl lblSelectionText;
         private DevExpress.XtraEditors.PanelControl pnlOptionPanel;
         private DevExpress.XtraEditors.GroupControl gcDLButtons;
-        private DevExpress.XtraEditors.SimpleButton btnDownloadBest;
-        private DevExpress.XtraEditors.SimpleButton btnDownloadAudio;
-        private DevExpress.XtraEditors.SimpleButton btnSelectionDL;
         private DevExpress.XtraEditors.GroupControl gcCrop;
         private DevExpress.XtraEditors.PanelControl pnlCropPanel;
         private DevExpress.XtraEditors.ToggleSwitch toggleCrop;
@@ -798,5 +817,9 @@
         private DevExpress.XtraEditors.ToggleSwitch toggleConvert;
         private DevExpress.XtraEditors.LabelControl lblLastDL;
         private DevExpress.Utils.ToolTipController historyTooltip;
+        public DevExpress.XtraEditors.SimpleButton btnDownloadBest;
+        public DevExpress.XtraEditors.SimpleButton btnDownloadAudio;
+        public DevExpress.XtraEditors.SimpleButton btnSelectionDL;
+        public DevExpress.XtraEditors.SimpleButton btnCancelProcess;
     }
 }

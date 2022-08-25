@@ -153,6 +153,16 @@ namespace YT_RED.Properties {
         /// <summary>
         ///   Looks up a localized resource of type DevExpress.Utils.Svg.SvgImage.
         /// </summary>
+        internal static DevExpress.Utils.Svg.SvgImage close {
+            get {
+                object obj = ResourceManager.GetObject("close", resourceCulture);
+                return ((DevExpress.Utils.Svg.SvgImage)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type DevExpress.Utils.Svg.SvgImage.
+        /// </summary>
         internal static DevExpress.Utils.Svg.SvgImage enablesearch {
             get {
                 object obj = ResourceManager.GetObject("enablesearch", resourceCulture);
@@ -196,6 +206,16 @@ namespace YT_RED.Properties {
         internal static DevExpress.Utils.Svg.SvgImage instagram_circle {
             get {
                 object obj = ResourceManager.GetObject("instagram-circle", resourceCulture);
+                return ((DevExpress.Utils.Svg.SvgImage)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type DevExpress.Utils.Svg.SvgImage.
+        /// </summary>
+        internal static DevExpress.Utils.Svg.SvgImage listnumbers {
+            get {
+                object obj = ResourceManager.GetObject("listnumbers", resourceCulture);
                 return ((DevExpress.Utils.Svg.SvgImage)(obj));
             }
         }
@@ -326,16 +346,6 @@ namespace YT_RED.Properties {
         internal static DevExpress.Utils.Svg.SvgImage sound {
             get {
                 object obj = ResourceManager.GetObject("sound", resourceCulture);
-                return ((DevExpress.Utils.Svg.SvgImage)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type DevExpress.Utils.Svg.SvgImage.
-        /// </summary>
-        internal static DevExpress.Utils.Svg.SvgImage stop {
-            get {
-                object obj = ResourceManager.GetObject("stop", resourceCulture);
                 return ((DevExpress.Utils.Svg.SvgImage)(obj));
             }
         }

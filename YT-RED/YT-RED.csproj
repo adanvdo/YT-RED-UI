@@ -326,6 +326,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\close.svg" />
+    <None Include="Resources\listnumbers.svg" />
     <None Include="Resources\electronics_volume.svg" />
     <None Include="Resources\VideoSound.svg" />
     <None Include="Resources\glyph_video.svg" />

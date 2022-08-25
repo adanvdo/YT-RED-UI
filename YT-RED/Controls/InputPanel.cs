@@ -21,6 +21,12 @@ namespace YT_RED.Controls
         [Browsable(true)]
         public event KeyEventHandler Url_KeyDown;
 
+        [Browsable(true)]
+        public event EventHandler ListFormats_MouseMove;        
+
+        [Browsable(true)]
+        public event EventHandler ListFormats_MouseLeave;
+
         public bool ShowCrab
         {
             get { return btnCrab.Visible; }
@@ -82,6 +88,18 @@ namespace YT_RED.Controls
         {
             if (Url_KeyDown != null)
                 Url_KeyDown(sender, e);
+        }
+
+        private void btnListFormats_MouseMove(object sender, MouseEventArgs e)
+        {
+            if(ListFormats_MouseMove != null)
+                ListFormats_MouseMove(sender, e);
+        }
+
+        private void btnListFormats_MouseLeave(object sender, EventArgs e)
+        {
+            if (ListFormats_MouseLeave != null)
+                ListFormats_MouseLeave(sender, e);
         }
     }
 }

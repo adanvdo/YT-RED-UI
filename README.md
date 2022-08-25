@@ -26,11 +26,14 @@ YT-RED is a safe alternative to other popular youtube and reddit video downloade
 - .NET Framework 4.8
 
 ### Current Features (more info further below) <a name="current-features"></a>
-- List Video Format Options
+- List Available Media Formats
+- Two Format Selection Modes
+  - Preset: Format list includes automatically generated audio+video pairs
+  - Custom: Choose/combine the Audio and/or Video formats of your choice
 - Download Selected Format
 - Download Best Quality Video (or Gif)
 - Download Best Quality Audio
-- Download History Log / File Browser
+- Download History Log / File Access
 - Automatic ID3 Tagging for Audio Downloads
 - Segment Downloads
 - Video Cropping
@@ -38,6 +41,8 @@ YT-RED is a safe alternative to other popular youtube and reddit video downloade
 - Minimize to System Tray
 - Quick Download while in System Tray
 - Quick Download Hotkey
+- Configurable Panel Positions
+- Additional Advanced Options
 - Update Assistant
 
 ### Known Issues <a name="known-issues"></a>
@@ -50,6 +55,10 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 - #### List Formats
   This will retrieve all video formats available to download.
   An individual format can be selected and downloaded.
+
+- #### Format Selection Mode - Choose from one of two available selection modes
+  1. Preset - Select a single format from one of the automatically generated format options  
+  2. Custom - Combine the audio and video format of your choice for a single merged file
 
 - #### Download Best
   The "Download Best" option evaluates all available video and audio formats before downloading the best available.
@@ -80,6 +89,9 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
   To use, Highlight a youtube or reddit media post url in your browser, and press the configured hotkey. This will perform an automatic "Best Download" with the progress displayed above the system tray.
 
+- #### Layout Options
+  Change the position of certain panels for the layout you like.
+
 - #### Update Assistant
   Check for updates and download release packages directly in the app. 
   Optional Updater for one-click update installs
@@ -88,6 +100,11 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
   ![2022-08-21_0-03-35](https://user-images.githubusercontent.com/26498008/185775490-4ab0e3c0-b980-4f4b-8b36-b11f08dad838.png)
 
 ## CHANGELOG <a name="changelog"></a>
+
+### 8/25/2022 v1.0.1.16
+- Added download cancellation Support
+- Added visible progress bar when program is minimized during a download
+- Fixed bug introduced in v1.0.1.15 where audio+video / audio format downloads caused the program to crash before downloading
 
 ### 8/18/2022 v1.0.1.15
 - Added Layout Settings (Format List Modes and Panel Positions)

@@ -41,6 +41,12 @@ namespace YT_RED.Controls
             get { return toggleConvert.IsOn; }
         }
 
+        [Browsable(true)]
+        public event EventHandler Cancel_MouseMove;
+
+        [Browsable(true)]
+        public event EventHandler Cancel_MouseLeave;
+
         private Classes.YTDLFormatPair currentFormatPair = new Classes.YTDLFormatPair();
 
         [Browsable(false)]
@@ -61,7 +67,7 @@ namespace YT_RED.Controls
 
         public void SetCurrentFormat(Classes.YTDLFormatData format)
         {
-            if(format == null) throw new ArgumentNullException("format");
+            if (format == null) throw new ArgumentNullException("format");
             if (format.Type == Classes.StreamType.File || format.Type == Classes.StreamType.Unknown) throw new ArgumentException("type is not valid");
 
             if (format.Type == Classes.StreamType.Video || format.Type == Classes.StreamType.AudioAndVideo)
@@ -81,7 +87,7 @@ namespace YT_RED.Controls
             this.currentFormatPair.AudioFormat = audioFormat;
 
             processFormatChange();
-        }        
+        }
 
         private void processFormatChange()
         {
@@ -124,13 +130,13 @@ namespace YT_RED.Controls
                 return true;
             }
         }
-        
+
         private void formatChanged()
         {
             if (currentFormatPair != null && currentFormatPair.IsValid())
             {
                 if (currentFormatPair.VideoFormat == null || currentFormatPair.VideoCodec == "none")
-                {                   
+                {
                     cbVideoFormat.Properties.Items.Clear();
                     cbAudioFormat.Properties.Items.Clear();
                     cbAudioFormat.Properties.Items.AddRange(audioFormats);
@@ -213,7 +219,7 @@ namespace YT_RED.Controls
                     bool pf = Enum.TryParse(cbVideoFormat.SelectedItem.ToString(), out VideoFormat pvf);
                     if (pf)
                         vf = pvf;
-                    if(vf != Settings.VideoFormat.UNSPECIFIED)
+                    if (vf != Settings.VideoFormat.UNSPECIFIED)
                         return vf;
                 }
                 return null;
@@ -265,12 +271,12 @@ namespace YT_RED.Controls
                     pbProgress.Refresh();
                 };
                 pbProgress.Invoke(safeUpdate);
-            } 
+            }
             else
             {
                 pbProgress.Position = progress;
                 pbProgress.Refresh();
-            }            
+            }
         }
 
         public void ShowProgress()
@@ -305,6 +311,9 @@ namespace YT_RED.Controls
 
         [Browsable(true)]
         public event EventHandler DownloadBest_Click;
+
+        [Browsable(true)]
+        public event EventHandler CancelProcess_Click;
 
         private Color toggleForeColor;
 
@@ -410,7 +419,7 @@ namespace YT_RED.Controls
                 pnlSegPanel.Visible = true;
                 gcSegments.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
             }
-        }       
+        }
 
         private void gcCrop_Click(object sender, EventArgs e)
         {
@@ -440,7 +449,7 @@ namespace YT_RED.Controls
                 pnlConvertPanel.Visible = true;
                 gcConvert.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
             }
-        }        
+        }
 
         public void UpdatePanelStates()
         {
@@ -539,17 +548,22 @@ namespace YT_RED.Controls
 
         private void btnDownloadAudio_Click(object sender, EventArgs e)
         {
-            if(DownloadAudio_Click != null) DownloadAudio_Click(sender, e);
+            if (DownloadAudio_Click != null) DownloadAudio_Click(sender, e);
         }
 
         private void btnDownloadBest_Click(object sender, EventArgs e)
         {
-            if(DownloadBest_Click != null) DownloadBest_Click(sender, e);
+            if (DownloadBest_Click != null) DownloadBest_Click(sender, e);
+        }
+
+        private void btnCancelProcess_Click(object sender, EventArgs e)
+        {
+            if(CancelProcess_Click != null) CancelProcess_Click(sender, e);
         }
 
         private void lblSelectionText_TextChanged(object sender, EventArgs e)
         {
-            if(!string.IsNullOrEmpty(lblSelectionText.Text))
+            if (!string.IsNullOrEmpty(lblSelectionText.Text))
             {
                 lblSelectionText.Padding = new Padding(0, 10, 0, 10);
             }
@@ -561,7 +575,7 @@ namespace YT_RED.Controls
 
         private void checkConversionOptions()
         {
-            if(cbVideoFormat.SelectedItem != null && !string.IsNullOrEmpty(cbVideoFormat.SelectedItem.ToString()) && !string.IsNullOrEmpty(cbAudioFormat.SelectedItem.ToString()))
+            if (cbVideoFormat.SelectedItem != null && !string.IsNullOrEmpty(cbVideoFormat.SelectedItem.ToString()) && !string.IsNullOrEmpty(cbAudioFormat.SelectedItem.ToString()))
             {
                 lblAlwaysConvert.Text = "Audio Format will be automatically determined\nwhen downloading \"Best [audio+video]\"";
                 lblAlwaysConvert.Visible = true;
@@ -588,12 +602,12 @@ namespace YT_RED.Controls
             try
             {
                 Logging.DownloadLog row = gvHistory.GetRow(gvHistory.FocusedRowHandle) as Logging.DownloadLog;
-                if(row != null && row.FileExists)
+                if (row != null && row.FileExists)
                 {
-                    openFileLocation(row.DownloadLocation);    
+                    openFileLocation(row.DownloadLocation);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Logging.ExceptionHandler.LogException(ex);
             }
@@ -601,7 +615,7 @@ namespace YT_RED.Controls
 
         private void btnOpenDL_Click(object sender, EventArgs e)
         {
-            if(!string.IsNullOrEmpty(btnOpenDL.Text) && System.IO.File.Exists(btnOpenDL.Text))
+            if (!string.IsNullOrEmpty(btnOpenDL.Text) && System.IO.File.Exists(btnOpenDL.Text))
             {
                 openFileLocation(btnOpenDL.Text);
             }
@@ -617,9 +631,9 @@ namespace YT_RED.Controls
         private void historyTooltip_GetActiveObjectInfo(object sender, DevExpress.Utils.ToolTipControllerGetActiveObjectInfoEventArgs e)
         {
             GridHitInfo hitInfo = gvHistory.CalcHitInfo(e.ControlMousePosition);
-            if(hitInfo != null && hitInfo.InRowCell)
+            if (hitInfo != null && hitInfo.InRowCell)
             {
-                if(hitInfo.Column.FieldName == "FileExists")
+                if (hitInfo.Column.FieldName == "FileExists")
                 {
                     bool fileExits = Convert.ToBoolean(gvHistory.GetRowCellValue(hitInfo.RowHandle, "FileExists"));
                     object o = $"{hitInfo.HitTest}{hitInfo.RowHandle}";
@@ -627,6 +641,18 @@ namespace YT_RED.Controls
                 }
 
             }
+        }
+
+        private void btnCancelProcess_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (Cancel_MouseMove != null)
+                Cancel_MouseMove(sender, e);
+        }
+
+        private void btnCancelProcess_MouseLeave(object sender, EventArgs e)
+        {
+            if (Cancel_MouseLeave != null)
+                Cancel_MouseLeave(sender, e);
         }
     }
 }

@@ -52,6 +52,8 @@ namespace YT_RED
         private bool trayBalloonShown = false;
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repHistoryCheckEdit;
         private int splitterNegativePosition = 0;
+        private TrayForm activeTrayForm = null;
+
 
         static KeyboardHook hook = new KeyboardHook();
 
@@ -67,6 +69,12 @@ namespace YT_RED
             this.initialFunction = InitialFunction.None;
             this.initialLink = "";
             this.newUpdater = newUpdater;
+            this.activeTrayForm = new TrayForm();
+            activeTrayForm.FormClosed += TrayForm_FormClosed;
+            activeTrayForm.StartPosition = FormStartPosition.Manual;
+            Rectangle workingArea = Screen.GetWorkingArea(this);
+            var loc = new Point(workingArea.Right - activeTrayForm.Size.Width, workingArea.Bottom - activeTrayForm.Size.Height);
+            activeTrayForm.Location = loc;
             cpMainControlPanel.ParentMainForm = this;
             repHistoryCheckEdit = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             repHistoryCheckEdit.CheckBoxOptions.Style = DevExpress.XtraEditors.Controls.CheckBoxStyle.Custom;
@@ -82,6 +90,12 @@ namespace YT_RED
             this.initialFunction = initialFunction;
             this.initialLink = initialLink;
             this.newUpdater = newUpdater;
+            this.activeTrayForm = new TrayForm();
+            activeTrayForm.FormClosed += TrayForm_FormClosed;
+            activeTrayForm.StartPosition = FormStartPosition.Manual;
+            Rectangle workingArea = Screen.GetWorkingArea(this);
+            var loc = new Point(workingArea.Right - activeTrayForm.Size.Width, workingArea.Bottom - activeTrayForm.Size.Height);
+            activeTrayForm.Location = loc;
             cpMainControlPanel.ParentMainForm = this;
             repHistoryCheckEdit = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             repHistoryCheckEdit.CheckBoxOptions.Style = DevExpress.XtraEditors.Controls.CheckBoxStyle.Custom;
@@ -163,19 +177,18 @@ namespace YT_RED
                 {
                     try
                     {
-                        TrayForm trayForm = new TrayForm();
-                        activeTrayForm = trayForm;
-                        trayForm.FormClosed += TrayForm_FormClosed;
-                        trayForm.StartPosition = FormStartPosition.Manual;
+                        activeTrayForm = new TrayForm();
+                        activeTrayForm.FormClosed += TrayForm_FormClosed;
+                        activeTrayForm.StartPosition = FormStartPosition.Manual;
                         Rectangle workingArea = Screen.GetWorkingArea(this);
-                        var loc = new Point(workingArea.Right - trayForm.Size.Width, workingArea.Bottom - trayForm.Size.Height);
-                        trayForm.HideProgressPanel();
-                        trayForm.Location = loc;
-                        trayForm.Url = copiedText;
-                        trayForm.Show();
-                        trayForm.BringToFront();
-                        trayForm.TopMost = true;
-                        trayForm.TriggerDownload();
+                        var loc = new Point(workingArea.Right - activeTrayForm.Size.Width, workingArea.Bottom - activeTrayForm.Size.Height);
+                        activeTrayForm.HideProgressPanel();
+                        activeTrayForm.Location = loc;
+                        activeTrayForm.Url = copiedText;
+                        activeTrayForm.Show();
+                        activeTrayForm.BringToFront();
+                        activeTrayForm.TopMost = true;
+                        activeTrayForm.TriggerDownload();
                     }
                     catch (Exception ex)
                     {
@@ -184,7 +197,12 @@ namespace YT_RED
                 }
                 else if(!activeTrayForm.Locked)
                 {
+                    Rectangle workingArea = Screen.GetWorkingArea(this);
+                    var loc = new Point(workingArea.Right - activeTrayForm.Size.Width, workingArea.Bottom - activeTrayForm.Size.Height);
+                    activeTrayForm.HideProgressPanel();
+                    activeTrayForm.Location = loc;
                     activeTrayForm.Url = copiedText;
+                    activeTrayForm.Show();
                     activeTrayForm.BringToFront();
                     activeTrayForm.TopMost = true;
                     activeTrayForm.TriggerDownload();
@@ -229,16 +247,24 @@ namespace YT_RED
             if (this.WindowState == FormWindowState.Minimized)
             {
                 enableQuickDownload = true;
-                notifyIcon.Visible = true;
-                if (!trayBalloonShown)
+                notifyIcon.Visible = true;                
+                this.ShowInTaskbar = false;
+                if (VideoUtil.Running)
+                {
+                    activeTrayForm.closeOnCompletedProgress = true;
+                    activeTrayForm.Url = this.ipMainInput.URL;
+                    activeTrayForm.Show();
+                }
+                else if (!trayBalloonShown)
                 {
                     notifyIcon.ShowBalloonTip(3000);
                     trayBalloonShown = true;
                 }
-                this.ShowInTaskbar = false;
             }
             else
             {
+                notifyIcon.Visible = false;
+                this.ShowInTaskbar = true;
                 enableQuickDownload = false;
             }
             base.OnResize(e);
@@ -438,25 +464,22 @@ namespace YT_RED
             this.Show();
             this.WindowState = FormWindowState.Normal;
         }
-
-        private TrayForm activeTrayForm = null;
+        
         private void tsiDownload_Click(object sender, EventArgs e)
         {
             if (activeTrayForm == null)
             {
                 try
                 {
-                    using (TrayForm trayForm = new TrayForm())
-                    {
-                        activeTrayForm = trayForm;
-                        trayForm.FormClosed += TrayForm_FormClosed;
-                        trayForm.StartPosition = FormStartPosition.Manual;
-                        Rectangle workingArea = Screen.GetWorkingArea(this);
-                        trayForm.HideProgressPanel();
-                        var loc = new Point(workingArea.Right - trayForm.Size.Width, workingArea.Bottom - (trayForm.Size.Height - 81));
-                        trayForm.Location = loc;
-                        trayForm.ShowDialog();
-                    }
+                    if (activeTrayForm == null) activeTrayForm = new TrayForm();
+                    activeTrayForm.FormClosed += TrayForm_FormClosed;
+                    activeTrayForm.StartPosition = FormStartPosition.Manual;
+                    Rectangle workingArea = Screen.GetWorkingArea(this);
+                    activeTrayForm.HideProgressPanel();
+                    var loc = new Point(workingArea.Right - activeTrayForm.Size.Width, workingArea.Bottom - (activeTrayForm.Size.Height - 81));
+                    activeTrayForm.Location = loc;
+                    activeTrayForm.ShowDialog();
+                    
                 }
                 catch (Exception ex)
                 {
@@ -467,7 +490,7 @@ namespace YT_RED
 
         private void TrayForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            activeTrayForm = null;
+            //activeTrayForm = null;
         }
 
         private void tsiExit_Click(object sender, EventArgs e)
@@ -511,7 +534,11 @@ namespace YT_RED
         {
             if (!string.IsNullOrEmpty(ipMainInput.URL))
             {
-                getYtdlFormatList(ipMainInput.URL);                
+                if(ipMainInput.btnListFormats.Text == "Cancel      ")
+                {
+                    VideoUtil.CancellationTokenSource.Cancel();
+                    ipMainInput.btnListFormats.Text = "List Available Formats";
+                } else getYtdlFormatList(ipMainInput.URL);
             }
         }
 
@@ -530,6 +557,7 @@ namespace YT_RED
             {
                 cpMainControlPanel.SetCurrentFormats(null, new YTDLFormatData() { AudioCodec = "best" });
                 ytdlDownloadBest(ipMainInput.URL, Classes.StreamType.Audio);
+                
             }
         }
 
@@ -624,17 +652,23 @@ namespace YT_RED
                 return;
 
             var percent = (int)(Math.Round(progress.Progress * 100));
+            if (this.activeTrayForm != null)
+                this.activeTrayForm.ShowProgress(progress);
             cpMainControlPanel.UpdateProgress(percent, true);
         }        
 
         public void processOutput(string output)
         {
             ipMainInput.marqeeMain.Text = output;
+            if (this.activeTrayForm != null)
+                this.activeTrayForm.ShowProgressOutput(output);
         }
 
         private void Conversion_OnProgress(object sender, Xabe.FFmpeg.Events.ConversionProgressEventArgs args)
         {
             var percent = (int)(Math.Round(args.Duration.TotalSeconds / args.TotalLength.TotalSeconds, 2) * 100);
+            if (activeTrayForm != null)
+                activeTrayForm.ShowProgress(percent);
             cpMainControlPanel.UpdateProgress(percent, true);
         }
 
@@ -649,6 +683,9 @@ namespace YT_RED
                     if (res == DialogResult.No)
                         return;
                 }
+                VideoUtil.Running = true;
+                this.ipMainInput.btnListFormats.Text = "Cancel      ";
+                this.ipMainInput.btnListFormats.ImageOptions.SvgImage = Properties.Resources.close;
                 this.UseWaitCursor = true;
                 (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = true;
                 ipMainInput.marqeeMain.Text = "Fetching Available Formats";
@@ -680,7 +717,8 @@ namespace YT_RED
                 }
                 else if(data.Extension.ToLower() == "gif") 
                 {
-                    IMediaInfo gifInfo = await FFmpeg.GetMediaInfo(data.Url);
+                    VideoUtil.CancellationTokenSource = new System.Threading.CancellationTokenSource();
+                    IMediaInfo gifInfo = await FFmpeg.GetMediaInfo(data.Url, VideoUtil.CancellationTokenSource.Token);
                     converted.Add(new YTDLFormatData(data, gifInfo));
                 }
                 
@@ -690,15 +728,19 @@ namespace YT_RED
             }
             catch (Exception ex)
             {
-                ExceptionHandler.LogException(ex);
+                if (ex.Message.ToLower() != "a task was canceled.")
+                    ExceptionHandler.LogException(ex);
             }
+            this.ipMainInput.btnListFormats.Text = "List Available Formats";
+            this.ipMainInput.btnListFormats.ImageOptions.SvgImage = Properties.Resources.listnumbers;
+            VideoUtil.Running = false;
             this.UseWaitCursor = false;
             this.ipMainInput.marqeeMain.Hide();
             ipMainInput.marqeeMain.Text = string.Empty;
         }
 
         private async void ytdlDownloadBest(string url, Classes.StreamType streamType = Classes.StreamType.AudioAndVideo)
-        {
+        {            
             this.currentDownload = HtmlUtil.CheckUrl(ipMainInput.URL);
             if (this.currentDownload == DownloadType.Unknown && AppSettings.Default.General.ShowHostWarning)
             {
@@ -707,7 +749,12 @@ namespace YT_RED
                     return;
             }
 
+            VideoUtil.Running = true;
             this.UseWaitCursor = true;
+            this.cpMainControlPanel.btnDownloadBest.Visible = false;
+            this.cpMainControlPanel.btnDownloadAudio.Visible = false;
+            this.cpMainControlPanel.btnSelectionDL.Visible = false;
+            this.cpMainControlPanel.btnCancelProcess.Visible = true;
             (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = true;
             ipMainInput.marqeeMain.Text = "Sending Download Request..";
             ipMainInput.marqeeMain.Show();
@@ -747,8 +794,9 @@ namespace YT_RED
                     conversion.OnProgress += Conversion_OnProgress;
                     try
                     {
+                        VideoUtil.CancellationTokenSource = new System.Threading.CancellationTokenSource();
                         cpMainControlPanel.ShowProgress();
-                        await conversion.Start();
+                        await conversion.Start(VideoUtil.CancellationTokenSource.Token);
                         result = new RunResult<string>(true, new string[] { }, destination);
                         cpMainControlPanel.HideProgress();
                     }
@@ -767,7 +815,8 @@ namespace YT_RED
                     conversion.OnProgress += Conversion_OnProgress;
                     try
                     {
-                        await conversion.Start();
+                        VideoUtil.CancellationTokenSource = new System.Threading.CancellationTokenSource();
+                        await conversion.Start(VideoUtil.CancellationTokenSource.Token);
                         result = new RunResult<string>(true, new string[] { }, destination);
                     }
                     catch (Exception ex)
@@ -784,7 +833,7 @@ namespace YT_RED
                 if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)                
                     test = await Utils.VideoUtil.DownloadPreferredYtdl(VideoUtil.CorrectYouTubeString(url), streamType);
                 else 
-                    test = await Utils.VideoUtil.DownloadBestYtdl(VideoUtil.CorrectYouTubeString(url), streamType, null, null, null, cpMainControlPanel.EmbedThumbnail);
+                    test = await Utils.VideoUtil.DownloadBestYtdl(VideoUtil.CorrectYouTubeString(url), streamType, cpMainControlPanel.EmbedThumbnail);
 
                 if (!test.Success)
                 {                  
@@ -803,7 +852,7 @@ namespace YT_RED
                                 if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
                                     test = await Utils.VideoUtil.DownloadPreferredYtdl(VideoUtil.CorrectYouTubeString(url), detect);
                                 else 
-                                    test = await Utils.VideoUtil.DownloadBestYtdl(VideoUtil.CorrectYouTubeString(url), detect, null, null, null, cpMainControlPanel.EmbedThumbnail);
+                                    test = await Utils.VideoUtil.DownloadBestYtdl(VideoUtil.CorrectYouTubeString(url), detect, cpMainControlPanel.EmbedThumbnail);
                             }
                         }
                         else if (data.Formats == null && data.Extension.ToLower() == "gif")
@@ -830,12 +879,16 @@ namespace YT_RED
                 result = test;
                 cpMainControlPanel.HideProgress();
             }
-            if (!result.Success)
+            if (!result.Success && result.Data != "canceled")
             {
                 MsgBox.Show("Download Failed\n" + String.Join("\n", result.ErrorOutput));
             }
+            VideoUtil.Running = false;
             ipMainInput.marqeeMain.Hide();
             ipMainInput.marqeeMain.Text = "";
+            this.cpMainControlPanel.btnDownloadBest.Visible = true;
+            this.cpMainControlPanel.btnSelectionDL.Visible = true;
+            this.cpMainControlPanel.btnCancelProcess.Visible = false;
             await Historian.RecordDownload(new DownloadLog(
                 DownloadType.YouTube,
                 VideoUtil.CorrectYouTubeString(url),
@@ -844,12 +897,15 @@ namespace YT_RED
                 result.Data));
             cpMainControlPanel.gcHistory.DataSource = Historian.DownloadHistory;
             refreshHistory();
-            cpMainControlPanel.ShowDownloadLocation(result.Data);
-            if (AppSettings.Default.General.AutomaticallyOpenDownloadLocation)
+            if (result.Success)
             {
-                string argument = "/select, \"" + result.Data + "\"";
+                cpMainControlPanel.ShowDownloadLocation(result.Data);
+                if (AppSettings.Default.General.AutomaticallyOpenDownloadLocation)
+                {
+                    string argument = "/select, \"" + result.Data + "\"";
 
-                System.Diagnostics.Process.Start("explorer.exe", argument);
+                    System.Diagnostics.Process.Start("explorer.exe", argument);
+                }
             }
             this.UseWaitCursor = false;
             this.currentDownload = DownloadType.Unknown;
@@ -867,6 +923,7 @@ namespace YT_RED
                     return;
             }
 
+            VideoUtil.Running = true;
             this.UseWaitCursor = true;
             (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = true;
             cpMainControlPanel.HideDownloadLocation();
@@ -876,16 +933,21 @@ namespace YT_RED
             AudioFormat? audioFormat = null;
 
             RunResult<string> result = null;
+            this.cpMainControlPanel.btnSelectionDL.Visible = false;
+            this.cpMainControlPanel.btnCancelProcess.Visible = true;
 
             if (cpMainControlPanel.PostProcessingEnabled || (cpMainControlPanel.CurrentFormatPair.Type != Classes.StreamType.Video
-                && (cpMainControlPanel.CurrentFormatPair.VideoFormat.RedditAudioFormat != null || cpMainControlPanel.CurrentFormatPair.AudioFormat.RedditAudioFormat != null)) 
-                || (cpMainControlPanel.CurrentFormatPair.VideoFormat.VideoCodec != "gif" && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat))
+                && ((cpMainControlPanel.CurrentFormatPair.VideoFormat != null && cpMainControlPanel.CurrentFormatPair.VideoFormat.RedditAudioFormat != null) || (cpMainControlPanel.CurrentFormatPair.AudioFormat != null && cpMainControlPanel.CurrentFormatPair.AudioFormat.RedditAudioFormat != null))) 
+                || (cpMainControlPanel.CurrentFormatPair.VideoFormat != null && cpMainControlPanel.CurrentFormatPair.VideoFormat.VideoCodec != "gif" && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat))
             {
                 if (cpMainControlPanel.SegmentEnabled && cpMainControlPanel.SegmentDuration == TimeSpan.Zero)
                 {
                     this.UseWaitCursor = false;
+                    VideoUtil.Running = false;
                     ipMainInput.marqeeMain.Hide();
                     ipMainInput.marqeeMain.Text = "";
+                    this.cpMainControlPanel.btnSelectionDL.Visible = true;
+                    this.cpMainControlPanel.btnCancelProcess.Visible = false;
                     MsgBox.Show("Please specify a valid duration for the segment", "Invalid Duration");
                     return;
                 }
@@ -973,6 +1035,9 @@ namespace YT_RED
                 t = Classes.StreamType.AudioAndVideo;
             ipMainInput.marqeeMain.Hide();
             ipMainInput.marqeeMain.Text = "";
+            this.cpMainControlPanel.btnSelectionDL.Visible = true;
+            this.cpMainControlPanel.btnCancelProcess.Visible = false;
+            VideoUtil.Running = false;
             if (result.Success)
             {
                 await Historian.RecordDownload(new DownloadLog(
@@ -1062,7 +1127,10 @@ namespace YT_RED
             cpMainControlPanel.DownloadBestVisible = false;
             cpMainControlPanel.DownloadAudioVisible = false;
             Classes.YTDLFormatData fd = gvFormats.GetFocusedRow() as Classes.YTDLFormatData;
-            cpMainControlPanel.SetCurrentFormats(fd);
+            if (fd.Type == Classes.StreamType.Video || fd.Type == Classes.StreamType.AudioAndVideo)
+                cpMainControlPanel.SetCurrentFormats(fd);
+            else if (fd.Type == Classes.StreamType.Audio)
+                cpMainControlPanel.SetCurrentFormats(null, fd);
             if(fd.VideoCodec == "none")
             {
                 cpMainControlPanel.DisableToggle(false, true, false);
@@ -1149,8 +1217,7 @@ namespace YT_RED
 
         bool deselecting = false;
         private void gvFormats_SelectionChanged(object sender, DevExpress.Data.SelectionChangedEventArgs e)
-        {
-            
+        {            
             if (deselecting || !gvFormats.OptionsSelection.MultiSelect) return;
             int handle = e.ControllerRow;
             YTDLFormatData selection = (YTDLFormatData)gvFormats.GetRow(handle);
@@ -1233,6 +1300,23 @@ namespace YT_RED
                 gvFormats.UnselectRow(e.RowHandle);
             else
                 gvFormats.SelectRow(e.RowHandle);
+        }
+
+        private void cancelProcessButtons_MouseMove(object sender, EventArgs e)
+        {
+            if (this.UseWaitCursor) { this.UseWaitCursor = false; }
+        }
+
+        private void cancelProcessButtons_MouseLeave(object sender, EventArgs e)
+        {
+            if (VideoUtil.Running) { this.UseWaitCursor = true; }
+        }
+
+        private void cpMainControlPanel_CancelProcess_Click(object sender, EventArgs e)
+        {
+            VideoUtil.CancellationTokenSource.Cancel();
+            ipMainInput.marqeeMain.Hide();
+            ipMainInput.marqeeMain.Text = "";
         }
     }
 }

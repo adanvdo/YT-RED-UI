@@ -30,27 +30,27 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InputPanel));
             this.panelControl3 = new DevExpress.XtraEditors.PanelControl();
-            this.marqeeMain = new DevExpress.XtraEditors.MarqueeProgressBarControl();
             this.panelControl4 = new DevExpress.XtraEditors.PanelControl();
             this.btnCrab = new DevExpress.XtraEditors.SimpleButton();
             this.panelControl1 = new DevExpress.XtraEditors.PanelControl();
+            this.btnListReset = new DevExpress.XtraEditors.SimpleButton();
+            this.btnListFormats = new DevExpress.XtraEditors.SimpleButton();
+            this.labelControl2 = new DevExpress.XtraEditors.LabelControl();
+            this.marqeeMain = new DevExpress.XtraEditors.MarqueeProgressBarControl();
             this.pictureEdit6 = new DevExpress.XtraEditors.PictureEdit();
             this.pictureEdit5 = new DevExpress.XtraEditors.PictureEdit();
             this.pictureEdit4 = new DevExpress.XtraEditors.PictureEdit();
             this.pictureEdit3 = new DevExpress.XtraEditors.PictureEdit();
             this.pictureEdit2 = new DevExpress.XtraEditors.PictureEdit();
             this.pictureEdit1 = new DevExpress.XtraEditors.PictureEdit();
-            this.btnListReset = new DevExpress.XtraEditors.SimpleButton();
             this.txtUrl = new DevExpress.XtraEditors.TextEdit();
-            this.btnListFormats = new DevExpress.XtraEditors.SimpleButton();
-            this.labelControl2 = new DevExpress.XtraEditors.LabelControl();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl3)).BeginInit();
             this.panelControl3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.marqeeMain.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl4)).BeginInit();
             this.panelControl4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).BeginInit();
             this.panelControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.marqeeMain.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit6.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit5.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit4.Properties)).BeginInit();
@@ -73,18 +73,6 @@
             this.panelControl3.Name = "panelControl3";
             this.panelControl3.Size = new System.Drawing.Size(400, 123);
             this.panelControl3.TabIndex = 0;
-            // 
-            // marqeeMain
-            // 
-            this.marqeeMain.Dock = System.Windows.Forms.DockStyle.Top;
-            this.marqeeMain.EditValue = 0;
-            this.marqeeMain.Location = new System.Drawing.Point(2, 101);
-            this.marqeeMain.Name = "marqeeMain";
-            this.marqeeMain.Properties.AllowFocused = false;
-            this.marqeeMain.Properties.ShowTitle = true;
-            this.marqeeMain.Size = new System.Drawing.Size(396, 20);
-            this.marqeeMain.TabIndex = 0;
-            this.marqeeMain.Visible = false;
             // 
             // panelControl4
             // 
@@ -137,6 +125,64 @@
             this.panelControl1.Padding = new System.Windows.Forms.Padding(75, 2, 0, 0);
             this.panelControl1.Size = new System.Drawing.Size(396, 25);
             this.panelControl1.TabIndex = 0;
+            // 
+            // btnListReset
+            // 
+            this.btnListReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnListReset.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.btnListReset.Appearance.Options.UseFont = true;
+            this.btnListReset.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
+            this.btnListReset.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.LeftCenter;
+            this.btnListReset.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleLeft;
+            this.btnListReset.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("btnListReset.ImageOptions.SvgImage")));
+            this.btnListReset.ImageOptions.SvgImageSize = new System.Drawing.Size(18, 18);
+            this.btnListReset.Location = new System.Drawing.Point(181, 62);
+            this.btnListReset.Name = "btnListReset";
+            this.btnListReset.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
+            this.btnListReset.Size = new System.Drawing.Size(31, 32);
+            this.btnListReset.TabIndex = 3;
+            this.btnListReset.ToolTip = "Clear and Reset";
+            this.btnListReset.Click += new System.EventHandler(this.btnListReset_Click);
+            // 
+            // btnListFormats
+            // 
+            this.btnListFormats.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnListFormats.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.btnListFormats.Appearance.Options.UseFont = true;
+            this.btnListFormats.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
+            this.btnListFormats.ImageOptions.SvgImage = global::YT_RED.Properties.Resources.listnumbers;
+            this.btnListFormats.ImageOptions.SvgImageSize = new System.Drawing.Size(25, 25);
+            this.btnListFormats.Location = new System.Drawing.Point(218, 62);
+            this.btnListFormats.Name = "btnListFormats";
+            this.btnListFormats.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
+            this.btnListFormats.Size = new System.Drawing.Size(175, 32);
+            this.btnListFormats.TabIndex = 2;
+            this.btnListFormats.Text = "List Available Formats";
+            this.btnListFormats.Click += new System.EventHandler(this.btnListFormats_Click);
+            this.btnListFormats.MouseLeave += new System.EventHandler(this.btnListFormats_MouseLeave);
+            this.btnListFormats.MouseMove += new System.Windows.Forms.MouseEventHandler(this.btnListFormats_MouseMove);
+            // 
+            // labelControl2
+            // 
+            this.labelControl2.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.labelControl2.Appearance.Options.UseFont = true;
+            this.labelControl2.Location = new System.Drawing.Point(10, 34);
+            this.labelControl2.Name = "labelControl2";
+            this.labelControl2.Size = new System.Drawing.Size(58, 16);
+            this.labelControl2.TabIndex = 0;
+            this.labelControl2.Text = "Video URL";
+            // 
+            // marqeeMain
+            // 
+            this.marqeeMain.Dock = System.Windows.Forms.DockStyle.Top;
+            this.marqeeMain.EditValue = 0;
+            this.marqeeMain.Location = new System.Drawing.Point(2, 101);
+            this.marqeeMain.Name = "marqeeMain";
+            this.marqeeMain.Properties.AllowFocused = false;
+            this.marqeeMain.Properties.ShowTitle = true;
+            this.marqeeMain.Size = new System.Drawing.Size(396, 20);
+            this.marqeeMain.TabIndex = 0;
+            this.marqeeMain.Visible = false;
             // 
             // pictureEdit6
             // 
@@ -276,24 +322,6 @@
             this.pictureEdit1.Size = new System.Drawing.Size(25, 23);
             this.pictureEdit1.TabIndex = 0;
             // 
-            // btnListReset
-            // 
-            this.btnListReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnListReset.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
-            this.btnListReset.Appearance.Options.UseFont = true;
-            this.btnListReset.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
-            this.btnListReset.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.LeftCenter;
-            this.btnListReset.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleLeft;
-            this.btnListReset.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("btnListReset.ImageOptions.SvgImage")));
-            this.btnListReset.ImageOptions.SvgImageSize = new System.Drawing.Size(18, 18);
-            this.btnListReset.Location = new System.Drawing.Point(181, 62);
-            this.btnListReset.Name = "btnListReset";
-            this.btnListReset.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
-            this.btnListReset.Size = new System.Drawing.Size(31, 32);
-            this.btnListReset.TabIndex = 3;
-            this.btnListReset.ToolTip = "Clear and Reset";
-            this.btnListReset.Click += new System.EventHandler(this.btnListReset_Click);
-            // 
             // txtUrl
             // 
             this.txtUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -306,32 +334,6 @@
             this.txtUrl.EditValueChanged += new System.EventHandler(this.txtUrl_EditValueChanged);
             this.txtUrl.Click += new System.EventHandler(this.txtUrl_Click);
             this.txtUrl.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUrl_KeyDown);
-            // 
-            // btnListFormats
-            // 
-            this.btnListFormats.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnListFormats.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
-            this.btnListFormats.Appearance.Options.UseFont = true;
-            this.btnListFormats.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
-            this.btnListFormats.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("btnListFormats.ImageOptions.SvgImage")));
-            this.btnListFormats.ImageOptions.SvgImageSize = new System.Drawing.Size(25, 25);
-            this.btnListFormats.Location = new System.Drawing.Point(218, 62);
-            this.btnListFormats.Name = "btnListFormats";
-            this.btnListFormats.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
-            this.btnListFormats.Size = new System.Drawing.Size(175, 32);
-            this.btnListFormats.TabIndex = 2;
-            this.btnListFormats.Text = "List Available Formats";
-            this.btnListFormats.Click += new System.EventHandler(this.btnListFormats_Click);
-            // 
-            // labelControl2
-            // 
-            this.labelControl2.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
-            this.labelControl2.Appearance.Options.UseFont = true;
-            this.labelControl2.Location = new System.Drawing.Point(10, 34);
-            this.labelControl2.Name = "labelControl2";
-            this.labelControl2.Size = new System.Drawing.Size(58, 16);
-            this.labelControl2.TabIndex = 0;
-            this.labelControl2.Text = "Video URL";
             // 
             // InputPanel
             // 
@@ -346,12 +348,12 @@
             this.Size = new System.Drawing.Size(400, 123);
             ((System.ComponentModel.ISupportInitialize)(this.panelControl3)).EndInit();
             this.panelControl3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.marqeeMain.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl4)).EndInit();
             this.panelControl4.ResumeLayout(false);
             this.panelControl4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).EndInit();
             this.panelControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.marqeeMain.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit6.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit5.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit4.Properties)).EndInit();
