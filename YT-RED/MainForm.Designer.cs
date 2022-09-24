@@ -264,6 +264,8 @@
             this.cpMainControlPanel.DownloadAudio_Click += new System.EventHandler(this.cpMainControlPanel_DownloadAudio_Click);
             this.cpMainControlPanel.DownloadBest_Click += new System.EventHandler(this.cpMainControlPanel_DownloadBest_Click);
             this.cpMainControlPanel.CancelProcess_Click += new System.EventHandler(this.cpMainControlPanel_CancelProcess_Click);
+            this.cpMainControlPanel.ReDownload_Click += new System.EventHandler(this.cpMainControlPanel_ReDownload_Click);
+            this.cpMainControlPanel.NewDownload_Click += new System.EventHandler(this.cpMainControlPanel_NewDownload_Click);
             // 
             // toolTipController
             // 

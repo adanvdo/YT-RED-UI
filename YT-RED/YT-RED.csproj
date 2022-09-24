@@ -153,8 +153,8 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="TagLibSharp, Version=2.2.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
-      <HintPath>..\packages\TagLibSharp.2.2.0\lib\net45\TagLibSharp.dll</HintPath>
+    <Reference Include="TagLibSharp, Version=2.3.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
+      <HintPath>..\packages\TagLibSharp.2.3.0\lib\net462\TagLibSharp.dll</HintPath>
     </Reference>
     <Reference Include="UIAutomationClient" />
     <Reference Include="URIScheme, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -162,7 +162,8 @@
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="Xabe.FFmpeg, Version=5.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Xabe.FFmpeg.5.2.0\lib\netstandard2.0\Xabe.FFmpeg.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\local-packages\Xabe.FFMpeg\Xabe.FFmpeg.dll</HintPath>
     </Reference>
     <Reference Include="YoutubeDLSharp, Version=0.4.2.22202, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -248,6 +249,7 @@
     <Compile Include="Logging\DownloadLog.cs" />
     <Compile Include="Logging\ExceptionHandler.cs" />
     <Compile Include="Logging\Historian.cs" />
+    <Compile Include="Logging\PendingDownload.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

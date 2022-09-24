@@ -22,11 +22,10 @@ namespace YT_RED.Classes
     {
         StartTime = 0,
         Duration = 1,
-        EndTime = 2,
-        Size = 3,
-        VideoOutFormat = 4,
-        AudioOutFormat = 5,
-        Crop = 6,
-        ID3Thumbnail = 7
+        Size = 2,
+        VideoOutFormat = 3,
+        AudioOutFormat = 4,
+        Crop = 5,
+        ID3Thumbnail = 6
     }
 }

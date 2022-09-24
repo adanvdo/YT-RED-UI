@@ -7,12 +7,28 @@ using System.Linq;
 using System.Windows.Forms;
 using YT_RED.Settings;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
+using YT_RED.Logging;
+using YT_RED.Classes;
 
 namespace YT_RED.Controls
 {
     public partial class ControlPanel : DevExpress.XtraEditors.XtraUserControl
     {
         private string formatWarning = "YT-RED is currently set to Always Convert to your\nPreferred Video and Audio Format.\nThis can be changed in Advanced Settings";
+
+        [Browsable(false)]
+        public DownloadLog TargetLog
+        {
+            get
+            {
+                if(selectedHistoryIndex >= 0)
+                {
+                    var log = gvHistory.GetRow(selectedHistoryIndex) as DownloadLog;
+                    return log;
+                }
+                return null;
+            }
+        }
 
         [Browsable(false)]
         public bool PostProcessingEnabled
@@ -87,6 +103,11 @@ namespace YT_RED.Controls
             this.currentFormatPair.AudioFormat = audioFormat;
 
             processFormatChange();
+        }
+
+        public void SetCurrentFormatPair(YTDLFormatPair formatPair)
+        {
+            currentFormatPair = formatPair;
         }
 
         private void processFormatChange()
@@ -315,6 +336,12 @@ namespace YT_RED.Controls
         [Browsable(true)]
         public event EventHandler CancelProcess_Click;
 
+        [Browsable(true)]
+        public event EventHandler ReDownload_Click;
+
+        [Browsable(true)]
+        public event EventHandler NewDownload_Click;
+
         private Color toggleForeColor;
 
         private MainForm parentMainForm = null;
@@ -339,7 +366,6 @@ namespace YT_RED.Controls
             videoFormats.AddRange(vFormats.Where(f => f != "UNSPECIFIED"));
             cbVideoFormat.Properties.Items.AddRange(videoFormats);
             cbVideoFormat.SelectedIndex = 0;
-
             audioFormats = new List<string>();
             List<string> aFormats = new List<string>() { "" };
             aFormats.AddRange(Enum.GetNames(typeof(AudioFormat)).Cast<string>());
@@ -369,6 +395,7 @@ namespace YT_RED.Controls
             HideDownloadLocation();
             currentFormatPair.Clear();
             formatChanged();
+            lblAlwaysConvert.Visible = !toggleConvert.IsOn && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
         }
 
         public void DisableToggle(bool disableSegment = false, bool disableCrop = false, bool disableConvert = false)
@@ -390,19 +417,22 @@ namespace YT_RED.Controls
             }
         }
 
-        public void EnableToggle(bool enableSegment = false, bool enableCrop = false, bool enableConvert = false)
+        public void EnableToggle(bool enableSegment = false, bool enableCrop = false, bool enableConvert = false, bool turnOn = false)
         {
             if (enableSegment)
             {
                 toggleSegment.Enabled = true;
+                if (turnOn) toggleSegment.IsOn = true;
             }
             if (enableCrop)
             {
                 toggleCrop.Enabled = true;
+                if (turnOn) toggleCrop.IsOn = true;
             }
             if (enableConvert)
             {
                 toggleConvert.Enabled = true;
+                if(turnOn) toggleConvert.IsOn = true;
             }
         }
 
@@ -633,13 +663,40 @@ namespace YT_RED.Controls
             GridHitInfo hitInfo = gvHistory.CalcHitInfo(e.ControlMousePosition);
             if (hitInfo != null && hitInfo.InRowCell)
             {
+                object o;
                 if (hitInfo.Column.FieldName == "FileExists")
                 {
                     bool fileExits = Convert.ToBoolean(gvHistory.GetRowCellValue(hitInfo.RowHandle, "FileExists"));
-                    object o = $"{hitInfo.HitTest}{hitInfo.RowHandle}";
+                    o = $"{hitInfo.HitTest}{hitInfo.RowHandle}";
                     e.Info = new DevExpress.Utils.ToolTipControlInfo(o, fileExits ? "File Exists" : "File Not Found");
                 }
+                if(hitInfo.Column.FieldName == "PostProcessed")
+                {
+                    o = $"{hitInfo.HitTest}{hitInfo.RowHandle}";
+                    var row = gvHistory.GetRow(hitInfo.RowHandle) as DownloadLog;
+                    string details = $"Format: {row.Format}\n";
 
+                    if (row.PostProcessed)
+                    {
+                        if (row.Start != null && row.Duration != null)
+                        {
+                            details += $"Segment Start: {(TimeSpan)row.Start} - Duration: {(TimeSpan)row.Duration}\n";
+                        }
+                        if (row.Crops != null && row.Crops.Length > 0)
+                        {
+                            details += $"Crop: Top ({row.Crops[0]}) Bottom ({row.Crops[1]}) Left ({row.Crops[2]}) Right ({row.Crops[3]})\n";
+                        }
+                        if (row.VideoConversionFormat != null)
+                        {
+                            details += $"Convert Video: {row.VideoConversionFormat}\n";
+                        }
+                        if (row.AudioConversionFormat != null)
+                        {
+                            details += $"Convert Audio: {row.AudioConversionFormat}\n";
+                        }
+                    }
+                    e.Info = new DevExpress.Utils.ToolTipControlInfo(o, details);
+                }
             }
         }
 
@@ -653,6 +710,68 @@ namespace YT_RED.Controls
         {
             if (Cancel_MouseLeave != null)
                 Cancel_MouseLeave(sender, e);
+        }
+
+        private int selectedHistoryIndex = -1;
+        private void gcHistory_MouseClick(object sender, MouseEventArgs e)
+        {
+            if(e.Button == MouseButtons.Right)
+            {
+                GridHitInfo hitInfo = gvHistory.CalcHitInfo(e.Location);
+                if (hitInfo != null && hitInfo.InDataRow) {
+                    selectedHistoryIndex = hitInfo.RowHandle;
+                    historyPopup.ShowPopup(Control.MousePosition);
+                }
+            }
+        }
+
+        private void historyPopup_CloseUp(object sender, EventArgs e)
+        {
+        }
+
+        private void bbiReDownload_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if(ReDownload_Click != null) ReDownload_Click(sender, e);
+        }
+
+        private void bbiNewDownload_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if(NewDownload_Click != null) NewDownload_Click(sender, e);
+        }
+
+        public void PopulateHistoryColumns()
+        {
+            gvHistory.Columns.Clear();
+            gvHistory.PopulateColumns();
+            gvHistory.Columns["FileExists"].VisibleIndex = 0;
+            gvHistory.Columns["DownloadType"].VisibleIndex = 1;
+            gvHistory.Columns["DownloadLocation"].VisibleIndex = 2;
+            gvHistory.Columns["PostProcessed"].VisibleIndex = 3;
+            gvHistory.Columns["PostProcessed"].MaxWidth = 25;
+            gvHistory.Columns["PostProcessed"].ColumnEdit = repPostProcessed;
+            gvHistory.Columns["PostProcessed"].OptionsColumn.ShowCaption = false;
+            gvHistory.Columns["FileExists"].ColumnEdit = repFileExists;
+            gvHistory.Columns["FileExists"].FieldName = "FileExists";
+            gvHistory.Columns["FileExists"].OptionsColumn.ShowCaption = false;
+            gvHistory.Columns["FileExists"].MinWidth = 5;
+            gvHistory.Columns["FileExists"].MaxWidth = 25;
+            gvHistory.Columns["FileExists"].Width = 10;
+            gvHistory.Columns["FileExists"].ToolTip = "File Exists?";
+            gvHistory.Columns["DownloadType"].Width = 10;
+            gvHistory.Columns["DownloadType"].MaxWidth = 75;
+            gvHistory.Columns["DownloadType"].Caption = "Type";
+            gvHistory.Columns["Url"].Visible = false;
+            gvHistory.Columns["TimeLogged"].Visible = false;
+            gvHistory.Columns["Type"].Visible = false;
+            gvHistory.Columns["Downloaded"].Visible = false;
+            gvHistory.Columns["Format"].Visible = false;
+            gvHistory.Columns["FormatPair"].Visible = false;
+            gvHistory.Columns["Start"].Visible = false;
+            gvHistory.Columns["Duration"].Visible = false;
+            gvHistory.Columns["Crops"].Visible = false;
+            gvHistory.Columns["VideoConversionFormat"].Visible = false;
+            gvHistory.Columns["AudioConversionFormat"].Visible = false;
+            gvHistory.RefreshData();
         }
     }
 }

@@ -12,10 +12,19 @@ namespace YT_RED.Logging
             return LogException(exception, showDialog, true);
         }
 
-        public static bool LogException(Exception exception, bool showDialog = true, bool ffmpeg = false)
+
+        public static bool LogException(Exception exception, string videoUrl, string audioUrl = null, bool ffmpeg = false)
+        {
+            return LogException(exception, true, ffmpeg, videoUrl, audioUrl);
+        }
+
+        public static bool LogException(Exception exception, bool showDialog = true, bool ffmpeg = false, string videoUrl = "", string audioUrl = "")
         {
             string formattedException = $@"
 {DateTime.Now.ToString()} ----------------------------
+
+Video URL: {videoUrl}
+Audio URL: {audioUrl}
 
 {exception.Message}
 

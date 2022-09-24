@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace YT_RED.Classes
 {
     public class YTDLFormatPair
     {
+        [JsonProperty("stream_type")]
         public StreamType Type { get; set; }
 
-        private YTDLFormatData videoFormat = null;
+        private YTDLFormatData videoFormat;
+        [JsonProperty("video_format")]
         public YTDLFormatData VideoFormat
         {
             get { return this.videoFormat; }
@@ -34,7 +37,8 @@ namespace YT_RED.Classes
         }
         
 
-        private YTDLFormatData audioFormat = null;
+        private YTDLFormatData audioFormat;
+        [JsonProperty("audio_format")]
         public YTDLFormatData AudioFormat
         {
             get { return this.audioFormat; }
@@ -57,6 +61,7 @@ namespace YT_RED.Classes
             }
         }
 
+        [JsonProperty("format_id")]
         public string FormatId
         {
             get
@@ -69,6 +74,7 @@ namespace YT_RED.Classes
             }
         }
 
+        [JsonIgnore]
         public string Extension
         {
             get
@@ -83,6 +89,7 @@ namespace YT_RED.Classes
             }
         }
 
+        [JsonIgnore]
         public string VideoCodec
         {
             get
@@ -93,6 +100,7 @@ namespace YT_RED.Classes
             }
         }
 
+        [JsonIgnore]
         public string AudioCodec
         {
             get
@@ -102,6 +110,7 @@ namespace YT_RED.Classes
             }
         }
 
+        [JsonIgnore]
         public YoutubeDLSharp.Metadata.FormatData RedditAudioFormat
         {
             get
@@ -114,6 +123,7 @@ namespace YT_RED.Classes
             }
         }
 
+        [JsonProperty("format_text")]
         public string FormatDisplayText { 
             get
             {
@@ -148,9 +158,6 @@ namespace YT_RED.Classes
 
         public YTDLFormatPair()
         {
-            Type = StreamType.Unknown;
-            VideoFormat = null;
-            AudioFormat = null;
         }
     }
 }

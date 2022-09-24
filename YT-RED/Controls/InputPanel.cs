@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace YT_RED.Controls
@@ -100,6 +101,24 @@ namespace YT_RED.Controls
         {
             if (ListFormats_MouseLeave != null)
                 ListFormats_MouseLeave(sender, e);
+        }
+
+        public void UpdateMarqueeText(string text)
+        {
+            if (marqeeMain.InvokeRequired)
+            {
+                Action safeUpdate = delegate
+                {
+                    marqeeMain.Text = text;
+                    marqeeMain.Refresh();
+                };
+                marqeeMain.Invoke(safeUpdate);
+            }
+            else
+            {
+                marqeeMain.Text = text;
+                marqeeMain.Refresh();
+            }
         }
     }
 }

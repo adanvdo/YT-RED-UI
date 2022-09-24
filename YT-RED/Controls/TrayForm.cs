@@ -216,8 +216,8 @@ namespace YT_RED.Controls
             if (result.Data != "canceled")
             {
                 await Historian.RecordDownload(new DownloadLog(
-                    currentDownload,
                     VideoUtil.CorrectYouTubeString(txtUrl.Text),
+                    currentDownload,
                     Classes.StreamType.AudioAndVideo,
                     DateTime.Now,
                     result.Data));

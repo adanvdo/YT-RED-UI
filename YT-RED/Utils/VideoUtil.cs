@@ -9,6 +9,7 @@ using Xabe.FFmpeg;
 using YoutubeDLSharp;
 using YoutubeDLSharp.Metadata;
 using YoutubeDLSharp.Options;
+using YT_RED.Classes;
 using YT_RED.Logging;
 using YT_RED.Settings;
 
@@ -180,7 +181,10 @@ namespace YT_RED.Utils
             }           
             if (vCodec != null)
             {
-                parameters.Add(new Classes.FFmpegParam(Classes.ParamType.VideoOutFormat, $"-c:v {vCodec.Encoder}"));
+                if (vCodec == SystemCodecMaps.RGB24)
+                    parameters.Add(new Classes.FFmpegParam(Classes.ParamType.VideoOutFormat, $"-pix_fmt {vCodec.Encoder}"));
+                else
+                    parameters.Add(new Classes.FFmpegParam(Classes.ParamType.VideoOutFormat, $"-c:v {vCodec.Encoder}"));
             }
             if (aCodec != null)
             {
@@ -291,7 +295,7 @@ namespace YT_RED.Utils
                     if (string.IsNullOrEmpty(videoStream.PixelFormat))
                         vCodec = vMap.BestVideo;
                     else if (vFormat == VideoFormat.GIF)
-                        vCodec = Classes.SystemCodecMaps.GetBestCodec(videoStream.PixelFormat);
+                        vCodec = SystemCodecMaps.RGB24;
                     aCodec = vMap.BestAudio;
                 }
             }
@@ -379,18 +383,18 @@ namespace YT_RED.Utils
                         bool startParse = TimeSpan.TryParse(segStartParam.Value.Replace("-ss ", ""), out TimeSpan startSpan);
                         bool durParse = TimeSpan.TryParse(segDurParam.Value.Replace("-t ", ""), out TimeSpan durSpan);
                         if (startParse && durParse)
-                            v = v.Split(startSpan, durSpan);
+                            v.SetSeek(startSpan);
                     }
                     convert.AddStream<Xabe.FFmpeg.IVideoStream>(v);
                 }
                 if (a != null)
-                {                    
-                    if(segStartParam != null && segDurParam != null)
+                {
+                    if (segStartParam != null && segDurParam != null)
                     {
                         bool startParse = TimeSpan.TryParse(segStartParam.Value.Replace("-ss ", ""), out TimeSpan startSpan);
                         bool durParse = TimeSpan.TryParse(segDurParam.Value.Replace("-t ", ""), out TimeSpan durSpan);
                         if (startParse && durParse)
-                            a = a.Split(startSpan, durSpan);
+                            a.SetSeek(startSpan);
                     }
                     convert.AddStream<Xabe.FFmpeg.IAudioStream>(a);
                 }
@@ -399,7 +403,7 @@ namespace YT_RED.Utils
                 {
                     foreach (var param in parameters)
                     {
-                        if (param.Type != Classes.ParamType.StartTime && param.Type != Classes.ParamType.Duration)
+                        if (param.Type != Classes.ParamType.StartTime)
                             convert.AddParameter(param.Value, ParameterPosition.PostInput);
                     }
                 }
@@ -439,11 +443,13 @@ namespace YT_RED.Utils
                 string outputFile = Path.Combine(outputDir, fileName);
 
                 convert.SetOutput(outputFile);
+                var test = convert.Build();
+
                 return convert;
             }
             catch(Exception ex)
             {
-                ExceptionHandler.LogException(ex);
+                ExceptionHandler.LogException(ex, videoUrl, audioUrl, true);
             }
             return null;
         }   
@@ -481,7 +487,7 @@ namespace YT_RED.Utils
             }
             catch(Exception ex)
             {
-                ExceptionHandler.LogException(ex);
+                ExceptionHandler.LogException(ex, url);
             }
             return null;
         }
@@ -529,7 +535,7 @@ namespace YT_RED.Utils
             catch (Exception ex)
             {
                 if (ex.Message.ToLower() != "a task was canceled.")
-                    ExceptionHandler.LogException(ex);
+                    ExceptionHandler.LogException(ex, url);
                 else cancelled = true;
             }
             if (cancelled)
@@ -596,7 +602,7 @@ namespace YT_RED.Utils
             catch (Exception ex)
             {
                 if (ex.Message.ToLower() != "a task was canceled.")
-                    ExceptionHandler.LogException(ex);
+                    ExceptionHandler.LogException(ex, url);
                 else
                     cancelled = true;
             }
@@ -674,7 +680,7 @@ namespace YT_RED.Utils
             catch (Exception ex)
             {
                 if (ex.Message.ToLower() != "a task was canceled.")
-                    ExceptionHandler.LogException(ex);
+                    ExceptionHandler.LogException(ex, null, url);
                 else
                     cancelled = true;
             }
@@ -731,6 +737,7 @@ namespace YT_RED.Utils
 
         public static async Task<RunResult<string>> DownloadYTDLGif(string url, OptionSet options)
         {
+            bool cancelled = false;
             if (options == null) options = new OptionSet();
             ytdl.OutputFolder = AppSettings.Default.General.VideoDownloadPath;
             try
@@ -757,14 +764,21 @@ namespace YT_RED.Utils
             }
             catch (Exception ex)
             {
-                ExceptionHandler.LogException(ex);
+                if (ex.Message.ToLower() != "a task was canceled.")
+                    ExceptionHandler.LogException(ex, null, url);
+                else
+                    cancelled = true;
             }
-            return null;
+            if (cancelled)
+                return new RunResult<string>(false, new string[] { "a task was canceled." }, "canceled");
+            else
+                return null;
         }
 
         private static async Task<RunResult<string>> downloadYTDLAudio(string url, OptionSet options)
         {
-            if(options == null) throw new ArgumentNullException("options");
+            bool cancelled = false;
+            if (options == null) throw new ArgumentNullException("options");
             ytdl.OutputFolder = AppSettings.Default.General.AudioDownloadPath;
             try
             {
@@ -791,13 +805,20 @@ namespace YT_RED.Utils
             }
             catch(Exception ex)
             {
-                ExceptionHandler.LogException(ex);
+                if (ex.Message.ToLower() != "a task was canceled.")
+                    ExceptionHandler.LogException(ex, null, url);
+                else
+                    cancelled = true;
             }
-            return null;
+            if (cancelled)
+                return new RunResult<string>(false, new string[] { "a task was canceled." }, "canceled");
+            else
+                return null;
         }
 
         private static async Task<RunResult<string>> downloadYTDLVideo(string url, string format)
         {
+            bool cancelled = false;
             try
             {
                 CancellationTokenSource = new CancellationTokenSource();
@@ -821,9 +842,15 @@ namespace YT_RED.Utils
             }
             catch(Exception ex)
             {
-                ExceptionHandler.LogException(ex);
+                if (ex.Message.ToLower() != "a task was canceled.")
+                    ExceptionHandler.LogException(ex, null, url);
+                else
+                    cancelled = true;
             }
-            return null;
+            if (cancelled)
+                return new RunResult<string>(false, new string[] { "a task was canceled." }, "canceled");
+            else
+                return null;
         }
 
         public static string CorrectYouTubeString(string linkOrID)
