@@ -101,6 +101,12 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 9/23/2022 v1.0.1.17
+ - Fixed Bug where Conversion to GIF Failed
+ - Fixed Bug where Formats were not properly selected in Custom Format mode
+ - Fixed Bug where Segment Downloads were very slow
+ - Added Re-Download Feature Option to Download History
+
 ### 8/25/2022 v1.0.1.16
 - Added download cancellation Support
 - Added visible progress bar when program is minimized during a download
