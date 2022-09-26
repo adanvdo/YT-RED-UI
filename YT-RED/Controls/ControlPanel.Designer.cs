@@ -40,6 +40,7 @@
             this.btnDownloadAudio = new DevExpress.XtraEditors.SimpleButton();
             this.btnSelectionDL = new DevExpress.XtraEditors.SimpleButton();
             this.gcConvert = new DevExpress.XtraEditors.GroupControl();
+            this.hlblOpenSettings = new DevExpress.XtraEditors.HyperlinkLabelControl();
             this.lblAlwaysConvert = new DevExpress.XtraEditors.LabelControl();
             this.pnlConvertPanel = new DevExpress.XtraEditors.PanelControl();
             this.labelControl7 = new DevExpress.XtraEditors.LabelControl();
@@ -152,7 +153,7 @@
             this.pnlOptionPanel.Margin = new System.Windows.Forms.Padding(0);
             this.pnlOptionPanel.MinimumSize = new System.Drawing.Size(323, 136);
             this.pnlOptionPanel.Name = "pnlOptionPanel";
-            this.pnlOptionPanel.Size = new System.Drawing.Size(323, 595);
+            this.pnlOptionPanel.Size = new System.Drawing.Size(323, 605);
             this.pnlOptionPanel.TabIndex = 0;
             // 
             // gcDLButtons
@@ -166,7 +167,7 @@
             this.gcDLButtons.Controls.Add(this.btnDownloadAudio);
             this.gcDLButtons.Controls.Add(this.btnSelectionDL);
             this.gcDLButtons.Dock = System.Windows.Forms.DockStyle.Top;
-            this.gcDLButtons.Location = new System.Drawing.Point(0, 436);
+            this.gcDLButtons.Location = new System.Drawing.Point(0, 446);
             this.gcDLButtons.Margin = new System.Windows.Forms.Padding(0);
             this.gcDLButtons.Name = "gcDLButtons";
             this.gcDLButtons.Size = new System.Drawing.Size(323, 159);
@@ -249,6 +250,7 @@
             this.gcConvert.AutoSize = true;
             this.gcConvert.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gcConvert.CaptionImageOptions.AllowGlyphSkinning = true;
+            this.gcConvert.Controls.Add(this.hlblOpenSettings);
             this.gcConvert.Controls.Add(this.lblAlwaysConvert);
             this.gcConvert.Controls.Add(this.pnlConvertPanel);
             buttonImageOptions1.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
@@ -260,10 +262,26 @@
             this.gcConvert.Location = new System.Drawing.Point(0, 285);
             this.gcConvert.Margin = new System.Windows.Forms.Padding(0);
             this.gcConvert.Name = "gcConvert";
-            this.gcConvert.Size = new System.Drawing.Size(323, 151);
+            this.gcConvert.Size = new System.Drawing.Size(323, 161);
             this.gcConvert.TabIndex = 0;
             this.gcConvert.Text = "Conversion Override";
             this.gcConvert.Click += new System.EventHandler(this.gcConvert_Click);
+            // 
+            // hlblOpenSettings
+            // 
+            this.hlblOpenSettings.Appearance.Options.UseTextOptions = true;
+            this.hlblOpenSettings.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.hlblOpenSettings.Appearance.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Top;
+            this.hlblOpenSettings.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
+            this.hlblOpenSettings.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.hlblOpenSettings.Dock = System.Windows.Forms.DockStyle.Top;
+            this.hlblOpenSettings.Location = new System.Drawing.Point(2, 143);
+            this.hlblOpenSettings.Name = "hlblOpenSettings";
+            this.hlblOpenSettings.Size = new System.Drawing.Size(319, 16);
+            this.hlblOpenSettings.TabIndex = 1;
+            this.hlblOpenSettings.Text = "Open Settings";
+            this.hlblOpenSettings.Visible = false;
+            this.hlblOpenSettings.Click += new System.EventHandler(this.hlblOpenSettings_Click);
             // 
             // lblAlwaysConvert
             // 
@@ -277,7 +295,7 @@
             this.lblAlwaysConvert.Location = new System.Drawing.Point(2, 96);
             this.lblAlwaysConvert.Name = "lblAlwaysConvert";
             this.lblAlwaysConvert.Padding = new System.Windows.Forms.Padding(3);
-            this.lblAlwaysConvert.Size = new System.Drawing.Size(319, 53);
+            this.lblAlwaysConvert.Size = new System.Drawing.Size(319, 47);
             this.lblAlwaysConvert.TabIndex = 0;
             this.lblAlwaysConvert.Text = "YT-RED is currently set to Always Convert to your \r\nPreferred Video and Audio For" +
     "mat. \r\nThis can be changed in Advanced Settings";
@@ -660,7 +678,7 @@
             this.pnlProgressPanel.Controls.Add(this.lblLastDL);
             this.pnlProgressPanel.Controls.Add(this.pbProgress);
             this.pnlProgressPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlProgressPanel.Location = new System.Drawing.Point(0, 595);
+            this.pnlProgressPanel.Location = new System.Drawing.Point(0, 605);
             this.pnlProgressPanel.Margin = new System.Windows.Forms.Padding(0);
             this.pnlProgressPanel.Name = "pnlProgressPanel";
             this.pnlProgressPanel.Size = new System.Drawing.Size(323, 78);
@@ -707,14 +725,14 @@
             // gcHistory
             // 
             this.gcHistory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcHistory.Location = new System.Drawing.Point(0, 673);
+            this.gcHistory.Location = new System.Drawing.Point(0, 683);
             this.gcHistory.MainView = this.gvHistory;
             this.gcHistory.MenuManager = this.historyBarManager;
             this.gcHistory.Name = "gcHistory";
             this.gcHistory.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repFileExists,
             this.repPostProcessed});
-            this.gcHistory.Size = new System.Drawing.Size(323, 162);
+            this.gcHistory.Size = new System.Drawing.Size(323, 152);
             this.gcHistory.TabIndex = 0;
             this.gcHistory.ToolTipController = this.historyTooltip;
             this.gcHistory.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -813,8 +831,9 @@
             this.repPostProcessed.AutoHeight = false;
             this.repPostProcessed.CheckBoxOptions.Style = DevExpress.XtraEditors.Controls.CheckBoxStyle.Custom;
             this.repPostProcessed.CheckBoxOptions.SvgImageSize = new System.Drawing.Size(20, 20);
-            this.repPostProcessed.ImageOptions.SvgImageChecked = global::YT_RED.Properties.Resources.actions_add;
+            this.repPostProcessed.ImageOptions.SvgImageChecked = global::YT_RED.Properties.Resources.functionsinformation;
             this.repPostProcessed.ImageOptions.SvgImageSize = new System.Drawing.Size(20, 20);
+            this.repPostProcessed.ImageOptions.SvgImageUnchecked = global::YT_RED.Properties.Resources.about1;
             this.repPostProcessed.Name = "repPostProcessed";
             // 
             // historyTooltip
@@ -943,5 +962,6 @@
         private DevExpress.XtraBars.BarButtonItem bbiNewDownload;
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repFileExists;
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repPostProcessed;
+        private DevExpress.XtraEditors.HyperlinkLabelControl hlblOpenSettings;
     }
 }

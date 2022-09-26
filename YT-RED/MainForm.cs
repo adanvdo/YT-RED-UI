@@ -399,12 +399,18 @@ namespace YT_RED
         
         private void bbiSettings_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             openSettings();
         }
 
-        private async void openSettings(OpenPosition openPosition = OpenPosition.Unspecified)
+        public void OpenSettingsDialog(string page = "")
         {
-            SettingsDialog dlg = new SettingsDialog();
+            openSettings(OpenPosition.Unspecified, page);
+        }
+
+        private async void openSettings(OpenPosition openPosition = OpenPosition.Unspecified, string page = "")
+        {
+            SettingsDialog dlg = new SettingsDialog(page);
             if(openPosition != OpenPosition.Unspecified)
             {
                 if (openPosition == OpenPosition.BottomRight)
@@ -420,6 +426,7 @@ namespace YT_RED
                 }
             }
             DialogResult res = dlg.ShowDialog();
+            Cursor.Current = Cursors.Default;
             cpMainControlPanel.gcHistory.DataSource = Historian.DownloadHistory;
             refreshHistory();
             applyLayout(LayoutArea.Panels);
@@ -533,6 +540,7 @@ namespace YT_RED
             cpMainControlPanel.ResetControls();
             selectedAudioIndex = -1;
             selectedVideoIndex = -1;
+            ipMainInput.URL = string.Empty;
             if (gvFormats.GetSelectedRows().Length < 1)
             {
                 cpMainControlPanel.DownloadSelectionVisible = false;
@@ -961,9 +969,13 @@ namespace YT_RED
 
             PendingDownload pendingDL = null;
 
-            if (cpMainControlPanel.PostProcessingEnabled || (cpMainControlPanel.CurrentFormatPair.Type != Classes.StreamType.Video
-                && ((cpMainControlPanel.CurrentFormatPair.VideoFormat != null && cpMainControlPanel.CurrentFormatPair.VideoFormat.RedditAudioFormat != null) || (cpMainControlPanel.CurrentFormatPair.AudioFormat != null && cpMainControlPanel.CurrentFormatPair.AudioFormat.RedditAudioFormat != null))) 
-                || (cpMainControlPanel.CurrentFormatPair.VideoFormat != null && cpMainControlPanel.CurrentFormatPair.VideoFormat.VideoCodec != "gif" && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat))
+            bool preferredVideo = cpMainControlPanel.CurrentFormatPair.VideoFormat == null ? false : cpMainControlPanel.CurrentFormatPair.VideoFormat.Extension.ToUpper() == AppSettings.Default.Advanced.PreferredVideoFormat.ToString();
+            bool preferredAudio = cpMainControlPanel.CurrentFormatPair.AudioFormat == null ? false : cpMainControlPanel.CurrentFormatPair.AudioFormat.Extension.ToUpper() == AppSettings.Default.Advanced.PreferredAudioFormat.ToString();
+
+            if (cpMainControlPanel.PostProcessingEnabled 
+                || (cpMainControlPanel.CurrentFormatPair.Type == Classes.StreamType.Audio && cpMainControlPanel.CurrentFormatPair.AudioFormat != null && cpMainControlPanel.CurrentFormatPair.RedditAudioFormat == null && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat && !preferredAudio)
+                || (cpMainControlPanel.CurrentFormatPair.Type != Classes.StreamType.Video && ((cpMainControlPanel.CurrentFormatPair.VideoFormat != null && cpMainControlPanel.CurrentFormatPair.VideoFormat.RedditAudioFormat != null) || (cpMainControlPanel.CurrentFormatPair.AudioFormat != null && cpMainControlPanel.CurrentFormatPair.AudioFormat.RedditAudioFormat != null)))
+                || (cpMainControlPanel.CurrentFormatPair.VideoFormat != null && cpMainControlPanel.CurrentFormatPair.VideoFormat.VideoCodec != "gif" && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat && !preferredVideo))
             {
                 if (cpMainControlPanel.SegmentEnabled && cpMainControlPanel.SegmentDuration == TimeSpan.Zero)
                 {
@@ -995,8 +1007,13 @@ namespace YT_RED
 
                 if (cpMainControlPanel.ConversionEnabled)
                 {
-                    videoFormat = cpMainControlPanel.ConvertVideoFormat == null ? AppSettings.Default.Advanced.PreferredVideoFormat : cpMainControlPanel.ConvertVideoFormat;
-                    audioFormat = cpMainControlPanel.ConvertAudioFormat == null ? AppSettings.Default.Advanced.PreferredAudioFormat : cpMainControlPanel.ConvertAudioFormat;
+                    videoFormat = cpMainControlPanel.ConvertVideoFormat;
+                    audioFormat = cpMainControlPanel.ConvertAudioFormat;
+                } 
+                else if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
+                {
+                    videoFormat = AppSettings.Default.Advanced.PreferredVideoFormat;
+                    audioFormat = AppSettings.Default.Advanced?.PreferredAudioFormat;
                 }
 
                 pendingDL = new PendingDownload()
@@ -1018,7 +1035,8 @@ namespace YT_RED
 
                 try
                 {
-                    await conversion.Start();
+                    VideoUtil.CancellationTokenSource = new System.Threading.CancellationTokenSource();
+                    await conversion.Start(VideoUtil.CancellationTokenSource.Token);
 
                     if (cpMainControlPanel.EmbedThumbnail)
                     {
@@ -1111,9 +1129,7 @@ namespace YT_RED
             this.UseWaitCursor = false;
             this.currentDownload = DownloadType.Unknown;
             (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = false;
-        }
-
-        
+        }        
 
         private void gvFormats_CustomColumnDisplayText(object sender, DevExpress.XtraGrid.Views.Base.CustomColumnDisplayTextEventArgs e)
         {
@@ -1391,6 +1407,12 @@ namespace YT_RED
                     cpMainControlPanel.CropBottom = cpMainControlPanel.TargetLog.Crops[1].ToString();
                     cpMainControlPanel.CropLeft = cpMainControlPanel.TargetLog.Crops[2].ToString();
                     cpMainControlPanel.CropRight = cpMainControlPanel.TargetLog.Crops[3].ToString();
+                }
+                if((cpMainControlPanel.TargetLog.VideoConversionFormat != null && cpMainControlPanel.TargetLog.VideoConversionFormat != VideoFormat.UNSPECIFIED)
+                    || (cpMainControlPanel.TargetLog.AudioConversionFormat != null && cpMainControlPanel.TargetLog.AudioConversionFormat != AudioFormat.UNSPECIFIED))
+                {
+                    cpMainControlPanel.EnableToggle(false, false, true, true);
+                    cpMainControlPanel.ConvertVideoFormat = cpMainControlPanel.TargetLog.VideoConversionFormat;
                 }
 
                 if (cpMainControlPanel.TargetLog.FormatPair == null)

@@ -163,6 +163,8 @@ namespace YT_RED.Controls
                     cbAudioFormat.Properties.Items.AddRange(audioFormats);
                     cbVideoFormat.Enabled = false;
                     cbAudioFormat.Enabled = toggleConvert.IsOn;
+                    cbAudioFormat.SelectedItem = null;
+                    
                 }
                 else
                 {
@@ -171,6 +173,7 @@ namespace YT_RED.Controls
                     cbAudioFormat.Properties.Items.Clear();
                     cbAudioFormat.Enabled = false;
                     cbVideoFormat.Enabled = toggleConvert.IsOn;
+                    cbVideoFormat.SelectedItem = null;
                 }
             }
             else
@@ -181,6 +184,8 @@ namespace YT_RED.Controls
                 cbAudioFormat.Properties.Items.AddRange(audioFormats);
                 cbVideoFormat.Enabled = toggleConvert.IsOn;
                 cbAudioFormat.Enabled = toggleConvert.IsOn;
+                cbVideoFormat.SelectedItem = null;
+                cbAudioFormat.SelectedItem = null;
             }
         }
 
@@ -234,7 +239,7 @@ namespace YT_RED.Controls
         {
             get
             {
-                if (toggleConvert.IsOn && !string.IsNullOrEmpty(cbVideoFormat.SelectedItem.ToString()))
+                if (toggleConvert.IsOn && cbVideoFormat.SelectedItem != null && !string.IsNullOrEmpty(cbVideoFormat.SelectedItem.ToString()))
                 {
                     Settings.VideoFormat vf = VideoFormat.UNSPECIFIED;
                     bool pf = Enum.TryParse(cbVideoFormat.SelectedItem.ToString(), out VideoFormat pvf);
@@ -245,6 +250,12 @@ namespace YT_RED.Controls
                 }
                 return null;
             }
+            set
+            {
+                VideoFormat? v = value;
+                if(v != null)
+                    cbVideoFormat.SelectedItem = value;
+            }
         }
 
         [Browsable(false)]
@@ -252,7 +263,7 @@ namespace YT_RED.Controls
         {
             get
             {
-                if (toggleConvert.IsOn && !string.IsNullOrEmpty(cbAudioFormat.SelectedItem.ToString()))
+                if (toggleConvert.IsOn && cbAudioFormat.SelectedItem != null && !string.IsNullOrEmpty(cbAudioFormat.SelectedItem.ToString()))
                 {
                     Settings.AudioFormat af = AudioFormat.UNSPECIFIED;
                     bool pf = Enum.TryParse(cbAudioFormat.SelectedItem.ToString(), out AudioFormat paf);
@@ -261,6 +272,12 @@ namespace YT_RED.Controls
                     return af;
                 }
                 return null;
+            }
+            set
+            {
+                AudioFormat? v = value;
+                if(v != null)
+                    cbAudioFormat.SelectedItem = value;
             }
         }
 
@@ -395,6 +412,7 @@ namespace YT_RED.Controls
             HideDownloadLocation();
             currentFormatPair.Clear();
             formatChanged();
+            hlblOpenSettings.Visible = !toggleConvert.IsOn && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
             lblAlwaysConvert.Visible = !toggleConvert.IsOn && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
         }
 
@@ -567,6 +585,7 @@ namespace YT_RED.Controls
             }
             cbVideoFormat.Enabled = toggleConvert.IsOn;
             cbAudioFormat.Enabled = toggleConvert.IsOn;
+            hlblOpenSettings.Visible = !toggleConvert.IsOn && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
             lblAlwaysConvert.Visible = !toggleConvert.IsOn && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
             gcConvert.CustomHeaderButtons[0].Properties.Enabled = !toggleConvert.IsOn;
         }
@@ -605,13 +624,16 @@ namespace YT_RED.Controls
 
         private void checkConversionOptions()
         {
-            if (cbVideoFormat.SelectedItem != null && !string.IsNullOrEmpty(cbVideoFormat.SelectedItem.ToString()) && !string.IsNullOrEmpty(cbAudioFormat.SelectedItem.ToString()))
+            if (cbVideoFormat.SelectedItem != null && cbAudioFormat.SelectedItem != null 
+                && !string.IsNullOrEmpty(cbVideoFormat.SelectedItem.ToString()) && !string.IsNullOrEmpty(cbAudioFormat.SelectedItem.ToString()))
             {
                 lblAlwaysConvert.Text = "Audio Format will be automatically determined\nwhen downloading \"Best [audio+video]\"";
+                hlblOpenSettings.Visible = true;
                 lblAlwaysConvert.Visible = true;
             }
             else
             {
+                hlblOpenSettings.Visible = false;
                 lblAlwaysConvert.Visible = false;
                 lblAlwaysConvert.Text = formatWarning;
             }
@@ -772,6 +794,11 @@ namespace YT_RED.Controls
             gvHistory.Columns["VideoConversionFormat"].Visible = false;
             gvHistory.Columns["AudioConversionFormat"].Visible = false;
             gvHistory.RefreshData();
+        }
+
+        private void hlblOpenSettings_Click(object sender, EventArgs e)
+        {
+            parentMainForm.OpenSettingsDialog("Advanced");
         }
     }
 }

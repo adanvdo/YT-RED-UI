@@ -139,6 +139,10 @@ namespace YT_RED.Classes
                     return VideoFormat.WEBM;
                 case SystemVideoCodec.RGB24:
                     return VideoFormat.GIF;
+                case SystemVideoCodec.AVC1:
+                    return VideoFormat.MP4;
+                case SystemVideoCodec.MP4V:
+                    return VideoFormat.MP4;
                 default:
                     return VideoFormat.MP4;
             }
@@ -332,6 +336,8 @@ namespace YT_RED.Classes
         VP9 = 4,
         MPEG4 = 5,
         THEORA = 6,
-        RGB24 = 7
+        RGB24 = 7,
+        AVC1 = 8,
+        MP4V = 9
     }
 }

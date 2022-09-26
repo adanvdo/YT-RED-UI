@@ -328,6 +328,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\functionsinformation.svg" />
     <None Include="Resources\close.svg" />
     <None Include="Resources\listnumbers.svg" />
     <None Include="Resources\electronics_volume.svg" />
@@ -367,6 +368,7 @@
     <None Include="Resources\actions_question.svg" />
     <None Include="Resources\application.svg" />
     <None Include="Resources\actions_checkcircled.svg" />
+    <None Include="Resources\about1.svg" />
     <Content Include="Resources\App\ffmpeg.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -15,10 +15,16 @@ namespace YT_RED.Controls
     public partial class SettingsDialog : DevExpress.XtraEditors.XtraForm
     {
         private bool loading = true;
-        public SettingsDialog()
+        public SettingsDialog(string selectPage = "")
         {
             InitializeComponent();
             Init();
+            if (!string.IsNullOrEmpty(selectPage))
+            {
+                var page = this.tcSettingsTabControl.TabPages.Where(tpg => tpg.Name == $"tpg{selectPage}").ToArray()[0];
+                if(page != null) 
+                    this.tcSettingsTabControl.SelectedTabPage = page;
+            }
         }
 
         private async void Init()
@@ -140,6 +146,7 @@ namespace YT_RED.Controls
             }
             else AppSettings.Default.General.ActiveFeatureTab = AppFeature.General;
         }
+
     }
 
     public enum OpenPosition
