@@ -923,7 +923,10 @@ namespace YT_RED
                 streamType,
                 DateTime.Now,
                 result.Data,
-                pendingDL);
+                pendingDL)
+            {
+                Format = pendingDL.Format
+            };
 
             await Historian.RecordDownload(dlLog);
             if (result.Success)

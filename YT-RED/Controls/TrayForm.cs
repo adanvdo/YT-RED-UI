@@ -201,8 +201,17 @@ namespace YT_RED.Controls
 
             RunResult<string> result = null;
             string url = VideoUtil.CorrectYouTubeString(txtUrl.Text);
+
+            var pendingDL = new PendingDownload()
+            {
+                Url = url,
+                Format = "bestvideo+bestaudio/best"
+            };
+
             if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
+            {
                 result = await Utils.VideoUtil.DownloadPreferredYtdl(url, Classes.StreamType.AudioAndVideo);
+            }
             else
                 result = await VideoUtil.DownloadBestYtdl(url, Classes.StreamType.AudioAndVideo);
 
@@ -220,7 +229,11 @@ namespace YT_RED.Controls
                     currentDownload,
                     Classes.StreamType.AudioAndVideo,
                     DateTime.Now,
-                    result.Data));
+                    result.Data,
+                    pendingDL)
+                {
+                    Format = pendingDL.Format
+                });
             }
             btnOpenDL.Text = result.Data;
             btnOpenDL.Visible = true;
