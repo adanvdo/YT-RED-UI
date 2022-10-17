@@ -101,6 +101,9 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 10/17/2022 v1.0.1.19
+ - Fixed bug where audio-only downloads resulted in a crash
+
 ### 9/26/2022 v1.0.1.18
  - Fixed bug where media was re-encoded when it didn't need to be
  - Fixed bug where audio conversion was applied to GIF conversions
