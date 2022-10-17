@@ -30,7 +30,7 @@ We are out of alpha testing and moving to Beta.  Please send any issues or enhan
 
 ### **Latest Alpha: [v1.0.1.19](https://github.com/adanvdo/YT-RED-UI/releases/tag/v1.0.1.19-alpha)**
 
-*Updated 5/26/2022*
+*Updated 10/17/2022*
 
 # **Roadmap: The Future of YT-RED** <a name="future"></a>
 
