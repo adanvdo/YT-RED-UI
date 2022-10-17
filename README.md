@@ -5,6 +5,7 @@
 ![ytr-banner](https://user-images.githubusercontent.com/26498008/170678451-c993fe6e-3399-4949-969e-d6d18ab2aa56.png)
 
 # **News**
+## **10/17/2022 : Beta 1.0.2.0 Release Coming 10/19**
 ## **5/26/2022 : YT-RED IS NOW IN BETA STAGE!**
 We are out of alpha testing and moving to Beta.  Please send any issues or enhancement requests by adding a new issue on GitHub.
 
@@ -27,7 +28,7 @@ We are out of alpha testing and moving to Beta.  Please send any issues or enhan
 
 ### **Latest Beta: [v1.0.1.0](https://github.com/adanvdo/YT-RED-UI/releases/tag/v1.0.1.0-beta)**
 
-### **Latest Alpha: [v1.0.0.11](https://github.com/adanvdo/YT-RED-UI/releases/tag/v1.0.0.11-alpha)**
+### **Latest Alpha: [v1.0.1.19](https://github.com/adanvdo/YT-RED-UI/releases/tag/v1.0.1.19-alpha)**
 
 *Updated 5/26/2022*
 
