@@ -1,4 +1,4 @@
-# YT-RED-UI ALPHA BRANCH
+# YT-RED-UI BETA BRANCH
 
 ![ytr-banner-1 0 1 1](https://user-images.githubusercontent.com/26498008/171912293-7d925959-aba1-4826-8da8-8fbbf2a35a8f.png)
 
@@ -17,7 +17,7 @@ This project is UNLICENSED and uses licensed DevExpress WinForms Controls.
 
 YT-RED is a safe alternative to other popular youtube and reddit video downloaders found online.  Other popular reddit downlaod tools are full of trackers and data collection that the end user is not aware of.  YT-RED was personally built with a no-tracking and no-data-collection policy.  By keeping the source code open to the public, it is meant to be published as a safe and versatile media downloader for Windows
 
-![YTRMain](https://user-images.githubusercontent.com/26498008/196244863-8f8f2add-f9ee-4e5b-a681-3a15975356b2.png)
+![2022-08-21_0-03-03](https://user-images.githubusercontent.com/26498008/185775425-e18bda03-e824-4040-8ebf-37cf9da370e8.png)
 
 ![2022-08-21_0-03-18](https://user-images.githubusercontent.com/26498008/185775468-58de4d42-dfba-425b-b370-6f59f7091bf7.png)
 
@@ -100,6 +100,9 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
   ![2022-08-21_0-03-35](https://user-images.githubusercontent.com/26498008/185775490-4ab0e3c0-b980-4f4b-8b36-b11f08dad838.png)
 
 ## CHANGELOG <a name="changelog"></a>
+
+### 10/19/2022 v1.0.2.0
+ - Beta Branch Updated from v1.0.1.19-alpha
 
 ### 10/17/2022 v1.0.1.19
  - Fixed bug where audio-only downloads resulted in a crash
@@ -274,5 +277,8 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 - Added Program Icon
 - UI and Behavior Tweaks
 
-## This is an experimental build.  Bugs and/or crashes are possible.  
+### 5/26/2022
+- Beta Branch Created from v1.0.0.11-alpha
+
+## This is a beta build.  Bugs and/or crashes are possible.  
 Report new issues [here](https://github.com/adanvdo/YT-RED-UI/issues/new)
