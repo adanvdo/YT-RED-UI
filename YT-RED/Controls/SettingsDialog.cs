@@ -14,16 +14,24 @@ namespace YT_RED.Controls
 {
     public partial class SettingsDialog : DevExpress.XtraEditors.XtraForm
     {
-        public SettingsDialog()
+        private bool loading = true;
+        public SettingsDialog(string selectPage = "")
         {
             InitializeComponent();
             Init();
+            if (!string.IsNullOrEmpty(selectPage))
+            {
+                var page = this.tcSettingsTabControl.TabPages.Where(tpg => tpg.Name == $"tpg{selectPage}").ToArray()[0];
+                if(page != null) 
+                    this.tcSettingsTabControl.SelectedTabPage = page;
+            }
         }
 
-        private void Init()
+        private async void Init()
         {
             createFeatureOptionsPages();
-            this.tcSettingsTabControl.SelectedTabPage = this.tcSettingsTabControl.TabPages[0];
+            DevExpress.XtraTab.XtraTabPage active = this.tcSettingsTabControl.TabPages.FirstOrDefault(tpg => tpg.Name == $"tpg{AppSettings.Default.General.ActiveFeatureTab}");
+            this.tcSettingsTabControl.SelectedTabPage = active;
         }
         private void createFeatureOptionsPages()
         {
@@ -35,20 +43,23 @@ namespace YT_RED.Controls
                 propertyGrid.Name = $"pg{setting.Feature}";
                 propertyGrid.TabIndex = 99;
                 propertyGrid.GridTabIndex = 1;
+                if (setting.Feature == AppFeature.About)
+                {
+                    propertyGrid.Grid.OptionsView.ShowFocusedFrame = false;
+                    propertyGrid.Grid.OptionsSelectionAndFocus.EnableAppearanceFocusedRow = false;
+                }
 
                 var tabPage = new DevExpress.XtraTab.XtraTabPage();
                 tabPage.Controls.Add(propertyGrid);
                 tabPage.Name = $"tpg{setting.Feature}";
                 tabPage.Text = setting.Feature.ToFriendlyString().Replace("&", "&&");
-                if (setting.Feature == AppFeature.About)
-                {
-                    propertyGrid.Grid.OptionsBehavior.Editable = false;                    
-                }
 
                 this.tcSettingsTabControl.TabPages.Add(tabPage);
 
                 propertyGrid.SelectedObject = setting;
             }
+
+            loading = false;
         }
 
         private async void saveSettings()
@@ -66,6 +77,15 @@ namespace YT_RED.Controls
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            if (this.tcSettingsTabControl.SelectedTabPage.Name == $"tpg{AppFeature.About}")
+            {
+                PropertyGrid pg = (PropertyGrid)this.tcSettingsTabControl.SelectedTabPage.Controls.Find($"pg{AppFeature.About}", true).FirstOrDefault();
+                if (pg.IsBusy)
+                {
+                    MsgBox.Show("A task is in progress. Please wait.");
+                    return;
+                }
+            }
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
@@ -115,6 +135,18 @@ namespace YT_RED.Controls
         {
             ddDeleteDLs.ShowDropDown();
         }
+
+        private void tcSettingsTabControl_SelectedPageChanged(object sender, DevExpress.XtraTab.TabPageChangedEventArgs e)
+        {
+            if (loading || e.Page == null) return;
+            bool parseFeature = Enum.TryParse(e.Page.Name.Remove(0, 3), out AppFeature featureTab);
+            if (parseFeature)
+            {
+                AppSettings.Default.General.ActiveFeatureTab = featureTab;
+            }
+            else AppSettings.Default.General.ActiveFeatureTab = AppFeature.General;
+        }
+
     }
 
     public enum OpenPosition

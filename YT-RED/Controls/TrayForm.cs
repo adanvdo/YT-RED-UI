@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
+using System.Drawing;
+using System.Linq;
 using System.Threading;
-using Xabe.FFmpeg;
+using System.Windows.Forms;
 using YoutubeDLSharp;
+using YT_RED.Classes;
 using YT_RED.Logging;
 using YT_RED.Settings;
 using YT_RED.Utils;
+using Xabe.FFmpeg;
+using System.Diagnostics;
 
 namespace YT_RED.Controls
 {
@@ -19,24 +23,41 @@ namespace YT_RED.Controls
             get { return txtUrl.Text; }
             set { txtUrl.Text = value; }
         }
-
-        protected IProgress<DownloadProgress> ytProgress;
-        protected IProgress<string> ytOutput;
-        protected CancellationTokenSource cancellationTokenSource;
+        
         private DownloadType currentDownload;
+        private System.Windows.Forms.Timer activeTimer;
+        private bool inactive = false;
+        private bool hotkeyTriggered = false;
+        public bool closeOnCompletedProgress = false;
 
         public TrayForm()
         {
-            InitializeComponent();
-            ytProgress = new Progress<DownloadProgress>(showProgress);
-            ytOutput = null;
+            InitializeComponent();            
             currentDownload = DownloadType.Unknown;
+            this.activeTimer = new System.Windows.Forms.Timer();
+            this.activeTimer.Interval = 10000;
+            this.activeTimer.Tick += ActiveTimer_Tick;
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            this.activeTimer.Start();
+            base.OnLoad(e);
+        }
+
+        private void ActiveTimer_Tick(object sender, EventArgs e)
+        {
+            if (!Locked && inactive)
+                this.Hide();
+            else if (!Locked)
+                inactive = true;
         }
 
         public void TriggerDownload()
         {
             if(txtUrl.Text.Length > 3 && !Locked)
             {
+                hotkeyTriggered = true;
                 startDownload();
             }
         }
@@ -49,15 +70,107 @@ namespace YT_RED.Controls
             }
         }
 
-        private void showProgress(DownloadProgress progress)
+        public void ShowProgress(int percent)
         {
-            if (!pgTrayProgress.Visible)
-                pgTrayProgress.Show();
-            pgTrayProgress.Position = Convert.ToInt32(progress.Progress * 100);
-            if(progress.State == DownloadState.Success)
+            if (pgTrayProgress.InvokeRequired)
             {
-                pgTrayProgress.Position = 0;
-                pgTrayProgress.Hide();
+                Action safeUpdate = delegate
+                {
+                    if (!pgTrayProgress.Visible)
+                        pgTrayProgress.Show();
+                    pgTrayProgress.Position = percent;
+                    if (percent == 100)
+                    {
+                        pgTrayProgress.Position = 0;
+                        pgTrayProgress.Hide();
+                        progressMarquee.Hide();
+                        if (closeOnCompletedProgress)
+                        {
+                            closeOnCompletedProgress = false;
+                            this.Hide();
+                        }
+                    }
+                };
+                pgTrayProgress.Invoke(safeUpdate);
+            }
+            else
+            {
+                if (!pgTrayProgress.Visible)
+                    pgTrayProgress.Show();
+                pgTrayProgress.Position = percent;
+                if (percent == 100)
+                {
+                    pgTrayProgress.Position = 0;
+                    pgTrayProgress.Hide();
+                    progressMarquee.Hide();
+                    if (closeOnCompletedProgress)
+                    {
+                        closeOnCompletedProgress = false;
+                        this.Hide();
+                    }
+                }
+            }
+        }
+
+        public void ShowProgress(DownloadProgress progress)
+        {
+            if (pgTrayProgress.InvokeRequired)
+            {
+                Action safeUpdate = delegate
+                {
+                    if (!pgTrayProgress.Visible)
+                        pgTrayProgress.Show();
+                    pgTrayProgress.Position = Convert.ToInt32(progress.Progress * 100);
+                    if (progress.State == DownloadState.Success)
+                    {
+                        pgTrayProgress.Position = 0;
+                        pgTrayProgress.Hide();
+                        progressMarquee.Hide(); 
+                        if (closeOnCompletedProgress)
+                        {
+                            closeOnCompletedProgress = false;
+                            this.Hide();
+                        }
+                    }
+                };
+                pgTrayProgress.Invoke(safeUpdate);
+            }
+            else
+            {
+                if (!pgTrayProgress.Visible)
+                    pgTrayProgress.Show();
+                pgTrayProgress.Position = Convert.ToInt32(progress.Progress * 100);
+                if (progress.State == DownloadState.Success)
+                {
+                    pgTrayProgress.Position = 0;
+                    pgTrayProgress.Hide();
+                    progressMarquee.Hide();
+                    if (closeOnCompletedProgress)
+                    {
+                        closeOnCompletedProgress = false;
+                        this.Hide();
+                    }
+                }
+            }
+        }
+
+        public void ShowProgressOutput(string output)
+        {
+            if (progressMarquee.InvokeRequired)
+            {
+                Action safeUpdate = delegate
+                {
+                    if (!progressMarquee.Visible)
+                        progressMarquee.Show();
+                    progressMarquee.Text = output;
+                };
+                progressMarquee.Invoke(safeUpdate);
+            }
+            else 
+            {
+                if (!progressMarquee.Visible)
+                    progressMarquee.Show();
+                progressMarquee.Text = output;
             }
         }
 
@@ -68,131 +181,70 @@ namespace YT_RED.Controls
             this.progressPanel.Visible = true;
             progressMarquee.Text = "Starting Download Process..";
             progressMarquee.Show();
-
-            cancellationTokenSource = new CancellationTokenSource();
-            CancellationToken cancelToken = cancellationTokenSource.Token;
-
-            if (HtmlUtil.CheckUrl(txtUrl.Text) == DownloadType.YouTube)
+            if (hotkeyTriggered)
             {
-                currentDownload = DownloadType.YouTube;
-                RunResult<string> result = null;
-                if(AppSettings.Default.General.UsePreferredFormat)
-                {
-                    result = await VideoUtil.DownloadPreferred(VideoUtil.YouTubeString(txtUrl.Text), Classes.StreamType.AudioAndVideo, ytProgress, null, cancelToken);
-                }
-                else
-                {
-                    result = await VideoUtil.DownloadBestYT(VideoUtil.YouTubeString(txtUrl.Text), Classes.StreamType.AudioAndVideo, ytProgress, null, cancelToken);
-                }
-                if (!result.Success && result.Data != "canceled")
-                {
-                    MsgBox.Show("Download Failed\n" + String.Join("\n", result.ErrorOutput));
-                }
-
-                progressMarquee.Hide();
-                progressMarquee.Text = "";
-                if (result.Data != "canceled")
-                {
-                    await Historian.RecordDownload(new DownloadLog(
-                        DownloadType.YouTube,
-                        VideoUtil.YouTubeString(txtUrl.Text),
-                        Classes.StreamType.AudioAndVideo,
-                        DateTime.Now,
-                        result.Data));
-                }
-                btnOpenDL.Text = result.Data;
-                btnOpenDL.Visible = true;
-                this.txtUrl.Text = "";
-                this.txtUrl.Enabled = true;
-                this.Locked = false;
-
-                cancellationTokenSource.Dispose();
-                if(result.Data != "canceled" && AppSettings.Default.General.AutomaticallyOpenDownloadLocation)
-                {
-                    openDLLocation(btnOpenDL.Text);
-                    this.Close();
-                }
+                hotkeyTriggered = false;
             }
-            else if (HtmlUtil.CheckUrl(txtUrl.Text) == DownloadType.Reddit)
+            else
             {
-                currentDownload = DownloadType.Reddit;
-                redditDL(txtUrl.Text, cancelToken);
+                Rectangle workingArea = Screen.GetWorkingArea(this);
+                var loc = new Point(workingArea.Right - this.Size.Width, workingArea.Bottom - this.Size.Height);
+                this.Location = loc;
             }
-        }
-
-        private async void redditDL(string playlistUrl, CancellationToken? cancellationToken = null)
-        {
-            try
+            currentDownload = HtmlUtil.CheckUrl(txtUrl.Text);
+            if(currentDownload == DownloadType.Unknown && AppSettings.Default.General.ShowHostWarning)
             {
-                List<Classes.StreamLink> streamLinks = await Utils.HtmlUtil.GetVideoFromRedditPage(playlistUrl);
-                if (streamLinks != null)
+                DialogResult res = MsgBox.ShowUrlCheckWarning("The URL entered is not from a supported host. Downloads from this URL may fail or result in errors.\n\nContinue?", "Unrecognized URL", Buttons.YesNo, YT_RED.Controls.Icon.Warning, FormStartPosition.CenterParent);
+                if (res == DialogResult.No)
+                    return;
+            }
+
+            RunResult<string> result = null;
+            string url = VideoUtil.CorrectYouTubeString(txtUrl.Text);
+
+            var pendingDL = new PendingDownload()
+            {
+                Url = url,
+                Format = "bestvideo+bestaudio/best"
+            };
+
+            if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
+            {
+                result = await Utils.VideoUtil.DownloadPreferredYtdl(url, Classes.StreamType.AudioAndVideo);
+            }
+            else
+                result = await VideoUtil.DownloadBestYtdl(url, Classes.StreamType.AudioAndVideo);
+
+            if (!result.Success && result.Data != "canceled")
+            {
+                MsgBox.Show("Download Failed\n" + String.Join("\n", result.ErrorOutput));
+            }
+
+            progressMarquee.Hide();
+            progressMarquee.Text = "";
+            if (result.Data != "canceled")
+            {
+                await Historian.RecordDownload(new DownloadLog(
+                    VideoUtil.CorrectYouTubeString(txtUrl.Text),
+                    currentDownload,
+                    Classes.StreamType.AudioAndVideo,
+                    DateTime.Now,
+                    result.Data,
+                    pendingDL)
                 {
-
-                    string id = Utils.VideoUtil.GetRedditVideoID(streamLinks[0].StreamUrl);
-                    if (id != null)
-                    {
-                        this.progressPanel.Visible = true;
-                        progressMarquee.Text = "Evaluating available formats..";
-                        progressMarquee.Show();
-                        Tuple<int, string> bestDash = await Utils.HtmlUtil.GetBestRedditDashVideo(id);
-                        bool audioExists = await Utils.HtmlUtil.MediaExists(Utils.VideoUtil.RedditAudioUrl(id));
-                        if (bestDash != null)
-                        {
-                            progressMarquee.Text = "Preparing download..";
-                            IConversion conversion = await Utils.VideoUtil.PrepareStreamConversion(bestDash.Item2, audioExists ? Utils.VideoUtil.RedditAudioUrl(id) : String.Empty);
-                            string destination = conversion.OutputFilePath;
-                            conversion.OnProgress += Conversion_OnProgress;
-                            progressMarquee.Text = string.Empty;
-                            pgTrayProgress.Visible = true;
-                            bool cancelled = false;
-                            try
-                            {
-                                if (cancellationToken != null)
-                                    await conversion.Start((CancellationToken)cancellationToken);
-                                else
-                                    await conversion.Start();
-                            }
-                            catch (Exception ex)
-                            {
-                                if (ex.Message.ToLower() != "a task was canceled.")
-                                    ExceptionHandler.LogException(ex);
-                                else
-                                    cancelled = true;
-                            }
-                            if (!cancelled)
-                            {
-                                bool saved = await Historian.RecordDownload(new DownloadLog(
-                                    DownloadType.Reddit, bestDash.Item2, Classes.StreamType.AudioAndVideo, DateTime.Now, destination
-                                    ));
-                            }
-                            pgTrayProgress.Visible = false;
-                            progressMarquee.Hide();
-                            progressMarquee.Text = "";
-                            btnOpenDL.Text = destination;
-                            btnOpenDL.Visible = true;
-
-                            this.txtUrl.Text = "";
-                            this.txtUrl.Enabled = true;
-                            this.Locked = false;
-
-                            cancellationTokenSource.Dispose();
-                            if (!cancelled && AppSettings.Default.General.AutomaticallyOpenDownloadLocation)
-                            {
-                                openDLLocation(btnOpenDL.Text);
-                                this.Close();
-                            }
-                        }
-                    }
-                    else
-                    {
-                        cancellationTokenSource.Dispose();
-                        MsgBox.Show("Failed to acquire Media ID", "Oops", Buttons.OK, YT_RED.Controls.Icon.Error);
-                    }
-                }
+                    Format = pendingDL.Format
+                });
             }
-            catch (Exception ex)
+            btnOpenDL.Text = result.Data;
+            btnOpenDL.Visible = true;
+            this.txtUrl.Text = "";
+            this.txtUrl.Enabled = true;
+            this.Locked = false;
+
+            if (result.Data != "canceled" && AppSettings.Default.General.AutomaticallyOpenDownloadLocation)
             {
-                ExceptionHandler.LogException(ex);
+                openDLLocation(btnOpenDL.Text);
+                this.Hide();
             }
         }
 
@@ -223,7 +275,7 @@ namespace YT_RED.Controls
             if (btnOpenDL.Text.Length > 0)
             {
                 openDLLocation(btnOpenDL.Text);
-                this.Close();
+                this.Hide();
             }
         }
 
@@ -244,12 +296,12 @@ namespace YT_RED.Controls
                 DialogResult res = MsgBox.Show("A download is in progress. Cancel the current download?", "Download In-Progress", YT_RED.Controls.Buttons.YesNo, YT_RED.Controls.Icon.Warning, loc);
                 if(res == DialogResult.Yes)
                 {
-                    cancellationTokenSource.Cancel();
-                    cancellationTokenSource.Dispose();
-                    this.Close();
+                    VideoUtil.CancellationTokenSource.Cancel();
+                    VideoUtil.CancellationTokenSource.Dispose();
+                    this.Hide();
                 }
             }
-            this.Close();
+            this.Hide();
         }
 
         private void btnGo_Click(object sender, EventArgs e)
@@ -258,6 +310,11 @@ namespace YT_RED.Controls
             {
                 startDownload();
             }
+        }
+
+        private void TrayForm_MouseMove(object sender, MouseEventArgs e)
+        {
+            this.inactive = false;
         }
     }
 }

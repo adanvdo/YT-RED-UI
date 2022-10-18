@@ -63,6 +63,7 @@
             this.btnUpload.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnUpload.Location = new System.Drawing.Point(-69, 2);
             this.btnUpload.Name = "btnUpload";
+            this.btnUpload.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnUpload.Size = new System.Drawing.Size(75, 26);
             this.btnUpload.TabIndex = 5;
             this.btnUpload.Text = "Upload Logs";
@@ -74,6 +75,7 @@
             this.btnRetry.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnRetry.Location = new System.Drawing.Point(6, 2);
             this.btnRetry.Name = "btnRetry";
+            this.btnRetry.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnRetry.Size = new System.Drawing.Size(75, 26);
             this.btnRetry.TabIndex = 4;
             this.btnRetry.Text = "Retry";
@@ -85,6 +87,7 @@
             this.btnYes.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnYes.Location = new System.Drawing.Point(81, 2);
             this.btnYes.Name = "btnYes";
+            this.btnYes.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnYes.Size = new System.Drawing.Size(75, 26);
             this.btnYes.TabIndex = 3;
             this.btnYes.Text = "Yes";
@@ -96,6 +99,7 @@
             this.btnNo.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnNo.Location = new System.Drawing.Point(156, 2);
             this.btnNo.Name = "btnNo";
+            this.btnNo.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnNo.Size = new System.Drawing.Size(75, 26);
             this.btnNo.TabIndex = 2;
             this.btnNo.Text = "No";
@@ -107,6 +111,7 @@
             this.btnOk.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnOk.Location = new System.Drawing.Point(231, 2);
             this.btnOk.Name = "btnOk";
+            this.btnOk.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnOk.Size = new System.Drawing.Size(75, 26);
             this.btnOk.TabIndex = 1;
             this.btnOk.Text = "OK";
@@ -118,6 +123,7 @@
             this.btnCancel.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnCancel.Location = new System.Drawing.Point(306, 2);
             this.btnCancel.Name = "btnCancel";
+            this.btnCancel.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnCancel.Size = new System.Drawing.Size(75, 26);
             this.btnCancel.TabIndex = 0;
             this.btnCancel.Text = "Cancel";
@@ -135,7 +141,6 @@
             this.memoMessage.Properties.Appearance.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center;
             this.memoMessage.Properties.Padding = new System.Windows.Forms.Padding(5, 10, 5, 10);
             this.memoMessage.Properties.ReadOnly = true;
-            this.memoMessage.Properties.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.memoMessage.Properties.UseReadOnlyAppearance = false;
             this.memoMessage.Size = new System.Drawing.Size(383, 91);
             this.memoMessage.TabIndex = 1;
@@ -148,6 +153,7 @@
             this.uploadMarquee.EditValue = 0;
             this.uploadMarquee.Location = new System.Drawing.Point(0, 91);
             this.uploadMarquee.Name = "uploadMarquee";
+            this.uploadMarquee.Properties.AllowFocused = false;
             this.uploadMarquee.Properties.ShowTitle = true;
             this.uploadMarquee.Size = new System.Drawing.Size(383, 18);
             this.uploadMarquee.TabIndex = 2;
@@ -166,7 +172,7 @@
             this.lblIndicator.TabIndex = 3;
             this.lblIndicator.Visible = false;
             // 
-            // YTRMessageBox
+            // YTRErrorMessageBox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -177,7 +183,8 @@
             this.Controls.Add(this.uploadMarquee);
             this.Controls.Add(this.lblIndicator);
             this.Controls.Add(this.pnlButtons);
-            this.Name = "YTRMessageBox";
+            this.Name = "YTRErrorMessageBox";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ErrorMessageBox";
             ((System.ComponentModel.ISupportInitialize)(this.pnlButtons)).EndInit();
             this.pnlButtons.ResumeLayout(false);

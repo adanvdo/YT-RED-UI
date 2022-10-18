@@ -85,6 +85,7 @@
     <LangVersion>8.0</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -103,17 +104,20 @@
     <StartupObject>YT_RED.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DevExpress.BonusSkins.v21.2" />
-    <Reference Include="DevExpress.Data.Desktop.v21.2, Version=21.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Data.v21.2" />
-    <Reference Include="DevExpress.Images.v21.2, Version=21.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Printing.v21.2.Core, Version=21.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Utils.v21.2" />
-    <Reference Include="DevExpress.XtraBars.v21.2, Version=21.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.XtraEditors.v21.2" />
-    <Reference Include="DevExpress.XtraGrid.v21.2, Version=21.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.XtraLayout.v21.2, Version=21.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.XtraVerticalGrid.v21.2, Version=21.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.BonusSkins.v22.1" />
+    <Reference Include="DevExpress.Data.Desktop.v22.1, Version=22.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Drawing.v22.1" />
+    <Reference Include="DevExpress.Data.v22.1" />
+    <Reference Include="DevExpress.Images.v22.1, Version=22.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Mvvm.v22.1, Version=22.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Printing.v22.1.Core, Version=22.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Utils.v22.1" />
+    <Reference Include="DevExpress.XtraBars.v22.1, Version=22.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraDialogs.v22.1, Version=22.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraEditors.v22.1" />
+    <Reference Include="DevExpress.XtraGrid.v22.1, Version=22.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraLayout.v22.1, Version=22.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraVerticalGrid.v22.1, Version=22.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="HtmlAgilityPack, Version=1.11.42.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.11.42\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
@@ -124,12 +128,14 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Design" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Security.AccessControl, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.AccessControl.5.0.0\lib\net461\System.Security.AccessControl.dll</HintPath>
     </Reference>
@@ -147,21 +153,29 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="TagLibSharp, Version=2.3.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
+      <HintPath>..\packages\TagLibSharp.2.3.0\lib\net462\TagLibSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="UIAutomationClient" />
     <Reference Include="URIScheme, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\URIScheme.5.0.0\lib\netstandard2.0\URIScheme.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="Xabe.FFmpeg, Version=5.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Xabe.FFmpeg.5.2.0\lib\netstandard2.0\Xabe.FFmpeg.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\local-packages\Xabe.FFMpeg\Xabe.FFmpeg.dll</HintPath>
     </Reference>
-    <Reference Include="YoutubeDLSharp, Version=0.4.2.2271, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\YoutubeDLSharp.0.4.2\lib\net45\YoutubeDLSharp.dll</HintPath>
+    <Reference Include="YoutubeDLSharp, Version=0.4.2.22202, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\local-packages\YoutubeDLSharp\lib\net48\YoutubeDLSharp.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppFeature.cs" />
     <Compile Include="Classes\ApplicationController.cs" />
     <Compile Include="Classes\AssemblyBuildAttribute.cs" />
+    <Compile Include="Classes\Release.cs" />
+    <Compile Include="Classes\SystemCodec.cs" />
     <Compile Include="Classes\FFmpegParam.cs" />
     <Compile Include="Classes\HotkeyConverter.cs" />
     <Compile Include="Classes\KeyboardHook.cs" />
@@ -172,15 +186,40 @@
     <Compile Include="Classes\ResultStream.cs" />
     <Compile Include="Classes\StreamLink.cs" />
     <Compile Include="Classes\UIBlockDetector.cs" />
+    <Compile Include="Classes\YTDLFormatPair.cs" />
     <Compile Include="Classes\YTFormatData.cs" />
+    <Compile Include="Controls\ControlPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ControlPanel.Designer.cs">
+      <DependentUpon>ControlPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\CustomTabFormPage.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ImageControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ImageControl.Designer.cs">
+      <DependentUpon>ImageControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\InputPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\InputPanel.Designer.cs">
+      <DependentUpon>InputPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\MsgBox.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Controls\MsgBox.Designer.cs">
       <DependentUpon>MsgBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ReleaseItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ReleaseItem.Designer.cs">
+      <DependentUpon>ReleaseItem.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\YTRErrorMessageBox.cs">
       <SubType>Form</SubType>
@@ -210,6 +249,7 @@
     <Compile Include="Logging\DownloadLog.cs" />
     <Compile Include="Logging\ExceptionHandler.cs" />
     <Compile Include="Logging\Historian.cs" />
+    <Compile Include="Logging\PendingDownload.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -223,13 +263,28 @@
     <Compile Include="Settings\AppSettings.cs" />
     <Compile Include="Settings\FeatureSettings.cs" />
     <Compile Include="Settings\GeneralSettings.cs" />
+    <Compile Include="Settings\LayoutSettings.cs" />
     <Compile Include="Utils\HtmlUtil.cs" />
     <Compile Include="Utils\HttpUtil.cs" />
     <Compile Include="Utils\ReportingUtil.cs" />
     <Compile Include="Utils\StringUtil.cs" />
+    <Compile Include="Utils\TagUtil.cs" />
+    <Compile Include="Utils\UpdateHelper.cs" />
     <Compile Include="Utils\VideoUtil.cs" />
+    <EmbeddedResource Include="Controls\ControlPanel.resx">
+      <DependentUpon>ControlPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImageControl.resx">
+      <DependentUpon>ImageControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\InputPanel.resx">
+      <DependentUpon>InputPanel.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\MsgBox.resx">
       <DependentUpon>MsgBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ReleaseItem.resx">
+      <DependentUpon>ReleaseItem.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\YTRErrorMessageBox.resx">
       <DependentUpon>YTRErrorMessageBox.cs</DependentUpon>
@@ -273,6 +328,31 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\functionsinformation.svg" />
+    <None Include="Resources\close.svg" />
+    <None Include="Resources\listnumbers.svg" />
+    <None Include="Resources\electronics_volume.svg" />
+    <None Include="Resources\VideoSound.svg" />
+    <None Include="Resources\glyph_video.svg" />
+    <None Include="Resources\stop2.svg" />
+    <None Include="Resources\stop1.svg" />
+    <None Include="Resources\Media\loading_8.svg" />
+    <None Include="Resources\Media\loading_7.svg" />
+    <None Include="Resources\Media\loading_6.svg" />
+    <None Include="Resources\Media\loading_5.svg" />
+    <None Include="Resources\Media\loading_4.svg" />
+    <None Include="Resources\Media\loading_3.svg" />
+    <None Include="Resources\Media\loading_2.svg" />
+    <None Include="Resources\Media\loading_1.svg" />
+    <None Include="Resources\stop.svg" />
+    <None Include="Resources\checkbox.svg" />
+    <None Include="Resources\security_warningcircled2.svg" />
+    <None Include="Resources\Media\twitch-circle.svg" />
+    <None Include="Resources\Media\instagram-circle.svg" />
+    <None Include="Resources\Media\vimeo-circle.svg" />
+    <None Include="Resources\Media\twitter-circle.svg" />
+    <None Include="Resources\Media\reddit-circle.svg" />
+    <None Include="Resources\Media\youtube-circle.svg" />
     <None Include="Resources\exclamation.svg" />
     <None Include="Resources\shield.svg" />
     <None Include="Resources\enablesearch.svg" />
@@ -287,6 +367,8 @@
     <None Include="Resources\about.svg" />
     <None Include="Resources\actions_question.svg" />
     <None Include="Resources\application.svg" />
+    <None Include="Resources\actions_checkcircled.svg" />
+    <None Include="Resources\about1.svg" />
     <Content Include="Resources\App\ffmpeg.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -325,6 +407,7 @@
     <PostBuildEvent>set configName=$(ConfigurationName)
 set platformName=$(PlatformName)
 set versionNumber=@(VersionNumber)
+set releaseChannel=alpha
 call "E:\Dev\BuildAndSignYTR.bat"</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -13,6 +13,8 @@ namespace YT_RED
         public static bool x64 = false;
         public static string initialYTLink = string.Empty;
         public static string initialRedLink = string.Empty;
+        public static bool newUpdater = false;
+        public static bool updated = false;
         public static InitialFunction initialFunction = InitialFunction.None;
 
         private static List<string> functions = new List<string>()
@@ -20,7 +22,8 @@ namespace YT_RED
             "lf",
             "listformats",
             "dlb",
-            "downloadbest"
+            "downloadbest",
+            "uploadtest"
         };
 
         /// <summary>
@@ -51,15 +54,28 @@ namespace YT_RED
                             else if (func == "dlb") func = "DownloadBest";
                             initialFunction = (InitialFunction)Enum.Parse(typeof(InitialFunction), func);
                         }
-                        if (s.StartsWith("-yt"))
+                        if (s.StartsWith("-yt") || s == "yt")
                         {
                             DevRun = false;
                             initialYTLink = s.Remove(0, 4);
                         }
-                        if (s.StartsWith("-red"))
+                        if (s.StartsWith("-red") || s == "red")
                         {
                             DevRun = false;
                             initialRedLink = s.Remove(0, 5);
+                        }
+                        if(s.StartsWith("-uploadtest") || s.StartsWith("-ut"))
+                        {
+                            initialFunction = InitialFunction.UploadTest;
+                        }
+                        if (s.StartsWith("-updater") || s == "updater")
+                        {
+                            newUpdater = true;
+                        }
+
+                        if(s.StartsWith("-updated") || s == "updated")
+                        {
+                            updated = true;
                         }
                     }
                 }
@@ -74,14 +90,22 @@ namespace YT_RED
             FFmpeg.SetExecutablesPath(@".\Resources\App");
             MainForm runForm;
             if (!string.IsNullOrEmpty(initialYTLink))
-                runForm = new MainForm(initialFunction, initialYTLink, Classes.MediaSource.YouTube);
+                runForm = new MainForm(initialFunction, initialYTLink, newUpdater, updated);
             else if (!string.IsNullOrEmpty(initialRedLink))
-                runForm = new MainForm(initialFunction, initialRedLink, Classes.MediaSource.Reddit);
+                runForm = new MainForm(initialFunction, initialRedLink, newUpdater, updated);
             else
-                runForm = new MainForm();
+                runForm = new MainForm(newUpdater, updated);
 
-            var controller = new ApplicationController(runForm);            
-            controller.Run(Environment.GetCommandLineArgs());
+            try
+            {
+                var controller = new ApplicationController(runForm);
+                string[] argList = Environment.GetCommandLineArgs();
+                controller.Run(argList);
+            }
+            catch(Exception ex)
+            {
+                bool logged = Logging.ExceptionHandler.LogException(ex);
+            }
         }
     }
 
@@ -89,6 +113,7 @@ namespace YT_RED
     {
         ListFormats = 0,
         DownloadBest = 1,
-        None = 2
+        UploadTest = 2,
+        None = 3
     }
 }

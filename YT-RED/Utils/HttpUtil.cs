@@ -1,37 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using YT_RED.Classes;
 using YT_RED.Logging;
 using YT_RED.Settings;
-using Newtonsoft.Json;
 
 namespace YT_RED.Utils
 {
     public static class HttpUtil
     {
-        private static string serverUrl = "https://www.weaknpc.com/api2/ytred";
+        private static string serverUrl = Program.DevRun ? @"http://localhost:3000/api" : @"https://www.jamgalactic.com/api";
         private static async Task<HttpWebResponse> postErrorLogs(DateTime date)
         {
             try
             {
-                string logs = string.Empty;
-                if (File.Exists(Path.Combine(AppSettings.Default.General.ErrorLogPath, $"ErrorLogs_{date.ToShortDateString()}.txt")))
+                string tidyLogs = string.Empty;
+                string logFile = Path.Combine(AppSettings.Default.General.ErrorLogPath, $"ErrorLogs_{date.ToShortDateString()}.txt");
+                if (File.Exists(logFile))
                 {
-                    logs = File.ReadAllText(Path.Combine(AppSettings.Default.General.ErrorLogPath, $"ErrorLogs_{date.ToShortDateString()}.txt"));
+                    string rawLogs = File.ReadAllText(logFile);
+                    tidyLogs = rawLogs.Replace(@"\", @"\\").Replace(System.Environment.NewLine, @"\n").Replace("\n", @"\n").Trim();
+                    if (tidyLogs.StartsWith("\n"))
+                    {
+                        tidyLogs = tidyLogs.Remove(0, 1);
+                    }
+                    if (tidyLogs.StartsWith("\\n"))
+                    {
+                        tidyLogs = tidyLogs.Remove(0, 2);
+                    }                    
                 }
 
-                HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(serverUrl);
-                httpWebRequest.ContentType = "application /json";
+                HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create($"{serverUrl}/ytred");
+                httpWebRequest.ContentType = "application/json";
                 httpWebRequest.Method = "POST";
 
                 using (var streamWriter = new StreamWriter(await httpWebRequest.GetRequestStreamAsync()))
                 {
-                    LogPostRequest request = new LogPostRequest(ReportingUtil.GetMac(), DateTime.Now, logs);
+                    LogPostRequest request = new LogPostRequest(ReportingUtil.GetMac(), DateTime.Now, tidyLogs);
                     string json = JsonConvert.SerializeObject(request);
 
                     streamWriter.Write(json);
@@ -59,13 +67,22 @@ namespace YT_RED.Utils
 
             try
             {
-                HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(serverUrl);
-                httpWebRequest.ContentType = "application /json";
+                string tidyLogs = logs.Replace(@"\", @"\\").Replace(System.Environment.NewLine, @"\n").Replace("\n", @"\n").Trim();
+                if (tidyLogs.StartsWith("\n"))
+                {
+                    tidyLogs = tidyLogs.Remove(0, 1);
+                }
+                if (tidyLogs.StartsWith("\\n"))
+                {
+                    tidyLogs = tidyLogs.Remove(0, 2);
+                }
+                HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create($"{serverUrl}/ytred");
+                httpWebRequest.ContentType = "application/json";
                 httpWebRequest.Method = "POST";
 
                 using (var streamWriter = new StreamWriter(await httpWebRequest.GetRequestStreamAsync()))
                 {
-                    LogPostRequest request = new LogPostRequest(ReportingUtil.GetMac(), DateTime.Now, logs);
+                    LogPostRequest request = new LogPostRequest(ReportingUtil.GetMac(), DateTime.Now, tidyLogs);
                     string json = JsonConvert.SerializeObject(request);
 
                     streamWriter.Write(json);
@@ -112,7 +129,7 @@ namespace YT_RED.Utils
                     string logs = string.Empty;
                     if (File.Exists(file.FullName))
                     {
-                        logs = await Task.Run(() => File.ReadAllText(file.FullName));
+                        logs = await Task.Run(() => File.ReadAllText(file.FullName)); 
                         HttpWebResponse postResponse = await postErrorLogs(logs);
                         if (postResponse.StatusCode != HttpStatusCode.Created)
                             return false;
@@ -126,5 +143,24 @@ namespace YT_RED.Utils
             }
             return false;
         }        
+
+        public static async Task<HttpResponseMessage> Get(string endpoint, string query)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    UriBuilder baseUri = new UriBuilder($"{serverUrl}/{endpoint}");
+                    baseUri.Query = query;
+                    HttpResponseMessage response = await client.GetAsync(baseUri.ToString());
+                    return response;
+                }
+            }
+            catch(Exception ex)
+            {
+                ExceptionHandler.LogException(ex);
+            }
+            return null;
+        }
     }
 }

@@ -12,13 +12,9 @@ namespace YT_RED.Logging
     public static class Historian
     {
         private static string historyFile = "history.json";
+        public static bool Loaded { get { return historyWasLoaded; } }
         private static bool historyWasLoaded = false;
-        public static List<DownloadLog> DownloadHistory;
-
-        public static void Init()
-        {
-            DownloadHistory = new List<DownloadLog>();
-        }
+        public static List<DownloadLog> DownloadHistory = new List<DownloadLog>();
 
         public static async Task<bool> LoadDownloadHistory()
         {
@@ -54,6 +50,7 @@ namespace YT_RED.Logging
 
         public static async Task CleanHistory(DownloadCategory deleteLogs = DownloadCategory.None, DownloadCategory deleteDownloads = DownloadCategory.None)
         {
+            bool hasChanges = false;
             if (DownloadHistory == null)
                 DownloadHistory = new List<DownloadLog>();
             try
@@ -83,6 +80,11 @@ namespace YT_RED.Logging
                         filterLogs = DownloadHistory;
                     }
 
+                    if(filterLogs.Count > 0)
+                    {
+                        hasChanges = true;
+                    }
+
                     foreach(var log in filterLogs)
                     {
                         if(File.Exists(log.DownloadLocation))
@@ -95,20 +97,31 @@ namespace YT_RED.Logging
                 if (deleteLogs == DownloadCategory.All)
                 {
                     DownloadHistory.Clear();
+                    hasChanges = true;
                 }
                 else if(deleteLogs == DownloadCategory.Video)
                 {
                     DownloadHistory.RemoveAll(h => h.Type == Classes.StreamType.Video || h.Type == Classes.StreamType.AudioAndVideo);
+                    hasChanges = true;
                 }
                 else if (deleteLogs == DownloadCategory.Audio)
                 {
                     DownloadHistory.RemoveAll(h => h.Type == Classes.StreamType.Audio);
+                    hasChanges = true;
                 }
                 else 
                 {
-                    DownloadHistory.RemoveAll(h => h.Downloaded.Date < DateTime.Today.AddDays(-AppSettings.Default.General.HistoryAge).Date);
+                    if (DownloadHistory.Where(h => h.Downloaded.Date < DateTime.Today.AddDays(-AppSettings.Default.General.HistoryAge).Date).Count() > 0)
+                    {
+                        DownloadHistory.RemoveAll(h => h.Downloaded.Date < DateTime.Today.AddDays(-AppSettings.Default.General.HistoryAge).Date);
+                        hasChanges = true;
+                    }
                 }
-                await SaveHistory();
+
+                if (hasChanges)
+                {
+                    await SaveHistory();
+                }
             }
             catch(Exception ex)
             {
@@ -124,8 +137,10 @@ namespace YT_RED.Logging
             {
                 if (DownloadHistory == null || DownloadHistory.Count == 0)
                 {
-                    DownloadHistory = new List<DownloadLog>();
-                    DownloadHistory.Add(dlLog);
+                    DownloadHistory = new List<DownloadLog>
+                    {
+                        dlLog
+                    };
                 } 
                 else DownloadHistory.Insert(0, dlLog);
                 bool saved = await SaveHistory();
@@ -143,6 +158,11 @@ namespace YT_RED.Logging
             try
             {
                 var json = JsonConvert.SerializeObject(DownloadHistory, Formatting.Indented);
+                FileInfo hf = new FileInfo(historyFile);
+                if(await IsFileLocked(hf))
+                {
+                    return false;
+                }
                 await Task.Run(() => File.WriteAllText(historyFile, json));
                 return true;
             }
@@ -151,6 +171,31 @@ namespace YT_RED.Logging
                 ExceptionHandler.LogException(ex);
             }
             return false;
+        }
+
+        private static async Task<bool> IsFileLocked(FileInfo file)
+        {
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
+                    {
+                        stream.Close();
+                    }
+                }
+                catch (IOException)
+                {
+                    //the file is unavailable because it is:
+                    //still being written to
+                    //or being processed by another thread
+                    //or does not exist (has already been processed)
+                    return true;
+                }
+
+                //file is not locked
+                return false;
+            });
         }
     }
 

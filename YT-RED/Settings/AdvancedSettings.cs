@@ -9,6 +9,12 @@ namespace YT_RED.Settings
     {
         public override AppFeature Feature => AppFeature.Advanced;
 
+        [Category("Updates")]
+        [DisplayName("Release Channel")]
+        [Description("The type of releases to include when checking for updates.\nSelecting the Beta channel will include Beta and Stable. Alpha will include all releases.")]
+        [JsonProperty("release_channel")]
+        public ReleaseChannel Channel { get; set; }
+
         [Category("Hotkeys")]
         [DisplayName("Enable Hotkeys")]
         [Description(@"Enables and Registers Hotkey for Quick Download Feature
@@ -29,25 +35,47 @@ If there is existing text in your clipboard, YT-RED will restore it after starti
         [JsonProperty("dl_hotkey")]
         public Shortcut DownloadHotKey { get; set; }
 
-        
+        [Category("Processing")]
+        [DisplayName("Generate Missing Metadata")]
+        [Description("When enabled, YT-RED will analyze fetched formats that are missing useful Metadata.\n"
+            +"(Only applies when loading a format list)")]
+        [JsonProperty("fetch_metadata")]
+        public bool GetMissingMetadata { get; set; }
+
+        [Category("Processing")]
+        [DisplayName("Always Convert Format")]
+        [Description("Always convert video and audio downloads to your preferred format")]
+        [JsonProperty("always_convert")]
+        public bool AlwaysConvertToPreferredFormat { get; set; }
+
         [Category("Processing")]
         [DisplayName("Preferred Video Format")]
         [Description("Prefer this format when downloading \"Preferred\" video")]
         [JsonProperty("preferred_video_format")]
-        public YoutubeDLSharp.Options.DownloadMergeFormat PreferredYoutubeVideoFormat { get; set; }
+        public VideoFormat PreferredVideoFormat { get; set; }
 
         [Category("Processing")]
         [DisplayName("Preferred Audio Format")]
         [Description("Prefer this format when downloading \"preferred\" audio")]
         [JsonProperty("preferred_audio_format")]
-        public YoutubeDLSharp.Options.AudioConversionFormat PreferredYoutubeAudioFormat { get; set; }
+        public AudioFormat PreferredAudioFormat { get; set; }
+
+        [Category("Debug")]
+        [DisplayName("Enable Verbose Output")]
+        [Description("When enabled, displays full downloader arguments when starting a download")]
+        [JsonProperty("verbose_output")]
+        public bool VerboseOutput { get; set; }
 
         public AdvancedSettings()
         {
+            Channel = ReleaseChannel.Stable;
             EnableHotKeys = false;
             DownloadHotKey = Shortcut.None;
-            PreferredYoutubeVideoFormat = YoutubeDLSharp.Options.DownloadMergeFormat.Mp4;
-            PreferredYoutubeAudioFormat = YoutubeDLSharp.Options.AudioConversionFormat.Mp3;
+            GetMissingMetadata = true;
+            AlwaysConvertToPreferredFormat = false;
+            PreferredVideoFormat = VideoFormat.UNSPECIFIED;
+            PreferredAudioFormat = AudioFormat.UNSPECIFIED;
+            VerboseOutput = false;
         }
 
         public override async Task<string> ValidateSettings()

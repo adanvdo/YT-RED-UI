@@ -46,6 +46,8 @@ namespace YT_RED.Classes
     {
         Video = 0,
         Audio = 1,
-        AudioAndVideo = 3
+        AudioAndVideo = 3,
+        File = 4,
+        Unknown = 5
     }
 }

@@ -30,6 +30,7 @@ namespace YT_RED.Settings
 							var json = File.ReadAllText(SettingsFile);
 							JsonSerializerSettings settings = new JsonSerializerSettings();
 							settings.Converters.Add(new HotkeyConverter());
+							settings.MissingMemberHandling = MissingMemberHandling.Ignore;
 							_default = JsonConvert.DeserializeObject<AppSettings>(json, settings);
 
 							// re-save the file so we add any new settings
@@ -55,6 +56,8 @@ namespace YT_RED.Settings
 		
 		public GeneralSettings General { get; set; }
 
+		public LayoutSettings Layout { get; set; }
+
 		public AdvancedSettings Advanced { get; set; }
 
 		public About About { get; set; }
@@ -73,11 +76,24 @@ namespace YT_RED.Settings
 					return VideoFormat.OGG;
 				case "webm":
 					return VideoFormat.WEBM;
+				case "gif":
+					return VideoFormat.GIF;
 				case "":
 					return VideoFormat.UNSPECIFIED;
 				default:
-					return VideoFormat.BESTVIDEO;
+					return VideoFormat.UNSPECIFIED;
             }
+        }
+
+		public static StreamType DetectStreamTypeFromExtension(string extension)
+        {
+			VideoFormat v = VideoFormatFromExtension(extension);
+			if (v != VideoFormat.UNSPECIFIED) return StreamType.Video;
+
+			AudioFormat a = AudioFormatFromExtension(extension);
+			if (a != AudioFormat.UNSPECIFIED) return StreamType.Audio;
+
+			return StreamType.Unknown;
         }
 
 		public static VideoFormat ConvertMergeFormatToVideoFormat(YoutubeDLSharp.Options.DownloadMergeFormat downloadMergeFormat)
@@ -97,7 +113,7 @@ namespace YT_RED.Settings
 				case YoutubeDLSharp.Options.DownloadMergeFormat.Webm:
 					return VideoFormat.WEBM;
 				default:
-					return VideoFormat.BESTVIDEO;
+					return VideoFormat.UNSPECIFIED;
             }
         }
 
@@ -120,7 +136,7 @@ namespace YT_RED.Settings
 				case "wav":
 					return AudioFormat.WAV;
 				default:
-					return AudioFormat.BEST;
+					return AudioFormat.UNSPECIFIED;
 			}
         }
 
@@ -143,16 +159,17 @@ namespace YT_RED.Settings
 				case YoutubeDLSharp.Options.AudioConversionFormat.Wav:
 					return AudioFormat.WAV;
 				case YoutubeDLSharp.Options.AudioConversionFormat.Best:
-					return AudioFormat.BEST;
+					return AudioFormat.MP3;
 				default:
-					return AudioFormat.BEST;
+					return AudioFormat.MP3;
             }
         }
 
-		public FeatureSettings[] AllSettings => new FeatureSettings[] { General, Advanced, About };
+		public FeatureSettings[] AllSettings => new FeatureSettings[] { General, Layout, Advanced, About };
 		public AppSettings() 
 		{
 			General = new GeneralSettings();
+			Layout = new LayoutSettings();
 			Advanced = new AdvancedSettings();
 			About = new About();
 		}
@@ -197,7 +214,7 @@ namespace YT_RED.Settings
 		FLAC = 5,
 		OPUS = 6,
 		VORBIS = 7,
-		BEST = 8
+		UNSPECIFIED = 8
     }
 
     public enum VideoFormat
@@ -208,17 +225,6 @@ namespace YT_RED.Settings
 		MKV = 3,
 		OGG = 4,
 		UNSPECIFIED = 5,
-		BESTVIDEO = 6
+		GIF = 6
 	}
-
-	public enum Resolution
-    {
-		BEST = 0,
-		_2160p = 1,
-		_1080p = 2,
-		_720p = 3,
-		_480p = 4,
-		_360p = 5,
-		_240p = 6
-    }
 }

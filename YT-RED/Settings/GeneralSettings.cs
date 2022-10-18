@@ -11,6 +11,14 @@ namespace YT_RED.Settings
 	{
 		public override AppFeature Feature => AppFeature.General;
 
+        [Browsable(false)]
+        [JsonProperty("setting_tab")]
+		public AppFeature ActiveFeatureTab { get; set; }
+
+        [Browsable(false)]
+        [JsonProperty("show_host_warning")]
+		public bool ShowHostWarning { get; set; }
+
 		[Browsable(false)]
 		[JsonIgnore]
 		public string ExeDirectoryPath { get; set; }
@@ -26,26 +34,36 @@ namespace YT_RED.Settings
 		[JsonProperty("active_skin")]
 		public string ActiveSkin { get; set; }
 
-		[Category("Preferences")]
+        [Browsable(false)]
+        [JsonProperty("skin_palette")]
+		public string SkinPalette { get; set; }
+
+		[Category("Downloads")]
 		[DisplayName("Enable Download History")]
 		[Description("Enable YT-RED to keep a list of downloads for quick access on the Home screen")]
 		[DefaultValue(true)]
 		[JsonProperty("history_enabled")]
 		public bool EnableDownloadHistory { get; set; }
 
-		[Category("Preferences")]
+		[Category("Downloads")]
 		[DisplayName("History Age")]
 		[Description("The number of days to keep download history if it is enabled")]
 		[DefaultValue(30)]
 		[JsonProperty("history_age")]
 		public int HistoryAge { get; set; }
 
-		[Category("Preferences")]
+		[Category("Downloads")]
 		[DisplayName("Auto-Open Download Location")]
 		[Description("Automatically Open Completed Downloads in File Explorer")]
 		[DefaultValue(false)]
 		[JsonProperty("auto_open")]
 		public bool AutomaticallyOpenDownloadLocation { get; set; }
+
+        [Category("Downloads")]
+        [DisplayName("Use Title As File Name")]
+        [Description("Use the video title as the filename for all downloads (only available for non-processed downloads)\nA unique filename will be generated if this is disabled, or any post-processing features are used")]
+        [JsonProperty("use_title_filename")]
+        public bool UseTitleAsFileName { get; set; }
 
 		[Category("Downloads")]
 		[DisplayName("Video Download Path")]
@@ -73,14 +91,6 @@ namespace YT_RED.Settings
 		[Browsable(false)]
 		[JsonIgnore]
 		public string RedditMediaURLPrefix { get; set; }
-
-		[Browsable(false)]
-		[JsonIgnore]
-		public string RedditDefaultVideoSuffix { get; set; }
-
-		[Browsable(false)]
-		[JsonIgnore]
-		public string RedditDefaultAudioSuffix { get; set; }
 		#endregion
 
 		#region youtube
@@ -98,18 +108,20 @@ namespace YT_RED.Settings
 			}
 			catch(Exception ex)
             {
-				YT_RED.Controls.YTRErrorMessageBox.ErrorMessageBox(ex).ShowDialog();
+				Logging.ExceptionHandler.LogException(ex);
 				ErrorLogPath = "./ErrorLogs";
 			}
-			ActiveSkin = "DevExpress Dark Style";
+			ActiveFeatureTab = AppFeature.General;
+			ShowHostWarning = true;
+			ActiveSkin = "WXI";
+			SkinPalette = "Darkness";
 			EnableDownloadHistory = true;
 			HistoryAge = 30;
 			AutomaticallyOpenDownloadLocation = false;
 			RedditSampleUrl = @"https://www.reddit.com/r/PraiseTheCameraMan/comments/sj7iwr/couldnt_be_more_perfect/";
 			RedditMediaURLPrefix = @"https://v.redd.it/";
-			RedditDefaultVideoSuffix = @"/DASH_{0}.mp4?source=fallback";
-			RedditDefaultAudioSuffix = @"/DASH_audio.mp4?source=fallback";
 			YouTubeSampleUrl = @"https://www.youtube.com/watch?v=dCAORZphnlY";
+			UseTitleAsFileName = false;
 			VideoDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
 			AudioDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
 			UsePreferredFormat = false;

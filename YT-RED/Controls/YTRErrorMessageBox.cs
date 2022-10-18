@@ -1,12 +1,6 @@
-﻿using DevExpress.XtraEditors;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using System;
 using System.Drawing;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using YT_RED.Utils;
 
@@ -91,29 +85,31 @@ namespace YT_RED.Controls
             set { memoMessage.Text = value; }
         } 
 
-        public static YTRErrorMessageBox ErrorMessageBox(Exception ex)
-        {
-            YTRErrorMessageBox box = new YTRErrorMessageBox(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            box.btnUpload.Visible = true;
-            return box;
-        }
-
         public YTRErrorMessageBox()
         {
             InitializeComponent();
         }
 
-        public YTRErrorMessageBox(string message) : this(message, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information) { }
-        public YTRErrorMessageBox(string message, string caption) : this(message, caption, MessageBoxButtons.OK, MessageBoxIcon.Information) { }
-        public YTRErrorMessageBox(string message, string caption, MessageBoxButtons boxButtons) : this(message, caption, boxButtons, MessageBoxIcon.Information) { }
+        public static YTRErrorMessageBox FFMpegErrorBox(Exception ex)
+        {
+            int lastBracket = ex.Message.LastIndexOf("]", StringComparison.OrdinalIgnoreCase);
+            string ffmpegError = ex.Message.Substring(lastBracket + 1, ex.Message.Length - lastBracket - 1).Trim();
+            return new YTRErrorMessageBox(ffmpegError, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, true);
+        }
 
-        public YTRErrorMessageBox(string message, string caption, MessageBoxButtons boxButtons, MessageBoxIcon boxIcon)
+        public YTRErrorMessageBox(Exception exception) : this(exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, true) { }
+        public YTRErrorMessageBox(string message) : this(message, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information, false) { }
+        public YTRErrorMessageBox(string message, string caption) : this(message, caption, MessageBoxButtons.OK, MessageBoxIcon.Information, false) { }
+        public YTRErrorMessageBox(string message, string caption, MessageBoxButtons boxButtons) : this(message, caption, boxButtons, MessageBoxIcon.Information, false) { }
+
+        public YTRErrorMessageBox(string message, string caption, MessageBoxButtons boxButtons, MessageBoxIcon boxIcon, bool showUploadButton)
         {
             InitializeComponent();
             Message = message;
             Caption = caption;
             MessageBoxButtons = boxButtons; 
-            MessageBoxIcon = boxIcon;  
+            MessageBoxIcon = boxIcon;
+            btnUpload.Visible = showUploadButton;
         }
         
 
@@ -157,7 +153,7 @@ namespace YT_RED.Controls
 
             this.uploadMarquee.Text = "Sending Logs...";
             this.uploadMarquee.Show();
-            bool uploaded = await HttpUtil.UploadErrorLogs(DateTime.Today);
+            bool uploaded = await HttpUtil.UploadErrorLogs(1);
             if(uploaded)
             {
                 this.logsUploaded = true;

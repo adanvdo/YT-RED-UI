@@ -1,13 +1,7 @@
 ﻿using DevExpress.XtraEditors;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace YT_RED.Controls
@@ -20,12 +14,15 @@ namespace YT_RED.Controls
         private static Buttons _buttons = Buttons.OK;
         private static Icon _icon = YT_RED.Controls.Icon.Warning;
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        private static extern bool MessageBeep(uint type);
+        //[DllImport("user32.dll", CharSet = CharSet.Auto)]
+        //private static extern bool MessageBeep(uint type);
 
-        public MsgBox()
+        private bool urlCheck = false;
+
+        public MsgBox(bool urlCheck = false)
         {
             InitializeComponent();
+            this.urlCheck = urlCheck;
         }
 
         public static DialogResult Show(string message, FormStartPosition startPosition = FormStartPosition.CenterScreen)
@@ -40,7 +37,6 @@ namespace YT_RED.Controls
             _msgBox.messagePanel.Height = _msgBox.messagePanel.Height + addHeight;
             _msgBox.lblMessage.Height = _msgBox.lblMessage.Height + addHeight;
             _msgBox.ShowDialog();
-            MessageBeep(0);
             return _msgBox.DialogResult;
         }
 
@@ -57,7 +53,6 @@ namespace YT_RED.Controls
             _msgBox.lblCaption.Text = caption;
             _msgBox.lblCaption.Visible = true;
             _msgBox.ShowDialog();
-            MessageBeep(0);
             return _msgBox.DialogResult;
         }
 
@@ -73,7 +68,6 @@ namespace YT_RED.Controls
             _msgBox.initButtons(buttons);
             _msgBox.initIcon(_icon);
             _msgBox.ShowDialog();
-            MessageBeep(0);
             return _msgBox.DialogResult;
         }
 
@@ -90,7 +84,6 @@ namespace YT_RED.Controls
             _msgBox.initIcon(_icon);
             _msgBox.lblCaption.Visible = true;
             _msgBox.ShowDialog();
-            MessageBeep(0);
             return _msgBox.DialogResult;
         }
 
@@ -106,7 +99,6 @@ namespace YT_RED.Controls
             _msgBox.initButtons(buttons);
             _msgBox.initIcon(icon);
             _msgBox.ShowDialog();
-            MessageBeep(0);
             return _msgBox.DialogResult;
         }
 
@@ -123,7 +115,23 @@ namespace YT_RED.Controls
             _msgBox.initIcon(icon);
             _msgBox.lblCaption.Visible = true;
             _msgBox.ShowDialog();
-            MessageBeep(0);
+            return _msgBox.DialogResult;
+        }
+
+        public static DialogResult ShowUrlCheckWarning(string message, string caption, Buttons buttons, Icon icon, FormStartPosition startPosition = FormStartPosition.CenterScreen)
+        {
+            _msgBox = new MsgBox(true);
+            _msgBox.StartPosition = startPosition;
+            _msgBox.lblMessage.Text = message;
+            int addHeight = heightIncrease(message);
+            _msgBox.messagePanel.Height = _msgBox.messagePanel.Height + addHeight;
+            _msgBox.lblMessage.Height = _msgBox.lblMessage.Height + addHeight;
+            _msgBox.lblCaption.Text = caption;
+            _msgBox.initButtons(buttons);
+            _msgBox.initIcon(icon);
+            _msgBox.lblCaption.Visible = true;
+            _msgBox.pnlSuppressPanel.Visible = true;
+            _msgBox.ShowDialog();
             return _msgBox.DialogResult;
         }
 
@@ -142,7 +150,6 @@ namespace YT_RED.Controls
             _msgBox.initIcon(icon);
             _msgBox.lblCaption.Visible = true;
             _msgBox.ShowDialog();
-            MessageBeep(0);
             return _msgBox.DialogResult;
         }        
             
@@ -260,6 +267,15 @@ namespace YT_RED.Controls
             }
 
             _msgBox.Dispose();
+        }
+
+        private void chkSuppress_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.urlCheck)
+            {
+                Settings.AppSettings.Default.General.ShowHostWarning = !this.chkSuppress.Checked;
+                Settings.AppSettings.Default.Save();
+            }
         }
     }
 

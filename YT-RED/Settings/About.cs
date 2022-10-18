@@ -10,7 +10,7 @@ namespace YT_RED.Settings
     {       
         public override AppFeature Feature => AppFeature.About;
 
-        private Version version;
+        private Version version;        
 
         [Category("About")]
         [DisplayName("Version")]
@@ -41,7 +41,14 @@ namespace YT_RED.Settings
             Version = "0.0.0.0";
             Build = "Alpha";
             GitHub = @"https://github.com/adanvdo/YT-RED-UI";
-            Contact = @"jesse@jmconcepts.net";
+            Contact = @"jesse@jamgalactic.com";
         }
+    }
+
+    public enum ReleaseChannel
+    {
+        Stable = 0,
+        Beta = 1,
+        Alpha = 2
     }
 }
