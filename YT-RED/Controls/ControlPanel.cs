@@ -234,6 +234,11 @@ namespace YT_RED.Controls
             set { txtCropRight.Text = value; }
         }
 
+        public bool ValidCrops()
+        {
+            return !string.IsNullOrEmpty(CropTop) || !string.IsNullOrEmpty(CropBottom) || !string.IsNullOrEmpty(CropLeft) || !string.IsNullOrEmpty(CropRight);
+        }
+
         [Browsable(false)]
         public Settings.VideoFormat? ConvertVideoFormat
         {
@@ -696,7 +701,7 @@ namespace YT_RED.Controls
                 {
                     o = $"{hitInfo.HitTest}{hitInfo.RowHandle}";
                     var row = gvHistory.GetRow(hitInfo.RowHandle) as DownloadLog;
-                    string details = $"Format: {row.Format}\n";
+                    string details = $"URL: {row.Url}\nFormat: {row.Format}\n";
 
                     if (row.PostProcessed)
                     {
