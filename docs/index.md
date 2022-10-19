@@ -1,6 +1,12 @@
+# YT-RED-UI
+
+## Windows .NET Framework GUI Application for Downloading Video and Audio Files from YouTube, Reddit, Vimeo, Twitter, Instagram, Twitch, and other popular media hosts. 
+
 ![ytr-banner](https://user-images.githubusercontent.com/26498008/170678451-c993fe6e-3399-4949-969e-d6d18ab2aa56.png)
 
 # **News**
+## **10/19/2022 : Beta 1.0.2.0 Official Release Now Available
+## **10/17/2022 : Beta 1.0.2.0 Release Coming 10/19**
 ## **5/26/2022 : YT-RED IS NOW IN BETA STAGE!**
 We are out of alpha testing and moving to Beta.  Please send any issues or enhancement requests by adding a new issue on GitHub.
 
@@ -21,11 +27,11 @@ We are out of alpha testing and moving to Beta.  Please send any issues or enhan
 
 ### **Latest Stable**: *N/A*
 
-### **Latest Beta: [v1.0.1.0](https://github.com/adanvdo/YT-RED-UI/releases/tag/v1.0.1.0-beta)**
+### **Latest Beta: [v1.0.2.0](https://github.com/adanvdo/YT-RED-UI/releases/tag/v1.0.2.0-beta)**
 
-### **Latest Alpha: [v1.0.0.11](https://github.com/adanvdo/YT-RED-UI/releases/tag/v1.0.0.11-alpha)**
+### **Latest Alpha: [v1.0.1.20](https://github.com/adanvdo/YT-RED-UI/releases/tag/v1.0.1.20-alpha)**
 
-*Updated 5/26/2022*
+*Updated 10/19/2022*
 
 # **Roadmap: The Future of YT-RED** <a name="future"></a>
 
@@ -54,9 +60,11 @@ YT-RED Multi-Platform intended support:
 
 ### YT-RED is a Windows .NET Framework GUI Application for Downloading Video and Audio Files from YouTube and Reddit
   \
-*Screenshot from v1.0.0.11-alpha*
+*Screenshots from v1.0.1.20-alpha*
 
-![ytr-promo2](https://user-images.githubusercontent.com/26498008/167324533-f962636c-be97-4210-ac38-cbad8cf2195a.jpg)
+![YTRMain](https://user-images.githubusercontent.com/26498008/196805373-45dd6736-c6bf-41d1-8a27-507437300b00.png)
+
+![2022-08-21_0-03-18](https://user-images.githubusercontent.com/26498008/185775468-58de4d42-dfba-425b-b370-6f59f7091bf7.png)
 
 ## **Requirements** <a name="requirements"></a>
 - Windows 7, 8, 10
@@ -79,9 +87,12 @@ A lot of magic happens behind the scenes.
 
 ## **Current Features** <a name="current-features"></a>
 - ### List Formats
-  Both Youtube and Reddit tabs have a "List Formats" button.
   This will retrieve all video formats available to download.
   An individual format can be selected and downloaded.
+
+- ### Format Selection Mode - Choose from one of two available selection modes
+  1. Preset - Select a single format from one of the automatically generated format options  
+  2. Custom - Combine the audio and video format of your choice for a single merged file
 
 - ### Download Best
   The "Download Best" option evaluates all available video and audio formats before downloading the best available.
@@ -93,10 +104,21 @@ A lot of magic happens behind the scenes.
 
   Specify the start time of the segment, and the duration.
 
+- ### Automatic ID3 Tagging
+  When downloading audio, video thumbnails are automatically embedded as cover art, and titles are set to the video title.
+
 - ### Crop Video
   The "Crop Video" option is available for all video downloads. The feature only accepts crop sizes in pixels at this time. 
 
   Enter the number of pixels to crop on each desired side, and then start the download.
+ 
+- ### Convert Format
+  Specify a Video or Audio format for the resulting download.  YT-RED will convert the original media to the format of your choice.
+
+- ### Download History (Optional)
+  When enabled, YT-RED will locally record each download, including settings. Download History can be configured to store download logs for the number of days specified.
+  Recorded downloads can be redownloaded by right-clicking on the associated log and choosing the "re-download" option, or you can run a new download by choosing the "Use URL for New Download" option.
+  Download History can be manually cleared in Settings, with the option to delete all associated download files.
 
 - ### Quick Downloads
   Quick Download is only available when YT-RED has been minimized to the System Tray. Right-click on the YT-RED icon in the tray, and select "Quick Download" to open the Quick Download form.
@@ -105,6 +127,16 @@ A lot of magic happens behind the scenes.
   When the Quick Download Hotkey is enabled in advanced settings, YT-RED will register a custom Hotkey that initiates a Quick Download.
 
   To use, Highlight a youtube or reddit media post url in your browser, and press the configured hotkey. This will perform an automatic "Best Download" with the progress displayed above the system tray.
+
+- ### Layout Options
+  Change the position of certain panels for the layout you like.
+
+- ### Update Assistant
+  Check for updates and download release packages directly in the app. 
+  Optional Updater for one-click update installs
+  Open Settings -> About and click the "Check for Update" button.
+  
+  ![2022-08-21_0-03-35](https://user-images.githubusercontent.com/26498008/185775490-4ab0e3c0-b980-4f4b-8b36-b11f08dad838.png)
 
 ## **Contact**
 ### **To report bugs or request enhancements, please  [submit a new Issue on GitHub](https://github.com/adanvdo/YT-RED-UI/issues/new)**
