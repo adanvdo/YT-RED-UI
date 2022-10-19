@@ -787,7 +787,7 @@ namespace YT_RED
                 duration = cpMainControlPanel.SegmentDuration;
             }
 
-            if (streamType == Classes.StreamType.AudioAndVideo && cpMainControlPanel.CropEnabled)
+            if (streamType == Classes.StreamType.AudioAndVideo && cpMainControlPanel.CropEnabled && cpMainControlPanel.ValidCrops())
             {
                 crops = new int[] { Convert.ToInt32(cpMainControlPanel.CropTop), Convert.ToInt32(cpMainControlPanel.CropBottom), Convert.ToInt32(cpMainControlPanel.CropLeft), 
                     Convert.ToInt32(cpMainControlPanel.CropRight) };
@@ -919,7 +919,7 @@ namespace YT_RED
             this.cpMainControlPanel.btnSelectionDL.Visible = true;
             this.cpMainControlPanel.btnCancelProcess.Visible = false;
             var dlLog = new DownloadLog(VideoUtil.CorrectYouTubeString(url),
-                DownloadType.YouTube,
+                currentDownload,
                 streamType,
                 DateTime.Now,
                 result.Data,
@@ -994,7 +994,7 @@ namespace YT_RED
 
                 int[] crops = null;
 
-                if (cpMainControlPanel.CropEnabled)
+                if (cpMainControlPanel.CropEnabled && cpMainControlPanel.ValidCrops())
                 {
                     crops = new int[] { Convert.ToInt32(cpMainControlPanel.CropTop), Convert.ToInt32(cpMainControlPanel.CropBottom), Convert.ToInt32(cpMainControlPanel.CropLeft), 
                         Convert.ToInt32(cpMainControlPanel.CropRight) };
@@ -1108,7 +1108,7 @@ namespace YT_RED
                 {
                     return new DownloadLog(
                         VideoUtil.CorrectYouTubeString(ipMainInput.URL),
-                        DownloadType.YouTube,
+                        this.currentDownload,
                         t, DateTime.Now,
                         result.Data,
                         pendingDL)

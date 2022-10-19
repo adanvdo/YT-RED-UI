@@ -234,6 +234,11 @@ namespace YT_RED.Controls
             set { txtCropRight.Text = value; }
         }
 
+        public bool ValidCrops()
+        {
+            return !string.IsNullOrEmpty(CropTop) || !string.IsNullOrEmpty(CropBottom) || !string.IsNullOrEmpty(CropLeft) || !string.IsNullOrEmpty(CropRight);
+        }
+
         [Browsable(false)]
         public Settings.VideoFormat? ConvertVideoFormat
         {
