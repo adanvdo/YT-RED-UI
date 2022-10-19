@@ -101,6 +101,10 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 10/19/2022 v1.0.1.20
+ - Fixed bug where incorrect download type was recorded to download logs
+ - Added URL to Download Log Info Tooltip
+
 ### 10/17/2022 v1.0.1.19
  - Fixed bug where audio-only downloads resulted in a crash
 
