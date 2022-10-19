@@ -17,7 +17,7 @@ This project is UNLICENSED and uses licensed DevExpress WinForms Controls.
 
 YT-RED is a safe alternative to other popular youtube and reddit video downloaders found online.  Other popular reddit downlaod tools are full of trackers and data collection that the end user is not aware of.  YT-RED was personally built with a no-tracking and no-data-collection policy.  By keeping the source code open to the public, it is meant to be published as a safe and versatile media downloader for Windows
 
-![YTRMain](https://user-images.githubusercontent.com/26498008/196244863-8f8f2add-f9ee-4e5b-a681-3a15975356b2.png)
+![YTRMain](https://user-images.githubusercontent.com/26498008/196803598-89310241-41a8-4b69-8190-02fcdd060aeb.png)
 
 ![2022-08-21_0-03-18](https://user-images.githubusercontent.com/26498008/185775468-58de4d42-dfba-425b-b370-6f59f7091bf7.png)
 
@@ -46,7 +46,8 @@ YT-RED is a safe alternative to other popular youtube and reddit video downloade
 - Update Assistant
 
 ### Known Issues <a name="known-issues"></a>
-- None At This Time
+- Youtube Playlist downloads are not yet supported
+- GIF Conversion does not convert to proper GIF file
 
 ### How To Use <a name="how-to-use"></a>
 
@@ -80,6 +81,11 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
  
 - #### Convert Format
   Specify a Video or Audio format for the resulting download.  YT-RED will convert the original media to the format of your choice.
+
+- #### Download History (Optional)
+  When enabled, YT-RED will locally record each download, including settings. Download History can be configured to store download logs for the number of days specified.
+  Recorded downloads can be redownloaded by right-clicking on the associated log and choosing the "re-download" option, or you can run a new download by choosing the "Use URL for New Download" option.
+  Download History can be manually cleared in Settings, with the option to delete all associated download files.
 
 - #### Quick Downloads
   Quick Download is only available when YT-RED has been minimized to the System Tray. Right-click on the YT-RED icon in the tray, and select "Quick Download" to open the Quick Download form.
