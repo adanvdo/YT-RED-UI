@@ -407,7 +407,7 @@
     <PostBuildEvent>set configName=$(ConfigurationName)
 set platformName=$(PlatformName)
 set versionNumber=@(VersionNumber)
-set releaseChannel=alpha
+set releaseChannel=beta
 call "E:\Dev\BuildAndSignYTR.bat"</PostBuildEvent>
   </PropertyGroup>
 </Project>

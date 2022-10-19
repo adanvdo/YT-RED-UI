@@ -39,7 +39,7 @@ namespace YT_RED.Settings
         public About()
         {
             Version = "0.0.0.0";
-            Build = "Alpha";
+            Build = "Beta";
             GitHub = @"https://github.com/adanvdo/YT-RED-UI";
             Contact = @"jesse@jamgalactic.com";
         }
