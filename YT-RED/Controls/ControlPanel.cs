@@ -108,6 +108,8 @@ namespace YT_RED.Controls
         public void SetCurrentFormatPair(YTDLFormatPair formatPair)
         {
             currentFormatPair = formatPair;
+
+            processFormatChange();
         }
 
         private void processFormatChange()

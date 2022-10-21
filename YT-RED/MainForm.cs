@@ -523,7 +523,14 @@ namespace YT_RED
             cpMainControlPanel.CurrentFormatPair.Clear();
             cpMainControlPanel.ResetControls();
             selectedAudioIndex = -1;
-            selectedVideoIndex = -1;
+            selectedVideoIndex = -1; 
+            if (gvFormats.GetSelectedRows().Length < 1)
+            {
+                cpMainControlPanel.DownloadSelectionVisible = false;
+                cpMainControlPanel.DownloadBestVisible = true;
+                cpMainControlPanel.DownloadAudioVisible = true;
+                return;
+            }
             if (ipMainInput.URL == "crab")
             {
                 ipMainInput.ShowCrab = true;
@@ -1365,7 +1372,8 @@ namespace YT_RED
         {
             if (!gvFormats.IsValidRowHandle(e.RowHandle) || gvFormats.IsGroupRow(e.RowHandle)) return;
             GridHitInfo hit = gvFormats.CalcHitInfo(e.Location);
-            if (hit.Column.FieldName == "Selected") return;
+            
+            if (!hit.InColumn || hit.Column.FieldName == "Selected") return;
 
             e.Handled = true;
             if (selectedAudioIndex == e.RowHandle || selectedVideoIndex == e.RowHandle)
