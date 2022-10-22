@@ -80,6 +80,7 @@ namespace YT_RED.Logging
         Vimeo = 3,
         Instagram = 4,
         Twitch = 5,
-        Unknown = 6
+        Playlist = 6,
+        Unknown = 7
     }
 }

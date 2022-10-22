@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -454,6 +455,23 @@ namespace YT_RED.Utils
             return null;
         }   
 
+        public static async Task<YoutubeDLSharp.Metadata.VideoData> GetPlaylistData(string url)
+        {
+            CancellationTokenSource = new CancellationTokenSource();
+            OptionSet plOptions = new OptionSet();
+            plOptions.FlatPlaylist = true;
+            plOptions.DumpSingleJson = true;
+            RunResult<VideoData> res = await ytdl.RunVideoDataFetch(url, CancellationTokenSource.Token, true, plOptions, ytProgress, ytOutput, false, AppSettings.Default.Advanced.VerboseOutput);
+            if (res.Success)
+            {
+                return res.Data;
+            }
+            else
+            {
+                throw new Exception(String.Join("\n", res.ErrorOutput));
+            }
+        }
+
         public static async Task<YoutubeDLSharp.Metadata.VideoData> GetVideoData(string url, bool useFfmpegMetaDataFallback = false)
         {
             CancellationTokenSource = new CancellationTokenSource();            
@@ -853,29 +871,52 @@ namespace YT_RED.Utils
                 return null;
         }
 
-        public static string CorrectYouTubeString(string linkOrID)
+        public static Classes.YoutubeLink ConvertToYouTubeLink(string linkOrID)
         {
+            YoutubeLinkType type = YoutubeLinkType.Invalid;
             if (HtmlUtil.CheckUrl(linkOrID) == DownloadType.YouTube)
             {
                 if (linkOrID.Length == 11)
+                {
                     linkOrID = @"https://www.youtube.com/watch?v=" + linkOrID;
-                else if (linkOrID.Contains("/shorts/"))
-                {
-                    string id = linkOrID.Substring(linkOrID.IndexOf("/shorts/") + 8, 11);
-                    linkOrID = $"https://www.youtube.com/watch?v={id}";
+                    type = YoutubeLinkType.Video;
                 }
-                else if (linkOrID.StartsWith(@"https://youtu.be/"))
+                else
                 {
-                    string id = linkOrID.Substring(17, 11);
-                    linkOrID = $"https://www.youtube.com/watch?v={id}";
+                    Uri uri = new Uri(linkOrID);
+                    if (uri.Segments.Select(s => s.ToLower()).ToArray().Contains("shorts") && linkOrID.Remove(0, linkOrID.ToLower().IndexOf("/shorts/") + 8).Length == 11)
+                    {
+                        string id = linkOrID.Substring(linkOrID.IndexOf("/shorts/") + 8, 11);
+                        linkOrID = $"https://www.youtube.com/watch?v={id}";
+                        type = YoutubeLinkType.Short;
+                    }
+                    else if (linkOrID.StartsWith(@"https://youtu.be/") && linkOrID.Remove(0, 17).Length == 11)
+                    {
+                        string id = linkOrID.Substring(17, 11);
+                        linkOrID = $"https://www.youtube.com/watch?v={id}";
+                        type = YoutubeLinkType.Video;
+                    }
+                    else if (linkOrID.StartsWith(@"https://www.youtube.com/") || linkOrID.StartsWith(@"https://youtube.com/"))
+                    {
+                        string id = string.Empty;
+                        if (uri.Segments.Select(s => s.ToLower()).ToArray().Contains("playlist"))
+                        {
+                            id = uri.Query.Substring(uri.Query.IndexOf("?"), uri.Query.Length - uri.Query.IndexOf("?")).Split('?').Where(p => p.ToLower().StartsWith("list")).FirstOrDefault().Split('=')[1];
+                            linkOrID = $"https://www.youtube.com/playlist?list={id}";
+                            type = YoutubeLinkType.Playlist;
+                        }
+                        else if(linkOrID.Remove(0, linkOrID.IndexOf("v=") + 2).Length == 11)
+                        {
+                            id = linkOrID.Substring(linkOrID.IndexOf("v=") + 2, 11);
+                            linkOrID = $"https://www.youtube.com/watch?v={id}";
+                            type = YoutubeLinkType.Video;
+                        }
+                    }
                 }
-                else if (linkOrID.StartsWith(@"https://www.youtube.com/") || linkOrID.StartsWith(@"https://youtube.com/"))
-                {
-                    string id = linkOrID.Substring(linkOrID.IndexOf("v=") + 2, 11);
-                    linkOrID = $"https://www.youtube.com/watch?v={id}";
-                }
+                return new YoutubeLink(type, linkOrID);
             }
-            return linkOrID;
+            
+            return null;
         }
-    }
+    }    
 }

@@ -174,6 +174,7 @@
     <Compile Include="AppFeature.cs" />
     <Compile Include="Classes\ApplicationController.cs" />
     <Compile Include="Classes\AssemblyBuildAttribute.cs" />
+    <Compile Include="Classes\ListMode.cs" />
     <Compile Include="Classes\Release.cs" />
     <Compile Include="Classes\SystemCodec.cs" />
     <Compile Include="Classes\FFmpegParam.cs" />
@@ -186,7 +187,10 @@
     <Compile Include="Classes\ResultStream.cs" />
     <Compile Include="Classes\StreamLink.cs" />
     <Compile Include="Classes\UIBlockDetector.cs" />
+    <Compile Include="Classes\YoutubeLink.cs" />
+    <Compile Include="Classes\YoutubeLinkType.cs" />
     <Compile Include="Classes\YTDLFormatPair.cs" />
+    <Compile Include="Classes\YTDLPlaylistData.cs" />
     <Compile Include="Classes\YTFormatData.cs" />
     <Compile Include="Controls\ControlPanel.cs">
       <SubType>UserControl</SubType>

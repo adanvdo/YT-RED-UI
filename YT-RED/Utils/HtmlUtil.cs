@@ -31,6 +31,6 @@ namespace YT_RED.Utils
             if (url.StartsWith(@"https://instagram.com") || url.StartsWith(@"https://www.instagram.com"))
                 return DownloadType.Instagram;
             return DownloadType.Unknown;
-        }       
-    }
+        }        
+    }    
 }

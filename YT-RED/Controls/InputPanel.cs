@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
+using YT_RED.Classes;
 
 namespace YT_RED.Controls
 {
@@ -51,11 +52,28 @@ namespace YT_RED.Controls
             }
         }
 
+        private ListMode listMode;        
+
         public InputPanel()
         {
             InitializeComponent();
+            ListMode = ListMode.Format;
         }
 
+        [Browsable(false)]
+        public ListMode ListMode
+        {
+            get
+            {
+                return listMode;
+            }
+
+            set
+            {
+                listMode = value;
+                UpdateListButtonText();
+            }
+        }
         private void btnListFormats_Click(object sender, EventArgs e)
         {
             if (ListFormats_Click != null)
@@ -118,6 +136,19 @@ namespace YT_RED.Controls
             {
                 marqeeMain.Text = text;
                 marqeeMain.Refresh();
+            }
+        }
+
+        public void UpdateListButtonText()
+        {
+            switch (listMode)
+            {
+                case ListMode.Format:
+                    btnListFormats.Text = "List Available Formats";
+                    break;
+                case ListMode.List:
+                    btnListFormats.Text = "List Playlist Items";
+                    break;
             }
         }
     }

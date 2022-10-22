@@ -71,6 +71,18 @@ namespace YT_RED.Controls
             get { return this.currentFormatPair; }
         }
 
+        private Classes.PlaylistItemCollection currentPlaylistItems = new PlaylistItemCollection();
+        [Browsable(false)]
+        public Classes.PlaylistItemCollection CurrentPlaylistItems
+        {
+            get { return this.currentPlaylistItems; }
+        }
+
+        public void SetCurrentPlaylistItems(List<YTDLPlaylistData> playlistData)
+        {
+            this.currentPlaylistItems = new PlaylistItemCollection(playlistData);
+        }
+
         public void RemoveCurrentFormat(Classes.StreamType type)
         {
             if (type == Classes.StreamType.File || type == Classes.StreamType.Unknown) throw new ArgumentException("invalid type");
@@ -440,6 +452,11 @@ namespace YT_RED.Controls
                 toggleConvert.IsOn = false;
                 toggleConvert.Enabled = false;
             }
+        }
+
+        public void SetSelectionText(string text)
+        {
+            this.lblSelectionText.Text = text;            
         }
 
         public void EnableToggle(bool enableSegment = false, bool enableCrop = false, bool enableConvert = false, bool turnOn = false)

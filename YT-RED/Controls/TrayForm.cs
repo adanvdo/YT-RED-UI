@@ -200,7 +200,8 @@ namespace YT_RED.Controls
             }
 
             RunResult<string> result = null;
-            string url = VideoUtil.CorrectYouTubeString(txtUrl.Text);
+            var convertedLink = VideoUtil.ConvertToYouTubeLink(txtUrl.Text);
+            string url = convertedLink.Url;
 
             var pendingDL = new PendingDownload()
             {
@@ -225,7 +226,7 @@ namespace YT_RED.Controls
             if (result.Data != "canceled")
             {
                 await Historian.RecordDownload(new DownloadLog(
-                    VideoUtil.CorrectYouTubeString(txtUrl.Text),
+                    VideoUtil.ConvertToYouTubeLink(txtUrl.Text).Url,
                     currentDownload,
                     Classes.StreamType.AudioAndVideo,
                     DateTime.Now,

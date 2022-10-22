@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
 using System.Reflection;
+using YT_RED.Utils;
 
 namespace YT_RED.Settings
 {
@@ -38,7 +39,13 @@ namespace YT_RED.Settings
         [JsonProperty("skin_palette")]
 		public string SkinPalette { get; set; }
 
-		[Category("Downloads")]
+        [Category("Downloads")]
+        [DisplayName("Best Resolution Max")]
+        [Description("The maximum resolution allowed when using \"Download Best\"")]
+        [JsonProperty("history_enabled")]
+		public Classes.Resolution MaxResolutionBest { get; set; }
+
+        [Category("Downloads")]
 		[DisplayName("Enable Download History")]
 		[Description("Enable YT-RED to keep a list of downloads for quick access on the Home screen")]
 		[DefaultValue(true)]
@@ -115,6 +122,7 @@ namespace YT_RED.Settings
 			ShowHostWarning = true;
 			ActiveSkin = "WXI";
 			SkinPalette = "Darkness";
+			MaxResolutionBest = Classes.Resolution.ANY;
 			EnableDownloadHistory = true;
 			HistoryAge = 30;
 			AutomaticallyOpenDownloadLocation = false;
@@ -137,5 +145,5 @@ namespace YT_RED.Settings
 				return "You must specify an audio download folder";
 			return await base.ValidateSettings();
         }
-	}
+	}	
 }
