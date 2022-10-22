@@ -199,13 +199,18 @@ namespace YT_RED.Controls
                     return;
             }
 
+            string useFormatString = "bestvideo{0}{1}+bestaudio/best{0}{1}";
+            string finalFormatString = String.Format(useFormatString,
+                AppSettings.Default.General.MaxResolutionValue > 0 ? $"[height<={AppSettings.Default.General.MaxResolutionValue}]" : "",
+                AppSettings.Default.General.MaxFilesizeBest > 0 ? $"[filesize<={AppSettings.Default.General.MaxFilesizeBest}M]" : "");       
+
             RunResult<string> result = null;
             string url = VideoUtil.CorrectYouTubeString(txtUrl.Text);
 
             var pendingDL = new PendingDownload()
             {
                 Url = url,
-                Format = "bestvideo+bestaudio/best"
+                Format = finalFormatString
             };
 
             if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)

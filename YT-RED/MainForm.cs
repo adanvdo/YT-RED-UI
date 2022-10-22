@@ -815,13 +815,23 @@ namespace YT_RED
                 AudioConversionFormat = audioFormat
             };
 
+            string mainFormatString = "bestvideo{0}{1}+bestaudio/best{0}{1}";
+            string audioFormatString = "bestaudio{0}{1}";
+            string finalFormatString = String.Format(mainFormatString,
+                AppSettings.Default.General.MaxResolutionValue > 0 ? $"[height<={AppSettings.Default.General.MaxResolutionValue}]" : "",
+                AppSettings.Default.General.MaxFilesizeBest > 0 ? $"[filesize<={AppSettings.Default.General.MaxFilesizeBest}M]" : "");
+
+            string finalAudioFormatString = String.Format(audioFormatString,
+                AppSettings.Default.General.MaxResolutionValue > 0 ? $"[height<={AppSettings.Default.General.MaxResolutionValue}]" : "",
+                AppSettings.Default.General.MaxFilesizeBest > 0 ? $"[filesize<={AppSettings.Default.General.MaxFilesizeBest}M]" : "");
+
             RunResult<string> result = null;
             if (cpMainControlPanel.PostProcessingEnabled)
             {
                 if (streamType != Classes.StreamType.Audio)
-                {
-                    pendingDL.Format = "bestvideo+bestaudio/best";
-                    IConversion conversion = await VideoUtil.PrepareBestYtdlConversion(url, "bestvideo+bestaudio/best", start, duration, 
+                {                    
+                    pendingDL.Format = finalFormatString;
+                    IConversion conversion = await VideoUtil.PrepareBestYtdlConversion(url, finalFormatString, start, duration, 
                         AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat, crops, videoFormat == null ? VideoFormat.UNSPECIFIED : (VideoFormat)videoFormat, 
                         audioFormat == null ? AudioFormat.UNSPECIFIED : (AudioFormat)audioFormat, false, processOutput);
                     string destination = conversion.OutputFilePath;
@@ -842,8 +852,8 @@ namespace YT_RED
                 }
                 else
                 {
-                    pendingDL.Format = "bestaudio";
-                    IConversion conversion = await VideoUtil.PrepareBestYtdlConversion(url, "bestaudio", start, duration, 
+                    pendingDL.Format = finalAudioFormatString;
+                    IConversion conversion = await VideoUtil.PrepareBestYtdlConversion(url, finalAudioFormatString, start, duration, 
                         AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat, null, VideoFormat.UNSPECIFIED, 
                         audioFormat == null ? AudioFormat.UNSPECIFIED : (AudioFormat)audioFormat, cpMainControlPanel.EmbedThumbnail, processOutput);
                     string destination = conversion.OutputFilePath;
@@ -863,7 +873,7 @@ namespace YT_RED
             }
             else
             {
-                pendingDL.Format = "bestvideo+bestaudio/best";
+                pendingDL.Format = finalFormatString;
                 cpMainControlPanel.ShowProgress();
                 RunResult<string> test = null;
                 if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)                
