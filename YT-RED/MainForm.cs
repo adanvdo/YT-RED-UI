@@ -1380,10 +1380,11 @@ namespace YT_RED
 
         private void gvFormats_RowClick(object sender, RowClickEventArgs e)
         {
+            bool test = gvFormats.IsValidRowHandle(e.RowHandle);
             if (!gvFormats.IsValidRowHandle(e.RowHandle) || gvFormats.IsGroupRow(e.RowHandle)) return;
             GridHitInfo hit = gvFormats.CalcHitInfo(e.Location);
             
-            if (!hit.InColumn || hit.Column.FieldName == "Selected") return;
+            if (!hit.InRow || hit.Column.FieldName == "Selected") return;
 
             e.Handled = true;
             if (selectedAudioIndex == e.RowHandle || selectedVideoIndex == e.RowHandle)
