@@ -523,7 +523,9 @@ namespace YT_RED
             cpMainControlPanel.CurrentFormatPair.Clear();
             cpMainControlPanel.ResetControls();
             selectedAudioIndex = -1;
-            selectedVideoIndex = -1; 
+            selectedVideoIndex = -1;
+            videoInfoPanel.Clear();
+            videoInfoPanel.Visible = false;
             if (gvFormats.GetSelectedRows().Length < 1)
             {
                 cpMainControlPanel.DownloadSelectionVisible = false;
@@ -744,6 +746,17 @@ namespace YT_RED
                     VideoUtil.CancellationTokenSource = new System.Threading.CancellationTokenSource();
                     IMediaInfo gifInfo = await FFmpeg.GetMediaInfo(data.Url, VideoUtil.CancellationTokenSource.Token);
                     converted.Add(new YTDLFormatData(data, gifInfo));
+                }
+
+                if(converted.Count > 0)
+                {                   
+                    await videoInfoPanel.Populate(data); 
+                    videoInfoPanel.Visible = true;
+                }
+                else
+                {
+                    videoInfoPanel.Visible = false;
+                    videoInfoPanel.Clear();
                 }
                 
                 gcFormats.DataSource = converted;

@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Threading.Tasks;
 using YT_RED.Classes;
 using YT_RED.Logging;
@@ -161,6 +162,17 @@ namespace YT_RED.Utils
                 ExceptionHandler.LogException(ex);
             }
             return null;
+        }
+
+        public static async Task<Stream> GetStreamFromUrl(string url)
+        {
+            Uri uri = new Uri(url);
+            byte[] imageData = null;
+            using (var client = new WebClient())
+            {
+                imageData = await client.DownloadDataTaskAsync(uri);
+            }
+            return new MemoryStream(imageData);
         }
     }
 }

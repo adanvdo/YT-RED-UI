@@ -419,6 +419,7 @@ namespace YT_RED.Controls
             HideDownloadLocation();
             currentFormatPair.Clear();
             formatChanged();
+            
             hlblOpenSettings.Visible = !toggleConvert.IsOn && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
             lblAlwaysConvert.Visible = !toggleConvert.IsOn && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
         }
