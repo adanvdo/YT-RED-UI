@@ -176,6 +176,7 @@
     <Compile Include="Classes\AssemblyBuildAttribute.cs" />
     <Compile Include="Classes\ListMode.cs" />
     <Compile Include="Classes\Release.cs" />
+    <Compile Include="Classes\Resolution.cs" />
     <Compile Include="Classes\SystemCodec.cs" />
     <Compile Include="Classes\FFmpegParam.cs" />
     <Compile Include="Classes\HotkeyConverter.cs" />

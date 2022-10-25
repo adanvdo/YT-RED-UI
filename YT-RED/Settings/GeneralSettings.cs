@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
 using System.Reflection;
-using YT_RED.Utils;
+using System.ComponentModel.DataAnnotations;
 
 namespace YT_RED.Settings
 {
@@ -42,8 +42,38 @@ namespace YT_RED.Settings
         [Category("Downloads")]
         [DisplayName("Best Resolution Max")]
         [Description("The maximum resolution allowed when using \"Download Best\"")]
-        [JsonProperty("history_enabled")]
-		public Classes.Resolution MaxResolutionBest { get; set; }
+		[DefaultValue(Classes.Resolution.ANY)]
+        [JsonProperty("best_max_res")]
+        public Classes.Resolution MaxResolutionBest { get; set; }
+
+		[Browsable(false)]
+		public int MaxResolutionValue
+		{
+			get
+			{
+				switch (MaxResolutionBest)
+				{
+					case Classes.Resolution.SD:
+						return 480;
+					case Classes.Resolution.HD720p:
+						return 720;
+					case Classes.Resolution.HD1080p:
+						return 1080;
+					case Classes.Resolution.UHD2160p:
+						return 2160;
+					default:
+						return 0;
+				}
+			}
+		}
+
+        [Category("Downloads")]
+        [DisplayName("Best Filesize Max")]
+        [Description("The maximum filesize in MB allowed when using \"Download Best\"\n0 = Unlimited")]
+		[DisplayFormat(DataFormatString = "{0}MB", ApplyFormatInEditMode = false)]
+		[DefaultValue(0)]
+        [JsonProperty("best_max_size")]
+		public int MaxFilesizeBest { get; set; }
 
         [Category("Downloads")]
 		[DisplayName("Enable Download History")]
@@ -123,6 +153,7 @@ namespace YT_RED.Settings
 			ActiveSkin = "WXI";
 			SkinPalette = "Darkness";
 			MaxResolutionBest = Classes.Resolution.ANY;
+			MaxFilesizeBest = 0;
 			EnableDownloadHistory = true;
 			HistoryAge = 30;
 			AutomaticallyOpenDownloadLocation = false;

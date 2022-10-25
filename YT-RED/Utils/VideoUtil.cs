@@ -214,15 +214,15 @@ namespace YT_RED.Utils
             IMediaInfo audioInfo = null;
             showOutput("Fetching Media Info..");
             CancellationTokenSource = new CancellationTokenSource();
-            if (format == "bestvideo" || format == "bestvideo+bestaudio/best")
+            if (format.StartsWith("bestvideo") || format.Contains("+bestaudio/best"))
                 videoInfo = await FFmpeg.GetMediaInfo(getUrls[0], CancellationTokenSource.Token);
-            else if (format == "bestaudio")
+            else if (format.StartsWith("bestaudio"))
             {
                 audioInfo = await FFmpeg.GetMediaInfo(getUrls[0], CancellationTokenSource.Token);
             }
 
             CancellationTokenSource = new CancellationTokenSource();
-            if (videoInfo != null && format == "bestvideo+bestaudio/best" && getUrls.Count > 1)
+            if (videoInfo != null && format.Contains("+bestaudio/best") && getUrls.Count > 1)
             {
                 audioInfo = await FFmpeg.GetMediaInfo(getUrls[1], CancellationTokenSource.Token);
             }
@@ -531,24 +531,38 @@ namespace YT_RED.Utils
                     options.AddCustomOption<string>("-o", GenerateUniqueYtdlFileName(streamType));
                 }
                 AudioConversionFormat audioConversionFormat = AudioConversionFormat.Best;
-                if (streamType == Classes.StreamType.Audio && embedThumbnail)
+                if (streamType == Classes.StreamType.Audio)
                 {
-                    audioConversionFormat = AudioConversionFormat.Mp3;
-                    options.EmbedThumbnail = true;
-                    options.AddMetadata = true;
-                    options.AddCustomOption<string>("--postprocessor-args", "-write_id3v1 1 -id3v2_version 3");
-                    options.AddCustomOption<string>("--convert-thumbnails", "jpg");
+                    if(AppSettings.Default.General.MaxFilesizeBest > 0)
+                    {
+                        options.MaxFilesize = $"{AppSettings.Default.General.MaxFilesizeBest}M]";
+                    }
+                    if (embedThumbnail)
+                    {
+                        audioConversionFormat = AudioConversionFormat.Mp3;
+                        options.EmbedThumbnail = true;
+                        options.AddMetadata = true;
+                        options.AddCustomOption<string>("--postprocessor-args", "-write_id3v1 1 -id3v2_version 3");
+                        options.AddCustomOption<string>("--convert-thumbnails", "jpg");
+                    }
                 }
+
+                string mainFormatString = "bestvideo{0}{1}+bestaudio/best{0}{1}";
+                string finalFormatString = string.Empty;
+
+                finalFormatString = String.Format(mainFormatString,
+                    AppSettings.Default.General.MaxResolutionValue > 0 ? $"[height<={AppSettings.Default.General.MaxResolutionValue}]" : "",
+                    AppSettings.Default.General.MaxFilesizeBest > 0 ? $"[filesize<={AppSettings.Default.General.MaxFilesizeBest}M]" : "");
 
                 CancellationTokenSource = new CancellationTokenSource();
 
-                if (streamType == Classes.StreamType.AudioAndVideo)
-                    return await ytdl.RunVideoDownload(url, "bestvideo+bestaudio/best", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, 
-                        YoutubeDLSharp.Options.VideoRecodeFormat.None, CancellationTokenSource.Token, ytProgress, ytOutput, options, AppSettings.Default.Advanced.VerboseOutput);
-                if (streamType == Classes.StreamType.Video)
-                    return await ytdl.RunVideoDownload(url, "bestvideo", YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, YoutubeDLSharp.Options.VideoRecodeFormat.None, CancellationTokenSource.Token, 
-                        ytProgress, ytOutput, options, AppSettings.Default.Advanced.VerboseOutput);
-                return await ytdl.RunAudioDownload(url, audioConversionFormat, CancellationTokenSource.Token, ytProgress, ytOutput, options, AppSettings.Default.Advanced.VerboseOutput);
+                if(streamType == Classes.StreamType.Audio)
+                {
+                    return await ytdl.RunAudioDownload(url, audioConversionFormat, CancellationTokenSource.Token, ytProgress, ytOutput, options, AppSettings.Default.Advanced.VerboseOutput);
+                }
+                
+                return await ytdl.RunVideoDownload(url, finalFormatString, YoutubeDLSharp.Options.DownloadMergeFormat.Unspecified, 
+                        YoutubeDLSharp.Options.VideoRecodeFormat.None, CancellationTokenSource.Token, ytProgress, ytOutput, options, AppSettings.Default.Advanced.VerboseOutput);             
             }
             catch (Exception ex)
             {
@@ -607,15 +621,21 @@ namespace YT_RED.Utils
                         break;
                 }
 
+                string mainFormatString = "bestvideo{0}{1}+bestaudio/best{0}{1}";
+                string finalFormatString = string.Empty;
+
+                finalFormatString = String.Format(mainFormatString,
+                    AppSettings.Default.General.MaxResolutionValue > 0 ? $"[height<={AppSettings.Default.General.MaxResolutionValue}]" : "",
+                    AppSettings.Default.General.MaxFilesizeBest > 0 ? $"[filesize<={AppSettings.Default.General.MaxResolutionBest}M]" : "");
+
                 CancellationTokenSource = new CancellationTokenSource();
 
-                if (streamType == Classes.StreamType.AudioAndVideo)
-                    return await ytdl.RunVideoDownload(url, "bestvideo+bestaudio/best", mergeFormat, videoRecodeFormat, CancellationTokenSource.Token, ytProgress, ytOutput, options, AppSettings.Default.Advanced.VerboseOutput);
-                else if (streamType == Classes.StreamType.Video)
-                    return await ytdl.RunVideoDownload(url, "bestvideo", mergeFormat, videoRecodeFormat, CancellationTokenSource.Token, ytProgress, ytOutput, options, AppSettings.Default.Advanced.VerboseOutput);
-                else
-                    return await DownloadAudioYTDL(url, AppSettings.Default.Advanced.PreferredAudioFormat, true);
+                if(streamType == Classes.StreamType.Audio)
+                {
+                    return await DownloadAudioYTDL(url, AppSettings.Default.Advanced.PreferredAudioFormat, true, AppSettings.Default.General.MaxFilesizeBest);
+                }
 
+                return await ytdl.RunVideoDownload(url, finalFormatString, mergeFormat, videoRecodeFormat, CancellationTokenSource.Token, ytProgress, ytOutput, options, AppSettings.Default.Advanced.VerboseOutput);
             }
             catch (Exception ex)
             {
@@ -630,7 +650,7 @@ namespace YT_RED.Utils
                 return null;
         }
 
-        public static async Task<RunResult<string>> DownloadAudioYTDL(string url, AudioFormat audioFormat, bool embedThumbnail = false)
+        public static async Task<RunResult<string>> DownloadAudioYTDL(string url, AudioFormat audioFormat, bool embedThumbnail = false, decimal maxFilesize = 0)
         {
             bool cancelled = false;
             try
@@ -690,6 +710,10 @@ namespace YT_RED.Utils
                     options.AddMetadata = true;
                     options.AddCustomOption<string>("--postprocessor-args", "-write_id3v1 1 -id3v2_version 3");
                     options.AddCustomOption<string>("--convert-thumbnails", "jpg");
+                }
+                if(maxFilesize > 0)
+                {
+                    options.MaxFilesize = $"{maxFilesize}M";
                 }
                 CancellationTokenSource = new CancellationTokenSource();
                 return await ytdl.RunAudioDownload(url, audioConversion, CancellationTokenSource.Token, 
