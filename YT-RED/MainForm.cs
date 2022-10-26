@@ -617,7 +617,10 @@ namespace YT_RED
             //gvFormats.Columns["Selected"].Visible = gvFormats.OptionsSelection.MultiSelect;
             if (gvFormats.OptionsSelection.MultiSelect)
             {
-                //gvFormats.Columns["Selected"].VisibleIndex = start;
+                gvFormats.VisibleColumns[0].OptionsColumn.ShowCaption = false;
+                gvFormats.VisibleColumns[0].Width = 25;
+                gvFormats.VisibleColumns[0].MaxWidth = 25;
+                gvFormats.VisibleColumns[0].MinWidth = 25;
                 start++;
             }
             gvFormats.Columns["Type"].VisibleIndex = start + 0;
@@ -633,7 +636,9 @@ namespace YT_RED
             gvFormats.Columns["AudioSamplingRate"].VisibleIndex = start + 8;
             gvFormats.Columns["FileSize"].VisibleIndex = start + 9;
             gvFormats.Columns["Type"].Width = 25;
-            gvFormats.Columns["Type"].Caption = "";
+            gvFormats.Columns["Type"].MaxWidth = 25;
+            gvFormats.Columns["Type"].MinWidth = 25;
+            gvFormats.Columns["Type"].OptionsColumn.ShowCaption = false;
             gvFormats.Columns["Format"].BestFit();
             gvFormats.Columns["VideoCodec"].BestFit();
             gvFormats.Columns["FrameRate"].Width = 50;

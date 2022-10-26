@@ -31,10 +31,7 @@ namespace YT_RED.Controls
 
         public async Task Populate(VideoData videoData)
         {
-            var old = peThumbnail.Image;
-            peThumbnail.Image = null;
-            if (old != null) old.Dispose();
-            clearText();
+            Clear();
 
             if (videoData != null) 
             {
@@ -71,7 +68,6 @@ namespace YT_RED.Controls
 
         private void peThumbnail_LoadCompleted(object sender, EventArgs e)
         {
-            var test = e;
         }
     }
 }
