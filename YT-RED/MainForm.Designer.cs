@@ -40,6 +40,7 @@
             this.gcFormats = new DevExpress.XtraGrid.GridControl();
             this.gvFormats = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.lblSelectAFormat = new DevExpress.XtraEditors.LabelControl();
+            this.videoInfoPanel = new YT_RED.Controls.VideoInfoPanel();
             this.marqueeProgressBarControl1 = new DevExpress.XtraEditors.MarqueeProgressBarControl();
             this.ipMainInput = new YT_RED.Controls.InputPanel();
             this.cpMainControlPanel = new YT_RED.Controls.ControlPanel();
@@ -138,6 +139,7 @@
             // 
             this.sccMainSplitter.Panel1.Controls.Add(this.gcFormats);
             this.sccMainSplitter.Panel1.Controls.Add(this.lblSelectAFormat);
+            this.sccMainSplitter.Panel1.Controls.Add(this.videoInfoPanel);
             this.sccMainSplitter.Panel1.Controls.Add(this.marqueeProgressBarControl1);
             this.sccMainSplitter.Panel1.Controls.Add(this.ipMainInput);
             this.sccMainSplitter.Panel1.MinSize = 482;
@@ -158,10 +160,10 @@
             // gcFormats
             // 
             this.gcFormats.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcFormats.Location = new System.Drawing.Point(0, 148);
+            this.gcFormats.Location = new System.Drawing.Point(0, 298);
             this.gcFormats.MainView = this.gvFormats;
             this.gcFormats.Name = "gcFormats";
-            this.gcFormats.Size = new System.Drawing.Size(839, 569);
+            this.gcFormats.Size = new System.Drawing.Size(839, 419);
             this.gcFormats.TabIndex = 0;
             this.gcFormats.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvFormats});
@@ -201,12 +203,20 @@
             this.lblSelectAFormat.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.lblSelectAFormat.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
             this.lblSelectAFormat.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblSelectAFormat.Location = new System.Drawing.Point(0, 123);
+            this.lblSelectAFormat.Location = new System.Drawing.Point(0, 273);
             this.lblSelectAFormat.Name = "lblSelectAFormat";
             this.lblSelectAFormat.Size = new System.Drawing.Size(839, 25);
             this.lblSelectAFormat.TabIndex = 0;
             this.lblSelectAFormat.Text = "Select a Video and/or Audio Format";
-            this.lblSelectAFormat.Visible = false;
+            // 
+            // videoInfoPanel
+            // 
+            this.videoInfoPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.videoInfoPanel.Location = new System.Drawing.Point(0, 123);
+            this.videoInfoPanel.Name = "videoInfoPanel";
+            this.videoInfoPanel.Size = new System.Drawing.Size(839, 150);
+            this.videoInfoPanel.TabIndex = 2;
+            this.videoInfoPanel.Visible = false;
             // 
             // marqueeProgressBarControl1
             // 
@@ -243,6 +253,8 @@
             // 
             // cpMainControlPanel
             // 
+            this.cpMainControlPanel.ConvertAudioFormat = null;
+            this.cpMainControlPanel.ConvertVideoFormat = null;
             this.cpMainControlPanel.CropBottom = "0";
             this.cpMainControlPanel.CropLeft = "0";
             this.cpMainControlPanel.CropRight = "0";
@@ -366,6 +378,7 @@
         private DevExpress.XtraGrid.Views.Grid.GridView gvFormats;
         private DevExpress.XtraEditors.MarqueeProgressBarControl marqueeProgressBarControl1;
         private Controls.ControlPanel cpMainControlPanel;
+        private Controls.VideoInfoPanel videoInfoPanel;
     }
 }
 

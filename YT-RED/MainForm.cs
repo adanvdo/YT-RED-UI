@@ -524,9 +524,11 @@ namespace YT_RED
             cpMainControlPanel.ResetControls();
             selectedAudioIndex = -1;
             selectedVideoIndex = -1; 
+            videoInfoPanel.Clear();
+            videoInfoPanel.Visible = false;
             
             var checkUrl = HtmlUtil.CheckUrl(ipMainInput.URL);
-            if(checkUrl != DownloadType.Unknown && checkUrl == DownloadType.YouTube)
+            if (gvFormats.GetSelectedRows().Length < 1 && checkUrl != DownloadType.Unknown && checkUrl == DownloadType.YouTube)
             {
                 YoutubeLink link = VideoUtil.ConvertToYouTubeLink(ipMainInput.URL);
                 if(link.Type == YoutubeLinkType.Playlist)
@@ -645,9 +647,13 @@ namespace YT_RED
             //gvFormats.Columns["Selected"].Visible = gvFormats.OptionsSelection.MultiSelect;
             if (gvFormats.OptionsSelection.MultiSelect)
             {
-                //gvFormats.Columns["Selected"].VisibleIndex = start;
+                gvFormats.VisibleColumns[0].OptionsColumn.ShowCaption = false;
+                gvFormats.VisibleColumns[0].Width = 25;
+                gvFormats.VisibleColumns[0].MaxWidth = 25;
+                gvFormats.VisibleColumns[0].MinWidth = 25;
                 start++;
             }
+            
             if (downloadType == DownloadType.Playlist)
             {
                 gvFormats.Columns.AddVisible("Title", "Title");
@@ -674,7 +680,9 @@ namespace YT_RED
                 gvFormats.Columns["AudioSamplingRate"].VisibleIndex = start + 8;
                 gvFormats.Columns["FileSize"].VisibleIndex = start + 9;
                 gvFormats.Columns["Type"].Width = 25;
-                gvFormats.Columns["Type"].Caption = "";
+                gvFormats.Columns["Type"].MaxWidth = 25;
+                gvFormats.Columns["Type"].MinWidth = 25;
+                gvFormats.Columns["Type"].OptionsColumn.ShowCaption = false;
                 gvFormats.Columns["Format"].BestFit();
                 gvFormats.Columns["VideoCodec"].BestFit();
                 gvFormats.Columns["FrameRate"].Width = 50;
@@ -701,7 +709,7 @@ namespace YT_RED
                 gvFormats.Columns["Height"].Visible = false;
                 gvFormats.Columns["StretchedRatio"].Visible = false;
                 gvFormats.Columns["ApproximateFileSize"].Visible = false;
-            }
+            }            
         }
 
         private void refreshHistory()
@@ -825,6 +833,17 @@ namespace YT_RED
                     VideoUtil.CancellationTokenSource = new System.Threading.CancellationTokenSource();
                     IMediaInfo gifInfo = await FFmpeg.GetMediaInfo(data.Url, VideoUtil.CancellationTokenSource.Token);
                     converted.Add(new YTDLFormatData(data, gifInfo));
+                }
+
+                if(converted.Count > 0)
+                {                   
+                    await videoInfoPanel.Populate(data); 
+                    videoInfoPanel.Visible = true;
+                }
+                else
+                {
+                    videoInfoPanel.Visible = false;
+                    videoInfoPanel.Clear();
                 }
                 
                 gcFormats.DataSource = converted;
