@@ -13,6 +13,7 @@ using YoutubeDLSharp.Options;
 using YT_RED.Classes;
 using YT_RED.Logging;
 using YT_RED.Settings;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace YT_RED.Utils
 {
@@ -39,12 +40,15 @@ namespace YT_RED.Utils
             runner = new YoutubeDLSharp.Helpers.ProcessRunner(4);
         }
 
-        public static string GenerateUniqueYtdlFileName(Classes.StreamType streamType)
+        public static string GenerateUniqueYtdlFileName(Classes.StreamType streamType, string playlist = "")
         {
-            string dir = streamType == Classes.StreamType.Audio ? AppSettings.Default.General.AudioDownloadPath : AppSettings.Default.General.VideoDownloadPath;
+            string dir = "";
+            if (string.IsNullOrEmpty(playlist))
+                dir = streamType == Classes.StreamType.Audio ? AppSettings.Default.General.AudioDownloadPath : AppSettings.Default.General.VideoDownloadPath;
+            else
+                dir = streamType == Classes.StreamType.Audio ? $@"{AppSettings.Default.General.AudioDownloadPath}\{playlist}" : $@"{AppSettings.Default.General.VideoDownloadPath}\{playlist}";
             return Path.Combine(dir, $"{DateTime.Now.ToString("MMddyyyyhhmmss")}.%(ext)s");
         }
-
         public static string GenerateUniqueFFmpegFileName()
         {
             return $"{DateTime.Now.ToString("MMddyyyyhhmmss")}";
@@ -510,12 +514,16 @@ namespace YT_RED.Utils
             return null;
         }
 
-        public static async Task<RunResult<string>> DownloadBestYtdl(string url, Classes.StreamType streamType, bool embedThumbnail = false)
+        public static async Task<RunResult<string>> DownloadBestYtdl(string url, Classes.StreamType streamType, bool embedThumbnail = false, string playlist = "")
         {
             bool cancelled = false;            
             try
-            {                
-                ytdl.OutputFolder = streamType == Classes.StreamType.Audio ? AppSettings.Default.General.AudioDownloadPath : AppSettings.Default.General.VideoDownloadPath;
+            {
+                if (string.IsNullOrEmpty(playlist))
+                    ytdl.OutputFolder = streamType == Classes.StreamType.Audio ? AppSettings.Default.General.AudioDownloadPath : AppSettings.Default.General.VideoDownloadPath;
+                else
+                    ytdl.OutputFolder = streamType == Classes.StreamType.Audio ? $@"{AppSettings.Default.General.AudioDownloadPath}\{playlist}" : $@"{AppSettings.Default.General.VideoDownloadPath}\{playlist}";
+
                 var options = YoutubeDLSharp.Options.OptionSet.Default;
                 if(options.CustomOptions.Where(o => o.OptionStrings.Contains("-o")).Count() > 0)
                 {
@@ -528,7 +536,7 @@ namespace YT_RED.Utils
                 }
                 if (!AppSettings.Default.General.UseTitleAsFileName)
                 {
-                    options.AddCustomOption<string>("-o", GenerateUniqueYtdlFileName(streamType));
+                    options.AddCustomOption<string>("-o", GenerateUniqueYtdlFileName(streamType, playlist));
                 }
                 AudioConversionFormat audioConversionFormat = AudioConversionFormat.Best;
                 if (streamType == Classes.StreamType.Audio)
@@ -576,12 +584,15 @@ namespace YT_RED.Utils
                 return null;
         }
 
-        public static async Task<RunResult<string>> DownloadPreferredYtdl(string url, Classes.StreamType streamType)
+        public static async Task<RunResult<string>> DownloadPreferredYtdl(string url, Classes.StreamType streamType, string playlist = "")
         {
             bool cancelled = false;
             try
             {
-                ytdl.OutputFolder = streamType == Classes.StreamType.Audio ? AppSettings.Default.General.AudioDownloadPath : AppSettings.Default.General.VideoDownloadPath;
+                if (string.IsNullOrEmpty(playlist))
+                    ytdl.OutputFolder = streamType == Classes.StreamType.Audio ? AppSettings.Default.General.AudioDownloadPath : AppSettings.Default.General.VideoDownloadPath;
+                else
+                    ytdl.OutputFolder = streamType == Classes.StreamType.Audio ? $@"{AppSettings.Default.General.AudioDownloadPath}\{playlist}" : $@"{AppSettings.Default.General.VideoDownloadPath}\{playlist}";
                 var options = YoutubeDLSharp.Options.OptionSet.Default;
                 if (options.CustomOptions.Where(o => o.OptionStrings.Contains("-o")).Count() > 0)
                 {
@@ -589,7 +600,7 @@ namespace YT_RED.Utils
                 }
                 if (!AppSettings.Default.General.UseTitleAsFileName)
                 {
-                    options.AddCustomOption<string>("-o", GenerateUniqueYtdlFileName(streamType));
+                    options.AddCustomOption<string>("-o", GenerateUniqueYtdlFileName(streamType, playlist));
                 }
                 DownloadMergeFormat mergeFormat = DownloadMergeFormat.Unspecified;
                 VideoRecodeFormat videoRecodeFormat = VideoRecodeFormat.None;

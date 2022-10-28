@@ -116,6 +116,12 @@ namespace YT_RED.Settings
 		[JsonProperty("audio_dl_path")]
 		public string AudioDownloadPath { get; set; }
 
+        [Category("Downloads")]
+        [DisplayName("Create Folder For Playlist Downloads")]
+        [Description("When true, a subfolder will be created for media downloaded from a Youtube playlist")]
+        [JsonProperty("playlist_folders")]
+        public bool CreateFolderForPlaylists { get; set; }
+
 		[Browsable(false)]
 		[JsonProperty("use_preferred_format")]
 		public bool UsePreferredFormat { get; set; }
@@ -163,6 +169,7 @@ namespace YT_RED.Settings
 			UseTitleAsFileName = false;
 			VideoDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
 			AudioDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+			CreateFolderForPlaylists = true;
 			UsePreferredFormat = false;
 		}
 

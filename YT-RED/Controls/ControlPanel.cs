@@ -9,6 +9,7 @@ using YT_RED.Settings;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
 using YT_RED.Logging;
 using YT_RED.Classes;
+using DevExpress.XtraEditors;
 
 namespace YT_RED.Controls
 {
@@ -21,7 +22,7 @@ namespace YT_RED.Controls
         {
             get
             {
-                if(selectedHistoryIndex >= 0)
+                if (selectedHistoryIndex >= 0)
                 {
                     var log = gvHistory.GetRow(selectedHistoryIndex) as DownloadLog;
                     return log;
@@ -78,9 +79,14 @@ namespace YT_RED.Controls
             get { return this.currentPlaylistItems; }
         }
 
-        public void SetCurrentPlaylistItems(List<YTDLPlaylistData> playlistData)
+        public void SetCurrentPlaylistItems(YoutubeDLSharp.Metadata.VideoData videoData, List<YTDLPlaylistData> playlistData)
         {
-            this.currentPlaylistItems = new PlaylistItemCollection(playlistData);
+            this.currentPlaylistItems = new PlaylistItemCollection(videoData, playlistData);
+        }
+
+        public void ClearCurrentPlaylistItems()
+        {
+            this.currentPlaylistItems = new PlaylistItemCollection();
         }
 
         public void RemoveCurrentFormat(Classes.StreamType type)
@@ -178,7 +184,7 @@ namespace YT_RED.Controls
                     cbVideoFormat.Enabled = false;
                     cbAudioFormat.Enabled = toggleConvert.IsOn;
                     cbAudioFormat.SelectedItem = null;
-                    
+
                 }
                 else
                 {
@@ -272,7 +278,7 @@ namespace YT_RED.Controls
             set
             {
                 VideoFormat? v = value;
-                if(v != null)
+                if (v != null)
                     cbVideoFormat.SelectedItem = value;
             }
         }
@@ -295,7 +301,7 @@ namespace YT_RED.Controls
             set
             {
                 AudioFormat? v = value;
-                if(v != null)
+                if (v != null)
                     cbAudioFormat.SelectedItem = value;
             }
         }
@@ -318,6 +324,27 @@ namespace YT_RED.Controls
             set { btnDownloadBest.Visible = value; }
         }
 
+        public void UpdateListProgress(int completed = 0, bool hideOnCompletion = true)
+        {          
+
+            if (pbListProgress.InvokeRequired)
+            {
+                Action safeUpdate = delegate
+                {
+                    pbListProgress.Position = completed;
+                    pbListProgress.Tag = completed != currentPlaylistItems.Count ? $"{completed}:{currentPlaylistItems.Count}" : null;
+                    pbListProgress.Refresh();
+                };
+                pbListProgress.Invoke(safeUpdate);
+            }
+            else
+            {
+                pbListProgress.Position = completed;
+                pbListProgress.Tag = completed != currentPlaylistItems.Count ? $"{completed}:{currentPlaylistItems.Count}" : null;
+                pbListProgress.Refresh();
+            }
+        }
+
         public void UpdateProgress(int progress = 0, bool hideOnCompletion = true)
         {
             if (pbProgress.InvokeRequired)
@@ -336,8 +363,26 @@ namespace YT_RED.Controls
             }
         }
 
+        public void ShowListProgress()
+        {
+            if(pbListProgress.Properties.Maximum != currentPlaylistItems.Count) pbListProgress.Properties.Maximum = currentPlaylistItems.Count;
+            pbListProgress.Tag = null;
+            pbListProgress.Visible = true;
+            pbProgress.Visible = true;
+            UpdateListProgress(0);
+        }
+
+        public void HideListProgress()
+        {
+            pbListProgress.Properties.Maximum = 0;
+            pbListProgress.Tag = null;
+            pbListProgress.Visible = false;
+            pbProgress.Visible = false;
+        }
+
         public void ShowProgress()
         {
+            pbProgress.Position = 0;
             pbProgress.Visible = true;
         }
 
@@ -824,6 +869,19 @@ namespace YT_RED.Controls
         private void hlblOpenSettings_Click(object sender, EventArgs e)
         {
             parentMainForm.OpenSettingsDialog("Advanced");
+        }
+
+        private void pbListProgress_CustomDisplayText(object sender, DevExpress.XtraEditors.Controls.CustomDisplayTextEventArgs e)
+        {
+            if (pbListProgress.Tag != null && !string.IsNullOrEmpty(pbListProgress.Tag.ToString()))
+            {
+                string[] values = pbListProgress.Tag.ToString().Split(':');
+                e.DisplayText = $"{values[0]} of {values[1]}";
+            }
+            else
+            {
+                e.DisplayText = string.Empty;
+            }
         }
     }
 }

@@ -84,6 +84,7 @@
             this.repPostProcessed = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.historyTooltip = new DevExpress.Utils.ToolTipController(this.components);
             this.historyPopup = new DevExpress.XtraBars.PopupMenu(this.components);
+            this.pbListProgress = new DevExpress.XtraEditors.ProgressBarControl();
             ((System.ComponentModel.ISupportInitialize)(this.pnlOptionPanel)).BeginInit();
             this.pnlOptionPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gcDLButtons)).BeginInit();
@@ -120,6 +121,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.repFileExists)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repPostProcessed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.historyPopup)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbListProgress.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // lblSelectionText
@@ -677,17 +679,18 @@
             this.pnlProgressPanel.Controls.Add(this.btnOpenDL);
             this.pnlProgressPanel.Controls.Add(this.lblLastDL);
             this.pnlProgressPanel.Controls.Add(this.pbProgress);
+            this.pnlProgressPanel.Controls.Add(this.pbListProgress);
             this.pnlProgressPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlProgressPanel.Location = new System.Drawing.Point(0, 605);
             this.pnlProgressPanel.Margin = new System.Windows.Forms.Padding(0);
             this.pnlProgressPanel.Name = "pnlProgressPanel";
-            this.pnlProgressPanel.Size = new System.Drawing.Size(323, 78);
+            this.pnlProgressPanel.Size = new System.Drawing.Size(323, 109);
             this.pnlProgressPanel.TabIndex = 0;
             // 
             // btnOpenDL
             // 
             this.btnOpenDL.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnOpenDL.Location = new System.Drawing.Point(0, 52);
+            this.btnOpenDL.Location = new System.Drawing.Point(0, 83);
             this.btnOpenDL.Name = "btnOpenDL";
             this.btnOpenDL.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnOpenDL.Size = new System.Drawing.Size(323, 26);
@@ -702,7 +705,7 @@
             this.lblLastDL.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
             this.lblLastDL.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.lblLastDL.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblLastDL.Location = new System.Drawing.Point(0, 31);
+            this.lblLastDL.Location = new System.Drawing.Point(0, 62);
             this.lblLastDL.Margin = new System.Windows.Forms.Padding(0);
             this.lblLastDL.Name = "lblLastDL";
             this.lblLastDL.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
@@ -714,7 +717,7 @@
             // pbProgress
             // 
             this.pbProgress.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pbProgress.Location = new System.Drawing.Point(0, 0);
+            this.pbProgress.Location = new System.Drawing.Point(0, 31);
             this.pbProgress.Name = "pbProgress";
             this.pbProgress.Properties.AllowFocused = false;
             this.pbProgress.Properties.ShowTitle = true;
@@ -725,14 +728,14 @@
             // gcHistory
             // 
             this.gcHistory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcHistory.Location = new System.Drawing.Point(0, 683);
+            this.gcHistory.Location = new System.Drawing.Point(0, 714);
             this.gcHistory.MainView = this.gvHistory;
             this.gcHistory.MenuManager = this.historyBarManager;
             this.gcHistory.Name = "gcHistory";
             this.gcHistory.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repFileExists,
             this.repPostProcessed});
-            this.gcHistory.Size = new System.Drawing.Size(323, 152);
+            this.gcHistory.Size = new System.Drawing.Size(323, 121);
             this.gcHistory.TabIndex = 0;
             this.gcHistory.ToolTipController = this.historyTooltip;
             this.gcHistory.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -849,6 +852,19 @@
             this.historyPopup.Name = "historyPopup";
             this.historyPopup.CloseUp += new System.EventHandler(this.historyPopup_CloseUp);
             // 
+            // pbListProgress
+            // 
+            this.pbListProgress.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pbListProgress.Location = new System.Drawing.Point(0, 0);
+            this.pbListProgress.Name = "pbListProgress";
+            this.pbListProgress.Properties.AllowFocused = false;
+            this.pbListProgress.Properties.PercentView = false;
+            this.pbListProgress.Properties.ShowTitle = true;
+            this.pbListProgress.Size = new System.Drawing.Size(323, 31);
+            this.pbListProgress.TabIndex = 2;
+            this.pbListProgress.Visible = false;
+            this.pbListProgress.CustomDisplayText += new DevExpress.XtraEditors.Controls.CustomDisplayTextEventHandler(this.pbListProgress_CustomDisplayText);
+            // 
             // ControlPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -904,6 +920,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.repFileExists)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repPostProcessed)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.historyPopup)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbListProgress.Properties)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -963,5 +980,6 @@
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repFileExists;
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repPostProcessed;
         private DevExpress.XtraEditors.HyperlinkLabelControl hlblOpenSettings;
+        private DevExpress.XtraEditors.ProgressBarControl pbListProgress;
     }
 }

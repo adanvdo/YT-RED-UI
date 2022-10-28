@@ -46,13 +46,20 @@ namespace YT_RED.Classes
     {
         public VideoData PlaylistData { get; set; }
 
+        public int Count
+        {
+            get
+            {
+                return Items == null ? 0 : Items.Count;
+            }
+        }
         public List<YTDLPlaylistData> Items { get; set; }
 
-        public PlaylistItemCollection() : this(new List<YTDLPlaylistData>()) { }
+        public PlaylistItemCollection() : this(null, new List<YTDLPlaylistData>()) { }
 
-        public PlaylistItemCollection(List<YTDLPlaylistData> items)
+        public PlaylistItemCollection(VideoData playlistVideoData, List<YTDLPlaylistData> items)
         {
-            PlaylistData = null;
+            PlaylistData = playlistVideoData;
             Items = items;
         }
 
