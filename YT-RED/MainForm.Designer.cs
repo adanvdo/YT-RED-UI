@@ -234,9 +234,14 @@
             // btnPLSelectAll
             // 
             this.btnPLSelectAll.Dock = System.Windows.Forms.DockStyle.Left;
+            this.btnPLSelectAll.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
+            this.btnPLSelectAll.ImageOptions.SvgImage = global::YT_RED.Properties.Resources.checkbox;
+            this.btnPLSelectAll.ImageOptions.SvgImageColorizationMode = DevExpress.Utils.SvgImageColorizationMode.Full;
+            this.btnPLSelectAll.ImageOptions.SvgImageSize = new System.Drawing.Size(18, 18);
             this.btnPLSelectAll.Location = new System.Drawing.Point(0, 0);
+            this.btnPLSelectAll.Margin = new System.Windows.Forms.Padding(0);
             this.btnPLSelectAll.Name = "btnPLSelectAll";
-            this.btnPLSelectAll.Size = new System.Drawing.Size(125, 25);
+            this.btnPLSelectAll.Size = new System.Drawing.Size(110, 25);
             this.btnPLSelectAll.TabIndex = 0;
             this.btnPLSelectAll.Text = "Select All";
             this.btnPLSelectAll.Visible = false;

@@ -549,6 +549,8 @@ namespace YT_RED
                 {
                     cpMainControlPanel.DisableToggle(true, true, true);                    
                     cpMainControlPanel.SetSelectionText("Playlist Download");
+                    cpMainControlPanel.btnDownloadBest.Text = "DOWNLOAD ALL [audio+video]       ";
+                    cpMainControlPanel.btnDownloadAudio.Text = "DOWNLOAD ALL AUDIO     ";
                     ipMainInput.ListMode = ListMode.List;
                 }
                 else
@@ -609,7 +611,7 @@ namespace YT_RED
                 if (ipMainInput.btnListFormats.Text == "Cancel      ")
                 {
                     VideoUtil.CancellationTokenSource.Cancel();
-                    ipMainInput.btnListFormats.Text = "List Available Formats";
+                    ipMainInput.UpdateListButtonText();
                 }
                 else 
                 {
@@ -641,13 +643,13 @@ namespace YT_RED
             {
                 if (ipMainInput.ListMode == ListMode.List)
                 {
-                    if(cpMainControlPanel.CurrentPlaylistItems.Count > 0)
+                    if(cpMainControlPanel.CurrentPlaylistItems != null && cpMainControlPanel.CurrentPlaylistItems.Count > 0)
                     {
                         ytdlDownloadPlaylistItems();
                     }
                     else
                     {
-
+                        ytdlDownloadPlaylistItems(Classes.StreamType.AudioAndVideo, true);
                     }
                 }
                 else
@@ -664,13 +666,13 @@ namespace YT_RED
             {
                 if (ipMainInput.ListMode == ListMode.List)
                 {
-                    if (cpMainControlPanel.CurrentPlaylistItems.Count > 0)
+                    if (cpMainControlPanel.CurrentPlaylistItems != null && cpMainControlPanel.CurrentPlaylistItems.Count > 0)
                     {
                         ytdlDownloadPlaylistItems(Classes.StreamType.Audio);
                     }
                     else
                     {
-
+                        ytdlDownloadPlaylistItems(Classes.StreamType.Audio, true);
                     }
                 }
                 else
@@ -919,15 +921,44 @@ namespace YT_RED
             ipMainInput.marqeeMain.Text = string.Empty;
         }
 
-        private async void ytdlDownloadPlaylistItems(Classes.StreamType streamType = Classes.StreamType.AudioAndVideo)
+        private async void ytdlDownloadPlaylistItems(Classes.StreamType streamType = Classes.StreamType.AudioAndVideo, bool downloadAll = false)
         {
-            if (cpMainControlPanel.CurrentPlaylistItems.Count < 1) return;
+            if (downloadAll)
+            {
+                (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = true;
+
+                ipMainInput.marqeeMain.Text = "Fetching Playlist Information..";
+                ipMainInput.marqeeMain.Show();
+                YoutubeLink link = VideoUtil.ConvertToYouTubeLink(ipMainInput.URL);
+                var data = await VideoUtil.GetPlaylistData(link.Url);
+                ipMainInput.marqeeMain.Hide();
+                ipMainInput.marqeeMain.Text = "";
+
+                (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = false;
+
+                if (data != null)
+                {
+                    this.playlistItemCollection = new PlaylistItemCollection(data);
+                    DialogResult res = MsgBox.Show($"There are {this.playlistItemCollection.Count} videos in this playlist.\nContinue download?", 
+                        "Confirm Download", 
+                        Buttons.YesNo, 
+                        YT_RED.Controls.Icon.Warning, 
+                        FormStartPosition.CenterParent);
+                    if(res == DialogResult.No) { return; }
+                }
+                else
+                {
+                    MsgBox.Show("Empty or Invalid Playlist", "Error", Buttons.OK, YT_RED.Controls.Icon.Error, FormStartPosition.CenterParent);
+                    return;
+                }
+            }
+            else if (cpMainControlPanel.CurrentPlaylistItems.Count < 1) return;
 
             VideoUtil.Running = true;
             this.UseWaitCursor = true;
-            this.cpMainControlPanel.btnDownloadBest.Visible = false;
-            this.cpMainControlPanel.btnDownloadAudio.Visible = false;
-            this.cpMainControlPanel.btnSelectionDL.Visible = false;
+            cpMainControlPanel.DownloadSelectionVisible = false;
+            cpMainControlPanel.DownloadBestVisible = false;
+            cpMainControlPanel.DownloadAudioVisible = false;            
             this.cpMainControlPanel.btnCancelProcess.Visible = true;
             (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = true;
             ipMainInput.marqeeMain.Text = "Sending Download Request..";
@@ -944,9 +975,10 @@ namespace YT_RED
 
             int downloaded = 0;
             string initialDLLocation = string.Empty;
+            PlaylistItemCollection targetPlaylist = downloadAll ? this.playlistItemCollection : cpMainControlPanel.CurrentPlaylistItems;
             cpMainControlPanel.ShowListProgress();
 
-            foreach(var playlistItem in cpMainControlPanel.CurrentPlaylistItems.Items)
+            foreach(var playlistItem in targetPlaylist.Items)
             {
                 PendingDownload pendingDL = new PendingDownload()
                 {
@@ -957,9 +989,9 @@ namespace YT_RED
                 RunResult<string> result = null;
                 cpMainControlPanel.ShowProgress();
                 if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
-                    result = await Utils.VideoUtil.DownloadPreferredYtdl(playlistItem.Url, streamType, cpMainControlPanel.CurrentPlaylistItems.PlaylistData.Title.Replace(" ", ""));
+                    result = await Utils.VideoUtil.DownloadPreferredYtdl(playlistItem.Url, streamType, targetPlaylist.PlaylistData.Title.Replace(" ", ""));
                 else
-                    result = await Utils.VideoUtil.DownloadBestYtdl(playlistItem.Url, streamType, cpMainControlPanel.EmbedThumbnail, cpMainControlPanel.CurrentPlaylistItems.PlaylistData.Title.Replace(" ", ""));
+                    result = await Utils.VideoUtil.DownloadBestYtdl(playlistItem.Url, streamType, cpMainControlPanel.EmbedThumbnail, targetPlaylist.PlaylistData.Title.Replace(" ", ""));
 
                 if (!result.Success && result.Data != "canceled")
                 {
@@ -1005,8 +1037,9 @@ namespace YT_RED
             VideoUtil.Running = false;
             ipMainInput.marqeeMain.Hide();
             ipMainInput.marqeeMain.Text = "";
-            this.cpMainControlPanel.btnDownloadBest.Visible = true;
-            this.cpMainControlPanel.btnDownloadAudio.Visible = true;
+            cpMainControlPanel.DownloadSelectionVisible = false;
+            cpMainControlPanel.DownloadAudioVisible = true;
+            cpMainControlPanel.DownloadBestVisible = true;
             this.cpMainControlPanel.btnCancelProcess.Visible = false;    
             this.UseWaitCursor = false;
             (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = false;
@@ -1025,10 +1058,10 @@ namespace YT_RED
 
             VideoUtil.Running = true;
             this.UseWaitCursor = true;
-            this.cpMainControlPanel.btnDownloadBest.Visible = false;
-            this.cpMainControlPanel.btnDownloadAudio.Visible = false;
-            this.cpMainControlPanel.btnSelectionDL.Visible = false;
-            this.cpMainControlPanel.btnCancelProcess.Visible = true;
+            cpMainControlPanel.DownloadSelectionVisible = false;
+            cpMainControlPanel.DownloadAudioVisible = false;
+            cpMainControlPanel.DownloadBestVisible = false;
+            this.cpMainControlPanel.btnCancelProcess.Visible = false;
             (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = true;
             ipMainInput.marqeeMain.Text = "Sending Download Request..";
             ipMainInput.marqeeMain.Show();
@@ -1180,9 +1213,10 @@ namespace YT_RED
             }
             VideoUtil.Running = false;
             ipMainInput.marqeeMain.Hide();
-            ipMainInput.marqeeMain.Text = "";
-            this.cpMainControlPanel.btnDownloadBest.Visible = true;
-            this.cpMainControlPanel.btnDownloadAudio.Visible = true;
+            ipMainInput.marqeeMain.Text = ""; 
+            cpMainControlPanel.DownloadSelectionVisible = false;
+            cpMainControlPanel.DownloadAudioVisible = true;
+            cpMainControlPanel.DownloadBestVisible = true;
             this.cpMainControlPanel.btnCancelProcess.Visible = false;
             var dlLog = new DownloadLog(VideoUtil.ConvertToYouTubeLink(url).Url,
                 currentDownload,
@@ -1233,7 +1267,7 @@ namespace YT_RED
             AudioFormat? audioFormat = null;
 
             RunResult<string> result = null;
-            this.cpMainControlPanel.btnSelectionDL.Visible = false;
+            cpMainControlPanel.DownloadSelectionVisible = false;
             this.cpMainControlPanel.btnCancelProcess.Visible = true;
 
             PendingDownload pendingDL = null;
@@ -1251,8 +1285,8 @@ namespace YT_RED
                     this.UseWaitCursor = false;
                     VideoUtil.Running = false;
                     ipMainInput.marqeeMain.Hide();
-                    ipMainInput.marqeeMain.Text = "";
-                    this.cpMainControlPanel.btnSelectionDL.Visible = true;
+                    ipMainInput.marqeeMain.Text = ""; 
+                    cpMainControlPanel.DownloadSelectionVisible = false;                    
                     this.cpMainControlPanel.btnCancelProcess.Visible = false;
                     MsgBox.Show("Please specify a valid duration for the segment", "Invalid Duration");
                     return;
@@ -1365,7 +1399,7 @@ namespace YT_RED
                 t = Classes.StreamType.AudioAndVideo;
             ipMainInput.marqeeMain.Hide();
             ipMainInput.marqeeMain.Text = "";
-            this.cpMainControlPanel.btnSelectionDL.Visible = true;
+            cpMainControlPanel.DownloadSelectionVisible = true;
             this.cpMainControlPanel.btnCancelProcess.Visible = false;
             VideoUtil.Running = false;
             if (result.Success)

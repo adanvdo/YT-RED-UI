@@ -473,7 +473,15 @@ namespace YT_RED.Controls
             EnableToggle(true, true, true);
             cbVideoFormat.SelectedIndex = 0;
             cbAudioFormat.SelectedIndex = 0;
+            btnSelectionDL.Text = "DOWNLOAD SELECTED FORMAT    ";
+            btnDownloadAudio.Text = "DOWNLOAD AUDIO       ";
+            btnDownloadBest.Text = "DOWNLOAD BEST [audio+video]      ";
             HideDownloadLocation();
+            if (currentPlaylistItems != null)
+            {
+                currentPlaylistItems.Dispose();
+                currentPlaylistItems = null;
+            }
             currentFormatPair.Clear();
             formatChanged();
             
