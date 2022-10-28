@@ -52,8 +52,8 @@ namespace YT_RED.Controls
                     var supportedImage = videoData.Thumbnails.FirstOrDefault(tn => !tn.Url.ToLower().EndsWith(".webp"));
                     if (supportedImage != null)
                     {
-                        Stream thumbnailStream = await Utils.HttpUtil.GetStreamFromUrl(supportedImage.Url);
-                        peThumbnail.Image = Image.FromStream(thumbnailStream);
+                        Stream thumbnailStream = await Utils.WebUtil.GetStreamFromUrl(supportedImage.Url);
+                        peThumbnail.Image = Image.FromStream(thumbnailStream, false, true);
                     }
                 }
             }

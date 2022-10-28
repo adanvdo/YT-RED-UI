@@ -30,19 +30,19 @@
         {
             this.lblMediaInfo = new DevExpress.XtraEditors.LabelControl();
             this.pnlMediaInfo = new DevExpress.XtraEditors.PanelControl();
-            this.peThumbnail = new DevExpress.XtraEditors.PictureEdit();
             this.pnlTextPanel = new DevExpress.XtraEditors.PanelControl();
-            this.txtTitle = new DevExpress.XtraEditors.TextEdit();
-            this.txtDuration = new DevExpress.XtraEditors.TextEdit();
             this.txtDescription = new DevExpress.XtraEditors.MemoEdit();
+            this.txtDuration = new DevExpress.XtraEditors.TextEdit();
+            this.txtTitle = new DevExpress.XtraEditors.TextEdit();
+            this.peThumbnail = new DevExpress.XtraEditors.PictureEdit();
             ((System.ComponentModel.ISupportInitialize)(this.pnlMediaInfo)).BeginInit();
             this.pnlMediaInfo.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.peThumbnail.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pnlTextPanel)).BeginInit();
             this.pnlTextPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.txtTitle.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.txtDuration.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtDescription.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtDuration.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtTitle.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.peThumbnail.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // lblMediaInfo
@@ -73,6 +73,66 @@
             this.pnlMediaInfo.Size = new System.Drawing.Size(572, 125);
             this.pnlMediaInfo.TabIndex = 3;
             // 
+            // pnlTextPanel
+            // 
+            this.pnlTextPanel.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.pnlTextPanel.Controls.Add(this.txtDescription);
+            this.pnlTextPanel.Controls.Add(this.txtDuration);
+            this.pnlTextPanel.Controls.Add(this.txtTitle);
+            this.pnlTextPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlTextPanel.Location = new System.Drawing.Point(219, 0);
+            this.pnlTextPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlTextPanel.Name = "pnlTextPanel";
+            this.pnlTextPanel.Size = new System.Drawing.Size(353, 125);
+            this.pnlTextPanel.TabIndex = 3;
+            // 
+            // txtDescription
+            // 
+            this.txtDescription.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtDescription.EditValue = "";
+            this.txtDescription.Location = new System.Drawing.Point(0, 50);
+            this.txtDescription.Name = "txtDescription";
+            this.txtDescription.Properties.AllowFocused = false;
+            this.txtDescription.Properties.Appearance.Options.UseTextOptions = true;
+            this.txtDescription.Properties.Appearance.TextOptions.Trimming = DevExpress.Utils.Trimming.EllipsisCharacter;
+            this.txtDescription.Properties.Appearance.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Top;
+            this.txtDescription.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.Simple;
+            this.txtDescription.Properties.ReadOnly = true;
+            this.txtDescription.Properties.UseReadOnlyAppearance = false;
+            this.txtDescription.Size = new System.Drawing.Size(353, 75);
+            this.txtDescription.TabIndex = 2;
+            // 
+            // txtDuration
+            // 
+            this.txtDuration.Dock = System.Windows.Forms.DockStyle.Top;
+            this.txtDuration.EditValue = "Duration:";
+            this.txtDuration.Location = new System.Drawing.Point(0, 25);
+            this.txtDuration.Name = "txtDuration";
+            this.txtDuration.Properties.AllowFocused = false;
+            this.txtDuration.Properties.AutoHeight = false;
+            this.txtDuration.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.txtDuration.Properties.ReadOnly = true;
+            this.txtDuration.Properties.UseReadOnlyAppearance = false;
+            this.txtDuration.Size = new System.Drawing.Size(353, 25);
+            this.txtDuration.TabIndex = 1;
+            // 
+            // txtTitle
+            // 
+            this.txtTitle.Dock = System.Windows.Forms.DockStyle.Top;
+            this.txtTitle.EditValue = "TITLE";
+            this.txtTitle.Location = new System.Drawing.Point(0, 0);
+            this.txtTitle.Margin = new System.Windows.Forms.Padding(0);
+            this.txtTitle.Name = "txtTitle";
+            this.txtTitle.Properties.AllowFocused = false;
+            this.txtTitle.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
+            this.txtTitle.Properties.Appearance.Options.UseFont = true;
+            this.txtTitle.Properties.AutoHeight = false;
+            this.txtTitle.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.txtTitle.Properties.ReadOnly = true;
+            this.txtTitle.Properties.UseReadOnlyAppearance = false;
+            this.txtTitle.Size = new System.Drawing.Size(353, 25);
+            this.txtTitle.TabIndex = 0;
+            // 
             // peThumbnail
             // 
             this.peThumbnail.Dock = System.Windows.Forms.DockStyle.Left;
@@ -90,65 +150,6 @@
             this.peThumbnail.TabIndex = 2;
             this.peThumbnail.LoadCompleted += new System.EventHandler(this.peThumbnail_LoadCompleted);
             // 
-            // pnlTextPanel
-            // 
-            this.pnlTextPanel.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-            this.pnlTextPanel.Controls.Add(this.txtDescription);
-            this.pnlTextPanel.Controls.Add(this.txtDuration);
-            this.pnlTextPanel.Controls.Add(this.txtTitle);
-            this.pnlTextPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlTextPanel.Location = new System.Drawing.Point(219, 0);
-            this.pnlTextPanel.Margin = new System.Windows.Forms.Padding(0);
-            this.pnlTextPanel.Name = "pnlTextPanel";
-            this.pnlTextPanel.Size = new System.Drawing.Size(353, 125);
-            this.pnlTextPanel.TabIndex = 3;
-            // 
-            // txtTitle
-            // 
-            this.txtTitle.Dock = System.Windows.Forms.DockStyle.Top;
-            this.txtTitle.EditValue = "TITLE";
-            this.txtTitle.Location = new System.Drawing.Point(0, 0);
-            this.txtTitle.Name = "txtTitle";
-            this.txtTitle.Properties.AllowFocused = false;
-            this.txtTitle.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
-            this.txtTitle.Properties.Appearance.Options.UseFont = true;
-            this.txtTitle.Properties.AutoHeight = false;
-            this.txtTitle.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-            this.txtTitle.Properties.ReadOnly = true;
-            this.txtTitle.Properties.UseReadOnlyAppearance = false;
-            this.txtTitle.Size = new System.Drawing.Size(353, 22);
-            this.txtTitle.TabIndex = 0;
-            // 
-            // txtDuration
-            // 
-            this.txtDuration.Dock = System.Windows.Forms.DockStyle.Top;
-            this.txtDuration.EditValue = "Duration:";
-            this.txtDuration.Location = new System.Drawing.Point(0, 22);
-            this.txtDuration.Name = "txtDuration";
-            this.txtDuration.Properties.AllowFocused = false;
-            this.txtDuration.Properties.AutoHeight = false;
-            this.txtDuration.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-            this.txtDuration.Properties.ReadOnly = true;
-            this.txtDuration.Properties.UseReadOnlyAppearance = false;
-            this.txtDuration.Size = new System.Drawing.Size(353, 22);
-            this.txtDuration.TabIndex = 1;
-            // 
-            // txtDescription
-            // 
-            this.txtDescription.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtDescription.EditValue = "";
-            this.txtDescription.Location = new System.Drawing.Point(0, 44);
-            this.txtDescription.Name = "txtDescription";
-            this.txtDescription.Properties.AllowFocused = false;
-            this.txtDescription.Properties.Appearance.Options.UseTextOptions = true;
-            this.txtDescription.Properties.Appearance.TextOptions.Trimming = DevExpress.Utils.Trimming.EllipsisCharacter;
-            this.txtDescription.Properties.Appearance.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Top;
-            this.txtDescription.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.Simple;
-            this.txtDescription.Properties.ReadOnly = true;
-            this.txtDescription.Properties.UseReadOnlyAppearance = false;
-            this.txtDescription.Size = new System.Drawing.Size(353, 81);
-            this.txtDescription.TabIndex = 2;
-            // 
             // VideoInfoPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -160,12 +161,12 @@
             this.Size = new System.Drawing.Size(572, 150);
             ((System.ComponentModel.ISupportInitialize)(this.pnlMediaInfo)).EndInit();
             this.pnlMediaInfo.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.peThumbnail.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pnlTextPanel)).EndInit();
             this.pnlTextPanel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.txtTitle.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.txtDuration.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtDescription.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtDuration.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtTitle.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.peThumbnail.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }

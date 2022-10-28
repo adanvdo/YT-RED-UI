@@ -39,6 +39,9 @@
             this.sccMainSplitter = new DevExpress.XtraEditors.SplitContainerControl();
             this.gcFormats = new DevExpress.XtraGrid.GridControl();
             this.gvFormats = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.repPictureEdit = new DevExpress.XtraEditors.Repository.RepositoryItemPictureEdit();
+            this.pnlPlaylistControls = new DevExpress.XtraEditors.PanelControl();
+            this.btnPLSelectAll = new DevExpress.XtraEditors.SimpleButton();
             this.lblSelectAFormat = new DevExpress.XtraEditors.LabelControl();
             this.videoInfoPanel = new YT_RED.Controls.VideoInfoPanel();
             this.marqueeProgressBarControl1 = new DevExpress.XtraEditors.MarqueeProgressBarControl();
@@ -60,6 +63,9 @@
             this.sccMainSplitter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gcFormats)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvFormats)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repPictureEdit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlPlaylistControls)).BeginInit();
+            this.pnlPlaylistControls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.marqueeProgressBarControl1.Properties)).BeginInit();
             this.taskBarMenu.SuspendLayout();
             this.SuspendLayout();
@@ -138,7 +144,7 @@
             // sccMainSplitter.Panel1
             // 
             this.sccMainSplitter.Panel1.Controls.Add(this.gcFormats);
-            this.sccMainSplitter.Panel1.Controls.Add(this.lblSelectAFormat);
+            this.sccMainSplitter.Panel1.Controls.Add(this.pnlPlaylistControls);
             this.sccMainSplitter.Panel1.Controls.Add(this.videoInfoPanel);
             this.sccMainSplitter.Panel1.Controls.Add(this.marqueeProgressBarControl1);
             this.sccMainSplitter.Panel1.Controls.Add(this.ipMainInput);
@@ -163,6 +169,8 @@
             this.gcFormats.Location = new System.Drawing.Point(0, 298);
             this.gcFormats.MainView = this.gvFormats;
             this.gcFormats.Name = "gcFormats";
+            this.gcFormats.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
+            this.repPictureEdit});
             this.gcFormats.Size = new System.Drawing.Size(839, 419);
             this.gcFormats.TabIndex = 0;
             this.gcFormats.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -195,6 +203,45 @@
             this.gvFormats.FocusedRowChanged += new DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventHandler(this.gvFormats_FocusedRowChanged);
             this.gvFormats.CustomColumnDisplayText += new DevExpress.XtraGrid.Views.Base.CustomColumnDisplayTextEventHandler(this.gvFormats_CustomColumnDisplayText);
             // 
+            // repPictureEdit
+            // 
+            this.repPictureEdit.AllowAnimationOnValueChanged = DevExpress.Utils.DefaultBoolean.True;
+            this.repPictureEdit.AllowDisposeImage = true;
+            this.repPictureEdit.AllowFocused = false;
+            this.repPictureEdit.AllowHtmlDraw = DevExpress.Utils.DefaultBoolean.False;
+            this.repPictureEdit.AllowScrollOnMouseWheel = DevExpress.Utils.DefaultBoolean.False;
+            this.repPictureEdit.AllowZoom = DevExpress.Utils.DefaultBoolean.False;
+            this.repPictureEdit.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.repPictureEdit.Name = "repPictureEdit";
+            this.repPictureEdit.ReadOnly = true;
+            this.repPictureEdit.ShowEditMenuItem = DevExpress.Utils.DefaultBoolean.False;
+            this.repPictureEdit.ShowMenu = false;
+            this.repPictureEdit.ShowZoomSubMenu = DevExpress.Utils.DefaultBoolean.False;
+            this.repPictureEdit.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Zoom;
+            // 
+            // pnlPlaylistControls
+            // 
+            this.pnlPlaylistControls.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.pnlPlaylistControls.Controls.Add(this.btnPLSelectAll);
+            this.pnlPlaylistControls.Controls.Add(this.lblSelectAFormat);
+            this.pnlPlaylistControls.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlPlaylistControls.Location = new System.Drawing.Point(0, 273);
+            this.pnlPlaylistControls.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlPlaylistControls.Name = "pnlPlaylistControls";
+            this.pnlPlaylistControls.Size = new System.Drawing.Size(839, 25);
+            this.pnlPlaylistControls.TabIndex = 3;
+            // 
+            // btnPLSelectAll
+            // 
+            this.btnPLSelectAll.Dock = System.Windows.Forms.DockStyle.Left;
+            this.btnPLSelectAll.Location = new System.Drawing.Point(0, 0);
+            this.btnPLSelectAll.Name = "btnPLSelectAll";
+            this.btnPLSelectAll.Size = new System.Drawing.Size(125, 25);
+            this.btnPLSelectAll.TabIndex = 0;
+            this.btnPLSelectAll.Text = "Select All";
+            this.btnPLSelectAll.Visible = false;
+            this.btnPLSelectAll.Click += new System.EventHandler(this.btnPLSelectAll_Click);
+            // 
             // lblSelectAFormat
             // 
             this.lblSelectAFormat.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
@@ -202,8 +249,9 @@
             this.lblSelectAFormat.Appearance.Options.UseTextOptions = true;
             this.lblSelectAFormat.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.lblSelectAFormat.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
-            this.lblSelectAFormat.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblSelectAFormat.Location = new System.Drawing.Point(0, 273);
+            this.lblSelectAFormat.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblSelectAFormat.Location = new System.Drawing.Point(0, 0);
+            this.lblSelectAFormat.Margin = new System.Windows.Forms.Padding(0);
             this.lblSelectAFormat.Name = "lblSelectAFormat";
             this.lblSelectAFormat.Size = new System.Drawing.Size(839, 25);
             this.lblSelectAFormat.TabIndex = 0;
@@ -213,6 +261,7 @@
             // 
             this.videoInfoPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.videoInfoPanel.Location = new System.Drawing.Point(0, 123);
+            this.videoInfoPanel.Margin = new System.Windows.Forms.Padding(0);
             this.videoInfoPanel.Name = "videoInfoPanel";
             this.videoInfoPanel.Size = new System.Drawing.Size(839, 150);
             this.videoInfoPanel.TabIndex = 2;
@@ -235,6 +284,7 @@
             this.ipMainInput.AutoSize = true;
             this.ipMainInput.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ipMainInput.Dock = System.Windows.Forms.DockStyle.Top;
+            this.ipMainInput.ListMode = YT_RED.Classes.ListMode.Format;
             this.ipMainInput.Location = new System.Drawing.Point(0, 0);
             this.ipMainInput.Margin = new System.Windows.Forms.Padding(0);
             this.ipMainInput.MinimumSize = new System.Drawing.Size(400, 100);
@@ -352,6 +402,9 @@
             this.sccMainSplitter.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gcFormats)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvFormats)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repPictureEdit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlPlaylistControls)).EndInit();
+            this.pnlPlaylistControls.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.marqueeProgressBarControl1.Properties)).EndInit();
             this.taskBarMenu.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -379,6 +432,9 @@
         private DevExpress.XtraEditors.MarqueeProgressBarControl marqueeProgressBarControl1;
         private Controls.ControlPanel cpMainControlPanel;
         private Controls.VideoInfoPanel videoInfoPanel;
+        private DevExpress.XtraEditors.Repository.RepositoryItemPictureEdit repPictureEdit;
+        private DevExpress.XtraEditors.PanelControl pnlPlaylistControls;
+        private DevExpress.XtraEditors.SimpleButton btnPLSelectAll;
     }
 }
 

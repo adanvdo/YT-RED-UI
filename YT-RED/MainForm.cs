@@ -6,7 +6,9 @@ using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -52,6 +54,7 @@ namespace YT_RED
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repHistoryCheckEdit;
         private int splitterNegativePosition = 0;
         private TrayForm activeTrayForm = null;
+        private PlaylistItemCollection playlistItemCollection = null;
 
 
         static KeyboardHook hook = new KeyboardHook();
@@ -518,6 +521,12 @@ namespace YT_RED
 
         private async void ipMainInput_Url_Changed(object sender, EventArgs e)
         {
+            if(playlistItemCollection != null)
+            {
+                playlistItemCollection.Dispose();
+                playlistItemCollection = null;
+            }
+
             gcFormats.DataSource = null;
             gvFormats.RefreshData();
             cpMainControlPanel.CurrentFormatPair.Clear();
@@ -526,6 +535,9 @@ namespace YT_RED
             selectedVideoIndex = -1; 
             videoInfoPanel.Clear();
             videoInfoPanel.Visible = false;
+            btnPLSelectAll.Visible = false;
+            btnPLSelectAll.Text = "Select All";
+            allSelected = false;
             
             var checkUrl = HtmlUtil.CheckUrl(ipMainInput.URL);
             if (gvFormats.GetSelectedRows().Length < 1 && checkUrl != DownloadType.Unknown && checkUrl == DownloadType.YouTube)
@@ -533,6 +545,7 @@ namespace YT_RED
                 YoutubeLink link = VideoUtil.ConvertToYouTubeLink(ipMainInput.URL);
                 if(link.Type == YoutubeLinkType.Playlist)
                 {
+                    btnPLSelectAll.Visible = true;
                     cpMainControlPanel.DisableToggle(true, true, true);                    
                     cpMainControlPanel.SetSelectionText("Playlist Download");
                     ipMainInput.ListMode = ListMode.List;
@@ -563,13 +576,22 @@ namespace YT_RED
 
         private void ipMainInput_ResetList_Click(object sender, EventArgs e)
         {
+            if (playlistItemCollection != null)
+            {
+                playlistItemCollection.Dispose();
+                playlistItemCollection = null;
+            }
+
             gcFormats.DataSource = null;
             gvFormats.RefreshData();
             cpMainControlPanel.CurrentFormatPair.Clear();
             cpMainControlPanel.ResetControls();
             selectedAudioIndex = -1;
             selectedVideoIndex = -1;
-            ipMainInput.URL = string.Empty;
+            ipMainInput.URL = string.Empty; 
+            btnPLSelectAll.Visible = false;
+            btnPLSelectAll.Text = "Select All";
+            allSelected = false;
             if (gvFormats.GetSelectedRows().Length < 1)
             {
                 cpMainControlPanel.DownloadSelectionVisible = false;
@@ -656,12 +678,16 @@ namespace YT_RED
             
             if (downloadType == DownloadType.Playlist)
             {
+                gvFormats.Columns.AddVisible("ThumbnailImage", "");
                 gvFormats.Columns.AddVisible("Title", "Title");
                 gvFormats.Columns.AddVisible("Duration", "Duration");
                 gvFormats.Columns.AddField("Url");
-                gvFormats.Columns["Title"].VisibleIndex = 0;
+                gvFormats.Columns.AddField("ID");
+                gvFormats.Columns["ThumbnailImage"].OptionsColumn.ShowCaption = false;
+                gvFormats.Columns["ThumbnailImage"].MinWidth = 100;
+                gvFormats.RowHeight = 75;
+                gvFormats.Columns["ThumbnailImage"].ColumnEdit = repPictureEdit;
                 gvFormats.Columns["Title"].BestFit();
-                gvFormats.Columns["Duration"].VisibleIndex = 1;
             }
             else
             {
@@ -762,11 +788,12 @@ namespace YT_RED
                 var data = await VideoUtil.GetPlaylistData(url);
                 if(data != null)
                 {
-                    PlaylistItemCollection playlist = new PlaylistItemCollection(data);
-                    if(playlist != null)
+                    this.playlistItemCollection = new PlaylistItemCollection(data);
+                    if(this.playlistItemCollection != null)
                     {
-                        gcFormats.DataSource = playlist.Items;
+                        gcFormats.DataSource = this.playlistItemCollection.Items;
                         refreshFormatGrid(DownloadType.Playlist);
+                        loadThumbnailsAsync();
                     }
                 }
                 (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = false;
@@ -1394,7 +1421,7 @@ namespace YT_RED
                         break;
                 }
                 e.Handled = true;
-            }
+            }            
         }
 
         private void sccMainSplitter_Resize(object sender, EventArgs e)
@@ -1589,6 +1616,45 @@ namespace YT_RED
                 ipMainInput.URL = cpMainControlPanel.TargetLog.Url;
             else
                 MsgBox.Show("Error reading log info");
+        }
+
+        private async void loadThumbnailsAsync()
+        {
+            foreach(YTDLPlaylistData item in this.playlistItemCollection.Items)
+            {
+                if (VideoUtil.CancellationTokenSource.Token.IsCancellationRequested) break;
+                if (!string.IsNullOrEmpty(item.ThumbUrl))
+                {
+                    var imagebytes = await HttpUtil.GetImageAsByteArrayAsync(item.ThumbUrl);
+                    if (imagebytes != null)
+                    {
+                        using (MemoryStream ms = new MemoryStream(imagebytes))
+                        {
+                            item.ThumbnailImage = Image.FromStream(ms);
+                            gcFormats.RefreshDataSource();
+                        }
+                    }
+                }
+            }
+            return;
+        }
+
+        bool allSelected = false;
+        private void btnPLSelectAll_Click(object sender, EventArgs e)
+        {
+            if(ipMainInput.ListMode != ListMode.List) return;
+            if (allSelected)
+            {
+                gvFormats.ClearSelection();
+                allSelected = false;
+                btnPLSelectAll.Text = "Select All";
+            }
+            else
+            {
+                gvFormats.SelectAll();
+                allSelected = true;
+                btnPLSelectAll.Text = "Clear Selection";
+            }
         }
     }
 }

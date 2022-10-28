@@ -8,11 +8,13 @@ using System.Threading.Tasks;
 using YT_RED.Classes;
 using YT_RED.Logging;
 using YT_RED.Settings;
+using System.Drawing;
 
 namespace YT_RED.Utils
 {
     public static class HttpUtil
     {
+        #region API
         private static string serverUrl = Program.DevRun ? @"http://localhost:3000/api" : @"https://www.jamgalactic.com/api";
         private static async Task<HttpWebResponse> postErrorLogs(DateTime date)
         {
@@ -163,16 +165,31 @@ namespace YT_RED.Utils
             }
             return null;
         }
+        #endregion
 
-        public static async Task<Stream> GetStreamFromUrl(string url)
+        #region WEB
+
+        public static async Task<byte[]> GetImageAsByteArrayAsync(string url, bool useAbsoluteUri = true)
         {
-            Uri uri = new Uri(url);
-            byte[] imageData = null;
-            using (var client = new WebClient())
+            try
             {
-                imageData = await client.DownloadDataTaskAsync(uri);
+                Uri uri = new Uri(url);
+                string useUrl = useAbsoluteUri ? $"https://{uri.Host}{uri.AbsolutePath}" : uri.ToString();
+                using(HttpClient client = new HttpClient())
+                {
+                    var response = await client.GetAsync(useUrl);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return await response.Content.ReadAsByteArrayAsync();
+                    }
+                }
             }
-            return new MemoryStream(imageData);
+            catch (Exception ex)
+            {
+                ExceptionHandler.LogException(ex);
+            }
+            return null;
         }
+        #endregion
     }
 }
