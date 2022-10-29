@@ -40,6 +40,15 @@ namespace YT_RED.Utils
             runner = new YoutubeDLSharp.Helpers.ProcessRunner(4);
         }
 
+        public static List<string> ResolutionList { 
+            get
+            {
+                List<string> resolutions = new List<string>();
+                resolutions.AddRange(Enum.GetNames(typeof(Classes.Resolution)).Cast<string>());
+                return resolutions;
+            } 
+        }
+
         public static string GenerateUniqueYtdlFileName(Classes.StreamType streamType, string playlist = "")
         {
             string dir = "";

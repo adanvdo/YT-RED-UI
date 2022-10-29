@@ -547,7 +547,7 @@ namespace YT_RED
                 YoutubeLink link = VideoUtil.ConvertToYouTubeLink(ipMainInput.URL);
                 if(link.Type == YoutubeLinkType.Playlist)
                 {
-                    cpMainControlPanel.DisableToggle(true, true, true);                    
+                    cpMainControlPanel.DisableToggle(true, true, true);
                     cpMainControlPanel.SetSelectionText("Playlist Download");
                     cpMainControlPanel.btnDownloadBest.Text = "DOWNLOAD ALL [audio+video]       ";
                     cpMainControlPanel.btnDownloadAudio.Text = "DOWNLOAD ALL AUDIO     ";
@@ -563,7 +563,6 @@ namespace YT_RED
                         cpMainControlPanel.DownloadAudioVisible = true;
                         return;
                     }
-                    cpMainControlPanel.EnableToggle(true, true, true);
                     ipMainInput.btnListFormats.Enabled = true;
                     cpMainControlPanel.SetSelectionText(cpMainControlPanel.CurrentFormatPair != null && !string.IsNullOrEmpty(cpMainControlPanel.CurrentFormatPair.FormatDisplayText) ?
                         cpMainControlPanel.CurrentFormatPair.FormatDisplayText : "");
@@ -620,7 +619,7 @@ namespace YT_RED
                     if (ipMainInput.ListMode == ListMode.Format)
                     {
                         cpMainControlPanel.CurrentFormatPair.Clear();
-                        cpMainControlPanel.ResetControls();
+                        cpMainControlPanel.ResetControls(true);
                         selectedAudioIndex = -1;
                         selectedVideoIndex = -1;
                         getYtdlFormatList(ipMainInput.URL);
@@ -964,14 +963,17 @@ namespace YT_RED
             ipMainInput.marqeeMain.Text = "Sending Download Request..";
             ipMainInput.marqeeMain.Show();
 
+            int maxRes = cpMainControlPanel.LimitsEnabled ? cpMainControlPanel.MaxResolutionValue : AppSettings.Default.General.MaxResolutionValue;
+            int maxSize = cpMainControlPanel.LimitsEnabled ? cpMainControlPanel.MaxFilesize : AppSettings.Default.General.MaxFilesizeBest;
+
             string mainFormatString = "bestvideo{0}{1}+bestaudio/best{0}{1}";
             string audioFormatString = "bestaudio{0}";
             string finalFormatString = String.Format(mainFormatString,
-                AppSettings.Default.General.MaxResolutionValue > 0 ? $"[height<={AppSettings.Default.General.MaxResolutionValue}]" : "",
-                AppSettings.Default.General.MaxFilesizeBest > 0 ? $"[filesize<={AppSettings.Default.General.MaxFilesizeBest}M]" : "");
+                maxRes > 0 ? $"[height<={maxRes}]" : "",
+                maxSize > 0 ? $"[filesize<={maxSize}M]" : "");
 
             string finalAudioFormatString = String.Format(audioFormatString,
-                AppSettings.Default.General.MaxFilesizeBest > 0 ? $"[filesize<={AppSettings.Default.General.MaxFilesizeBest}M]" : "");
+                maxSize > 0 ? $"[filesize<={maxSize}M]" : "");
 
             int downloaded = 0;
             string initialDLLocation = string.Empty;
@@ -1098,14 +1100,17 @@ namespace YT_RED
                 AudioConversionFormat = audioFormat
             };
 
+            int maxRes = cpMainControlPanel.LimitsEnabled ? cpMainControlPanel.MaxResolutionValue : AppSettings.Default.General.MaxResolutionValue;
+            int maxSize = cpMainControlPanel.LimitsEnabled ? cpMainControlPanel.MaxFilesize : AppSettings.Default.General.MaxFilesizeBest;
+
             string mainFormatString = "bestvideo{0}{1}+bestaudio/best{0}{1}";
             string audioFormatString = "bestaudio{0}";
             string finalFormatString = String.Format(mainFormatString,
-                AppSettings.Default.General.MaxResolutionValue > 0 ? $"[height<={AppSettings.Default.General.MaxResolutionValue}]" : "",
-                AppSettings.Default.General.MaxFilesizeBest > 0 ? $"[filesize<={AppSettings.Default.General.MaxFilesizeBest}M]" : "");
+                maxRes > 0 ? $"[height<={maxRes}]" : "",
+                maxSize > 0 ? $"[filesize<={maxSize}M]" : "");
 
             string finalAudioFormatString = String.Format(audioFormatString,
-                AppSettings.Default.General.MaxFilesizeBest > 0 ? $"[filesize<={AppSettings.Default.General.MaxFilesizeBest}M]" : "");
+                maxSize > 0 ? $"[filesize<={maxSize}M]" : "");
 
             RunResult<string> result = null;
             if (cpMainControlPanel.PostProcessingEnabled)
