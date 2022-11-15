@@ -319,6 +319,8 @@
             this.cpMainControlPanel.DownloadBestVisible = true;
             this.cpMainControlPanel.DownloadSelectionVisible = false;
             this.cpMainControlPanel.Location = new System.Drawing.Point(0, 0);
+            this.cpMainControlPanel.MaxFilesize = 0;
+            this.cpMainControlPanel.MaxResolution = null;
             this.cpMainControlPanel.MinimumSize = new System.Drawing.Size(323, 0);
             this.cpMainControlPanel.Name = "cpMainControlPanel";
             this.cpMainControlPanel.SegmentDuration = System.TimeSpan.Parse("00:00:01");

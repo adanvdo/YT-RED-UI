@@ -87,7 +87,13 @@ namespace YT_RED.Logging
 
                     foreach(var log in filterLogs)
                     {
-                        if(File.Exists(log.DownloadLocation))
+                        if (log.InSubFolder)
+                        {
+                            string subFolder = new FileInfo(log.DownloadLocation).Directory.FullName;
+                            if(Directory.Exists(subFolder))
+                                Directory.Delete(subFolder, true);
+                        } 
+                        else if(File.Exists(log.DownloadLocation))
                         {
                             File.Delete(log.DownloadLocation);
                         }

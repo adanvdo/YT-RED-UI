@@ -925,6 +925,11 @@ namespace YT_RED.Utils
                     linkOrID = @"https://www.youtube.com/watch?v=" + linkOrID;
                     type = YoutubeLinkType.Video;
                 }
+                else if (linkOrID.Length == 34)
+                {
+                    linkOrID = @"https://www.youtube.com/playlist?list=" + linkOrID;
+                    type = YoutubeLinkType.Playlist;
+                }
                 else
                 {
                     Uri uri = new Uri(linkOrID);

@@ -107,6 +107,16 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 11/15/2022 v1.0.2.2
+ - Fixed bug with custom format layout where format rows could no longer be selected unless you click directly in the checkbox
+ - Added Youtube Playlist Support (List and select Playlist Items, or Download an Entire Playlist)
+ - Added Playlist-related Settings
+ - Added Video Thumbnail and Detail Display when listing formats
+ - Added support for entering Youtube Video IDs and Playlist IDs in the URL box
+ - Added options to specify a Max Resolution and Max Filesize when using "Download Best" and "Download All" feature
+ - Changed Behavior of Preferred Format Conversion Settings
+ - Minor UI and Behavior Tweaks
+
 ### 10/21/2022 v1.0.2.1
  - Fixed bug where button states were not properly reset after changing URL
  - Fixed bug where a crash occurred if you clicked an area in the format grid that was not a column

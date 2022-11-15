@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MsgBox));
             this.messagePanel = new DevExpress.XtraEditors.PanelControl();
             this.msgIcon = new DevExpress.XtraEditors.PictureEdit();
             this.panelControl1 = new DevExpress.XtraEditors.PanelControl();
@@ -281,11 +282,14 @@
             this.Controls.Add(this.buttonPanel);
             this.Controls.Add(this.pictureEdit1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.IconOptions.Icon = ((System.Drawing.Icon)(resources.GetObject("MsgBox.IconOptions.Icon")));
+            this.IconOptions.Image = ((System.Drawing.Image)(resources.GetObject("MsgBox.IconOptions.Image")));
             this.MinimumSize = new System.Drawing.Size(400, 150);
             this.Name = "MsgBox";
             this.Padding = new System.Windows.Forms.Padding(3);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MsgBox";
+            this.Shown += new System.EventHandler(this.MsgBox_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.messagePanel)).EndInit();
             this.messagePanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.msgIcon.Properties)).EndInit();

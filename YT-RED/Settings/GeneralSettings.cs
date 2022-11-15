@@ -39,7 +39,14 @@ namespace YT_RED.Settings
         [JsonProperty("skin_palette")]
 		public string SkinPalette { get; set; }
 
-        [Category("Downloads")]
+		[Category("Download Restrictions")]
+		[DisplayName("Enforce Restrictions")]
+		[Description("Always Enable Restrictions For New Downloads\n(Can be toggled off per-download in Control Panel)")]
+		[DefaultValue(true)]
+		[JsonProperty("enforce_restrictions")]
+		public bool EnforceRestrictions { get; set; }
+
+        [Category("Download Restrictions")]
         [DisplayName("Best Resolution Max")]
         [Description("The maximum resolution allowed when using \"Download Best\"")]
 		[DefaultValue(Classes.Resolution.ANY)]
@@ -61,13 +68,15 @@ namespace YT_RED.Settings
 						return 1080;
 					case Classes.Resolution.UHD2160p:
 						return 2160;
+					case Classes.Resolution.ANY:
+						return 0;
 					default:
 						return 0;
 				}
 			}
 		}
 
-        [Category("Downloads")]
+        [Category("Download Restrictions")]
         [DisplayName("Best Filesize Max")]
         [Description("The maximum filesize in MB allowed when using \"Download Best\"\n0 = Unlimited")]
 		[DisplayFormat(DataFormatString = "{0}MB", ApplyFormatInEditMode = false)]
@@ -75,14 +84,14 @@ namespace YT_RED.Settings
         [JsonProperty("best_max_size")]
 		public int MaxFilesizeBest { get; set; }
 
-        [Category("Downloads")]
+        [Category("Download History")]
 		[DisplayName("Enable Download History")]
 		[Description("Enable YT-RED to keep a list of downloads for quick access on the Home screen")]
 		[DefaultValue(true)]
 		[JsonProperty("history_enabled")]
 		public bool EnableDownloadHistory { get; set; }
 
-		[Category("Downloads")]
+		[Category("Download History")]
 		[DisplayName("History Age")]
 		[Description("The number of days to keep download history if it is enabled")]
 		[DefaultValue(30)]
@@ -158,6 +167,7 @@ namespace YT_RED.Settings
 			ShowHostWarning = true;
 			ActiveSkin = "WXI";
 			SkinPalette = "Darkness";
+			EnforceRestrictions = false;
 			MaxResolutionBest = Classes.Resolution.ANY;
 			MaxFilesizeBest = 0;
 			EnableDownloadHistory = true;

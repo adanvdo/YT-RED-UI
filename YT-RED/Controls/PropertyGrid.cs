@@ -109,7 +109,7 @@ namespace YT_RED.Controls
 			if(e.Properties.Find("UseTitleAsFileName", false) != null)
             {
 				this.pgcPropertyGrid.OptionsBehavior.PropertySort = DevExpress.XtraVerticalGrid.PropertySort.NoSort;
-				e.Properties = e.Properties.Sort(new string[] { "UseTitleAsFileName", "AudioDownloadPath", "VideoDownloadPath", "MaxResolutionBest", "MaxFilesizeBest", "AutomaticallyOpenDownloadLocation", "EnableDownloadHistory", "HistoryAge", "ErrorLogPath" });
+				e.Properties = e.Properties.Sort(new string[] { "UseTitleAsFileName", "AudioDownloadPath", "VideoDownloadPath", "EnforceRestrictions", "MaxResolutionBest", "MaxFilesizeBest", "AutomaticallyOpenDownloadLocation", "EnableDownloadHistory", "HistoryAge", "ErrorLogPath" });
             }
         }
 

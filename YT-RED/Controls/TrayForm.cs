@@ -198,6 +198,22 @@ namespace YT_RED.Controls
                 if (res == DialogResult.No)
                     return;
             }
+            if(currentDownload == DownloadType.YouTube)
+            {
+                YoutubeLink link = VideoUtil.ConvertToYouTubeLink(txtUrl.Text);
+                if (link.Type == YoutubeLinkType.Playlist)
+                {
+                    DialogResult res = MsgBox.Show("Quick Download does not support Youtube Playlists", "Unsupported", Buttons.OK,YT_RED.Controls.Icon.Exclamation, FormStartPosition.CenterScreen, true);
+                    if(res != DialogResult.None)
+                    {
+                        this.txtUrl.Text = "";
+                        this.txtUrl.Enabled = true;
+                        this.Locked = false;
+                        this.Hide();
+                    }
+                    return;
+                }
+            }
 
             string useFormatString = "bestvideo{0}{1}+bestaudio/best{0}{1}";
             string finalFormatString = String.Format(useFormatString,

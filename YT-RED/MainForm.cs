@@ -170,11 +170,21 @@ namespace YT_RED
                 if(!string.IsNullOrEmpty(tempText))
                     Clipboard.SetText(tempText);
 
-                if (HtmlUtil.CheckUrl(copiedText) == DownloadType.Unknown && AppSettings.Default.General.ShowHostWarning)
+                var check = HtmlUtil.CheckUrl(copiedText);
+                if (check == DownloadType.Unknown && AppSettings.Default.General.ShowHostWarning)
                 {
                     DialogResult res = MsgBox.ShowUrlCheckWarning("The URL entered is not from a supported host. Downloads from this URL may fail or result in errors.\n\nContinue?", "Unrecognized URL", Buttons.YesNo, YT_RED.Controls.Icon.Warning, FormStartPosition.CenterParent);
                     if (res == DialogResult.No)
                         return;
+                }
+                else if(check == DownloadType.YouTube)
+                {
+                    YoutubeLink link = VideoUtil.ConvertToYouTubeLink(copiedText);
+                    if (link.Type == YoutubeLinkType.Playlist)
+                    {
+                        MsgBox.Show("Quick Download does not support Youtube Playlists", "Unsupported", Buttons.OK, YT_RED.Controls.Icon.Exclamation, FormStartPosition.CenterScreen, true);
+                        return;
+                    }
                 }
 
                 if (activeTrayForm == null)
@@ -238,6 +248,18 @@ namespace YT_RED
                     MsgBox.Show("Log Upload Failed", FormStartPosition.CenterParent);
             }
             splitterNegativePosition = sccMainSplitter.Size.Width - sccMainSplitter.SplitterPosition;
+            if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
+            {
+                cpMainControlPanel.EnableToggle(false, false, true, true, false);                
+                cpMainControlPanel.ConvertVideoFormat = AppSettings.Default.Advanced.PreferredVideoFormat;
+                cpMainControlPanel.ConvertAudioFormat = AppSettings.Default.Advanced.PreferredAudioFormat;
+            }
+            if (AppSettings.Default.General.EnforceRestrictions)
+            {
+                cpMainControlPanel.EnableToggle(false, false, false, true, true);
+            }
+            cpMainControlPanel.MaxResolution = AppSettings.Default.General.MaxResolutionBest;
+            cpMainControlPanel.MaxFilesize = AppSettings.Default.General.MaxFilesizeBest;
             base.OnLoad(e);
         }
 
@@ -439,6 +461,9 @@ namespace YT_RED
             if (res == DialogResult.OK)
             {
                 bsiMessage.Caption = "Settings Saved";
+                string currentUrl = ipMainInput.URL;
+                cpMainControlPanel.ResetControls(gvFormats.RowCount > 0);
+                if(ipMainInput.URL != currentUrl) { ipMainInput.URL = currentUrl; }
                 cpMainControlPanel.gcHistory.Visible = AppSettings.Default.General.EnableDownloadHistory;
                 await Task.Delay(3000);
                 bsiMessage.Caption = String.Empty;
@@ -532,7 +557,7 @@ namespace YT_RED
             gcFormats.DataSource = null;
             gvFormats.RefreshData();
             cpMainControlPanel.CurrentFormatPair.Clear();
-            cpMainControlPanel.ResetControls();
+            cpMainControlPanel.ResetControls(false);
             selectedAudioIndex = -1;
             selectedVideoIndex = -1; 
             videoInfoPanel.Clear();
@@ -545,8 +570,15 @@ namespace YT_RED
             if (gvFormats.GetSelectedRows().Length < 1 && checkUrl != DownloadType.Unknown && checkUrl == DownloadType.YouTube)
             {
                 YoutubeLink link = VideoUtil.ConvertToYouTubeLink(ipMainInput.URL);
+                if(ipMainInput.URL != link.Url)
+                {
+                    ipMainInput.URL = link.Url;
+                    ipMainInput.btnListFormats.Focus();
+                }
                 if(link.Type == YoutubeLinkType.Playlist)
                 {
+                    cpMainControlPanel.ShowHideControlGroup(ControlGroups.Segment, false);
+                    cpMainControlPanel.ShowHideControlGroup(ControlGroups.Crop, false);
                     cpMainControlPanel.DisableToggle(true, true, true);
                     cpMainControlPanel.SetSelectionText("Playlist Download");
                     cpMainControlPanel.btnDownloadBest.Text = "DOWNLOAD ALL [audio+video]       ";
@@ -555,6 +587,8 @@ namespace YT_RED
                 }
                 else
                 {
+                    cpMainControlPanel.ShowHideControlGroup(ControlGroups.Segment, true);
+                    cpMainControlPanel.ShowHideControlGroup(ControlGroups.Crop, true);
                     ipMainInput.ListMode = ListMode.Format;
                     if (gvFormats.GetSelectedRows().Length < 1)
                     {
@@ -587,7 +621,7 @@ namespace YT_RED
             gcFormats.DataSource = null;
             gvFormats.RefreshData();
             cpMainControlPanel.CurrentFormatPair.Clear();
-            cpMainControlPanel.ResetControls();
+            cpMainControlPanel.ResetControls(false);
             selectedAudioIndex = -1;
             selectedVideoIndex = -1;
             ipMainInput.URL = string.Empty; 
@@ -722,6 +756,7 @@ namespace YT_RED
             {
                 gvFormats.PopulateColumns();
                 gvFormats.RefreshData();
+                gvFormats.RowHeight = 0;
                 gvFormats.Columns["Type"].VisibleIndex = start + 0;
                 gvFormats.Columns["Format"].VisibleIndex = start + 1;
                 gvFormats.Columns["Duration"].VisibleIndex = start + 2;
@@ -896,6 +931,7 @@ namespace YT_RED
                 {                   
                     await videoInfoPanel.Populate(data); 
                     videoInfoPanel.Visible = true;
+                    ipMainInput.SendToBack();
                 }
                 else
                 {
@@ -944,6 +980,7 @@ namespace YT_RED
                         YT_RED.Controls.Icon.Warning, 
                         FormStartPosition.CenterParent);
                     if(res == DialogResult.No) { return; }
+                    cpMainControlPanel.SetCurrentPlaylistItems(this.playlistItemCollection);
                 }
                 else
                 {
@@ -990,7 +1027,7 @@ namespace YT_RED
 
                 RunResult<string> result = null;
                 cpMainControlPanel.ShowProgress();
-                if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
+                if (cpMainControlPanel.ConversionEnabled && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
                     result = await Utils.VideoUtil.DownloadPreferredYtdl(playlistItem.Url, streamType, targetPlaylist.PlaylistData.Title.Replace(" ", ""));
                 else
                     result = await Utils.VideoUtil.DownloadBestYtdl(playlistItem.Url, streamType, cpMainControlPanel.EmbedThumbnail, targetPlaylist.PlaylistData.Title.Replace(" ", ""));
@@ -1011,7 +1048,18 @@ namespace YT_RED
                     streamType,
                     DateTime.Now,
                     result.Data,
-                    pendingDL);
+                    pendingDL
+                    )
+                {
+                    InSubFolder = AppSettings.Default.General.CreateFolderForPlaylists,
+                    PlaylistTitle = targetPlaylist.PlaylistData.Title,
+                    PlaylistUrl = targetPlaylist.PlaylistData.WebpageUrl 
+                };
+                if (cpMainControlPanel.LimitsEnabled)
+                {
+                    dlLog.MaxResolution = cpMainControlPanel.MaxResolution;
+                    dlLog.MaxFileSize = cpMainControlPanel.MaxFilesize;
+                }
                 initialDLLocation = result.Data;
 
                 await Historian.RecordDownload(dlLog);
@@ -1119,7 +1167,7 @@ namespace YT_RED
                 {                    
                     pendingDL.Format = finalFormatString;
                     IConversion conversion = await VideoUtil.PrepareBestYtdlConversion(url, finalFormatString, start, duration, 
-                        AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat, crops, videoFormat == null ? VideoFormat.UNSPECIFIED : (VideoFormat)videoFormat, 
+                        cpMainControlPanel.ConversionEnabled && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat, crops, videoFormat == null ? VideoFormat.UNSPECIFIED : (VideoFormat)videoFormat, 
                         audioFormat == null ? AudioFormat.UNSPECIFIED : (AudioFormat)audioFormat, false, processOutput);
                     string destination = conversion.OutputFilePath;
                     conversion.OnProgress += Conversion_OnProgress;
@@ -1141,7 +1189,7 @@ namespace YT_RED
                 {
                     pendingDL.Format = finalAudioFormatString;
                     IConversion conversion = await VideoUtil.PrepareBestYtdlConversion(url, finalAudioFormatString, start, duration, 
-                        AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat, null, VideoFormat.UNSPECIFIED, 
+                        cpMainControlPanel.ConversionEnabled && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat, null, VideoFormat.UNSPECIFIED, 
                         audioFormat == null ? AudioFormat.UNSPECIFIED : (AudioFormat)audioFormat, cpMainControlPanel.EmbedThumbnail, processOutput);
                     string destination = conversion.OutputFilePath;
                     conversion.OnProgress += Conversion_OnProgress;
@@ -1163,7 +1211,7 @@ namespace YT_RED
                 pendingDL.Format = streamType == Classes.StreamType.AudioAndVideo ? finalFormatString : finalAudioFormatString;
                 cpMainControlPanel.ShowProgress();
                 RunResult<string> test = null;
-                if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)                
+                if (cpMainControlPanel.ConversionEnabled && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)                
                     test = await Utils.VideoUtil.DownloadPreferredYtdl(VideoUtil.ConvertToYouTubeLink(url).Url, streamType);
                 else 
                     test = await Utils.VideoUtil.DownloadBestYtdl(VideoUtil.ConvertToYouTubeLink(url).Url, streamType, cpMainControlPanel.EmbedThumbnail);
@@ -1182,7 +1230,7 @@ namespace YT_RED
                             YT_RED.Classes.StreamType detect = AppSettings.DetectStreamTypeFromExtension(data.Extension);
                             if (detect != Classes.StreamType.Unknown)
                             {                                
-                                if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
+                                if (cpMainControlPanel.ConversionEnabled && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
                                     test = await Utils.VideoUtil.DownloadPreferredYtdl(VideoUtil.ConvertToYouTubeLink(url).Url, detect);
                                 else 
                                     test = await Utils.VideoUtil.DownloadBestYtdl(VideoUtil.ConvertToYouTubeLink(url).Url, detect, cpMainControlPanel.EmbedThumbnail);
@@ -1283,7 +1331,7 @@ namespace YT_RED
             if (cpMainControlPanel.PostProcessingEnabled 
                 || (cpMainControlPanel.CurrentFormatPair.Type == Classes.StreamType.Audio && cpMainControlPanel.CurrentFormatPair.AudioFormat != null && cpMainControlPanel.CurrentFormatPair.RedditAudioFormat == null && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat && !preferredAudio)
                 || (cpMainControlPanel.CurrentFormatPair.Type != Classes.StreamType.Video && ((cpMainControlPanel.CurrentFormatPair.VideoFormat != null && cpMainControlPanel.CurrentFormatPair.VideoFormat.RedditAudioFormat != null) || (cpMainControlPanel.CurrentFormatPair.AudioFormat != null && cpMainControlPanel.CurrentFormatPair.AudioFormat.RedditAudioFormat != null)))
-                || (cpMainControlPanel.CurrentFormatPair.VideoFormat != null && cpMainControlPanel.CurrentFormatPair.VideoFormat.VideoCodec != "gif" && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat && !preferredVideo))
+                || (cpMainControlPanel.CurrentFormatPair.VideoFormat != null && cpMainControlPanel.CurrentFormatPair.VideoFormat.VideoCodec != "gif" && cpMainControlPanel.ConversionEnabled && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat && !preferredVideo))
             {
                 if (cpMainControlPanel.SegmentEnabled && cpMainControlPanel.SegmentDuration == TimeSpan.Zero)
                 {
@@ -1315,14 +1363,9 @@ namespace YT_RED
 
                 if (cpMainControlPanel.ConversionEnabled)
                 {
-                    videoFormat = cpMainControlPanel.ConvertVideoFormat;
-                    audioFormat = cpMainControlPanel.ConvertAudioFormat;
+                    videoFormat = AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat ? AppSettings.Default.Advanced.PreferredVideoFormat : cpMainControlPanel.ConvertVideoFormat;
+                    audioFormat = AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat ? AppSettings.Default.Advanced.PreferredAudioFormat : cpMainControlPanel.ConvertAudioFormat;
                 } 
-                else if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
-                {
-                    videoFormat = AppSettings.Default.Advanced.PreferredVideoFormat;
-                    audioFormat = AppSettings.Default.Advanced?.PreferredAudioFormat;
-                }
 
                 pendingDL = new PendingDownload()
                 {
@@ -1335,7 +1378,7 @@ namespace YT_RED
                 };
 
                 IConversion conversion = await Utils.VideoUtil.PrepareYoutubeConversion(VideoUtil.ConvertToYouTubeLink(ipMainInput.URL).Url, cpMainControlPanel.CurrentFormatPair, 
-                    start, duration, AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat, crops, videoFormat == null ? VideoFormat.UNSPECIFIED : (VideoFormat)videoFormat, 
+                    start, duration, cpMainControlPanel.ConversionEnabled && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat, crops, videoFormat == null ? VideoFormat.UNSPECIFIED : (VideoFormat)videoFormat, 
                     audioFormat == null ? AudioFormat.UNSPECIFIED : (AudioFormat)audioFormat);
                 string destination = conversion.OutputFilePath;
                 conversion.OnProgress += Conversion_OnProgress;
@@ -1348,7 +1391,7 @@ namespace YT_RED
 
                     if (cpMainControlPanel.EmbedThumbnail)
                     {
-                        if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
+                        if (cpMainControlPanel.ConversionEnabled && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
                             audioFormat = AppSettings.Default.Advanced.PreferredAudioFormat;
 
                         var data = await VideoUtil.GetVideoData(VideoUtil.ConvertToYouTubeLink(ipMainInput.URL).Url);
@@ -1751,23 +1794,33 @@ namespace YT_RED
 
                 if (cpMainControlPanel.TargetLog.Start != null && cpMainControlPanel.TargetLog.Duration != null)
                 {
-                    cpMainControlPanel.EnableToggle(true, false, false, true);
+                    cpMainControlPanel.EnableToggle(true, false, false, false);
                     cpMainControlPanel.SegmentStart = (TimeSpan)cpMainControlPanel.TargetLog.Start;
                     cpMainControlPanel.SegmentDuration = (TimeSpan)cpMainControlPanel.TargetLog.Duration;
                 }
                 if (cpMainControlPanel.TargetLog.Crops != null && cpMainControlPanel.TargetLog.Crops.Length > 0)
                 {
-                    cpMainControlPanel.EnableToggle(false, true, false, true);
+                    cpMainControlPanel.EnableToggle(false, true, false, false);
                     cpMainControlPanel.CropTop = cpMainControlPanel.TargetLog.Crops[0].ToString();
                     cpMainControlPanel.CropBottom = cpMainControlPanel.TargetLog.Crops[1].ToString();
                     cpMainControlPanel.CropLeft = cpMainControlPanel.TargetLog.Crops[2].ToString();
                     cpMainControlPanel.CropRight = cpMainControlPanel.TargetLog.Crops[3].ToString();
                 }
-                if((cpMainControlPanel.TargetLog.VideoConversionFormat != null && cpMainControlPanel.TargetLog.VideoConversionFormat != VideoFormat.UNSPECIFIED)
+                if ((cpMainControlPanel.TargetLog.VideoConversionFormat != null && cpMainControlPanel.TargetLog.VideoConversionFormat != VideoFormat.UNSPECIFIED)
                     || (cpMainControlPanel.TargetLog.AudioConversionFormat != null && cpMainControlPanel.TargetLog.AudioConversionFormat != AudioFormat.UNSPECIFIED))
                 {
-                    cpMainControlPanel.EnableToggle(false, false, true, true);
+                    cpMainControlPanel.EnableToggle(false, false, true, false);
                     cpMainControlPanel.ConvertVideoFormat = cpMainControlPanel.TargetLog.VideoConversionFormat;
+                }
+                if (cpMainControlPanel.TargetLog.MaxResolution != null && cpMainControlPanel.TargetLog.MaxResolution != Resolution.ANY)
+                {
+                    cpMainControlPanel.EnableToggle(false, false, false, true);
+                    cpMainControlPanel.MaxResolution = cpMainControlPanel.TargetLog.MaxResolution;
+                }
+                if(cpMainControlPanel.TargetLog.MaxFileSize != null && cpMainControlPanel.TargetLog.MaxFileSize > 0)
+                {
+                    cpMainControlPanel.EnableToggle(false, false, false, true);
+                    cpMainControlPanel.MaxFilesize = (int)cpMainControlPanel.TargetLog.MaxFileSize;
                 }
 
                 if (cpMainControlPanel.TargetLog.FormatPair == null)
