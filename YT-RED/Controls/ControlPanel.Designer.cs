@@ -294,6 +294,7 @@
             this.pnlLimitPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlLimitPanel.Location = new System.Drawing.Point(2, 29);
             this.pnlLimitPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlLimitPanel.MinimumSize = new System.Drawing.Size(0, 96);
             this.pnlLimitPanel.Name = "pnlLimitPanel";
             this.pnlLimitPanel.Size = new System.Drawing.Size(319, 96);
             this.pnlLimitPanel.TabIndex = 0;
@@ -429,6 +430,7 @@
             this.pnlConvertPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlConvertPanel.Location = new System.Drawing.Point(2, 29);
             this.pnlConvertPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlConvertPanel.MinimumSize = new System.Drawing.Size(0, 67);
             this.pnlConvertPanel.Name = "pnlConvertPanel";
             this.pnlConvertPanel.Size = new System.Drawing.Size(319, 67);
             this.pnlConvertPanel.TabIndex = 0;
@@ -529,6 +531,7 @@
             this.pnlCropPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlCropPanel.Location = new System.Drawing.Point(2, 29);
             this.pnlCropPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlCropPanel.MinimumSize = new System.Drawing.Size(0, 93);
             this.pnlCropPanel.Name = "pnlCropPanel";
             this.pnlCropPanel.Size = new System.Drawing.Size(319, 93);
             this.pnlCropPanel.TabIndex = 0;
@@ -710,6 +713,7 @@
             this.pnlSegPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlSegPanel.Location = new System.Drawing.Point(2, 29);
             this.pnlSegPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlSegPanel.MinimumSize = new System.Drawing.Size(0, 69);
             this.pnlSegPanel.Name = "pnlSegPanel";
             this.pnlSegPanel.Size = new System.Drawing.Size(319, 69);
             this.pnlSegPanel.TabIndex = 0;
@@ -859,11 +863,12 @@
             this.gcHistory.Location = new System.Drawing.Point(0, 831);
             this.gcHistory.MainView = this.gvHistory;
             this.gcHistory.MenuManager = this.historyBarManager;
+            this.gcHistory.MinimumSize = new System.Drawing.Size(0, 225);
             this.gcHistory.Name = "gcHistory";
             this.gcHistory.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repFileExists,
             this.repPostProcessed});
-            this.gcHistory.Size = new System.Drawing.Size(323, 207);
+            this.gcHistory.Size = new System.Drawing.Size(323, 227);
             this.gcHistory.TabIndex = 0;
             this.gcHistory.ToolTipController = this.historyTooltip;
             this.gcHistory.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -914,7 +919,7 @@
             // 
             this.barDockControlBottom.CausesValidation = false;
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 1038);
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 1058);
             this.barDockControlBottom.Manager = this.historyBarManager;
             this.barDockControlBottom.Size = new System.Drawing.Size(323, 0);
             // 
@@ -924,7 +929,7 @@
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.barDockControlLeft.Location = new System.Drawing.Point(0, 0);
             this.barDockControlLeft.Manager = this.historyBarManager;
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 1038);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 1058);
             // 
             // barDockControlRight
             // 
@@ -932,7 +937,7 @@
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
             this.barDockControlRight.Location = new System.Drawing.Point(323, 0);
             this.barDockControlRight.Manager = this.historyBarManager;
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 1038);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 1058);
             // 
             // bbiReDownload
             // 
@@ -992,9 +997,9 @@
             this.Controls.Add(this.barDockControlRight);
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
-            this.MinimumSize = new System.Drawing.Size(323, 0);
+            this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "ControlPanel";
-            this.Size = new System.Drawing.Size(323, 1038);
+            this.Size = new System.Drawing.Size(323, 1058);
             ((System.ComponentModel.ISupportInitialize)(this.pnlOptionPanel)).EndInit();
             this.pnlOptionPanel.ResumeLayout(false);
             this.pnlOptionPanel.PerformLayout();
@@ -1065,14 +1070,6 @@
         private DevExpress.XtraEditors.TextEdit txtCropLeft;
         private DevExpress.XtraEditors.LabelControl labelControl5;
         private DevExpress.XtraEditors.TextEdit txtCropRight;
-        private DevExpress.XtraEditors.GroupControl gcSegments;
-        private DevExpress.XtraEditors.LabelControl lblSegmentDisclaimer;
-        private DevExpress.XtraEditors.PanelControl pnlSegPanel;
-        private DevExpress.XtraEditors.ToggleSwitch toggleSegment;
-        private DevExpress.XtraEditors.LabelControl labelControl3;
-        private DevExpress.XtraEditors.LabelControl labelControl4;
-        private DevExpress.XtraEditors.TimeSpanEdit tsStart;
-        private DevExpress.XtraEditors.TimeSpanEdit tsDuration;
         private DevExpress.XtraEditors.PanelControl pnlProgressPanel;
         private DevExpress.XtraEditors.SimpleButton btnOpenDL;
         private DevExpress.XtraEditors.ProgressBarControl pbProgress;
@@ -1111,5 +1108,13 @@
         private DevExpress.XtraEditors.ComboBoxEdit cbMaxRes;
         private DevExpress.XtraEditors.ToggleSwitch toggleDownloadLimits;
         private DevExpress.XtraEditors.TextEdit txtMaxFilesize;
+        private DevExpress.XtraEditors.GroupControl gcSegments;
+        private DevExpress.XtraEditors.LabelControl lblSegmentDisclaimer;
+        private DevExpress.XtraEditors.PanelControl pnlSegPanel;
+        private DevExpress.XtraEditors.ToggleSwitch toggleSegment;
+        private DevExpress.XtraEditors.LabelControl labelControl3;
+        private DevExpress.XtraEditors.LabelControl labelControl4;
+        private DevExpress.XtraEditors.TimeSpanEdit tsStart;
+        private DevExpress.XtraEditors.TimeSpanEdit tsDuration;
     }
 }

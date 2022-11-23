@@ -964,8 +964,8 @@ namespace YT_RED.Utils
                 }
                 return new YoutubeLink(type, linkOrID);
             }
-            
-            return null;
+
+            return new YoutubeLink(Classes.YoutubeLinkType.Invalid, linkOrID);
         }
     }    
 }

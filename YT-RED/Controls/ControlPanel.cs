@@ -266,6 +266,22 @@ namespace YT_RED.Controls
             set { txtCropRight.Text = value; }
         }
 
+        public Size TotalControlSize
+        {
+            get
+            {
+
+                int totalMinHeight = (gcSegments.Visible ? gcSegments.Height : 0)
+                    + (gcCrop.Visible ? gcCrop.Height : 0)
+                    + (gcConvert.Visible ? gcConvert.Height : 0)
+                    + (gcDownloadLimits.Visible ? gcDownloadLimits.Height : 0)
+                    + gcDLButtons.Height
+                    + pnlProgressPanel.Height
+                    + gcHistory.MinimumSize.Height;
+                return new Size(this.Size.Width, totalMinHeight);
+            }
+        }
+
         public bool ValidCrops()
         {
             return !string.IsNullOrEmpty(CropTop) || !string.IsNullOrEmpty(CropBottom) || !string.IsNullOrEmpty(CropLeft) || !string.IsNullOrEmpty(CropRight);
@@ -484,6 +500,9 @@ namespace YT_RED.Controls
         }
 
         [Browsable(true)]
+        public event EventHandler Controls_Updated;
+
+        [Browsable(true)]
         public event EventHandler DownloadSelection_Click;
 
         [Browsable(true)]
@@ -515,7 +534,7 @@ namespace YT_RED.Controls
         public ControlPanel()
         {
             InitializeComponent();
-            toggleForeColor = toggleSegment.ForeColor;
+            toggleForeColor = toggleSegment.ForeColor;            
             InitControls();
         }
 
@@ -537,6 +556,8 @@ namespace YT_RED.Controls
             cbMaxRes.SelectedIndex = 4;
             txtMaxFilesize.Text = "0";
             inInit = false;
+            this.MinimumSize = this.TotalControlSize;
+            this.controlsUpdated();
         }
 
         private List<string> videoFormats;
@@ -593,6 +614,21 @@ namespace YT_RED.Controls
 
             hlblOpenSettings.Visible = toggleConvert.IsOn && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
             lblAlwaysConvert.Visible = toggleConvert.IsOn && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
+            this.MinimumSize = this.TotalControlSize;
+            this.controlsUpdated();
+        }
+
+        public void AdjustControls(int parentPanelHeight)
+        {
+            if(TotalControlSize.Height < parentPanelHeight)
+            {
+                this.Height = parentPanelHeight;
+            }
+        }
+
+        private void controlsUpdated()
+        {
+            if(Controls_Updated != null) Controls_Updated(this, EventArgs.Empty);
         }
 
         public void DisableToggle(bool disableSegment = false, bool disableCrop = false, bool disableConvert = false, bool disableLimits = false)
@@ -1128,6 +1164,7 @@ namespace YT_RED.Controls
                 }
             }
         }
+
     }
 
     public enum ControlGroups

@@ -292,6 +292,7 @@ namespace YT_RED
                 notifyIcon.Visible = false;
                 this.ShowInTaskbar = true;
                 enableQuickDownload = false;
+                cpMainControlPanel.AdjustControls(pnlScrollableControls.Height);
             }
             base.OnResize(e);
         }
@@ -1883,6 +1884,22 @@ namespace YT_RED
                 gvFormats.SelectAll();
                 allSelected = true;
                 btnPLSelectAll.Text = "Clear Selection";
+            }
+        }
+
+        private void cpMainControlPanel_Controls_Updated(object sender, EventArgs e)
+        {
+            if(cpMainControlPanel.TotalControlSize.Height > sccMainSplitter.Panel2.Size.Height)
+            {
+                sccMainSplitter.SplitterPosition = sccMainSplitter.SplitterPosition - 25;
+                cpMainControlPanel.Dock = DockStyle.Top;
+                cpMainControlPanel.AdjustControls(pnlScrollableControls.Height);
+            }
+            else
+            {
+                sccMainSplitter.SplitterPosition = sccMainSplitter.SplitterPosition + 25;
+                cpMainControlPanel.Dock = DockStyle.Fill;
+                cpMainControlPanel.AdjustControls(pnlScrollableControls.Height);
             }
         }
     }

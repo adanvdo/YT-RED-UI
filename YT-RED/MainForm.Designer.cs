@@ -46,6 +46,7 @@
             this.videoInfoPanel = new YT_RED.Controls.VideoInfoPanel();
             this.marqueeProgressBarControl1 = new DevExpress.XtraEditors.MarqueeProgressBarControl();
             this.ipMainInput = new YT_RED.Controls.InputPanel();
+            this.pnlScrollableControls = new DevExpress.XtraEditors.XtraScrollableControl();
             this.cpMainControlPanel = new YT_RED.Controls.ControlPanel();
             this.toolTipController = new DevExpress.Utils.ToolTipController(this.components);
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
@@ -67,6 +68,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pnlPlaylistControls)).BeginInit();
             this.pnlPlaylistControls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.marqueeProgressBarControl1.Properties)).BeginInit();
+            this.pnlScrollableControls.SuspendLayout();
             this.taskBarMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -153,7 +155,7 @@
             // 
             // sccMainSplitter.Panel2
             // 
-            this.sccMainSplitter.Panel2.Controls.Add(this.cpMainControlPanel);
+            this.sccMainSplitter.Panel2.Controls.Add(this.pnlScrollableControls);
             this.sccMainSplitter.Panel2.MinSize = 323;
             this.sccMainSplitter.Panel2.Text = "Panel2";
             this.sccMainSplitter.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -306,6 +308,16 @@
             this.ipMainInput.ListFormats_MouseMove += new System.EventHandler(this.cancelProcessButtons_MouseMove);
             this.ipMainInput.ListFormats_MouseLeave += new System.EventHandler(this.cancelProcessButtons_MouseLeave);
             // 
+            // pnlScrollableControls
+            // 
+            this.pnlScrollableControls.Controls.Add(this.cpMainControlPanel);
+            this.pnlScrollableControls.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlScrollableControls.Location = new System.Drawing.Point(0, 0);
+            this.pnlScrollableControls.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlScrollableControls.Name = "pnlScrollableControls";
+            this.pnlScrollableControls.Size = new System.Drawing.Size(323, 717);
+            this.pnlScrollableControls.TabIndex = 3;
+            // 
             // cpMainControlPanel
             // 
             this.cpMainControlPanel.ConvertAudioFormat = null;
@@ -319,16 +331,18 @@
             this.cpMainControlPanel.DownloadBestVisible = true;
             this.cpMainControlPanel.DownloadSelectionVisible = false;
             this.cpMainControlPanel.Location = new System.Drawing.Point(0, 0);
+            this.cpMainControlPanel.Margin = new System.Windows.Forms.Padding(0);
             this.cpMainControlPanel.MaxFilesize = 0;
             this.cpMainControlPanel.MaxResolution = null;
-            this.cpMainControlPanel.MinimumSize = new System.Drawing.Size(323, 0);
+            this.cpMainControlPanel.MinimumSize = new System.Drawing.Size(323, 769);
             this.cpMainControlPanel.Name = "cpMainControlPanel";
             this.cpMainControlPanel.SegmentDuration = System.TimeSpan.Parse("00:00:01");
             this.cpMainControlPanel.SegmentStart = System.TimeSpan.Parse("00:00:00");
-            this.cpMainControlPanel.Size = new System.Drawing.Size(323, 717);
+            this.cpMainControlPanel.Size = new System.Drawing.Size(323, 769);
             this.cpMainControlPanel.TabIndex = 2;
             this.cpMainControlPanel.Cancel_MouseMove += new System.EventHandler(this.cancelProcessButtons_MouseMove);
             this.cpMainControlPanel.Cancel_MouseLeave += new System.EventHandler(this.cancelProcessButtons_MouseLeave);
+            this.cpMainControlPanel.Controls_Updated += new System.EventHandler(this.cpMainControlPanel_Controls_Updated);
             this.cpMainControlPanel.DownloadSelection_Click += new System.EventHandler(this.cpMainControlPanel_DownloadSelection_Click);
             this.cpMainControlPanel.DownloadAudio_Click += new System.EventHandler(this.cpMainControlPanel_DownloadAudio_Click);
             this.cpMainControlPanel.DownloadBest_Click += new System.EventHandler(this.cpMainControlPanel_DownloadBest_Click);
@@ -413,6 +427,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pnlPlaylistControls)).EndInit();
             this.pnlPlaylistControls.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.marqueeProgressBarControl1.Properties)).EndInit();
+            this.pnlScrollableControls.ResumeLayout(false);
             this.taskBarMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -442,6 +457,7 @@
         private DevExpress.XtraEditors.Repository.RepositoryItemPictureEdit repPictureEdit;
         private DevExpress.XtraEditors.PanelControl pnlPlaylistControls;
         private DevExpress.XtraEditors.SimpleButton btnPLSelectAll;
+        private DevExpress.XtraEditors.XtraScrollableControl pnlScrollableControls;
     }
 }
 
