@@ -107,6 +107,10 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 11/23/2022 v1.0.2.3
+- Fixed bug where non-youtube downloads caused a crash
+- Fixed issue where the download history could be cut off if the app window was too small
+
 ### 11/15/2022 v1.0.2.2
  - Fixed bug with custom format layout where format rows could no longer be selected unless you click directly in the checkbox
  - Added Youtube Playlist Support (List and select Playlist Items, or Download an Entire Playlist)
