@@ -556,7 +556,6 @@ namespace YT_RED.Controls
             cbMaxRes.SelectedIndex = 4;
             txtMaxFilesize.Text = "0";
             inInit = false;
-            this.MinimumSize = this.TotalControlSize;
             this.controlsUpdated();
         }
 
@@ -614,7 +613,6 @@ namespace YT_RED.Controls
 
             hlblOpenSettings.Visible = toggleConvert.IsOn && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
             lblAlwaysConvert.Visible = toggleConvert.IsOn && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
-            this.MinimumSize = this.TotalControlSize;
             this.controlsUpdated();
         }
 

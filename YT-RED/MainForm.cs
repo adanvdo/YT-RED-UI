@@ -292,6 +292,7 @@ namespace YT_RED
                 notifyIcon.Visible = false;
                 this.ShowInTaskbar = true;
                 enableQuickDownload = false;
+                updateControlPanelDisplay();
                 cpMainControlPanel.AdjustControls(pnlScrollableControls.Height);
             }
             base.OnResize(e);
@@ -1889,16 +1890,32 @@ namespace YT_RED
 
         private void cpMainControlPanel_Controls_Updated(object sender, EventArgs e)
         {
-            if(cpMainControlPanel.TotalControlSize.Height > sccMainSplitter.Panel2.Size.Height)
+            updateControlPanelDisplay();
+        }
+
+        private bool adjustedSplitter = false;
+        private void updateControlPanelDisplay()
+        {
+            if (cpMainControlPanel.TotalControlSize.Height > sccMainSplitter.Panel2.Size.Height)
             {
-                sccMainSplitter.SplitterPosition = sccMainSplitter.SplitterPosition - 25;
+                if (pnlScrollableControls.VerticalScroll.Visible && !adjustedSplitter)
+                {
+                    sccMainSplitter.SplitterPosition = sccMainSplitter.SplitterPosition - 25;
+                    adjustedSplitter = true;
+                }
                 cpMainControlPanel.Dock = DockStyle.Top;
+                cpMainControlPanel.MinimumSize = cpMainControlPanel.TotalControlSize;
                 cpMainControlPanel.AdjustControls(pnlScrollableControls.Height);
             }
             else
             {
-                sccMainSplitter.SplitterPosition = sccMainSplitter.SplitterPosition + 25;
+                if (!pnlScrollableControls.VerticalScroll.Visible && adjustedSplitter)
+                {
+                    sccMainSplitter.SplitterPosition = sccMainSplitter.SplitterPosition + 25;
+                    adjustedSplitter = false;
+                }
                 cpMainControlPanel.Dock = DockStyle.Fill;
+                cpMainControlPanel.MinimumSize = new Size(0, 0);
                 cpMainControlPanel.AdjustControls(pnlScrollableControls.Height);
             }
         }

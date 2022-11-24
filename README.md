@@ -107,6 +107,9 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 11/23/2022 v1.0.2.4
+- Fixed bug where Control Panel was not scrollable when too large to fit in the window
+
 ### 11/23/2022 v1.0.2.3
 - Fixed bug where non-youtube downloads caused a crash
 - Fixed issue where the download history could be cut off if the app window was too small

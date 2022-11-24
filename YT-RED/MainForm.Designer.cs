@@ -131,7 +131,7 @@
             this.tabFormContentContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabFormContentContainer1.Location = new System.Drawing.Point(0, 66);
             this.tabFormContentContainer1.Name = "tabFormContentContainer1";
-            this.tabFormContentContainer1.Size = new System.Drawing.Size(1188, 717);
+            this.tabFormContentContainer1.Size = new System.Drawing.Size(1188, 767);
             this.tabFormContentContainer1.TabIndex = 0;
             // 
             // sccMainSplitter
@@ -159,7 +159,7 @@
             this.sccMainSplitter.Panel2.MinSize = 323;
             this.sccMainSplitter.Panel2.Text = "Panel2";
             this.sccMainSplitter.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.sccMainSplitter.Size = new System.Drawing.Size(1188, 717);
+            this.sccMainSplitter.Size = new System.Drawing.Size(1188, 767);
             this.sccMainSplitter.SplitterPosition = 839;
             this.sccMainSplitter.TabIndex = 0;
             this.sccMainSplitter.SplitterMoved += new System.EventHandler(this.sccMainSplitter_SplitterMoved);
@@ -173,7 +173,7 @@
             this.gcFormats.Name = "gcFormats";
             this.gcFormats.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repPictureEdit});
-            this.gcFormats.Size = new System.Drawing.Size(839, 419);
+            this.gcFormats.Size = new System.Drawing.Size(839, 469);
             this.gcFormats.TabIndex = 0;
             this.gcFormats.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvFormats});
@@ -315,7 +315,7 @@
             this.pnlScrollableControls.Location = new System.Drawing.Point(0, 0);
             this.pnlScrollableControls.Margin = new System.Windows.Forms.Padding(0);
             this.pnlScrollableControls.Name = "pnlScrollableControls";
-            this.pnlScrollableControls.Size = new System.Drawing.Size(323, 717);
+            this.pnlScrollableControls.Size = new System.Drawing.Size(323, 767);
             this.pnlScrollableControls.TabIndex = 3;
             // 
             // cpMainControlPanel
@@ -334,11 +334,10 @@
             this.cpMainControlPanel.Margin = new System.Windows.Forms.Padding(0);
             this.cpMainControlPanel.MaxFilesize = 0;
             this.cpMainControlPanel.MaxResolution = null;
-            this.cpMainControlPanel.MinimumSize = new System.Drawing.Size(323, 769);
             this.cpMainControlPanel.Name = "cpMainControlPanel";
             this.cpMainControlPanel.SegmentDuration = System.TimeSpan.Parse("00:00:01");
             this.cpMainControlPanel.SegmentStart = System.TimeSpan.Parse("00:00:00");
-            this.cpMainControlPanel.Size = new System.Drawing.Size(323, 769);
+            this.cpMainControlPanel.Size = new System.Drawing.Size(323, 767);
             this.cpMainControlPanel.TabIndex = 2;
             this.cpMainControlPanel.Cancel_MouseMove += new System.EventHandler(this.cancelProcessButtons_MouseMove);
             this.cpMainControlPanel.Cancel_MouseLeave += new System.EventHandler(this.cancelProcessButtons_MouseLeave);
@@ -401,7 +400,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1188, 783);
+            this.ClientSize = new System.Drawing.Size(1188, 833);
             this.Controls.Add(this.tabFormContentContainer1);
             this.Controls.Add(this.tcMainTabControl);
             this.DoubleBuffered = true;

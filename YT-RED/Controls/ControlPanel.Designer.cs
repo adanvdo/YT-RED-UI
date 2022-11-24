@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions5 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions1 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions2 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions3 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
-            DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions4 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             this.lblSelectionText = new DevExpress.XtraEditors.LabelControl();
             this.pnlOptionPanel = new DevExpress.XtraEditors.PanelControl();
             this.gcDLButtons = new DevExpress.XtraEditors.GroupControl();
@@ -269,10 +269,10 @@
             this.gcDownloadLimits.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gcDownloadLimits.CaptionImageOptions.AllowGlyphSkinning = true;
             this.gcDownloadLimits.Controls.Add(this.pnlLimitPanel);
-            buttonImageOptions1.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
-            buttonImageOptions1.SvgImageSize = new System.Drawing.Size(18, 18);
+            buttonImageOptions5.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
+            buttonImageOptions5.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcDownloadLimits.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
-            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions1, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions5, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
             this.gcDownloadLimits.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
             this.gcDownloadLimits.Dock = System.Windows.Forms.DockStyle.Top;
             this.gcDownloadLimits.Location = new System.Drawing.Point(0, 436);
@@ -371,10 +371,10 @@
             this.gcConvert.Controls.Add(this.hlblOpenSettings);
             this.gcConvert.Controls.Add(this.lblAlwaysConvert);
             this.gcConvert.Controls.Add(this.pnlConvertPanel);
-            buttonImageOptions2.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
-            buttonImageOptions2.SvgImageSize = new System.Drawing.Size(18, 18);
+            buttonImageOptions1.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
+            buttonImageOptions1.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcConvert.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
-            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions2, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions1, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
             this.gcConvert.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
             this.gcConvert.Dock = System.Windows.Forms.DockStyle.Top;
             this.gcConvert.Location = new System.Drawing.Point(0, 275);
@@ -502,10 +502,10 @@
             this.gcCrop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gcCrop.CaptionImageOptions.AllowGlyphSkinning = true;
             this.gcCrop.Controls.Add(this.pnlCropPanel);
-            buttonImageOptions3.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
-            buttonImageOptions3.SvgImageSize = new System.Drawing.Size(18, 18);
+            buttonImageOptions2.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
+            buttonImageOptions2.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcCrop.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
-            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions3, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions2, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
             this.gcCrop.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
             this.gcCrop.Dock = System.Windows.Forms.DockStyle.Top;
             this.gcCrop.Location = new System.Drawing.Point(0, 151);
@@ -670,10 +670,10 @@
             this.gcSegments.CaptionImageOptions.AllowGlyphSkinning = true;
             this.gcSegments.Controls.Add(this.lblSegmentDisclaimer);
             this.gcSegments.Controls.Add(this.pnlSegPanel);
-            buttonImageOptions4.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
-            buttonImageOptions4.SvgImageSize = new System.Drawing.Size(18, 18);
+            buttonImageOptions3.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
+            buttonImageOptions3.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcSegments.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
-            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions4, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, false, true, "ytSegment", -1)});
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions3, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, false, true, "ytSegment", -1)});
             this.gcSegments.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
             this.gcSegments.Dock = System.Windows.Forms.DockStyle.Top;
             this.gcSegments.Location = new System.Drawing.Point(0, 0);
@@ -863,12 +863,12 @@
             this.gcHistory.Location = new System.Drawing.Point(0, 831);
             this.gcHistory.MainView = this.gvHistory;
             this.gcHistory.MenuManager = this.historyBarManager;
-            this.gcHistory.MinimumSize = new System.Drawing.Size(0, 225);
+            this.gcHistory.MinimumSize = new System.Drawing.Size(0, 200);
             this.gcHistory.Name = "gcHistory";
             this.gcHistory.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repFileExists,
             this.repPostProcessed});
-            this.gcHistory.Size = new System.Drawing.Size(323, 227);
+            this.gcHistory.Size = new System.Drawing.Size(323, 200);
             this.gcHistory.TabIndex = 0;
             this.gcHistory.ToolTipController = this.historyTooltip;
             this.gcHistory.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -919,7 +919,7 @@
             // 
             this.barDockControlBottom.CausesValidation = false;
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 1058);
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 1031);
             this.barDockControlBottom.Manager = this.historyBarManager;
             this.barDockControlBottom.Size = new System.Drawing.Size(323, 0);
             // 
@@ -929,7 +929,7 @@
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.barDockControlLeft.Location = new System.Drawing.Point(0, 0);
             this.barDockControlLeft.Manager = this.historyBarManager;
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 1058);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 1031);
             // 
             // barDockControlRight
             // 
@@ -937,7 +937,7 @@
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
             this.barDockControlRight.Location = new System.Drawing.Point(323, 0);
             this.barDockControlRight.Manager = this.historyBarManager;
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 1058);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 1031);
             // 
             // bbiReDownload
             // 
@@ -999,7 +999,7 @@
             this.Controls.Add(this.barDockControlTop);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "ControlPanel";
-            this.Size = new System.Drawing.Size(323, 1058);
+            this.Size = new System.Drawing.Size(323, 1031);
             ((System.ComponentModel.ISupportInitialize)(this.pnlOptionPanel)).EndInit();
             this.pnlOptionPanel.ResumeLayout(false);
             this.pnlOptionPanel.PerformLayout();
