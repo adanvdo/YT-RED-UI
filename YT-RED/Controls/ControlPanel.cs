@@ -195,7 +195,8 @@ namespace YT_RED.Controls
                     cbAudioFormat.Properties.Items.AddRange(audioFormats);
                     cbVideoFormat.Enabled = false;
                     cbAudioFormat.Enabled = toggleConvert.IsOn;
-                    cbAudioFormat.SelectedItem = null;
+                    cbVideoFormat.SelectedItem = null;
+                    ConvertAudioFormat = AppSettings.Default.Advanced.PreferredAudioFormat;
 
                 }
                 else
@@ -205,20 +206,25 @@ namespace YT_RED.Controls
                     cbAudioFormat.Properties.Items.Clear();
                     cbAudioFormat.Enabled = false;
                     cbVideoFormat.Enabled = toggleConvert.IsOn;
-                    cbVideoFormat.SelectedItem = null;
+                    cbAudioFormat.SelectedItem = null;
+                    ConvertVideoFormat = AppSettings.Default.Advanced.PreferredVideoFormat;
                 }
             }
             else
             {
                 cbVideoFormat.Properties.Items.Clear();
                 cbVideoFormat.Properties.Items.AddRange(videoFormats);
+                ConvertVideoFormat = AppSettings.Default.Advanced.PreferredVideoFormat;
                 cbAudioFormat.Properties.Items.Clear();
                 cbAudioFormat.Properties.Items.AddRange(audioFormats);
+                ConvertAudioFormat = AppSettings.Default.Advanced.PreferredAudioFormat;
                 cbVideoFormat.Enabled = toggleConvert.IsOn;
                 cbAudioFormat.Enabled = toggleConvert.IsOn;
-                cbVideoFormat.SelectedItem = null;
-                cbAudioFormat.SelectedItem = null;
             }
+            cbAudioFormat.Enabled = toggleConvert.IsOn && !AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
+            cbVideoFormat.Enabled = toggleConvert.IsOn && !AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
+            hlblOpenSettings.Visible = toggleConvert.IsOn && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
+            lblAlwaysConvert.Visible = toggleConvert.IsOn && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
         }
 
         public TimeSpan SegmentStart

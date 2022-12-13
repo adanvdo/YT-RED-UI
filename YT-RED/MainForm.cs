@@ -206,7 +206,8 @@ namespace YT_RED
                     }
                     catch (Exception ex)
                     {
-                        ExceptionHandler.LogException(ex);
+                        if (ex.Message.ToLower() != "a task was canceled.")
+                            ExceptionHandler.LogException(ex);
                     }
                 }
                 else if(!activeTrayForm.Locked)
@@ -521,7 +522,8 @@ namespace YT_RED
                 }
                 catch (Exception ex)
                 {
-                    ExceptionHandler.LogException(ex);
+                    if (ex.Message.ToLower() != "a task was canceled.")
+                        ExceptionHandler.LogException(ex);
                 }
             }
         }
@@ -1183,7 +1185,8 @@ namespace YT_RED
                     }
                     catch (Exception ex)
                     {
-                        ExceptionHandler.LogFFmpegException(ex);
+                        if (ex.Message.ToLower() != "a task was canceled.")
+                            ExceptionHandler.LogFFmpegException(ex);
                         result = new RunResult<string>(false, new string[] { ex.Message }, null);
                     }
                 }
@@ -1203,7 +1206,8 @@ namespace YT_RED
                     }
                     catch (Exception ex)
                     {
-                        ExceptionHandler.LogFFmpegException(ex);
+                        if (ex.Message.ToLower() != "a task was canceled.")
+                            ExceptionHandler.LogFFmpegException(ex);
                         result = new RunResult<string>(false, new string[] { ex.Message }, null);
                     }
                 }
@@ -1365,8 +1369,8 @@ namespace YT_RED
 
                 if (cpMainControlPanel.ConversionEnabled)
                 {
-                    videoFormat = AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat ? AppSettings.Default.Advanced.PreferredVideoFormat : cpMainControlPanel.ConvertVideoFormat;
-                    audioFormat = AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat ? AppSettings.Default.Advanced.PreferredAudioFormat : cpMainControlPanel.ConvertAudioFormat;
+                    videoFormat = cpMainControlPanel.ConvertVideoFormat;
+                    audioFormat = cpMainControlPanel.ConvertAudioFormat;
                 } 
 
                 pendingDL = new PendingDownload()
@@ -1416,7 +1420,8 @@ namespace YT_RED
                 catch (Exception ex)
                 {
                     result = new RunResult<string>(false, new string[] { ex.Message }, null);
-                    ExceptionHandler.LogFFmpegException(ex);
+                    if (ex.Message.ToLower() != "a task was canceled.")
+                        ExceptionHandler.LogFFmpegException(ex);
                 }
                 cpMainControlPanel.HideProgress();
             }
@@ -1536,7 +1541,8 @@ namespace YT_RED
             }
             catch(Exception ex)
             {
-                ExceptionHandler.LogException(ex);
+                if (ex.Message.ToLower() != "a task was canceled.")
+                    ExceptionHandler.LogException(ex);
             }
         }
         private void gvFormats_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e)
@@ -1681,13 +1687,24 @@ namespace YT_RED
                     {
                         if (cpMainControlPanel.CurrentFormatPair.Type == Classes.StreamType.AudioAndVideo)
                         {
-                            gvFormats.UnselectRow(handle);
+                            if (selectedAudioIndex >= 0 && selectedAudioIndex != handle)
+                            {
+                                gvFormats.UnselectRow(selectedAudioIndex);
+                            }
+                            else
+                            {
+                                gvFormats.UnselectRow(handle);
+                                selectedAudioIndex = -1;
+                                deselecting = false;
+                                return;
+                            }
                             deselecting = false;
-                            return;
                         }
-
-                        if (selectedAudioIndex >= 0)
-                            gvFormats.UnselectRow(selectedAudioIndex);
+                        else
+                        {
+                            if (selectedAudioIndex >= 0)
+                                gvFormats.UnselectRow(selectedAudioIndex);
+                        }
                         selectedAudioIndex = handle;
                     }
                     else

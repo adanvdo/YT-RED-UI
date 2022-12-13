@@ -152,7 +152,8 @@ namespace YT_RED.Utils
                 vCodec = vMap.BestVideo;
                 aCodec = vMap.BestAudio;
             }
-            else if (convertAudio != AudioFormat.UNSPECIFIED)
+            
+            if (convertAudio != AudioFormat.UNSPECIFIED)
             {
                 aFormat = convertAudio;
                 aCodec = Classes.SystemCodecMaps.GetAudioCodec(convertAudio);

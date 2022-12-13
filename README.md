@@ -107,6 +107,12 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 12/13/2022 v1.0.2.5
+- Fixed bug where an error message was displayed and logged when a download was cancelled by the user
+- Fixed bug where Conversion controls were improperly changed after changing a format selection
+- Fixed bug where a conversion error occurred if Always Convert setting was enabled
+- Fixed bug that required you to unselect an audio format before selecting another audio format
+
 ### 11/23/2022 v1.0.2.4
 - Fixed bug where Control Panel was not scrollable when too large to fit in the window
 
