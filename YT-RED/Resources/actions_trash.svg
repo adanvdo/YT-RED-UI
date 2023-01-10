@@ -1,0 +1,16 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<svg x="0px" y="0px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" id="Layer_1" style="enable-background:new 0 0 32 32">
+  <style type="text/css">
+	.Blue{fill:#1177D7;}
+	.Yellow{fill:#FFB115;}
+	.Black{fill:#727272;}
+	.Green{fill:#039C23;}
+	.Red{fill:#D11C1C;}
+	.st0{opacity:0.75;}
+	.st1{opacity:0.5;}
+</style>
+  <g id="Trash">
+    <path d="M8,27c0,0.5,0.5,1,1,1h14c0.5,0,1-0.5,1-1V12H8V27z" class="Black" />
+    <path d="M25,6h-7V5c0-0.5-0.5-1-1-1h-2c-0.5,0-1,0.5-1,1v1H7C6.5,6,6,6.5,6,7v3h20V7C26,6.5,25.5,6,25,6z" class="Black" />
+  </g>
+</svg>

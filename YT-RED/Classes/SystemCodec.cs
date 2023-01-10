@@ -112,6 +112,8 @@ namespace YT_RED.Classes
                     return MKV;
                 case "WEBM":
                     return WEBM;
+                case "VP9":
+                    return WEBM;
                 case "OGG":
                     return OGGVideo;
                 case "GIF":

@@ -49,6 +49,20 @@ namespace YT_RED.Logging
         public Resolution? MaxResolution { get; set; } = null;
         [JsonProperty("max_filesize")]
         public int? MaxFileSize { get; set; } = null;
+        [JsonProperty("prepend_path")]
+        public string? PrependImagePath { get; set; } = null;
+        [JsonProperty("prepend_duration")]
+        public int? PrependDuration { get; set; } = null;
+        [JsonProperty("prepend_dur_type")]
+        public MediaDuration? PrependDurationType { get; set; } = null;
+
+        [JsonProperty("external_audio")]
+        public string? ExternalAudioPath { get; set; } = null;
+        [JsonProperty("audio_start")]
+        public TimeSpan? AudioStartTime { get; set; } = null;
+
+        [JsonProperty("external_image")]
+        public string? ExternalImagePath { get; set; } = null;
 
         [JsonIgnore]
         public bool FileExists
@@ -78,6 +92,12 @@ namespace YT_RED.Logging
                 Crops = pendingDownload.Crops;
                 VideoConversionFormat = pendingDownload.VideoConversionFormat;
                 AudioConversionFormat = pendingDownload.AudioConversionFormat;
+                PrependImagePath = pendingDownload.PrependImagePath;
+                PrependDuration = pendingDownload.PrependDuration;
+                PrependDurationType = pendingDownload.PrependDurationType;
+                ExternalAudioPath = pendingDownload.ExternalAudioPath;
+                AudioStartTime = pendingDownload.AudioStartTime;
+                ExternalImagePath = pendingDownload.ExternalImagePath;
             }
         }
     }

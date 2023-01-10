@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            YT_RED.Classes.OptionManager optionManager1 = new YT_RED.Classes.OptionManager();
             this.tcMainTabControl = new DevExpress.XtraBars.TabFormControl();
             this.bsiMessage = new DevExpress.XtraBars.BarStaticItem();
             this.skinBarSubItem1 = new DevExpress.XtraBars.SkinBarSubItem();
@@ -46,7 +47,6 @@
             this.videoInfoPanel = new YT_RED.Controls.VideoInfoPanel();
             this.marqueeProgressBarControl1 = new DevExpress.XtraEditors.MarqueeProgressBarControl();
             this.ipMainInput = new YT_RED.Controls.InputPanel();
-            this.pnlScrollableControls = new DevExpress.XtraEditors.XtraScrollableControl();
             this.cpMainControlPanel = new YT_RED.Controls.ControlPanel();
             this.toolTipController = new DevExpress.Utils.ToolTipController(this.components);
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
@@ -68,7 +68,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pnlPlaylistControls)).BeginInit();
             this.pnlPlaylistControls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.marqueeProgressBarControl1.Properties)).BeginInit();
-            this.pnlScrollableControls.SuspendLayout();
             this.taskBarMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -155,12 +154,12 @@
             // 
             // sccMainSplitter.Panel2
             // 
-            this.sccMainSplitter.Panel2.Controls.Add(this.pnlScrollableControls);
-            this.sccMainSplitter.Panel2.MinSize = 323;
+            this.sccMainSplitter.Panel2.Controls.Add(this.cpMainControlPanel);
+            this.sccMainSplitter.Panel2.MinSize = 350;
             this.sccMainSplitter.Panel2.Text = "Panel2";
             this.sccMainSplitter.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.sccMainSplitter.Size = new System.Drawing.Size(1188, 767);
-            this.sccMainSplitter.SplitterPosition = 839;
+            this.sccMainSplitter.SplitterPosition = 812;
             this.sccMainSplitter.TabIndex = 0;
             this.sccMainSplitter.SplitterMoved += new System.EventHandler(this.sccMainSplitter_SplitterMoved);
             this.sccMainSplitter.Resize += new System.EventHandler(this.sccMainSplitter_Resize);
@@ -168,12 +167,12 @@
             // gcFormats
             // 
             this.gcFormats.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcFormats.Location = new System.Drawing.Point(0, 298);
+            this.gcFormats.Location = new System.Drawing.Point(0, 300);
             this.gcFormats.MainView = this.gvFormats;
             this.gcFormats.Name = "gcFormats";
             this.gcFormats.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repPictureEdit});
-            this.gcFormats.Size = new System.Drawing.Size(839, 469);
+            this.gcFormats.Size = new System.Drawing.Size(812, 467);
             this.gcFormats.TabIndex = 0;
             this.gcFormats.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvFormats});
@@ -227,10 +226,10 @@
             this.pnlPlaylistControls.Controls.Add(this.btnPLSelectAll);
             this.pnlPlaylistControls.Controls.Add(this.lblSelectAFormat);
             this.pnlPlaylistControls.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlPlaylistControls.Location = new System.Drawing.Point(0, 273);
+            this.pnlPlaylistControls.Location = new System.Drawing.Point(0, 275);
             this.pnlPlaylistControls.Margin = new System.Windows.Forms.Padding(0);
             this.pnlPlaylistControls.Name = "pnlPlaylistControls";
-            this.pnlPlaylistControls.Size = new System.Drawing.Size(839, 25);
+            this.pnlPlaylistControls.Size = new System.Drawing.Size(812, 25);
             this.pnlPlaylistControls.TabIndex = 3;
             // 
             // btnPLSelectAll
@@ -260,17 +259,17 @@
             this.lblSelectAFormat.Location = new System.Drawing.Point(0, 0);
             this.lblSelectAFormat.Margin = new System.Windows.Forms.Padding(0);
             this.lblSelectAFormat.Name = "lblSelectAFormat";
-            this.lblSelectAFormat.Size = new System.Drawing.Size(839, 25);
+            this.lblSelectAFormat.Size = new System.Drawing.Size(812, 25);
             this.lblSelectAFormat.TabIndex = 0;
             this.lblSelectAFormat.Text = "Select a Video and/or Audio Format";
             // 
             // videoInfoPanel
             // 
             this.videoInfoPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.videoInfoPanel.Location = new System.Drawing.Point(0, 123);
+            this.videoInfoPanel.Location = new System.Drawing.Point(0, 125);
             this.videoInfoPanel.Margin = new System.Windows.Forms.Padding(0);
             this.videoInfoPanel.Name = "videoInfoPanel";
-            this.videoInfoPanel.Size = new System.Drawing.Size(839, 150);
+            this.videoInfoPanel.Size = new System.Drawing.Size(812, 150);
             this.videoInfoPanel.TabIndex = 2;
             this.videoInfoPanel.Visible = false;
             // 
@@ -278,11 +277,11 @@
             // 
             this.marqueeProgressBarControl1.Dock = System.Windows.Forms.DockStyle.Top;
             this.marqueeProgressBarControl1.EditValue = 0;
-            this.marqueeProgressBarControl1.Location = new System.Drawing.Point(0, 103);
+            this.marqueeProgressBarControl1.Location = new System.Drawing.Point(0, 105);
             this.marqueeProgressBarControl1.Name = "marqueeProgressBarControl1";
             this.marqueeProgressBarControl1.Properties.AllowFocused = false;
             this.marqueeProgressBarControl1.Properties.ShowTitle = true;
-            this.marqueeProgressBarControl1.Size = new System.Drawing.Size(839, 20);
+            this.marqueeProgressBarControl1.Size = new System.Drawing.Size(812, 20);
             this.marqueeProgressBarControl1.TabIndex = 0;
             this.marqueeProgressBarControl1.Visible = false;
             // 
@@ -290,6 +289,7 @@
             // 
             this.ipMainInput.AutoSize = true;
             this.ipMainInput.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.ipMainInput.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ipMainInput.Dock = System.Windows.Forms.DockStyle.Top;
             this.ipMainInput.ListMode = YT_RED.Classes.ListMode.Format;
             this.ipMainInput.Location = new System.Drawing.Point(0, 0);
@@ -297,7 +297,7 @@
             this.ipMainInput.MinimumSize = new System.Drawing.Size(400, 100);
             this.ipMainInput.Name = "ipMainInput";
             this.ipMainInput.ShowCrab = false;
-            this.ipMainInput.Size = new System.Drawing.Size(839, 103);
+            this.ipMainInput.Size = new System.Drawing.Size(812, 105);
             this.ipMainInput.TabIndex = 1;
             this.ipMainInput.URL = "";
             this.ipMainInput.ListFormats_Click += new System.EventHandler(this.ipMainInput_ListFormats_Click);
@@ -308,24 +308,18 @@
             this.ipMainInput.ListFormats_MouseMove += new System.EventHandler(this.cancelProcessButtons_MouseMove);
             this.ipMainInput.ListFormats_MouseLeave += new System.EventHandler(this.cancelProcessButtons_MouseLeave);
             // 
-            // pnlScrollableControls
-            // 
-            this.pnlScrollableControls.Controls.Add(this.cpMainControlPanel);
-            this.pnlScrollableControls.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlScrollableControls.Location = new System.Drawing.Point(0, 0);
-            this.pnlScrollableControls.Margin = new System.Windows.Forms.Padding(0);
-            this.pnlScrollableControls.Name = "pnlScrollableControls";
-            this.pnlScrollableControls.Size = new System.Drawing.Size(323, 767);
-            this.pnlScrollableControls.TabIndex = 3;
-            // 
             // cpMainControlPanel
             // 
+            this.cpMainControlPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.cpMainControlPanel.ConvertAudioFormat = null;
             this.cpMainControlPanel.ConvertVideoFormat = null;
             this.cpMainControlPanel.CropBottom = "0";
             this.cpMainControlPanel.CropLeft = "0";
             this.cpMainControlPanel.CropRight = "0";
             this.cpMainControlPanel.CropTop = "0";
+            this.cpMainControlPanel.CustomAudioDuration = System.TimeSpan.Parse("00:00:00");
+            this.cpMainControlPanel.CustomAudioPath = "";
+            this.cpMainControlPanel.CustomAudioStart = System.TimeSpan.Parse("00:00:00");
             this.cpMainControlPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cpMainControlPanel.DownloadAudioVisible = true;
             this.cpMainControlPanel.DownloadBestVisible = true;
@@ -335,10 +329,15 @@
             this.cpMainControlPanel.MaxFilesize = 0;
             this.cpMainControlPanel.MaxResolution = null;
             this.cpMainControlPanel.Name = "cpMainControlPanel";
+            this.cpMainControlPanel.OptionManager = optionManager1;
+            this.cpMainControlPanel.PrependDuration = "1";
+            this.cpMainControlPanel.PrependDurationType = null;
+            this.cpMainControlPanel.PrependImagePath = "";
             this.cpMainControlPanel.SegmentDuration = System.TimeSpan.Parse("00:00:01");
             this.cpMainControlPanel.SegmentStart = System.TimeSpan.Parse("00:00:00");
-            this.cpMainControlPanel.Size = new System.Drawing.Size(323, 767);
+            this.cpMainControlPanel.Size = new System.Drawing.Size(350, 767);
             this.cpMainControlPanel.TabIndex = 2;
+            this.cpMainControlPanel.VideoImagePath = "";
             this.cpMainControlPanel.Cancel_MouseMove += new System.EventHandler(this.cancelProcessButtons_MouseMove);
             this.cpMainControlPanel.Cancel_MouseLeave += new System.EventHandler(this.cancelProcessButtons_MouseLeave);
             this.cpMainControlPanel.Controls_Updated += new System.EventHandler(this.cpMainControlPanel_Controls_Updated);
@@ -426,7 +425,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pnlPlaylistControls)).EndInit();
             this.pnlPlaylistControls.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.marqueeProgressBarControl1.Properties)).EndInit();
-            this.pnlScrollableControls.ResumeLayout(false);
             this.taskBarMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -456,7 +454,6 @@
         private DevExpress.XtraEditors.Repository.RepositoryItemPictureEdit repPictureEdit;
         private DevExpress.XtraEditors.PanelControl pnlPlaylistControls;
         private DevExpress.XtraEditors.SimpleButton btnPLSelectAll;
-        private DevExpress.XtraEditors.XtraScrollableControl pnlScrollableControls;
     }
 }
 

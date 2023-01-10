@@ -106,6 +106,7 @@
   <ItemGroup>
     <Reference Include="DevExpress.BonusSkins.v22.1" />
     <Reference Include="DevExpress.Data.Desktop.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Dialogs.v22.1.Core, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Drawing.v22.1" />
     <Reference Include="DevExpress.Data.v22.1" />
     <Reference Include="DevExpress.Images.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
@@ -170,7 +171,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\local-packages\Xabe.FFMpeg\Xabe.FFmpeg.dll</HintPath>
     </Reference>
-    <Reference Include="YoutubeDLSharp, Version=0.4.2.22202, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="YoutubeDLSharp, Version=0.4.2.22209, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\local-packages\YoutubeDLSharp\lib\net48\YoutubeDLSharp.dll</HintPath>
     </Reference>
@@ -179,7 +180,10 @@
     <Compile Include="AppFeature.cs" />
     <Compile Include="Classes\ApplicationController.cs" />
     <Compile Include="Classes\AssemblyBuildAttribute.cs" />
+    <Compile Include="Classes\DownloadOption.cs" />
     <Compile Include="Classes\ListMode.cs" />
+    <Compile Include="Classes\MediaDuration.cs" />
+    <Compile Include="Classes\OptionManager.cs" />
     <Compile Include="Classes\Release.cs" />
     <Compile Include="Classes\Resolution.cs" />
     <Compile Include="Classes\SystemCodec.cs" />
@@ -260,6 +264,9 @@
     </Compile>
     <Compile Include="Controls\TrayForm.Designer.cs">
       <DependentUpon>TrayForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\YTRGroupControl.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Extensions\EnumExtension.cs" />
     <Compile Include="Logging\DownloadLog.cs" />
@@ -348,6 +355,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\moveup.svg" />
+    <None Include="Resources\movedown.svg" />
     <None Include="Resources\functionsinformation.svg" />
     <None Include="Resources\close.svg" />
     <None Include="Resources\listnumbers.svg" />
@@ -389,6 +398,7 @@
     <None Include="Resources\application.svg" />
     <None Include="Resources\actions_checkcircled.svg" />
     <None Include="Resources\about1.svg" />
+    <None Include="Resources\actions_trash.svg" />
     <Content Include="Resources\App\ffmpeg.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -428,6 +438,6 @@
 set platformName=$(PlatformName)
 set versionNumber=@(VersionNumber)
 set releaseChannel=alpha
-call "G:\Dev\BuildAndSignYTR.bat"</PostBuildEvent>
+call "E:\Dev\BuildAndSignYTR.bat"</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Reflection;
 using System.ComponentModel.DataAnnotations;
+using YT_RED.Classes;
 
 namespace YT_RED.Settings
 {
@@ -135,8 +136,29 @@ namespace YT_RED.Settings
 		[JsonProperty("use_preferred_format")]
 		public bool UsePreferredFormat { get; set; }
 
-		#region reddit
 		[Browsable(false)]
+		[JsonProperty("segment_option")]
+		public DownloadOption SegmentOption { get; set; }
+        [Browsable(false)]
+        [JsonProperty("crop_option")]
+        public DownloadOption CropOption { get; set; }
+        [Browsable(false)]
+        [JsonProperty("convert_option")]
+		public DownloadOption ConvertOption { get; set;}
+        [Browsable(false)]
+        [JsonProperty("restriction_option")]
+		public DownloadOption RestrictionOption { get; set;}
+        [Browsable(false)]
+        [JsonProperty("prepend_option")]
+		public DownloadOption PrependOption { get; set; }
+        [Browsable(false)]
+        [JsonProperty("audio_option")]
+		public DownloadOption AudioOption { get; set; }
+        [Browsable(false)]
+        [JsonProperty("image_option")]
+		public DownloadOption ImageOption { get; set;}
+        #region reddit
+        [Browsable(false)]
 		[JsonIgnore]
 		public string RedditSampleUrl { get; set; }
 
@@ -181,6 +203,13 @@ namespace YT_RED.Settings
 			AudioDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
 			CreateFolderForPlaylists = true;
 			UsePreferredFormat = false;
+			SegmentOption = new DownloadOption(OptionType.Segment);
+			CropOption = new DownloadOption(OptionType.Crop);
+			ConvertOption = new DownloadOption(OptionType.Convert);
+			RestrictionOption = new DownloadOption(OptionType.Restrictions);
+			PrependOption = new DownloadOption(OptionType.Prepend);
+			AudioOption = new DownloadOption(OptionType.Audio);
+			ImageOption = new DownloadOption(OptionType.Image);
 		}
 
 		public override async Task<string> ValidateSettings()

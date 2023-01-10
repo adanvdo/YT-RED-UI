@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using YT_RED.Classes;
 using YT_RED.Settings;
 
 namespace YT_RED.Logging
@@ -16,6 +17,16 @@ namespace YT_RED.Logging
         public int[] Crops { get; set; } = null;
         public VideoFormat? VideoConversionFormat { get; set; } = null;
         public AudioFormat? AudioConversionFormat { get; set; } = null;
+
+        public string? PrependImagePath { get; set; } = null;
+        public int? PrependDuration { get; set; } = null;
+        public MediaDuration? PrependDurationType { get; set; } = null;
+
+        public string? ExternalAudioPath { get; set; } = null;
+        public TimeSpan? AudioStartTime { get; set; } = null;
+        public TimeSpan? AudioDuration { get; set; } = null;
+
+        public string? ExternalImagePath { get; set; } = null;
 
         public PendingDownload() { }
     }

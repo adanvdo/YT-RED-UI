@@ -10,11 +10,22 @@ using DevExpress.XtraGrid.Views.Grid.ViewInfo;
 using YT_RED.Logging;
 using YT_RED.Classes;
 using DevExpress.XtraEditors;
+using DevExpress.Dialogs.Core;
+using DevExpress.Utils.Drawing;
+using DevExpress.Utils.Svg;
+using DevExpress.Skins;
 
 namespace YT_RED.Controls
 {
     public partial class ControlPanel : DevExpress.XtraEditors.XtraUserControl
     {
+        private OptionManager optionManager = new OptionManager();
+        public OptionManager OptionManager
+        {
+            get { return optionManager; }
+            set { optionManager = value; }
+        }
+
         private string formatWarning = "YT-RED is currently set to Always Convert to your\nPreferred Video and Audio Format.\nThis can be changed in Advanced Settings";
 
         [Browsable(false)]
@@ -36,32 +47,50 @@ namespace YT_RED.Controls
         {
             get
             {
-                return SegmentEnabled || CropEnabled || ConversionEnabled;
+                return SegmentEnabled || CropEnabled || ConversionEnabled || PrependEnabled || ExternalAudioEnabled || ExternalImageEnabled;
             }
         }
 
         [Browsable(false)]
         public bool SegmentEnabled
         {
-            get { return toggleSegment.IsOn; }
+            get { return optionManager.Segment.FunctionallyEnabled; }
         }
 
         [Browsable(false)]
         public bool CropEnabled
         {
-            get { return toggleCrop.IsOn; }
+            get { return optionManager.Crop.FunctionallyEnabled; }
         }
 
         [Browsable(false)]
         public bool ConversionEnabled
         {
-            get { return toggleConvert.IsOn; }
+            get { return optionManager.Convert.FunctionallyEnabled; }
         }
 
-        [Browsable(false)]  
+        [Browsable(false)]
         public bool LimitsEnabled
         {
-            get { return toggleDownloadLimits.IsOn; }
+            get { return optionManager.Restrictions.FunctionallyEnabled; }
+        }
+
+        [Browsable(false)]
+        public bool PrependEnabled
+        {
+            get { return optionManager.PrependImage.FunctionallyEnabled; }
+        }
+
+        [Browsable(false)]
+        public bool ExternalAudioEnabled
+        {
+            get { return optionManager.ExternalAudio.FunctionallyEnabled; }
+        }
+
+        [Browsable(false)]
+        public bool ExternalImageEnabled
+        {
+            get { return optionManager.ExternalImage.FunctionallyEnabled; }
         }
 
         [Browsable(true)]
@@ -272,21 +301,74 @@ namespace YT_RED.Controls
             set { txtCropRight.Text = value; }
         }
 
-        public Size TotalControlSize
+        [Browsable(false)]
+        public string PrependImagePath
+        {
+            get { return txtPrependPath.Text; }
+            set { txtPrependPath.Text = value; }
+        }
+
+        public string PrependDuration
+        {
+            get { return txtPrependDuration.Text; }
+            set 
+            {
+                bool parse = Int32.TryParse(value.ToString(), out int dur);
+                if (parse && dur < 1) txtPrependDuration.Text = "1";
+                else if(value.ToString() != "0") txtPrependDuration.Text = value; 
+            }
+        }
+
+        [Browsable(false)]
+        public MediaDuration? PrependDurationType
         {
             get
             {
-
-                int totalMinHeight = (gcSegments.Visible ? gcSegments.Height : 0)
-                    + (gcCrop.Visible ? gcCrop.Height : 0)
-                    + (gcConvert.Visible ? gcConvert.Height : 0)
-                    + (gcDownloadLimits.Visible ? gcDownloadLimits.Height : 0)
-                    + gcDLButtons.Height
-                    + pnlProgressPanel.Height
-                    + gcHistory.MinimumSize.Height;
-                return new Size(this.Size.Width, totalMinHeight);
+                if (togglePrepend.IsOn && cbPrependType.SelectedItem != null && !string.IsNullOrEmpty(cbPrependType.Text))
+                {
+                    MediaDuration dt = MediaDuration.Frames;
+                    bool p = Enum.TryParse(cbPrependType.Text, out MediaDuration md);
+                    if (p)
+                        dt = md;
+                    return dt;
+                }
+                return null;
+            }
+            set
+            {
+                MediaDuration? d = value;
+                if (d != null)
+                    cbPrependType.SelectedIndex = cbPrependType.Properties.Items.IndexOf(value.ToString());
             }
         }
+
+        [Browsable(false)]
+        public string CustomAudioPath
+        {
+            get { return txtAudioPath.Text; }
+            set { txtAudioPath.Text = value; }
+        }
+
+        [Browsable(false)]
+        public TimeSpan? CustomAudioStart
+        {
+            get { return tsAudioStart.TimeSpan; }
+            set { tsAudioStart.TimeSpan = value == null ? TimeSpan.Zero : (TimeSpan)value; }
+        }
+
+        [Browsable(false)]
+        public TimeSpan? CustomAudioDuration
+        {
+            get { return tsAudioDuration.TimeSpan; }
+            set { tsAudioDuration.TimeSpan = value == null ? TimeSpan.Zero : (TimeSpan)value;}
+        }
+
+        [Browsable(false)]
+        public string VideoImagePath
+        {
+            get { return txtImageVideoPath.Text; }
+            set { txtImageVideoPath.Text = value; }
+        }  
 
         public bool ValidCrops()
         {
@@ -544,24 +626,46 @@ namespace YT_RED.Controls
             InitControls();
         }
 
-        public void InitControls()
-        {
+        public void InitControls(bool invoked = false)
+        {            
             videoFormats = new List<string>();
             List<string> vFormats = new List<string>() { "" };
             vFormats.AddRange(Enum.GetNames(typeof(VideoFormat)).Cast<string>());
             videoFormats.AddRange(vFormats.Where(f => f != "UNSPECIFIED"));
+            cbVideoFormat.Properties.Items.Clear();
             cbVideoFormat.Properties.Items.AddRange(videoFormats);
             cbVideoFormat.SelectedIndex = 0;
             audioFormats = new List<string>();
             List<string> aFormats = new List<string>() { "" };
             aFormats.AddRange(Enum.GetNames(typeof(AudioFormat)).Cast<string>());
             audioFormats.AddRange(aFormats.Where(f => f != "UNSPECIFIED"));
+            cbAudioFormat.Properties.Items.Clear();
             cbAudioFormat.Properties.Items.AddRange(audioFormats);
             cbAudioFormat.SelectedIndex = 0;
             cbMaxRes.Properties.Items.AddRange(Utils.VideoUtil.ResolutionList);
             cbMaxRes.SelectedIndex = 4;
             txtMaxFilesize.Text = "0";
+
+            txtPrependPath.Text = string.Empty;
+            txtPrependDuration.Text = "2"; 
+            List<string> durationTypes = new List<string>();
+            durationTypes.AddRange(Enum.GetNames(typeof(MediaDuration)).Cast<string>());
+            cbPrependType.Properties.Items.Clear();
+            cbPrependType.Properties.Items.AddRange(durationTypes);
+            cbPrependType.SelectedIndex = 0;
+
+            txtAudioPath.Text = string.Empty;
+            tsAudioStart.TimeSpan = TimeSpan.Zero;
+            tsAudioDuration.TimeSpan = TimeSpan.Zero;
+
+            txtImageVideoPath.Text = string.Empty;
+            
             inInit = false;
+            if (invoked)
+            {
+                ResetControls();
+            }
+
             this.controlsUpdated();
         }
 
@@ -580,22 +684,38 @@ namespace YT_RED.Controls
             txtCropLeft.Text = String.Empty;
             txtCropRight.Text = String.Empty;
             toggleConvert.IsOn = false;
-            ShowHideControlGroup(ControlGroups.Segment, true);
-            ShowHideControlGroup(ControlGroups.Crop, true);
-            DisableToggle(true, true, true, forFormatList);
-            EnableToggle(true, true, true, false, !forFormatList);
-            ShowHideControlGroup(ControlGroups.Limits, !forFormatList);
+            ShowHideControlGroup(ControlGroups.Segment, AppSettings.Default.General.SegmentOption.Visible);
+            ShowHideControlGroup(ControlGroups.Crop, AppSettings.Default.General.CropOption.Visible);
+            ShowHideControlGroup(ControlGroups.Convert, AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat || AppSettings.Default.General.ConvertOption.Visible);
             cbVideoFormat.SelectedIndex = 0;
             cbAudioFormat.SelectedIndex = 0;
             cbVideoFormat.Enabled = true;
             cbAudioFormat.Enabled = true;
+            DisableToggle(true, true, true, forFormatList, true, true, true);
+            EnableToggle(true, true, true, false, !forFormatList, true, true, true);
+            bool check = !forFormatList && AppSettings.Default.General.RestrictionOption.Visible;
+            ShowHideControlGroup(ControlGroups.Limits, AppSettings.Default.General.EnforceRestrictions || AppSettings.Default.General.RestrictionOption.Visible);
+            ShowHideControlGroup(ControlGroups.Prepend, AppSettings.Default.General.PrependOption.Visible);
+            ShowHideControlGroup(ControlGroups.Audio, AppSettings.Default.General.AudioOption.Visible);
+            txtAudioPath.Text = string.Empty;
+            tsAudioStart.TimeSpan = TimeSpan.Zero;
+            tsAudioDuration.TimeSpan = TimeSpan.Zero;
+            ShowHideControlGroup(ControlGroups.Image, AppSettings.Default.General.ImageOption.Visible);
+            txtImageVideoPath.Text = string.Empty;
             
             if (AppSettings.Default.General.EnforceRestrictions && !forFormatList)
             {
                 EnableToggle(false, false, false, true, true);
                 MaxResolution = AppSettings.Default.General.MaxResolutionBest;
                 MaxFilesize = AppSettings.Default.General.MaxFilesizeBest;
+                cbMaxRes.Enabled = false;
+                txtMaxFilesize.Enabled = false;
+                gcDownloadLimits.SendToBack();
             }
+
+            hlblGenSettings.Visible = AppSettings.Default.General.EnforceRestrictions;
+            lblLimitWarning.Visible = AppSettings.Default.General.EnforceRestrictions;
+
             btnSelectionDL.Text = "DOWNLOAD SELECTED FORMAT    ";
             btnDownloadAudio.Text = "DOWNLOAD AUDIO       ";
             btnDownloadBest.Text = "DOWNLOAD BEST [audio+video]      ";
@@ -614,28 +734,61 @@ namespace YT_RED.Controls
                 ConvertVideoFormat = AppSettings.Default.Advanced.PreferredVideoFormat;
                 ConvertAudioFormat = AppSettings.Default.Advanced.PreferredAudioFormat;
                 cbVideoFormat.Enabled = false;
-                cbAudioFormat.Enabled = false;
+                cbAudioFormat.Enabled = false; 
+                gcConvert.SendToBack();
             }
 
             hlblOpenSettings.Visible = toggleConvert.IsOn && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
             lblAlwaysConvert.Visible = toggleConvert.IsOn && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
+
+            togglePrepend.IsOn = false;
+            txtPrependPath.Text = string.Empty;
+            txtPrependDuration.Text = "2";
+            cbPrependType.SelectedIndex = 0;
+
+            toggleExternalAudio.IsOn = false;
+            txtAudioPath.Text = string.Empty;
+            tsAudioStart.TimeSpan = TimeSpan.Zero;
+            tsAudioDuration.TimeSpan = TimeSpan.Zero;
+
+            toggleExternalImage.IsOn = false;
+            txtImageVideoPath.Text = string.Empty;                
+
             this.controlsUpdated();
         }
 
-        public void AdjustControls(int parentPanelHeight)
-        {
-            if(TotalControlSize.Height < parentPanelHeight)
-            {
-                this.Height = parentPanelHeight;
-            }
-        }
+        private Color customBackcolor = Color.White;
+        private Color customForecoler = Color.Black;
 
         private void controlsUpdated()
         {
-            if(Controls_Updated != null) Controls_Updated(this, EventArgs.Empty);
+            DevExpress.Skins.Skin currentSkin = DevExpress.Skins.CommonSkins.GetSkin(this.LookAndFeel.ActiveLookAndFeel); 
+            var s = currentSkin.SvgPalettes["DefaultSkinPalette"];
+            var a = s.Colors.FirstOrDefault(c => c.Name == "Foreground 50");
+            if(a != null) customBackcolor = a.Value;
+            var b = s.Colors.FirstOrDefault(c => c.Name == "Foreground 100");
+            if(b != null) customForecoler = b.Value;
+
+            if (pnlOptionPanel.VerticalScroll.Visible && currentSkin != null)
+            {
+                Bitmap bmp = new Bitmap(btnScrollOptions.Width, btnScrollOptions.Height);
+                using(Graphics gfx = Graphics.FromImage(bmp))
+                {
+                    gfx.Clear(customBackcolor);
+                }
+
+                btnScrollOptions.BackgroundImage = bmp;
+                btnScrollOptions.ForeColor = customForecoler;
+            }
+            
+
+            btnScrollOptions.Visible = pnlOptionPanel.VerticalScroll.Visible;
+            
+            if (Controls_Updated != null) Controls_Updated(this, EventArgs.Empty);
         }
 
-        public void DisableToggle(bool disableSegment = false, bool disableCrop = false, bool disableConvert = false, bool disableLimits = false)
+        public void DisableToggle(bool disableSegment = false, bool disableCrop = false, bool disableConvert = false, bool disableLimits = false,
+            bool disablePrepend = false, bool disableAudio = false, bool disableImage = false)
         {
             if (disableSegment)
             {
@@ -657,6 +810,26 @@ namespace YT_RED.Controls
                 toggleDownloadLimits.IsOn = false;
                 toggleDownloadLimits.Enabled = false;
             }
+            if(disablePrepend)
+            {
+                togglePrepend.IsOn = false;
+                togglePrepend.Enabled = false;
+            }
+            if (disableAudio)
+            {
+                toggleExternalAudio.IsOn = false;
+                toggleExternalAudio.Enabled = false;
+            }
+            if (disableImage)
+            {
+                toggleExternalImage.IsOn = false;
+                toggleExternalImage.Enabled = false;
+            }
+        }
+
+        public void DisableNonRestrictionToggles()
+        {
+            DisableToggle(true, true, true, false, true, true, true);
         }
 
         public void SetSelectionText(string text)
@@ -664,7 +837,8 @@ namespace YT_RED.Controls
             this.lblSelectionText.Text = text;            
         }
 
-        public void EnableToggle(bool enableSegment = false, bool enableCrop = false, bool enableConvert = false, bool turnOn = false, bool enableLimits = false)
+        public void EnableToggle(bool enableSegment = false, bool enableCrop = false, bool enableConvert = false, bool turnOn = false, 
+            bool enableLimits = false, bool enablePrepend = false, bool enableAudio = false, bool enableImage = false)
         {
             if (enableSegment)
             {
@@ -687,28 +861,28 @@ namespace YT_RED.Controls
             {
                 toggleDownloadLimits.Enabled = true;
                 if(turnOn) toggleDownloadLimits.IsOn = true;
+                cbMaxRes.Enabled = !AppSettings.Default.General.EnforceRestrictions;
+                txtMaxFilesize.Enabled = !AppSettings.Default.General.EnforceRestrictions;
             }
-        }
+            if(enablePrepend)
+            {
+                togglePrepend.Enabled = true;
+                if(turnOn) togglePrepend.IsOn = true;
 
-        private void gcSegments_Click(object sender, EventArgs e)
-        {
-            ExpandCollapseControlGroup(ControlGroups.Segment);
-        }
+            }
+            if (enableAudio)
+            {
+                toggleExternalAudio.Enabled = true;
+                if(turnOn) toggleExternalAudio.IsOn = true;
 
-        private void gcCrop_Click(object sender, EventArgs e)
-        {
-            ExpandCollapseControlGroup(ControlGroups.Crop);
-        }
+            }
+            if (enableImage)
+            {
+                toggleExternalImage.Enabled = true;
+                if(turnOn) toggleExternalImage.IsOn = true;
 
-        private void gcConvert_Click(object sender, EventArgs e)
-        {
-            ExpandCollapseControlGroup(ControlGroups.Convert);
-        }
-
-        private void gcDownloadLimits_Click(object sender, EventArgs e)
-        {
-            ExpandCollapseControlGroup(ControlGroups.Limits);
-        }
+            }
+        }        
 
         public void ShowHideControlGroup(ControlGroups controlGroup, bool show)
         {
@@ -719,10 +893,19 @@ namespace YT_RED.Controls
                 case ControlGroups.Crop:
                     gcCrop.Visible = show; break;
                 case ControlGroups.Convert:
-                    gcConvert.Visible = show; break;
+                    if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat) gcConvert.SendToBack();
+                    gcConvert.Visible = show; 
+                    break;
                 case ControlGroups.Limits:
                     gcDownloadLimits.Visible = show; break;
+                case ControlGroups.Prepend:
+                    gcPrependImage.Visible = show; break;
+                case ControlGroups.Audio:
+                    gcOverrideAudio.Visible = show; break;
+                case ControlGroups.Image:
+                    gcExternalImage.Visible = show; break;
             }
+            this.controlsUpdated();
         }
 
         public void ExpandCollapseControlGroup(ControlGroups controlGroup)
@@ -734,12 +917,12 @@ namespace YT_RED.Controls
                     if (pnlSegPanel.Visible)
                     {
                         pnlSegPanel.Visible = false;
-                        gcSegments.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
+                        gcSegments.CustomHeaderButtons[1].Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
                     }
                     else
                     {
                         pnlSegPanel.Visible = true;
-                        gcSegments.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
+                        gcSegments.CustomHeaderButtons[1].Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
                     }
                     break;
                 case ControlGroups.Crop:
@@ -747,12 +930,12 @@ namespace YT_RED.Controls
                     if (pnlCropPanel.Visible)
                     {
                         pnlCropPanel.Visible = false;
-                        gcCrop.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
+                        gcCrop.CustomHeaderButtons[1].Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
                     }
                     else
                     {
                         pnlCropPanel.Visible = true;
-                        gcCrop.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
+                        gcCrop.CustomHeaderButtons[1].Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
                     }
                     break;
                 case ControlGroups.Convert:
@@ -760,12 +943,12 @@ namespace YT_RED.Controls
                     if (pnlConvertPanel.Visible)
                     {
                         pnlConvertPanel.Visible = false;
-                        gcConvert.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
+                        gcConvert.CustomHeaderButtons[1].Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
                     }
                     else
                     {
                         pnlConvertPanel.Visible = true;
-                        gcConvert.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
+                        gcConvert.CustomHeaderButtons[1].Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
                     }
                     break;
                 case ControlGroups.Limits:
@@ -773,12 +956,51 @@ namespace YT_RED.Controls
                     if (pnlLimitPanel.Visible)
                     {
                         pnlLimitPanel.Visible = false;
-                        gcDownloadLimits.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
+                        gcDownloadLimits.CustomHeaderButtons[1].Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
                     }
                     else
                     {
                         pnlLimitPanel.Visible = true;
-                        gcDownloadLimits.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
+                        gcDownloadLimits.CustomHeaderButtons[1].Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
+                    }
+                    break;
+                case ControlGroups.Prepend:
+                    if (togglePrepend.IsOn) return;
+                    if (pnlPrepend.Visible)
+                    {
+                        pnlPrepend.Visible = false;
+                        gcPrependImage.CustomHeaderButtons[1].Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
+                    }
+                    else
+                    {
+                        pnlPrepend.Visible = true;
+                        gcPrependImage.CustomHeaderButtons[1].Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
+                    }
+                    break;
+                case ControlGroups.Audio:
+                    if (toggleExternalAudio.IsOn) return;
+                    if (pnlAudio.Visible)
+                    {
+                        pnlAudio.Visible = false;
+                        gcOverrideAudio.CustomHeaderButtons[1].Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
+                    }
+                    else
+                    {
+                        pnlAudio.Visible = true;
+                        gcOverrideAudio.CustomHeaderButtons[1].Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
+                    }
+                    break;
+                case ControlGroups.Image:
+                    if (toggleExternalImage.IsOn) return;
+                    if (pnlImage.Visible)
+                    {
+                        pnlImage.Visible = false;
+                        gcExternalImage.CustomHeaderButtons[1].Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
+                    }
+                    else
+                    {
+                        pnlImage.Visible = true;
+                        gcExternalImage.CustomHeaderButtons[1].Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
                     }
                     break;
             }
@@ -790,6 +1012,36 @@ namespace YT_RED.Controls
             updateCropState();
             UpdateConvertState();
             UpdateLimitState();
+            UpdatePrependState();
+            UpdateExternalAudioState();
+            UpdateExternalImageState();
+            UpdateOptionButtonStates();
+            int i = 0;
+            foreach(Control ctrl in pnlOptionPanel.Controls)
+            {
+                if (ctrl.GetType() == typeof(YT_RED.Controls.YTRGroupControl))
+                {
+                    ctrl.TabIndex = i;
+                    i++;
+                }
+                else ctrl.TabIndex = (pnlOptionPanel.Controls.Count + 1) - i;
+            }
+            int retainer = pnlOptionPanel.VerticalScroll.Value;
+            pnlOptionPanel.VerticalScroll.Value = pnlOptionPanel.VerticalScroll.Maximum;
+            bottomScrollValue = pnlOptionPanel.VerticalScroll.Value;
+            pnlOptionPanel.VerticalScroll.Value = retainer;
+        }
+
+        public void UpdateOptionButtonStates()
+        {
+            lblOptionsInfo.Visible = !OptionManager.VisibleOption;
+            bbiSegment.Enabled = !optionManager.Segment.Visible;
+            bbiCrop.Enabled = !optionManager.Crop.Visible;
+            bbiConvert.Enabled = !optionManager.Convert.Visible;
+            bbiRestrictions.Enabled = !optionManager.Restrictions.Visible;
+            bbiPrepend.Enabled = !optionManager.PrependImage.Visible;
+            bbiAudio.Enabled = !optionManager.ExternalAudio.Visible;
+            bbiImage.Enabled = !optionManager.ExternalImage.Visible;
         }
 
         private void toggleSegment_Toggled(object sender, EventArgs e)
@@ -799,6 +1051,9 @@ namespace YT_RED.Controls
 
         private void updateSegmentState()
         {
+            optionManager.Segment.Enabled = toggleSegment.IsOn;
+            optionManager.Segment.Visible = gcSegments.Visible;
+            optionManager.Save();
             if (toggleSegment.IsOn)
             {
                 toggleSegment.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.Simple;
@@ -816,7 +1071,7 @@ namespace YT_RED.Controls
             tsStart.Enabled = toggleSegment.IsOn;
             tsDuration.Enabled = toggleSegment.IsOn;
             lblSegmentDisclaimer.Visible = toggleSegment.IsOn && (currentFormatPair == null || !currentFormatPair.IsValid() || parentMainForm.FormatCount < 1);
-            gcSegments.CustomHeaderButtons[0].Properties.Enabled = !toggleSegment.IsOn;
+            gcSegments.CustomHeaderButtons[1].Properties.Enabled = !toggleSegment.IsOn;
         }
 
         private void toggleCrop_Toggled(object sender, EventArgs e)
@@ -826,6 +1081,9 @@ namespace YT_RED.Controls
 
         private void updateCropState()
         {
+            optionManager.Crop.Enabled = toggleCrop.IsOn;
+            optionManager.Crop.Visible = gcCrop.Visible;
+            optionManager.Save();
             if (toggleCrop.IsOn)
             {
                 toggleCrop.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.Simple;
@@ -844,7 +1102,7 @@ namespace YT_RED.Controls
             txtCropTop.Enabled = toggleCrop.IsOn;
             txtCropLeft.Enabled = toggleCrop.IsOn;
             txtCropRight.Enabled = toggleCrop.IsOn;
-            gcCrop.CustomHeaderButtons[0].Properties.Enabled = !toggleCrop.IsOn;
+            gcCrop.CustomHeaderButtons[1].Properties.Enabled = !toggleCrop.IsOn;
             btnDownloadAudio.Enabled = !toggleCrop.IsOn;
         }
 
@@ -855,6 +1113,9 @@ namespace YT_RED.Controls
 
         public void UpdateConvertState()
         {
+            optionManager.Convert.Enabled = toggleConvert.IsOn;
+            optionManager.Convert.Visible = gcConvert.Visible;
+            optionManager.Save();
             if (toggleConvert.IsOn)
             {
                 toggleConvert.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.Simple;
@@ -873,7 +1134,97 @@ namespace YT_RED.Controls
             cbAudioFormat.Enabled = toggleConvert.IsOn && !AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
             hlblOpenSettings.Visible = toggleConvert.IsOn && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
             lblAlwaysConvert.Visible = toggleConvert.IsOn && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
-            gcConvert.CustomHeaderButtons[0].Properties.Enabled = !toggleConvert.IsOn;
+            gcConvert.CustomHeaderButtons[0].Properties.Enabled = !AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
+            gcConvert.CustomHeaderButtons[1].Properties.Enabled = !toggleConvert.IsOn;
+        }
+
+        private void togglePrepend_Toggled(object sender, EventArgs e)
+        {
+            UpdatePrependState();
+        }
+
+        public void UpdatePrependState()
+        {
+            optionManager.PrependImage.Enabled = togglePrepend.IsOn;
+            optionManager.PrependImage.Visible = gcPrependImage.Visible;
+            optionManager.Save();
+            if (togglePrepend.IsOn)
+            {
+                togglePrepend.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.Simple;
+                togglePrepend.Properties.Appearance.BorderColor = Color.LightGreen;
+                togglePrepend.BackColor = Color.LightGreen;
+                togglePrepend.ForeColor = Color.Black;
+            }
+            else
+            {
+                togglePrepend.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+                togglePrepend.Properties.Appearance.BorderColor = Color.Transparent;
+                togglePrepend.BackColor = Color.Transparent;
+                togglePrepend.ForeColor = toggleForeColor;
+            }
+            txtPrependPath.Enabled = togglePrepend.IsOn;
+            txtPrependDuration.Enabled = togglePrepend.IsOn;
+            cbPrependType.Enabled = togglePrepend.IsOn;
+            btnBrowsePrepend.Enabled = togglePrepend.IsOn;
+            gcPrependImage.CustomHeaderButtons[1].Properties.Enabled = !togglePrepend.IsOn;
+        }
+        private void toggleExternalAudio_Toggled(object sender, EventArgs e)
+        {
+            UpdateExternalAudioState();
+        }        
+
+        public void UpdateExternalAudioState()
+        {
+            optionManager.ExternalAudio.Enabled = toggleExternalAudio.IsOn;
+            optionManager.ExternalAudio.Visible = gcOverrideAudio.Visible;
+            optionManager.Save();
+            if (toggleExternalAudio.IsOn)
+            {
+                toggleExternalAudio.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.Simple;
+                toggleExternalAudio.Properties.Appearance.BorderColor = Color.LightGreen;
+                toggleExternalAudio.BackColor = Color.LightGreen;
+                toggleExternalAudio.ForeColor = Color.Black;
+            }
+            else
+            {
+                toggleExternalAudio.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+                toggleExternalAudio.Properties.Appearance.BorderColor = Color.Transparent;
+                toggleExternalAudio.BackColor = Color.Transparent;
+                toggleExternalAudio.ForeColor = toggleForeColor;
+            }
+            txtAudioPath.Enabled = toggleExternalAudio.IsOn;
+            tsAudioStart.Enabled = toggleExternalAudio.IsOn;
+            tsAudioDuration.Enabled = toggleExternalAudio.IsOn;
+            btnBrowseAudio.Enabled = toggleExternalAudio.IsOn;
+            gcOverrideAudio.CustomHeaderButtons[1].Properties.Enabled = !toggleExternalAudio.IsOn;
+        }
+
+        private void toggleExternalImage_Toggled(object sender, EventArgs e)
+        {
+            UpdateExternalImageState();
+        }
+
+        public void UpdateExternalImageState()
+        {
+            optionManager.ExternalImage.Enabled = toggleExternalImage.IsOn;
+            optionManager.ExternalImage.Visible = gcExternalImage.Visible;
+            optionManager.Save();
+            if (toggleExternalImage.IsOn)
+            {
+                toggleExternalImage.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.Simple;
+                toggleExternalImage.Properties.Appearance.BorderColor = Color.LightGreen;
+                toggleExternalImage.BackColor = Color.LightGreen;
+                toggleExternalImage.ForeColor = Color.Black;
+            }
+            else
+            {
+                toggleExternalImage.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+                toggleExternalImage.Properties.Appearance.BorderColor = Color.Transparent;
+                toggleExternalImage.BackColor = Color.Transparent;
+                toggleExternalImage.ForeColor = toggleForeColor;
+            }
+            txtImageVideoPath.Enabled = toggleExternalImage.IsOn;
+            gcOverrideAudio.CustomHeaderButtons[1].Properties.Enabled = !toggleExternalImage.IsOn;
         }
 
         private void toggleDownloadLimits_Toggled(object sender, EventArgs e)
@@ -883,6 +1234,9 @@ namespace YT_RED.Controls
 
         public void UpdateLimitState()
         {
+            optionManager.Restrictions.Enabled = toggleDownloadLimits.IsOn;
+            optionManager.Restrictions.Visible = gcDownloadLimits.Visible;
+            optionManager.Save();
             if (toggleDownloadLimits.IsOn)
             {
                 toggleDownloadLimits.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.Simple;
@@ -897,9 +1251,12 @@ namespace YT_RED.Controls
                 toggleDownloadLimits.BackColor = Color.Transparent;
                 toggleDownloadLimits.ForeColor = toggleForeColor;
             }
-            cbMaxRes.Enabled = toggleDownloadLimits.IsOn;
-            txtMaxFilesize.Enabled = toggleDownloadLimits.IsOn;
-            gcDownloadLimits.CustomHeaderButtons[0].Properties.Enabled = !toggleDownloadLimits.IsOn;
+            hlblGenSettings.Visible = toggleDownloadLimits.IsOn && AppSettings.Default.General.EnforceRestrictions;
+            lblLimitWarning.Visible = toggleDownloadLimits.IsOn && AppSettings.Default.General.EnforceRestrictions;
+            cbMaxRes.Enabled = toggleDownloadLimits.IsOn && !AppSettings.Default.General.EnforceRestrictions;
+            txtMaxFilesize.Enabled = toggleDownloadLimits.IsOn && !AppSettings.Default.General.EnforceRestrictions;
+            gcDownloadLimits.CustomHeaderButtons[0].Properties.Enabled = !AppSettings.Default.General.EnforceRestrictions;
+            gcDownloadLimits.CustomHeaderButtons[1].Properties.Enabled = !toggleDownloadLimits.IsOn;
         }
 
         private void btnSelectionDL_Click(object sender, EventArgs e)
@@ -954,11 +1311,25 @@ namespace YT_RED.Controls
         private void cbVideoFormat_SelectedIndexChanged(object sender, EventArgs e)
         {
             checkConversionOptions();
+            if (inInit) return;
+            if (cbVideoFormat.SelectedItem == null) optionManager.Convert.Parameters["video"] = VideoFormat.UNSPECIFIED;
+            else
+            {
+                bool vfp = Enum.TryParse(cbVideoFormat.SelectedItem.ToString(), out Settings.VideoFormat vf);
+                optionManager.Convert.Parameters["video"] = vfp ? vf : VideoFormat.UNSPECIFIED;
+            }
         }
 
         private void cbAudioFormat_SelectedIndexChanged(object sender, EventArgs e)
         {
             checkConversionOptions();
+            if(inInit) return;            
+            if (cbAudioFormat.SelectedItem == null) optionManager.Convert.Parameters["audio"] = AudioFormat.UNSPECIFIED;
+            else
+            {
+                bool afp = Enum.TryParse(cbAudioFormat.SelectedItem.ToString(), out Settings.AudioFormat af);
+                optionManager.Convert.Parameters["audio"] = afp ? af : AudioFormat.UNSPECIFIED;
+            }
         }
 
         private void gvHistory_DoubleClick(object sender, EventArgs e)
@@ -1120,6 +1491,12 @@ namespace YT_RED.Controls
             gvHistory.Columns["AudioConversionFormat"].Visible = false;
             gvHistory.Columns["MaxResolution"].Visible = false;
             gvHistory.Columns["MaxFileSize"].Visible = false;
+            gvHistory.Columns["PrependImagePath"].Visible = false;
+            gvHistory.Columns["PrependDuration"].Visible = false;
+            gvHistory.Columns["PrependDurationType"].Visible = false;
+            gvHistory.Columns["ExternalAudioPath"].Visible = false;
+            gvHistory.Columns["AudioStartTime"].Visible = false;
+            gvHistory.Columns["ExternalImagePath"].Visible = false;
             gvHistory.RefreshData();
         }
 
@@ -1153,6 +1530,8 @@ namespace YT_RED.Controls
                     AppSettings.Default.Save();
                 }
             }
+            optionManager.Restrictions.Parameters["maxres"] = (Resolution)cbMaxRes.SelectedItem;
+            optionManager.Restrictions.Parameters["maxsize"] = txtMaxFilesize.Text;
         }
 
         private void txtMaxFilesize_TextChanged(object sender, EventArgs e)
@@ -1169,6 +1548,261 @@ namespace YT_RED.Controls
             }
         }
 
+        private void segment_OptionChanged(object sender, EventArgs e)
+        {
+            if(inInit) return;
+            optionManager.Segment.Parameters["start"] = tsStart.TimeSpan;
+            optionManager.Segment.Parameters["duration"] = tsDuration.TimeSpan;
+        }
+
+        private void crop_OptionChanged(object sender, EventArgs e)
+        {
+            if (inInit) return;
+            optionManager.Crop.Parameters["top"] = txtCropTop.Text;
+            optionManager.Crop.Parameters["bottom"] = txtCropBottom.Text;
+            optionManager.Crop.Parameters["left"] = txtCropLeft.Text;
+            optionManager.Crop.Parameters["right"] = txtCropRight.Text;
+        }
+
+        private void txtMaxFilesize_EditValueChanged(object sender, EventArgs e)
+        {
+            if (inInit) return;
+            optionManager.Restrictions.Parameters["maxsize"] = txtMaxFilesize.Text;
+        }
+
+        private void prepend_OptionChanged(object sender, EventArgs e)
+        {
+            if (inInit) return;
+            bool parse = Int32.TryParse(txtPrependDuration.Text, out int dur);
+            if (parse) 
+            {
+                if (PrependDurationType == MediaDuration.Frames &&  dur < 2) txtPrependDuration.Text = "2";
+                else if(PrependDurationType == MediaDuration.Seconds && dur < 1) txtPrependDuration.Text = "1";
+            }
+            else txtPrependDuration.Text = PrependDurationType == MediaDuration.Frames ? "2" : "1";
+            optionManager.PrependImage.Parameters["path"] = txtPrependPath.Text;
+            optionManager.PrependImage.Parameters["duration"] = txtPrependDuration.Text;           
+        }
+
+        private void customAudio_OptionChanged(object sender, EventArgs e)
+        {
+            if (inInit) return;
+            optionManager.ExternalAudio.Parameters["path"] = txtAudioPath.Text;
+            optionManager.ExternalAudio.Parameters["start"] = tsAudioStart.TimeSpan;
+            optionManager.ExternalAudio.Parameters["duration"] = tsAudioDuration.TimeSpan;
+        }
+
+        private void txtImageVideoPath_EditValueChanged(object sender, EventArgs e)
+        {
+            if(inInit) return;
+            optionManager.ExternalImage.Parameters["path"] = txtImageVideoPath.Text;
+        }
+
+        private void bbiSegment_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            ShowHideControlGroup(ControlGroups.Segment, true);
+            gcSegments.BringToFront();
+            UpdatePanelStates();
+        }
+
+        private void bbiCrop_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            ShowHideControlGroup(ControlGroups.Crop, true);
+            gcCrop.BringToFront();
+            UpdatePanelStates();
+        }
+
+        private void bbiConvert_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            ShowHideControlGroup(ControlGroups.Convert, true);
+            gcConvert.BringToFront(); 
+            UpdatePanelStates();
+        }
+
+        private void bbiRestrictions_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            ShowHideControlGroup(ControlGroups.Limits, true);
+            gcDownloadLimits.BringToFront();
+            UpdatePanelStates();
+        }
+
+        private void bbiPrepend_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            ShowHideControlGroup(ControlGroups.Prepend, true);
+            gcPrependImage.BringToFront();
+            UpdatePanelStates();
+        }
+
+        private void bbiAudio_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            ShowHideControlGroup(ControlGroups.Audio, true);
+            gcOverrideAudio.BringToFront();
+            UpdatePanelStates();
+        }
+
+        private void bbiImage_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            ShowHideControlGroup(ControlGroups.Image, true);
+            gcExternalImage.BringToFront();
+            UpdatePanelStates();
+        }
+
+        private void groupControl_CustomButtonClick(object sender, DevExpress.XtraBars.Docking2010.BaseButtonEventArgs e)
+        {
+            YTRGroupControl gc = sender as YTRGroupControl;
+            if(gc != null)
+            {
+                if(e.Button.Properties.Tag.ToString() == "rem")
+                {
+                    ShowHideControlGroup(gc.ControlGroup, false);
+                    UpdatePanelStates();
+                }    
+                else
+                {
+                    ExpandCollapseControlGroup(gc.ControlGroup);
+                }
+            }
+        }
+
+        private void groupControl_MouseDown(object sender, MouseEventArgs e)
+        {
+            YTRGroupControl gc = sender as YTRGroupControl;
+            if (gc != null)
+            {
+                ExpandCollapseControlGroup(gc.ControlGroup);
+            }
+        }
+
+        private void ddbOptionMenu_Click(object sender, EventArgs e)
+        {
+            ddbOptionMenu.ShowDropDown();
+        }
+
+        private void hlblGenSettings_Click(object sender, EventArgs e)
+        {
+            parentMainForm.OpenSettingsDialog("General");
+        }
+
+        private void btnBrowsePrepend_Click(object sender, EventArgs e)
+        {
+            browseForFile(ControlGroups.Prepend);
+        }
+
+        private void btnBrowseAudio_Click(object sender, EventArgs e)
+        {
+            browseForFile(ControlGroups.Audio);
+        }
+
+        private void btnBrowseVidImage_Click(object sender, EventArgs e)
+        {
+            browseForFile(ControlGroups.Image);
+        }
+
+        private void browseForFile(ControlGroups group)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            string path = string.Empty;
+            using (XtraOpenFileDialog ofd = new XtraOpenFileDialog())
+            {
+                ofd.DefaultViewMode = DevExpress.Dialogs.Core.View.ViewMode.MediumIcon;
+                if (group == ControlGroups.Prepend || group == ControlGroups.Image)
+                {
+                    ofd.Filter = "Image Files (*.jpg, *.png)|*.jpg;*.png";
+                    ofd.Title = "Select an Image File";
+                }
+                else if (group == ControlGroups.Audio)
+                {
+                    ofd.Filter = "Audio Files (*.wav, *.mp3, *.m4a, *.acc)|*.wav;*.mp3;*.m4a;*.acc";
+                    ofd.Title = "Select an Audio File";
+                }
+                
+                ofd.CheckFileExists = true;
+                ofd.Multiselect = false;
+
+                DialogResult res = ofd.ShowDialog();
+                if(res == DialogResult.OK)
+                {
+                    path = ofd.FileName;
+                }
+            }
+
+            switch (group)
+            {
+                case ControlGroups.Prepend:
+                    txtPrependPath.Text = path;
+                    break;
+                case ControlGroups.Audio:
+                    txtAudioPath.Text = path;
+                    break;
+                case ControlGroups.Image:
+                    txtImageVideoPath.Text = path;
+                    break;
+            }
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void cbPrependType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (inInit) return;
+            if (!string.IsNullOrEmpty(cbPrependType.Text))
+            {
+                MediaDuration? dur = EnumExtensions.ToEnum<MediaDuration>(cbPrependType.Text);
+                if (dur != null)
+                {
+                    optionManager.PrependImage.Parameters["dtype"] = (object)cbPrependType.SelectedItem;
+                }
+            }
+        }
+
+        private int bottomScrollValue = 0;
+
+        private void btnToBottom_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var oc = pnlOptionPanel.Controls.OfType<Control>().Where(c => c.GetType() == typeof(YT_RED.Controls.YTRGroupControl));
+                if (oc.Count() > 0)
+                {
+                    if (btnScrollOptions.Text == "Go To Bottom")
+                    {
+                        oc = oc.OrderBy(c => c.TabIndex);
+                        oc.FirstOrDefault().Select();
+                        btnScrollOptions.Text = "Go To Top";
+                        btnScrollOptions.ImageOptions.SvgImage = Properties.Resources.moveup;
+                    }
+                    else
+                    {
+                        oc = oc.OrderByDescending(c => c.TabIndex);
+                        oc.FirstOrDefault().Select();
+                        btnScrollOptions.Text = "Go To Bottom";
+                        btnScrollOptions.ImageOptions.SvgImage = Properties.Resources.movedown;
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                Logging.ExceptionHandler.LogException(ex);
+            }
+        }
+
+        private void ControlPanel_Paint(object sender, PaintEventArgs e)
+        {            
+            controlsUpdated();
+        }
+
+        private void pnlOptionPanel_Scroll(object sender, XtraScrollEventArgs e)
+        {
+            if(pnlOptionPanel.VerticalScroll.Value < bottomScrollValue)
+            {
+                btnScrollOptions.Text = "Go To Bottom";
+                btnScrollOptions.ImageOptions.SvgImage = Properties.Resources.movedown;
+            }
+            else
+            {
+                btnScrollOptions.Text = "Go To Top";
+                btnScrollOptions.ImageOptions.SvgImage = Properties.Resources.moveup;
+            }
+        }
     }
 
     public enum ControlGroups
@@ -1176,6 +1810,10 @@ namespace YT_RED.Controls
         Segment = 0,
         Crop = 1,
         Convert = 2,
-        Limits = 3
+        Limits = 3,
+        Prepend = 4,
+        Audio = 5,
+        Image = 6,
+        General = 7
     }
 }

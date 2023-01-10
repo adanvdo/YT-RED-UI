@@ -174,14 +174,6 @@ namespace YT_RED.Settings
 			About = new About();
 		}
 
-		/// <summary>
-		/// Reloads the settings from disk and re-initializes the Default settings.
-		/// </summary>
-		public static void ReloadFromDisk()
-		{
-			_default = null;
-		}
-
 		public void Save()
 		{
 			JsonSerializerSettings settings = new JsonSerializerSettings();
