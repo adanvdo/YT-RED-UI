@@ -428,6 +428,6 @@
 set platformName=$(PlatformName)
 set versionNumber=@(VersionNumber)
 set releaseChannel=alpha
-call "G:\Dev\BuildAndSignYTR.bat"</PostBuildEvent>
+call "E:\Dev\BuildAndSignYTR.bat"</PostBuildEvent>
   </PropertyGroup>
 </Project>
