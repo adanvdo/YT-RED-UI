@@ -1767,7 +1767,13 @@ namespace YT_RED
                     {
                         if (cpMainControlPanel.CurrentFormatPair.Type == Classes.StreamType.AudioAndVideo)
                         {
-                            if (selectedAudioIndex >= 0 && selectedAudioIndex != handle)
+                            if(cpMainControlPanel.CurrentFormatPair.AudioFormat == null && selectedVideoIndex >= 0 && selectedVideoIndex != handle)
+                            {
+                                gvFormats.UnselectRow(selectedVideoIndex);
+                                cpMainControlPanel.RemoveCurrentFormat(Classes.StreamType.AudioAndVideo);
+                                selectedVideoIndex = -1;
+                            }
+                            else if (selectedAudioIndex >= 0 && selectedAudioIndex != handle)
                             {
                                 gvFormats.UnselectRow(selectedAudioIndex);
                             }

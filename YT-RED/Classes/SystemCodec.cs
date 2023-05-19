@@ -130,6 +130,27 @@ namespace YT_RED.Classes
             }
         }
 
+        public static VideoFormat GetVideoFormatFromString(string format)
+        {
+            switch (format.ToUpper())
+            {
+                case "FLV":
+                    return FLV.Format;
+                case "MP4":
+                    return MP4.Format;
+                case "MKV":
+                    return MKV.Format;
+                case "WEBM":
+                    return WEBM.Format;
+                case "OGG":
+                    return OGGVideo.Format;
+                case "GIF":
+                    return GIF.Format;
+                default:
+                    return VideoFormat.UNSPECIFIED;
+            }
+        }
+
         public static VideoFormat GetBestFormat(SystemVideoCodec codec)
         {
             switch (codec)
@@ -222,6 +243,31 @@ namespace YT_RED.Classes
             }
         }
         
+
+        public static AudioFormat GetAudioFormatFromString(string audioFormat)
+        {
+            switch(audioFormat.ToUpper())
+            {
+                case "AAC":
+                    return AudioFormat.AAC;
+                case "FLAC":
+                    return AudioFormat.FLAC;
+                case "M4A":
+                    return AudioFormat.M4A;
+                case "MP3":
+                    return AudioFormat.MP3;
+                case "OGG":
+                    return AudioFormat.VORBIS;
+                case "OPUS":
+                    return AudioFormat.OPUS;
+                case "VORBIS":
+                    return AudioFormat.VORBIS;
+                case "WAV":
+                    return AudioFormat.WAV;
+                default:
+                    return AudioFormat.UNSPECIFIED;
+            }
+        }
 
         public static FFmpegAudioCodec GetAudioCodec(AudioFormat audioFormat)
         {

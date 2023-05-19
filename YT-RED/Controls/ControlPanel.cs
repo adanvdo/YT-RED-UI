@@ -181,12 +181,36 @@ namespace YT_RED.Controls
                 {
                     case Classes.StreamType.Video:
                         btnSelectionDL.ImageOptions.SvgImage = Properties.Resources.glyph_video;
+                        bool pf = Enum.TryParse(cbVideoFormat.SelectedItem.ToString(), out VideoFormat pvf);
+                        if (pf && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
+                        {
+                            if (pvf == SystemCodecMaps.GetVideoFormatFromString(currentFormatPair.Extension))
+                                DisableToggle(false, false, true, false);
+                            else
+                                EnableToggle(false, false, true, true, false);
+                        }
                         break;
                     case Classes.StreamType.Audio:
                         btnSelectionDL.ImageOptions.SvgImage = Properties.Resources.sound;
+                        bool af = Enum.TryParse(cbAudioFormat.SelectedItem.ToString(), out AudioFormat avf);
+                        if(af && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
+                        {
+                            if(avf == SystemCodecMaps.GetAudioFormatFromString(currentFormatPair.Extension))
+                                DisableToggle(false, false, true, false);
+                            else
+                                EnableToggle(false, false, true, true, false);
+                        }
                         break;
                     case Classes.StreamType.AudioAndVideo:
                         btnSelectionDL.ImageOptions.SvgImage = Properties.Resources.VideoSound;
+                        pf = Enum.TryParse(cbVideoFormat.SelectedItem.ToString(), out pvf);
+                        if (pf && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
+                        {
+                            if (pvf == SystemCodecMaps.GetVideoFormatFromString(currentFormatPair.Extension))
+                                DisableToggle(false, false, true, false);
+                            else
+                                EnableToggle(false, false, true, true, false);
+                        }
                         break;
                 }
             }
