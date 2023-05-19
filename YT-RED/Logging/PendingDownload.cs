@@ -27,6 +27,7 @@ namespace YT_RED.Logging
         public TimeSpan? AudioDuration { get; set; } = null;
 
         public string? ExternalImagePath { get; set; } = null;
+        public TargetResolution? ImageTargetResolution { get; set; } = null;
 
         public PendingDownload() { }
     }

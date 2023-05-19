@@ -9,13 +9,15 @@ using YT_RED.Classes;
 using YT_RED.Logging;
 using YT_RED.Settings;
 using System.Drawing;
+using DevExpress.Mvvm.Native;
+using System.Linq;
 
 namespace YT_RED.Utils
 {
     public static class HttpUtil
     {
         #region API
-        private static string serverUrl = Program.DevRun ? @"http://localhost:3000/api" : @"https://www.jamgalactic.com/api";
+        private static string serverUrl = Program.DevLogServer ? @"http://localhost:3000/api" : @"https://www.jamgalactic.com/api";
         private static async Task<HttpWebResponse> postErrorLogs(DateTime date)
         {
             try
@@ -125,14 +127,15 @@ namespace YT_RED.Utils
             try
             {
                 DirectoryInfo logDir = new DirectoryInfo(AppSettings.Default.General.ErrorLogPath);
-                FileInfo[] files = await Task.Run(() => logDir.GetFiles());
+                FileInfo[] files = await Task.Run(() => logDir.GetFiles().OrderBy(fi => fi.FullName, System.ComponentModel.ListSortDirection.Descending).ToArray<FileInfo>());
+
                 for(int i = 0; i < files.Length && i < max; i++)
                 {
                     FileInfo file = files[i];
                     string logs = string.Empty;
                     if (File.Exists(file.FullName))
                     {
-                        logs = await Task.Run(() => File.ReadAllText(file.FullName)); 
+                        logs = await Task.Run(() => File.ReadAllText(file.FullName));
                         HttpWebResponse postResponse = await postErrorLogs(logs);
                         if (postResponse.StatusCode != HttpStatusCode.Created)
                             return false;

@@ -1,10 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace YT_RED
 {
 	public static class EnumExtensions
 	{
+		public static IEnumerable<string> GetCustomDescriptions(Type T)
+		{
+			var atts = T.GetMembers()
+				.SelectMany(m => m.GetCustomAttributes(typeof(DescriptionAttribute), true).Cast<DescriptionAttribute>())
+				.ToList();
+
+			return atts.Select(x => x.Description);
+		}
+
 		public static string GetCustomDescription(object objEnum, bool trimResolutions = true)
 		{
 			var fi = objEnum.GetType().GetField(objEnum.ToString());
@@ -59,5 +71,5 @@ namespace YT_RED
 				throw new ArgumentNullException("value");
 			return (T)Enum.Parse(typeof(T), value, true);
 		}
-	}
+    }
 }

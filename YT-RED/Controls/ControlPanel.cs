@@ -368,7 +368,30 @@ namespace YT_RED.Controls
         {
             get { return txtImageVideoPath.Text; }
             set { txtImageVideoPath.Text = value; }
-        }  
+        }
+
+        [Browsable(false)]
+        public TargetResolution? VideoTargetResolution
+        {
+            get
+            {
+                if(toggleExternalImage.IsOn && cbTargetRes.SelectedItem != null && !string.IsNullOrEmpty(cbTargetRes.SelectedItem.ToString()))
+                {
+                    TargetResolution? tr = EnumExtensions.GetFromDescription<TargetResolution>(cbTargetRes.Text);
+                    return tr;
+                }
+                return null;
+            }
+
+            set
+            {
+                TargetResolution? tr = value;
+                if(tr != null)
+                {
+                    cbTargetRes.SelectedIndex = cbTargetRes.Properties.Items.IndexOf(value.ToString());
+                }
+            }
+        }
 
         public bool ValidCrops()
         {
@@ -423,14 +446,14 @@ namespace YT_RED.Controls
         }
 
         [Browsable(false)]
-        public Resolution? MaxResolution
+        public ResolutionFilter? MaxResolution
         {
             get
             {
                 if(toggleDownloadLimits.IsOn && cbMaxRes.SelectedItem != null && !string.IsNullOrEmpty(cbMaxRes.SelectedItem.ToString()))
                 {
-                    Resolution r = Resolution.ANY;
-                    bool pr = Enum.TryParse(cbMaxRes.SelectedItem.ToString(), out Resolution ppr);
+                    ResolutionFilter r = ResolutionFilter.ANY;
+                    bool pr = Enum.TryParse(cbMaxRes.SelectedItem.ToString(), out ResolutionFilter ppr);
                     if (pr)
                         r = ppr;
                     return r;
@@ -439,7 +462,7 @@ namespace YT_RED.Controls
             }
             set
             {
-                Resolution? v = value;
+                ResolutionFilter? v = value;
                 if (v != null)
                     cbMaxRes.SelectedIndex = cbMaxRes.Properties.Items.IndexOf(value.ToString());                    
             }
@@ -452,13 +475,13 @@ namespace YT_RED.Controls
             {
                 switch (MaxResolution)
                 {
-                    case Classes.Resolution.SD:
+                    case Classes.ResolutionFilter.SD:
                         return 480;
-                    case Classes.Resolution.HD720p:
+                    case Classes.ResolutionFilter.HD720p:
                         return 720;
-                    case Classes.Resolution.HD1080p:
+                    case Classes.ResolutionFilter.HD1080p:
                         return 1080;
-                    case Classes.Resolution.UHD2160p:
+                    case Classes.ResolutionFilter.UHD2160p:
                         return 2160;
                     default:
                         return 0;
@@ -533,15 +556,19 @@ namespace YT_RED.Controls
             {
                 Action safeUpdate = delegate
                 {
+                    if (!pbProgress.Visible) pbProgress.Visible = true;
                     pbProgress.Position = progress;
                     pbProgress.Refresh();
+                    if(progress == 100) pbProgress.Visible = false;
                 };
                 pbProgress.Invoke(safeUpdate);
             }
             else
             {
+                if(!pbProgress.Visible) pbProgress.Visible = true;
                 pbProgress.Position = progress;
                 pbProgress.Refresh();
+                if (progress == 100) pbProgress.Visible = false;
             }
         }
 
@@ -564,12 +591,12 @@ namespace YT_RED.Controls
 
         public void ShowProgress()
         {
-            pbProgress.Position = 0;
             pbProgress.Visible = true;
         }
 
         public void HideProgress()
         {
+            pbProgress.Position = 0;
             pbProgress.Visible = false;
         }
 
@@ -642,6 +669,7 @@ namespace YT_RED.Controls
             cbAudioFormat.Properties.Items.Clear();
             cbAudioFormat.Properties.Items.AddRange(audioFormats);
             cbAudioFormat.SelectedIndex = 0;
+            cbMaxRes.Properties.Items.Clear();
             cbMaxRes.Properties.Items.AddRange(Utils.VideoUtil.ResolutionList);
             cbMaxRes.SelectedIndex = 4;
             txtMaxFilesize.Text = "0";
@@ -659,6 +687,12 @@ namespace YT_RED.Controls
             tsAudioDuration.TimeSpan = TimeSpan.Zero;
 
             txtImageVideoPath.Text = string.Empty;
+            List<string> targetResolutions = new List<string>();
+            var t = EnumExtensions.GetCustomDescriptions(typeof(TargetResolution));
+            targetResolutions.AddRange(t);
+            cbTargetRes.Properties.Items.Clear();
+            cbTargetRes.Properties.Items.AddRange(targetResolutions);
+            cbTargetRes.SelectedIndex = cbTargetRes.Properties.Items.Count - 1;
             
             inInit = false;
             if (invoked)
@@ -761,29 +795,7 @@ namespace YT_RED.Controls
         private Color customForecoler = Color.Black;
 
         private void controlsUpdated()
-        {
-            DevExpress.Skins.Skin currentSkin = DevExpress.Skins.CommonSkins.GetSkin(this.LookAndFeel.ActiveLookAndFeel); 
-            var s = currentSkin.SvgPalettes["DefaultSkinPalette"];
-            var a = s.Colors.FirstOrDefault(c => c.Name == "Foreground 50");
-            if(a != null) customBackcolor = a.Value;
-            var b = s.Colors.FirstOrDefault(c => c.Name == "Foreground 100");
-            if(b != null) customForecoler = b.Value;
-
-            if (pnlOptionPanel.VerticalScroll.Visible && currentSkin != null)
-            {
-                Bitmap bmp = new Bitmap(btnScrollOptions.Width, btnScrollOptions.Height);
-                using(Graphics gfx = Graphics.FromImage(bmp))
-                {
-                    gfx.Clear(customBackcolor);
-                }
-
-                btnScrollOptions.BackgroundImage = bmp;
-                btnScrollOptions.ForeColor = customForecoler;
-            }
-            
-
-            btnScrollOptions.Visible = pnlOptionPanel.VerticalScroll.Visible;
-            
+        {         
             if (Controls_Updated != null) Controls_Updated(this, EventArgs.Empty);
         }
 
@@ -1016,6 +1028,7 @@ namespace YT_RED.Controls
             UpdateExternalAudioState();
             UpdateExternalImageState();
             UpdateOptionButtonStates();
+
             int i = 0;
             foreach(Control ctrl in pnlOptionPanel.Controls)
             {
@@ -1030,6 +1043,32 @@ namespace YT_RED.Controls
             pnlOptionPanel.VerticalScroll.Value = pnlOptionPanel.VerticalScroll.Maximum;
             bottomScrollValue = pnlOptionPanel.VerticalScroll.Value;
             pnlOptionPanel.VerticalScroll.Value = retainer;
+
+            updateControlScroller();
+        }
+
+        private void updateControlScroller()
+        {
+            DevExpress.Skins.Skin currentSkin = DevExpress.Skins.CommonSkins.GetSkin(this.LookAndFeel.ActiveLookAndFeel);
+            var s = currentSkin.SvgPalettes["DefaultSkinPalette"];
+            var a = s.Colors.FirstOrDefault(c => c.Name == "Foreground 50");
+            if (a != null) customBackcolor = a.Value;
+            var b = s.Colors.FirstOrDefault(c => c.Name == "Foreground 100");
+            if (b != null) customForecoler = b.Value;
+
+            if (pnlOptionPanel.VerticalScroll.Visible && currentSkin != null)
+            {
+                Bitmap bmp = new Bitmap(btnScrollOptions.Width, btnScrollOptions.Height);
+                using (Graphics gfx = Graphics.FromImage(bmp))
+                {
+                    gfx.Clear(customBackcolor);
+                }
+
+                btnScrollOptions.BackgroundImage = bmp;
+                btnScrollOptions.ForeColor = customForecoler;
+            }
+
+            btnScrollOptions.Visible = pnlOptionPanel.VerticalScroll.Visible;
         }
 
         public void UpdateOptionButtonStates()
@@ -1224,7 +1263,10 @@ namespace YT_RED.Controls
                 toggleExternalImage.ForeColor = toggleForeColor;
             }
             txtImageVideoPath.Enabled = toggleExternalImage.IsOn;
+            btnBrowseVidImage.Enabled = toggleExternalImage.IsOn;
+            cbTargetRes.Enabled = toggleExternalImage.IsOn;
             gcOverrideAudio.CustomHeaderButtons[1].Properties.Enabled = !toggleExternalImage.IsOn;
+            btnDownloadBest.Enabled = !toggleExternalImage.IsOn;
         }
 
         private void toggleDownloadLimits_Toggled(object sender, EventArgs e)
@@ -1523,14 +1565,14 @@ namespace YT_RED.Controls
             if (inInit) return;
             if (!string.IsNullOrEmpty(cbMaxRes.Text))
             {
-                Resolution? maxRes = EnumExtensions.ToEnum<Resolution>(cbMaxRes.Text);
+                ResolutionFilter? maxRes = EnumExtensions.ToEnum<ResolutionFilter>(cbMaxRes.Text);
                 if (maxRes != null)
                 {
-                    AppSettings.Default.General.MaxResolutionBest = (Resolution)maxRes;
+                    AppSettings.Default.General.MaxResolutionBest = (ResolutionFilter)maxRes;
                     AppSettings.Default.Save();
                 }
             }
-            optionManager.Restrictions.Parameters["maxres"] = (Resolution)cbMaxRes.SelectedItem;
+            optionManager.Restrictions.Parameters["maxres"] = (ResolutionFilter)cbMaxRes.SelectedItem;
             optionManager.Restrictions.Parameters["maxsize"] = txtMaxFilesize.Text;
         }
 
@@ -1596,6 +1638,21 @@ namespace YT_RED.Controls
         {
             if(inInit) return;
             optionManager.ExternalImage.Parameters["path"] = txtImageVideoPath.Text;
+        }
+        private void cbTargetRes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (inInit) return;
+            TargetResolution? res = null;
+            if (!string.IsNullOrEmpty(cbTargetRes.Text))
+            {
+                res = EnumExtensions.GetFromDescription<TargetResolution>(cbTargetRes.Text);
+                if (res != null)
+                {
+                    AppSettings.Default.General.ImageOption.Parameters["resolution"] = (TargetResolution)res;
+                    AppSettings.Default.Save();
+                }
+            }
+            optionManager.ExternalImage.Parameters["resolution"] = res;
         }
 
         private void bbiSegment_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -1787,7 +1844,6 @@ namespace YT_RED.Controls
 
         private void ControlPanel_Paint(object sender, PaintEventArgs e)
         {            
-            controlsUpdated();
         }
 
         private void pnlOptionPanel_Scroll(object sender, XtraScrollEventArgs e)
@@ -1803,6 +1859,8 @@ namespace YT_RED.Controls
                 btnScrollOptions.ImageOptions.SvgImage = Properties.Resources.moveup;
             }
         }
+
+      
     }
 
     public enum ControlGroups

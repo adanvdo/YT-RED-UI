@@ -130,7 +130,7 @@ namespace YT_RED
         public static void UpdateDownloadHotkey()
         {
             MainForm.hook.UnregisterHotKey();
-            if (AppSettings.Default.Advanced.EnableHotKeys && AppSettings.Default.Advanced.DownloadHotKey != Shortcut.None)
+            if (!AppSettings.Default.Advanced.DisableHotKeysForCurrentProcess &&AppSettings.Default.Advanced.EnableHotKeys && AppSettings.Default.Advanced.DownloadHotKey != Shortcut.None)
             {
                 KeyShortcut shortcut = new KeyShortcut(AppSettings.Default.Advanced.DownloadHotKey);
                 string[] listKeys = shortcut.Key.ToString().Replace(" ", "").Split(',');
@@ -155,7 +155,7 @@ namespace YT_RED
                 System.Windows.Input.ModifierKeys dlModifier = (System.Windows.Input.ModifierKeys)modifierKeysConverter.ConvertFrom(modifierKeys);
                 Keys dlKey = (Keys)keysConverter.ConvertFrom(keys);
 
-                MainForm.hook.RegisterHotKey(dlModifier, dlKey);
+                MainForm.hook.RegisterHotKey(dlModifier, dlKey);                
             }
         }
 
@@ -190,30 +190,7 @@ namespace YT_RED
                     }
                 }
 
-                if (activeTrayForm == null)
-                {
-                    try
-                    {
-                        activeTrayForm = new TrayForm();
-                        activeTrayForm.FormClosed += TrayForm_FormClosed;
-                        activeTrayForm.StartPosition = FormStartPosition.Manual;
-                        Rectangle workingArea = Screen.GetWorkingArea(this);
-                        var loc = new Point(workingArea.Right - activeTrayForm.Size.Width, workingArea.Bottom - activeTrayForm.Size.Height);
-                        activeTrayForm.HideProgressPanel();
-                        activeTrayForm.Location = loc;
-                        activeTrayForm.Url = copiedText;
-                        activeTrayForm.Show();
-                        activeTrayForm.BringToFront();
-                        activeTrayForm.TopMost = true;
-                        activeTrayForm.TriggerDownload();
-                    }
-                    catch (Exception ex)
-                    {
-                        if (ex.Message.ToLower() != "a task was canceled.")
-                            ExceptionHandler.LogException(ex);
-                    }
-                }
-                else if(!activeTrayForm.Locked)
+                if(!activeTrayForm.Locked)
                 {
                     Rectangle workingArea = Screen.GetWorkingArea(this);
                     var loc = new Point(workingArea.Right - activeTrayForm.Size.Width, workingArea.Bottom - activeTrayForm.Size.Height);
@@ -310,20 +287,7 @@ namespace YT_RED
             VideoUtil.ytOutput = new Progress<string>(processOutput);
             VideoUtil.OnFFMpegProgress += Conversion_OnProgress;
             if(!Program.DevRun)
-                ipMainInput.URL = initialLink;
-
-            if (initialDownloadType == DownloadType.Unknown)
-            {
-                
-            }
-            else if (initialDownloadType == DownloadType.Reddit)
-            {
-
-            }
-            else if (initialFunction == InitialFunction.ListFormats)
-            {
-                getYtdlFormatList(ipMainInput.URL);
-            }
+                ipMainInput.URL = initialLink;            
             
             if (newUpdater)
             {
@@ -499,19 +463,11 @@ namespace YT_RED
         
         private void tsiDownload_Click(object sender, EventArgs e)
         {
-            if (activeTrayForm == null)
+            if (!activeTrayForm.Visible)
             {
                 try
-                {
-                    if (activeTrayForm == null) activeTrayForm = new TrayForm();
-                    activeTrayForm.FormClosed += TrayForm_FormClosed;
-                    activeTrayForm.StartPosition = FormStartPosition.Manual;
-                    Rectangle workingArea = Screen.GetWorkingArea(this);
-                    activeTrayForm.HideProgressPanel();
-                    var loc = new Point(workingArea.Right - activeTrayForm.Size.Width, workingArea.Bottom - (activeTrayForm.Size.Height - 81));
-                    activeTrayForm.Location = loc;
-                    activeTrayForm.ShowDialog();
-                    
+                {                    
+                    activeTrayForm.ShowDialog();                    
                 }
                 catch (Exception ex)
                 {
@@ -528,7 +484,7 @@ namespace YT_RED
 
         private void tsiExit_Click(object sender, EventArgs e)
         {
-            if (IsLocked || (activeTrayForm != null && activeTrayForm.Locked))
+            if (IsLocked || (activeTrayForm.Visible && activeTrayForm.Locked))
             {
                 DialogResult res = MsgBox.Show("A download is in progress.\nAre you sure you want to exit?", "Download In Progress", YT_RED.Controls.Buttons.OKCancel, YT_RED.Controls.Icon.Warning);
                 if (res != DialogResult.OK)
@@ -826,7 +782,7 @@ namespace YT_RED
                 return;
 
             var percent = (int)(Math.Round(progress.Progress * 100));
-            if (this.activeTrayForm != null)
+            if (this.activeTrayForm.Visible)
                 this.activeTrayForm.ShowProgress(progress);
             cpMainControlPanel.UpdateProgress(percent, true);
         }        
@@ -834,16 +790,19 @@ namespace YT_RED
         public void processOutput(string output)
         {
             ipMainInput.marqeeMain.Text = output;
-            if (this.activeTrayForm != null)
+            if (this.activeTrayForm.Visible)
                 this.activeTrayForm.ShowProgressOutput(output);
         }
 
         private void Conversion_OnProgress(object sender, Xabe.FFmpeg.Events.ConversionProgressEventArgs args)
         {
             var percent = (int)(Math.Round(args.Duration.TotalSeconds / args.TotalLength.TotalSeconds, 2) * 100);
-            if (activeTrayForm != null)
+            if (activeTrayForm.Visible)
                 activeTrayForm.ShowProgress(percent);
-            cpMainControlPanel.UpdateProgress(percent, true);
+            else
+            {
+                cpMainControlPanel.UpdateProgress(percent, true);
+            }
         }
 
         private async void getYtdlPlaylistItems(string url)
@@ -1156,6 +1115,7 @@ namespace YT_RED
             TimeSpan? audioDuration = null;
 
             string imagePath = string.Empty;
+            TargetResolution? imageRes = null;
 
             if (cpMainControlPanel.PrependEnabled)
             {
@@ -1171,6 +1131,12 @@ namespace YT_RED
                 audioDuration = cpMainControlPanel.CustomAudioDuration;
             }
 
+            if (cpMainControlPanel.ExternalImageEnabled)
+            {
+                imagePath = cpMainControlPanel.VideoImagePath;
+                imageRes = cpMainControlPanel.VideoTargetResolution;
+            }
+
             PendingDownload pendingDL = new PendingDownload()
             {
                 Url = url,
@@ -1184,7 +1150,10 @@ namespace YT_RED
                 PrependDurationType = prependType,
                 ExternalAudioPath = audioPath,
                 AudioStartTime = audioStart,
-                AudioDuration = audioDuration
+                AudioDuration = audioDuration,
+                ExternalImagePath = imagePath,
+                ImageTargetResolution = imageRes
+                
             };
 
             int maxRes = cpMainControlPanel.LimitsEnabled ? cpMainControlPanel.MaxResolutionValue : AppSettings.Default.General.MaxResolutionValue;
@@ -1208,7 +1177,7 @@ namespace YT_RED
                     IConversion conversion = await VideoUtil.PrepareBestYtdlConversion(url, finalFormatString, start, duration, 
                         cpMainControlPanel.ConversionEnabled && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat, crops, videoFormat == null ? VideoFormat.UNSPECIFIED : (VideoFormat)videoFormat, 
                         audioFormat == null ? AudioFormat.UNSPECIFIED : (AudioFormat)audioFormat, false, processOutput,
-                        prependPath, prependDur, prependType, audioPath, audioStart, audioDuration, imagePath);
+                        prependPath, prependDur, prependType, audioPath, audioStart, audioDuration);
 
                     string destination = conversion.OutputFilePath;
                     conversion.OnProgress += Conversion_OnProgress;
@@ -1248,14 +1217,31 @@ namespace YT_RED
                     IConversion conversion = await VideoUtil.PrepareBestYtdlConversion(url, finalAudioFormatString, start, duration, 
                         cpMainControlPanel.ConversionEnabled && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat, null, VideoFormat.UNSPECIFIED, 
                         audioFormat == null ? AudioFormat.UNSPECIFIED : (AudioFormat)audioFormat, cpMainControlPanel.EmbedThumbnail, processOutput,
-                        prependPath, prependDur, prependType, audioPath, audioStart, audioDuration, imagePath);
+                        prependPath, prependDur, prependType, audioPath, audioStart, audioDuration, imagePath, imageRes);
                     string destination = conversion.OutputFilePath;
                     conversion.OnProgress += Conversion_OnProgress;
+
                     try
                     {
                         VideoUtil.CancellationTokenSource = new System.Threading.CancellationTokenSource();
                         await conversion.Start(VideoUtil.CancellationTokenSource.Token);
+
+                        if (VideoUtil.TemporaryFiles.ContainsKey(url) && cpMainControlPanel.ExternalImageEnabled)
+                        {
+                            string source = destination;
+                            IConversion mix = await VideoUtil.PrepareStreamConversion(VideoUtil.TemporaryFiles[url], source);
+                            if (mix != null)
+                            {
+                                VideoUtil.TemporaryFiles.Add($"{url}_m", source);
+                                destination = mix.OutputFilePath;
+                                VideoUtil.CancellationTokenSource = new System.Threading.CancellationTokenSource();
+                                mix.OnProgress += Conversion_OnProgress;
+                                await mix.Start(VideoUtil.CancellationTokenSource.Token);
+                            }
+                        }
+
                         result = new RunResult<string>(true, new string[] { }, destination);
+                        cpMainControlPanel.HideProgress();
                     }
                     catch (Exception ex)
                     {
@@ -1475,7 +1461,7 @@ namespace YT_RED
 
                 IConversion conversion = await Utils.VideoUtil.PrepareYoutubeConversion(VideoUtil.ConvertToYouTubeLink(ipMainInput.URL).Url, cpMainControlPanel.CurrentFormatPair, 
                     start, duration, cpMainControlPanel.ConversionEnabled && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat, crops, videoFormat == null ? VideoFormat.UNSPECIFIED : (VideoFormat)videoFormat, 
-                    audioFormat == null ? AudioFormat.UNSPECIFIED : (AudioFormat)audioFormat);
+                    audioFormat == null ? AudioFormat.UNSPECIFIED : (AudioFormat)audioFormat, prependPath, prependDur, prependType, audioPath, audioStart, audioDuration, imagePath);
                 string destination = conversion.OutputFilePath;
                 conversion.OnProgress += Conversion_OnProgress;
                 cpMainControlPanel.ShowProgress();
@@ -1933,7 +1919,7 @@ namespace YT_RED
                     cpMainControlPanel.EnableToggle(false, false, true, false);
                     cpMainControlPanel.ConvertVideoFormat = cpMainControlPanel.TargetLog.VideoConversionFormat;
                 }
-                if (cpMainControlPanel.TargetLog.MaxResolution != null && cpMainControlPanel.TargetLog.MaxResolution != Resolution.ANY)
+                if (cpMainControlPanel.TargetLog.MaxResolution != null && cpMainControlPanel.TargetLog.MaxResolution != ResolutionFilter.ANY)
                 {
                     cpMainControlPanel.EnableToggle(false, false, false, true);
                     cpMainControlPanel.MaxResolution = cpMainControlPanel.TargetLog.MaxResolution;

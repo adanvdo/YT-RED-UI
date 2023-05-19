@@ -13,15 +13,15 @@ namespace YT_RED.Classes
         public static FFmpegVideoCodec MPEG4 = new FFmpegVideoCodec(SystemVideoCodec.MPEG4, "mpeg4");
         public static FFmpegVideoCodec H264 = new FFmpegVideoCodec(SystemVideoCodec.H264, "libx264");
         public static FFmpegVideoCodec H265 = new FFmpegVideoCodec(SystemVideoCodec.H265, "libx265");
-        public static FFmpegVideoCodec VP9 = new FFmpegVideoCodec(SystemVideoCodec.VP9, "libvpx-vp9 -tag:v hvc1");
-        public static FFmpegVideoCodec OGG = new FFmpegVideoCodec(SystemVideoCodec.THEORA, "libtheora -qscale:v 3");
+        public static FFmpegVideoCodec VP9 = new FFmpegVideoCodec(SystemVideoCodec.VP9, "libvpx-vp9", "-tag:v hvc1");
+        public static FFmpegVideoCodec OGG = new FFmpegVideoCodec(SystemVideoCodec.THEORA, "libtheora", "-qscale:v 3");
         public static FFmpegAudioCodec AAC = new FFmpegAudioCodec(AudioFormat.AAC, "libfdk_aac");
         public static FFmpegAudioCodec FLAC = new FFmpegAudioCodec(AudioFormat.FLAC, "flac");
-        public static FFmpegAudioCodec OPUS = new FFmpegAudioCodec(AudioFormat.OPUS, "libopus -qscale:a 3");
+        public static FFmpegAudioCodec OPUS = new FFmpegAudioCodec(AudioFormat.OPUS, "libopus", "-qscale:a 3");
         public static FFmpegAudioCodec MP3 = new FFmpegAudioCodec(AudioFormat.MP3, "libmp3lame");
-        public static FFmpegAudioCodec VORBIS = new FFmpegAudioCodec(AudioFormat.VORBIS, "libvorbis -qscale:a 3");
+        public static FFmpegAudioCodec VORBIS = new FFmpegAudioCodec(AudioFormat.VORBIS, "libvorbis", "-qscale:a 3");
         public static FFmpegAudioCodec WAV = new FFmpegAudioCodec(AudioFormat.WAV, "pcm_s32le");
-        public static FFmpegVideoCodec RGB24 = new FFmpegVideoCodec(SystemVideoCodec.RGB24, "rgb24 -qscale:v 3");
+        public static FFmpegVideoCodec RGB24 = new FFmpegVideoCodec(SystemVideoCodec.RGB24, "rgb24", "-qscale:v 3");
 
         public static VideoCodecMap FLV = new VideoCodecMap(VideoFormat.FLV, 
             new List<FFmpegVideoCodec>(){ 
@@ -40,13 +40,10 @@ namespace YT_RED.Classes
                 AV1,
                 MPEG4,
                 H264,
-                H265,
-                VP9,
+                H265
             },
             new List<FFmpegAudioCodec>()
             {
-                OPUS,
-                VORBIS,
                 MP3,
                 AAC
             }
@@ -58,7 +55,7 @@ namespace YT_RED.Classes
                 MPEG4,
                 H264, 
                 H265,
-                VP9,
+                VP9
             },
             new List<FFmpegAudioCodec>()
             {
@@ -99,6 +96,16 @@ namespace YT_RED.Classes
                 RGB24
             },
             new List<FFmpegAudioCodec>());
+
+        public static List<VideoCodecMap> AllCodecMaps = new List<VideoCodecMap>()
+        {
+            FLV,
+            MP4,
+            MKV,
+            WEBM,
+            OGGVideo,
+            GIF
+        };
 
         public static VideoCodecMap GetMappedCodecs(string format)
         {
@@ -214,6 +221,7 @@ namespace YT_RED.Classes
                     throw new Exception("Unsupported Format");
             }
         }
+        
 
         public static FFmpegAudioCodec GetAudioCodec(AudioFormat audioFormat)
         {
@@ -311,10 +319,14 @@ namespace YT_RED.Classes
 
         public string Encoder { get; set; }
 
-        public FFmpegVideoCodec(SystemVideoCodec codec, string encoder)
+        public string Tags { get; set; }
+        public string EncoderString { get { return $"{Encoder} {Tags}"; } }
+
+        public FFmpegVideoCodec(SystemVideoCodec codec, string encoder, string tags = null)
         {
             Codec = codec;
             Encoder = encoder;
+            Tags = tags;
         }
     }
 
@@ -322,11 +334,14 @@ namespace YT_RED.Classes
     {
         public AudioFormat Codec { get; set; }
         public string Encoder { get; set; }
+        public string Tags { get; set; }
+        public string EncoderString { get { return $"{Encoder} {Tags}"; } }
 
-        public FFmpegAudioCodec(AudioFormat codec, string encoder)
+        public FFmpegAudioCodec(AudioFormat codec, string encoder, string tags = null)
         {
             Codec = codec;
             Encoder = encoder;
+            Tags = tags;
         }
     }
 

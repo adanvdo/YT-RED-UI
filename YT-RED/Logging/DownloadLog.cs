@@ -46,7 +46,7 @@ namespace YT_RED.Logging
         [JsonProperty("audio_conversion")]
         public AudioFormat? AudioConversionFormat { get; set; } = null;
         [JsonProperty("max_resolution")]
-        public Resolution? MaxResolution { get; set; } = null;
+        public ResolutionFilter? MaxResolution { get; set; } = null;
         [JsonProperty("max_filesize")]
         public int? MaxFileSize { get; set; } = null;
         [JsonProperty("prepend_path")]

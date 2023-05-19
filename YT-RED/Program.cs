@@ -10,6 +10,7 @@ namespace YT_RED
     internal static class Program
     {
         public static bool DevRun = false;
+        public static bool DevLogServer = false;
         public static bool x64 = false;
         public static string initialYTLink = string.Empty;
         public static string initialRedLink = string.Empty;
@@ -42,7 +43,13 @@ namespace YT_RED
                     foreach (string s in args)
                     {
                         if (s.StartsWith("-dev") || s == "dev")
+                        {
                             DevRun = true;
+                        }
+                        if (s.StartsWith("-devlogs") || s == "devlogs" || s.StartsWith("-dls") || s == "dls")
+                        {
+                            DevLogServer = true;
+                        }
                         if (s.StartsWith("-if"))
                         {
                             DevRun = false;
@@ -53,17 +60,7 @@ namespace YT_RED
                             if (func == "lf") func = "ListFormats";
                             else if (func == "dlb") func = "DownloadBest";
                             initialFunction = (InitialFunction)Enum.Parse(typeof(InitialFunction), func);
-                        }
-                        if (s.StartsWith("-yt") || s == "yt")
-                        {
-                            DevRun = false;
-                            initialYTLink = s.Remove(0, 4);
-                        }
-                        if (s.StartsWith("-red") || s == "red")
-                        {
-                            DevRun = false;
-                            initialRedLink = s.Remove(0, 5);
-                        }
+                        }                        
                         if(s.StartsWith("-uploadtest") || s.StartsWith("-ut"))
                         {
                             initialFunction = InitialFunction.UploadTest;

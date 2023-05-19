@@ -23,6 +23,9 @@ YT-RED will not register any Hotkeys or access your clipboard data if this is di
         [JsonProperty("enable_hotkeys")]
         public bool EnableHotKeys { get; set; }
 
+        [Browsable(false)]
+        public bool DisableHotKeysForCurrentProcess { get; set; }
+
         [Category("Hotkeys")]
         [DisplayName("Quick Download Hotkey")]
         [Description(@"Register a Hotkey to perform Quick Downloads without needing YT-RED open in the foreground.
@@ -70,6 +73,7 @@ If there is existing text in your clipboard, YT-RED will restore it after starti
         {
             Channel = ReleaseChannel.Stable;
             EnableHotKeys = false;
+            DisableHotKeysForCurrentProcess = false;
             DownloadHotKey = Shortcut.None;
             GetMissingMetadata = true;
             AlwaysConvertToPreferredFormat = false;

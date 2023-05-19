@@ -26,7 +26,8 @@ namespace YT_RED.Classes
         public LogPostRequest(string machineId, DateTime logTime, string logText)
         {
             MachineID = machineId;
-            LogTime = logTime.ToString();
+            //0000-00-00 00:00:00
+            LogTime = logTime.ToString("yyyy-MM-dd HH:mm:ss");
             LogText = logText.Replace(@"\", @"\\").Replace("\n", "\\n");
         }
     }

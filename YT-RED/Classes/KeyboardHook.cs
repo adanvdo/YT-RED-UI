@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExpress.LookAndFeel.Design;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -89,7 +90,10 @@ namespace YT_RED.Classes
 
             // register the hot key.
             if (!RegisterHotKey(_window.Handle, _currentId, (uint)modifier, (uint)key))
+            {
                 Controls.MsgBox.Show("Failed to register Hotkey");
+                Settings.AppSettings.Default.Advanced.DisableHotKeysForCurrentProcess = true;
+            }
         }
 
         public void UnregisterHotKey()

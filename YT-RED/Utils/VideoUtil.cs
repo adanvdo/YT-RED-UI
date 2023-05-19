@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Security.Policy;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -52,7 +53,7 @@ namespace YT_RED.Utils
             get
             {
                 List<string> resolutions = new List<string>();
-                resolutions.AddRange(Enum.GetNames(typeof(Classes.Resolution)).Cast<string>());
+                resolutions.AddRange(Enum.GetNames(typeof(Classes.ResolutionFilter)).Cast<string>());
                 return resolutions;
             } 
         }
@@ -97,7 +98,7 @@ namespace YT_RED.Utils
 
         public static async Task<IConversion> PrepareYoutubeConversion(string url, Classes.YTDLFormatPair formatPair, TimeSpan? start = null, TimeSpan? duration = null, bool usePreferences = false, 
             int[] crops = null, VideoFormat convertVideo = VideoFormat.UNSPECIFIED, AudioFormat convertAudio = AudioFormat.UNSPECIFIED, string prependPath = "", int prependDuration = 0, MediaDuration? prependType = null,
-            string audioPath = "", TimeSpan? audioStart = null, TimeSpan? audioDuration = null, string imagePath = "")
+            string audioPath = "", TimeSpan? audioStart = null, TimeSpan? audioDuration = null, string imagePath = "", TargetResolution imageRes = TargetResolution.Source)
         {
             List<string> getUrls = new List<string>();
             List<string> vUrls = new List<string>();
@@ -207,13 +208,13 @@ namespace YT_RED.Utils
             if (vCodec != null)
             {
                 if (vCodec == SystemCodecMaps.RGB24)
-                    parameters.Add(new Classes.FFmpegParam(Classes.ParamType.VideoOutFormat, $"-pix_fmt {vCodec.Encoder}"));
+                    parameters.Add(new Classes.FFmpegParam(Classes.ParamType.VideoOutFormat, $"-pix_fmt {vCodec.EncoderString}"));
                 else
-                    parameters.Add(new Classes.FFmpegParam(Classes.ParamType.VideoOutFormat, $"-c:v {vCodec.Encoder}"));
+                    parameters.Add(new Classes.FFmpegParam(Classes.ParamType.VideoOutFormat, $"-c:v {vCodec.EncoderString}"));
             }
             if (aCodec != null)
             {
-                parameters.Add(new Classes.FFmpegParam(Classes.ParamType.AudioOutFormat, $"-c:a {aCodec.Encoder}"));
+                parameters.Add(new Classes.FFmpegParam(Classes.ParamType.AudioOutFormat, $"-c:a {aCodec.EncoderString}"));
             }
 
             if (outWidth >= 0 && outHeight >= 0 && x >= 0 && y >= 0)
@@ -224,9 +225,85 @@ namespace YT_RED.Utils
             return await PrepareStreamConversion(videoUrl, audioUrl, parameters.ToArray(), vFormat, aFormat);
         }
 
+        private static async Task<string> renderVideoFromImage(string urlKey, IVideoStream videoStream, FFmpegVideoCodec vCodec, VideoFormat vFormat, string prependPath, MediaDuration prependType, int prependDuration)
+        {
+            string videoUrl = string.Empty;
+            List<Classes.FFmpegParam> parameters = new List<Classes.FFmpegParam>();
+            ytOutput?.Report("Building Streams..");
+            var fr = videoStream.Framerate;
+            var pf = videoStream.PixelFormat;
+            var w = videoStream.Width;
+            var h = videoStream.Height;
+            var d = videoStream.Duration;
+
+            if (fr >= 1 && w > 0 && h > 0 && d > TimeSpan.Zero)
+            {
+                TimeSpan imgDur = TimeSpan.Zero;
+                if (prependType == MediaDuration.Frames)
+                {
+                    double second = prependDuration / fr;
+                    double ms = 1000 * second;
+                    imgDur = TimeSpan.FromMilliseconds(ms);
+                }
+                else
+                {
+                    imgDur = TimeSpan.FromSeconds(prependDuration);
+                }
+
+                //parameters.Add(new FFmpegParam(ParamType.ANULLSRC, $"-f lavfi -i anullsrc"));
+                parameters.Add(new FFmpegParam(ParamType.Loop, "-loop 1"));
+                parameters.Add(new FFmpegParam(ParamType.Framerate, $"-framerate {fr}"));
+                parameters.Add(new FFmpegParam(ParamType.Input, $"-i {prependPath}"));
+                parameters.Add(new FFmpegParam(ParamType.ANULLSRC, $"-f lavfi -i anullsrc"));
+                parameters.Add(new FFmpegParam(ParamType.VideoCodec, $"-c:v {vCodec.EncoderString}"));
+                parameters.Add(new FFmpegParam(ParamType.Duration, $"-t {((TimeSpan)imgDur)}"));
+                parameters.Add(new FFmpegParam(ParamType.PixelFormat, $"-pix_fmt {pf}"));
+                parameters.Add(new FFmpegParam(ParamType.VF, $"-vf \"scale={w}:{h}:force_original_aspect_ratio=decrease,pad={w}:{h}:(ow-iw)/2:(oh-ih)/2\""));
+                parameters.Add(new FFmpegParam(ParamType.Map, $"-map 0:v -map 0:a? -map 1:a -shortest"));
+
+                IConversion imageConversion = await PrepareStreamConversion(prependPath, null, parameters.ToArray(), vFormat);
+                string destination = imageConversion.OutputFilePath;
+                CancellationTokenSource = new System.Threading.CancellationTokenSource();
+                imageConversion.OnProgress += OnFFMpegProgress;
+                await imageConversion.Start(VideoUtil.CancellationTokenSource.Token);
+                parameters.Clear();
+                if (File.Exists(destination))
+                {
+                    TemporaryFiles.Add(urlKey, destination);
+                    videoUrl = destination;
+                }
+            }
+            return videoUrl;
+        }
+
+        private static async Task<string> convertCustomAudioForVideo(Uri videoUri, string audioPath, TimeSpan audioStart, TimeSpan duration)
+        {
+            string resultUrl = string.Empty;
+            List<Classes.FFmpegParam> parameters = new List<Classes.FFmpegParam>();            
+            ytOutput?.Report("Fetching Media Info..");
+            CancellationTokenSource = new CancellationTokenSource();
+            ytOutput?.Report("Creating Temporary Audio");
+            if (audioStart != TimeSpan.Zero) parameters.Add(new FFmpegParam(ParamType.StartTime, $"-ss {((TimeSpan)audioStart)}"));
+            parameters.Add(new FFmpegParam(ParamType.Duration, $"-t {((TimeSpan)duration)}"));
+            parameters.Add(new FFmpegParam(ParamType.AudioOutFormat, "-c:a copy"));
+            IConversion audioConversion = await PrepareStreamConversion(null, audioPath, parameters.ToArray());
+            string destination = audioConversion.OutputFilePath;
+            CancellationTokenSource = new System.Threading.CancellationTokenSource();
+            audioConversion.OnProgress += OnFFMpegProgress;
+            await audioConversion.Start(VideoUtil.CancellationTokenSource.Token);
+            parameters.Clear();
+            if (File.Exists(destination))
+            {
+                TemporaryFiles.Add(videoUri.OriginalString, destination);
+                resultUrl = destination;
+            }
+            return resultUrl;
+        }
+
         public static async Task<IConversion> PrepareBestYtdlConversion(string url, string format, TimeSpan? start = null, TimeSpan? duration = null, bool usePreferences = false, int[] crops = null,
             VideoFormat convertVideo = VideoFormat.UNSPECIFIED, AudioFormat convertAudio = AudioFormat.UNSPECIFIED, bool embedThumbnail = false, Action<string> showOutput = null,
-            string prependPath = "", int prependDuration = 0, MediaDuration? prependType = null, string audioPath = "", TimeSpan? audioStart = null, TimeSpan? audioDuration = null, string imagePath = "")
+            string prependPath = "", int prependDuration = 0, MediaDuration? prependType = null, string audioPath = "", TimeSpan? audioStart = null, TimeSpan? audioDuration = null, 
+            string imagePath = "", TargetResolution? targetResolution = null)
         {
             List<Classes.FFmpegParam> parameters = new List<Classes.FFmpegParam>();
             showOutput("Evaluating Formats..");
@@ -242,48 +319,57 @@ namespace YT_RED.Utils
             showOutput("Fetching Media Info..");
             CancellationTokenSource = new CancellationTokenSource();
 
+            TimeSpan durationFallback = TimeSpan.Zero;
+            Classes.VideoCodecMap vMap = null;
             if (format.StartsWith("bestvideo") || format.Contains("+bestaudio/best"))
             {
                 videoInfo = await FFmpeg.GetMediaInfo(getUrls[0], CancellationTokenSource.Token);
                 if (!string.IsNullOrEmpty(audioPath))
                 {
-                    audioInfo = await FFmpeg.GetMediaInfo(audioPath, CancellationTokenSource.Token);
-                    showOutput("Creating Temporary Audio");
-                    if (audioStart != null && audioStart != TimeSpan.Zero) parameters.Add(new FFmpegParam(ParamType.StartTime, $"-ss {((TimeSpan)audioStart)}"));
-                    if (audioDuration != null && audioDuration != TimeSpan.Zero && audioDuration <= videoInfo.Duration)
-                        parameters.Add(new FFmpegParam(ParamType.Duration, $"-t {((TimeSpan)audioDuration)}"));
-                    else
-                        parameters.Add(new FFmpegParam(ParamType.Duration, $"-t {videoInfo.Duration}"));
-                    parameters.Add(new FFmpegParam(ParamType.AudioOutFormat, "-c:a copy"));
-                    IConversion audioConversion = await PrepareStreamConversion(null, audioPath, parameters.ToArray());
-                    string destination = audioConversion.OutputFilePath;
-                    CancellationTokenSource = new System.Threading.CancellationTokenSource();
-                    audioConversion.OnProgress += OnFFMpegProgress;
-                    await audioConversion.Start(VideoUtil.CancellationTokenSource.Token);
-                    if (File.Exists(destination))
+                    string customAudioUrl = await convertCustomAudioForVideo(
+                        vUrl,
+                        audioPath,
+                        audioStart != null ? (TimeSpan)audioStart : TimeSpan.Zero,
+                        audioDuration != null && audioDuration != TimeSpan.Zero && audioDuration <= videoInfo.Duration ? (TimeSpan)audioDuration : videoInfo.Duration
+                    );
+                    if (!string.IsNullOrEmpty(customAudioUrl))
                     {
-                        TemporaryFiles.Add(vUrl.OriginalString, destination);
                         if (getUrls.Count > 1)
                         {
-                            getUrls[1] = destination;
+                            getUrls[1] = customAudioUrl;
                         }
                         else if (getUrls.Count == 1)
                         {
-                            getUrls.Add(destination);
+                            getUrls.Add(customAudioUrl);
                         }
                     }
-                    parameters.Clear();
                 }
             }
             else if (format.StartsWith("bestaudio"))
             {
                 audioInfo = await FFmpeg.GetMediaInfo(getUrls[0], CancellationTokenSource.Token);
+                if (!string.IsNullOrEmpty(imagePath) && audioInfo.Duration == TimeSpan.Zero)
+                {
+                    showOutput("Checking Conversion Info..");
+                    var vUrls = await GetFormatUrls(url, "bestvideo");
+                    if (vUrls.Count > 0)
+                    {
+                        videoInfo = await FFmpeg.GetMediaInfo(vUrls[0], CancellationTokenSource.Token);
+                        var vs = videoInfo.VideoStreams.FirstOrDefault();
+                        if (vs != null)
+                        {
+                            vMap = SystemCodecMaps.GetMappedCodecs(vs.Codec);
+                        }
+                        durationFallback = videoInfo.Duration;
+                        videoInfo = null;
+                    }
+                }
             }
 
             CancellationTokenSource = new CancellationTokenSource();
             if (videoInfo != null && format.Contains("+bestaudio/best") && getUrls.Count > 1)
             {
-                audioInfo = await FFmpeg.GetMediaInfo(getUrls[1], CancellationTokenSource.Token);
+                audioInfo = await FFmpeg.GetMediaInfo(getUrls[1], CancellationTokenSource.Token);                
             }
 
             IVideoStream videoStream = null;
@@ -317,7 +403,6 @@ namespace YT_RED.Utils
 
             VideoFormat vFormat = VideoFormat.UNSPECIFIED;
             AudioFormat aFormat = AudioFormat.UNSPECIFIED;
-            Classes.VideoCodecMap vMap = null;
             Classes.FFmpegVideoCodec vCodec = null;
             Classes.FFmpegAudioCodec aCodec = null;
 
@@ -362,7 +447,6 @@ namespace YT_RED.Utils
             else if (audioStream != null && !string.IsNullOrEmpty(audioStream.Codec))
             {
                 audioUrl = getUrls[0];
-
                 if (aCodec == null && usePreferences)
                 {
                     aFormat = AppSettings.Default.Advanced.PreferredAudioFormat;
@@ -372,38 +456,55 @@ namespace YT_RED.Utils
 
             if(!string.IsNullOrEmpty(prependPath) && videoStream != null)
             {
-                var fr = videoStream.Framerate;
-                var pf = videoStream.PixelFormat;
-                var w = videoStream.Width;
-                var h = videoStream.Height;
-                var d = videoStream.Duration;
-
-                if (fr >= 1 && w > 0 && h > 0 && d > TimeSpan.Zero)
+                string imageVideoUrl = await renderVideoFromImage(url, videoStream, vCodec, vFormat, prependPath, (MediaDuration)prependType, prependDuration);
+            }
+            else if(!string.IsNullOrEmpty(imagePath) && audioStream != null)
+            {
+                showOutput("Building Streams..");
+                var ad = audioStream.Duration > TimeSpan.Zero ? audioStream.Duration : durationFallback;
+                if(ad != null && ad > TimeSpan.Zero)
                 {
-                    TimeSpan imgDur = TimeSpan.Zero;
-                    if(prependType == MediaDuration.Frames)
-                    {   
-                        double second = prependDuration / fr;
-                        double ms = 1000 * second;
-                        imgDur = TimeSpan.FromMilliseconds(ms);                        
+                    TimeSpan imgDur = ad;
+
+                    parameters.Add(new FFmpegParam(ParamType.Loop, "-loop 1"));
+                    parameters.Add(new FFmpegParam(ParamType.Framerate, "-framerate 30.0"));
+                    parameters.Add(new FFmpegParam(ParamType.Input, $"-i {imagePath}"));
+                    parameters.Add(new FFmpegParam(ParamType.ANULLSRC, $"-f lavfi -i anullsrc"));
+                    
+                    string encoder = "";
+                    if (vMap != null)
+                    {
+                        encoder = vMap.BestVideo.EncoderString;
+                        vFormat = vMap.Format;
                     }
                     else
                     {
-                        imgDur = TimeSpan.FromSeconds(prependDuration);
+                        var cm = SystemCodecMaps.GetBestCodec(AppSettings.Default.Advanced.PreferredVideoFormat);
+                        if (cm != null)
+                        {
+                            encoder = cm.EncoderString;
+                        }
+                        else encoder = "libx264";
                     }
 
-                    //parameters.Add(new FFmpegParam(ParamType.ANULLSRC, $"-f lavfi -i anullsrc"));
-                    parameters.Add(new FFmpegParam(ParamType.Loop, "-loop 1"));
-                    parameters.Add(new FFmpegParam(ParamType.Framerate, $"-framerate {fr}"));
-                    parameters.Add(new FFmpegParam(ParamType.Input, $"-i {prependPath}"));
-                    parameters.Add(new FFmpegParam(ParamType.ANULLSRC, $"-f lavfi -i anullsrc"));
-                    parameters.Add(new FFmpegParam(ParamType.VideoCodec, $"-c:v {vCodec.Encoder}"));
+                    parameters.Add(new FFmpegParam(ParamType.VideoCodec, $"-c:v {encoder}"));
                     parameters.Add(new FFmpegParam(ParamType.Duration, $"-t {((TimeSpan)imgDur)}"));
-                    parameters.Add(new FFmpegParam(ParamType.PixelFormat, $"-pix_fmt {pf}"));
-                    parameters.Add(new FFmpegParam(ParamType.VF, $"-vf \"scale={w}:{h}:force_original_aspect_ratio=decrease,pad={w}:{h}:(ow-iw)/2:(oh-ih)/2\""));
+
+                    int w = 0;
+                    int h = 0;
+                    if (targetResolution != null && targetResolution != TargetResolution.Source)
+                    {
+                        string d = targetResolution.ToFriendlyString();
+                        var s = d.Split('x');
+                        w = int.Parse(s[0]);
+                        h = int.Parse(s[1]);
+
+                        parameters.Add(new FFmpegParam(ParamType.VF, $"-vf \"scale={w}:{h}:force_original_aspect_ratio=decrease,pad={w}:{h}:(ow-iw)/2:(oh-ih)/2\""));
+                    }
+
                     parameters.Add(new FFmpegParam(ParamType.Map, $"-map 0:v -map 0:a? -map 1:a -shortest"));
 
-                    IConversion imageConversion = await PrepareStreamConversion(prependPath, null, parameters.ToArray(), vFormat);
+                    IConversion imageConversion = await PrepareStreamConversion(imagePath, null, parameters.ToArray(), vFormat);
                     string destination = imageConversion.OutputFilePath;
                     CancellationTokenSource = new System.Threading.CancellationTokenSource();
                     imageConversion.OnProgress += OnFFMpegProgress;
@@ -413,6 +514,7 @@ namespace YT_RED.Utils
                         TemporaryFiles.Add(url, destination);
                     }
                     parameters.Clear();
+                    vFormat = VideoFormat.UNSPECIFIED;
                 }
             }
             
@@ -426,11 +528,11 @@ namespace YT_RED.Utils
             }
             if (vCodec != null)
             {
-                parameters.Add(new Classes.FFmpegParam(Classes.ParamType.VideoOutFormat, vFormat == VideoFormat.GIF ? $"-pix_fmt {vCodec.Encoder}" : $"-c:v {vCodec.Encoder}"));
+                parameters.Add(new Classes.FFmpegParam(Classes.ParamType.VideoOutFormat, vFormat == VideoFormat.GIF ? $"-pix_fmt {vCodec.EncoderString}" : $"-c:v {vCodec.EncoderString}"));
             }
             if (aCodec != null)
             {
-                parameters.Add(new Classes.FFmpegParam(Classes.ParamType.AudioOutFormat, $"-c:a {aCodec.Encoder}"));
+                parameters.Add(new Classes.FFmpegParam(Classes.ParamType.AudioOutFormat, $"-c:a {aCodec.EncoderString}"));
             }
 
             if (outWidth >= 0 && outHeight >= 0 && x >= 0 && y >= 0)

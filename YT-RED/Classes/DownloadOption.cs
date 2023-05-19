@@ -53,7 +53,7 @@ namespace YT_RED.Classes
                     Parameters["audio"] = Settings.AudioFormat.UNSPECIFIED;
                     break;
                 case OptionType.Restrictions:
-                    Parameters["maxres"] = Resolution.ANY;
+                    Parameters["maxres"] = ResolutionFilter.ANY;
                     Parameters["maxsize"] = "0";
                     break;
                 case OptionType.Prepend:
@@ -68,6 +68,7 @@ namespace YT_RED.Classes
                     break;
                 case OptionType.Image:
                     Parameters["path"] = string.Empty;
+                    Parameters["resolution"] = Classes.TargetResolution.Source;
                     break;
             }
         }

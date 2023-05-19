@@ -47,6 +47,8 @@
             this.pnlOptionPanel = new DevExpress.XtraEditors.XtraScrollableControl();
             this.gcExternalImage = new YT_RED.Controls.YTRGroupControl();
             this.pnlImage = new DevExpress.XtraEditors.PanelControl();
+            this.labelControl15 = new DevExpress.XtraEditors.LabelControl();
+            this.cbTargetRes = new DevExpress.XtraEditors.ComboBoxEdit();
             this.btnBrowseVidImage = new DevExpress.XtraEditors.SimpleButton();
             this.txtImageVideoPath = new DevExpress.XtraEditors.TextEdit();
             this.historyBarManager = new DevExpress.XtraBars.BarManager(this.components);
@@ -148,6 +150,7 @@
             this.gcExternalImage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pnlImage)).BeginInit();
             this.pnlImage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cbTargetRes.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtImageVideoPath.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.historyBarManager)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.toggleExternalImage.Properties)).BeginInit();
@@ -252,7 +255,6 @@
             // 
             // gcExternalImage
             // 
-            this.gcExternalImage.AutoSize = true;
             this.gcExternalImage.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gcExternalImage.CaptionImageOptions.AllowGlyphSkinning = true;
             this.gcExternalImage.ControlGroup = YT_RED.Controls.ControlGroups.Image;
@@ -269,7 +271,7 @@
             this.gcExternalImage.Location = new System.Drawing.Point(0, 948);
             this.gcExternalImage.Margin = new System.Windows.Forms.Padding(0);
             this.gcExternalImage.Name = "gcExternalImage";
-            this.gcExternalImage.Size = new System.Drawing.Size(333, 105);
+            this.gcExternalImage.Size = new System.Drawing.Size(333, 128);
             this.gcExternalImage.TabIndex = 9;
             this.gcExternalImage.Text = "Create Video From Image (Audio Downloads Only)";
             this.gcExternalImage.Visible = false;
@@ -279,6 +281,8 @@
             // pnlImage
             // 
             this.pnlImage.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.pnlImage.Controls.Add(this.labelControl15);
+            this.pnlImage.Controls.Add(this.cbTargetRes);
             this.pnlImage.Controls.Add(this.btnBrowseVidImage);
             this.pnlImage.Controls.Add(this.txtImageVideoPath);
             this.pnlImage.Controls.Add(this.labelControl2);
@@ -288,8 +292,33 @@
             this.pnlImage.Margin = new System.Windows.Forms.Padding(0);
             this.pnlImage.MinimumSize = new System.Drawing.Size(0, 74);
             this.pnlImage.Name = "pnlImage";
-            this.pnlImage.Size = new System.Drawing.Size(329, 74);
+            this.pnlImage.Size = new System.Drawing.Size(329, 96);
             this.pnlImage.TabIndex = 0;
+            // 
+            // labelControl15
+            // 
+            this.labelControl15.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.labelControl15.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.labelControl15.Appearance.Options.UseFont = true;
+            this.labelControl15.Location = new System.Drawing.Point(15, 69);
+            this.labelControl15.Name = "labelControl15";
+            this.labelControl15.Size = new System.Drawing.Size(101, 16);
+            this.labelControl15.TabIndex = 17;
+            this.labelControl15.Text = "Target Resolution";
+            // 
+            // cbTargetRes
+            // 
+            this.cbTargetRes.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.cbTargetRes.Enabled = false;
+            this.cbTargetRes.Location = new System.Drawing.Point(122, 64);
+            this.cbTargetRes.Name = "cbTargetRes";
+            this.cbTargetRes.Properties.AutoHeight = false;
+            this.cbTargetRes.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.cbTargetRes.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cbTargetRes.Size = new System.Drawing.Size(164, 25);
+            this.cbTargetRes.TabIndex = 16;
+            this.cbTargetRes.SelectedIndexChanged += new System.EventHandler(this.cbTargetRes_SelectedIndexChanged);
             // 
             // btnBrowseVidImage
             // 
@@ -416,7 +445,7 @@
             // 
             // bbiAudio
             // 
-            this.bbiAudio.Caption = "Use External Audio";
+            this.bbiAudio.Caption = "Use Custom Audio";
             this.bbiAudio.Id = 7;
             this.bbiAudio.Name = "bbiAudio";
             this.bbiAudio.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiAudio_ItemClick);
@@ -433,11 +462,11 @@
             this.labelControl2.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.labelControl2.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
             this.labelControl2.Appearance.Options.UseFont = true;
-            this.labelControl2.Location = new System.Drawing.Point(4, 38);
+            this.labelControl2.Location = new System.Drawing.Point(15, 38);
             this.labelControl2.Name = "labelControl2";
-            this.labelControl2.Size = new System.Drawing.Size(36, 16);
+            this.labelControl2.Size = new System.Drawing.Size(25, 16);
             this.labelControl2.TabIndex = 13;
-            this.labelControl2.Text = "Image";
+            this.labelControl2.Text = "Path";
             // 
             // toggleExternalImage
             // 
@@ -1673,6 +1702,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pnlImage)).EndInit();
             this.pnlImage.ResumeLayout(false);
             this.pnlImage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cbTargetRes.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtImageVideoPath.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.historyBarManager)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.toggleExternalImage.Properties)).EndInit();
@@ -1849,5 +1879,7 @@
         private DevExpress.XtraEditors.HyperlinkLabelControl hlblGenSettings;
         private DevExpress.XtraEditors.LabelControl lblLimitWarning;
         private DevExpress.XtraEditors.SimpleButton btnScrollOptions;
+        private DevExpress.XtraEditors.LabelControl labelControl15;
+        private DevExpress.XtraEditors.ComboBoxEdit cbTargetRes;
     }
 }

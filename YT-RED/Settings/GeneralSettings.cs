@@ -50,9 +50,9 @@ namespace YT_RED.Settings
         [Category("Download Restrictions")]
         [DisplayName("Best Resolution Max")]
         [Description("The maximum resolution allowed when using \"Download Best\"")]
-		[DefaultValue(Classes.Resolution.ANY)]
+		[DefaultValue(Classes.ResolutionFilter.ANY)]
         [JsonProperty("best_max_res")]
-        public Classes.Resolution MaxResolutionBest { get; set; }
+        public Classes.ResolutionFilter MaxResolutionBest { get; set; }
 
 		[Browsable(false)]
 		public int MaxResolutionValue
@@ -61,15 +61,15 @@ namespace YT_RED.Settings
 			{
 				switch (MaxResolutionBest)
 				{
-					case Classes.Resolution.SD:
+					case Classes.ResolutionFilter.SD:
 						return 480;
-					case Classes.Resolution.HD720p:
+					case Classes.ResolutionFilter.HD720p:
 						return 720;
-					case Classes.Resolution.HD1080p:
+					case Classes.ResolutionFilter.HD1080p:
 						return 1080;
-					case Classes.Resolution.UHD2160p:
+					case Classes.ResolutionFilter.UHD2160p:
 						return 2160;
-					case Classes.Resolution.ANY:
+					case Classes.ResolutionFilter.ANY:
 						return 0;
 					default:
 						return 0;
@@ -190,7 +190,7 @@ namespace YT_RED.Settings
 			ActiveSkin = "WXI";
 			SkinPalette = "Darkness";
 			EnforceRestrictions = false;
-			MaxResolutionBest = Classes.Resolution.ANY;
+			MaxResolutionBest = Classes.ResolutionFilter.ANY;
 			MaxFilesizeBest = 0;
 			EnableDownloadHistory = true;
 			HistoryAge = 30;
