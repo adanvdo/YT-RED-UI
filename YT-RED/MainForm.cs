@@ -251,7 +251,8 @@ namespace YT_RED
             splitterNegativePosition = sccMainSplitter.Size.Width - sccMainSplitter.SplitterPosition;
             if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
             {
-                cpMainControlPanel.EnableToggle(false, false, true, true, false);                
+                cpMainControlPanel.EnableToggle(false, false, true, true, false);
+                cpMainControlPanel.ConvertIntended = true;
                 cpMainControlPanel.ConvertVideoFormat = AppSettings.Default.Advanced.PreferredVideoFormat;
                 cpMainControlPanel.ConvertAudioFormat = AppSettings.Default.Advanced.PreferredAudioFormat;
             }
@@ -293,8 +294,6 @@ namespace YT_RED
                 notifyIcon.Visible = false;
                 this.ShowInTaskbar = true;
                 enableQuickDownload = false;
-                updateControlPanelDisplay();
-                cpMainControlPanel.AdjustControls(pnlScrollableControls.Height);
             }
             base.OnResize(e);
         }
@@ -1906,6 +1905,11 @@ namespace YT_RED
         }
 
         private void cpMainControlPanel_Controls_Updated(object sender, EventArgs e)
+        {
+            updateControlPanelDisplay();
+        }
+
+        public void UpdateControlPanelDisplay()
         {
             updateControlPanelDisplay();
         }

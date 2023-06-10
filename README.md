@@ -107,7 +107,11 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG <a name="changelog"></a>
 
-### 03/16/2022 v1.0.2.6
+### 6/10/2023 v1.0.2.7
+- Fixed bug where control panel scroll bar would cover part of the control panel
+- Fixed bug where format conversions could be run when the source media was already in the desired format
+
+### 03/16/2023 v1.0.2.6
 - Fixed bug where attempting to download unprocessed youtube media or list formats caused a .NET Crash
 - Updated YT-DLP and FFMPEG
 

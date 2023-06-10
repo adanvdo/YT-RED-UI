@@ -70,6 +70,18 @@ namespace YT_RED.Controls
         [Browsable(true)]
         public event EventHandler Cancel_MouseLeave;
 
+        private bool convertIntended = false;
+        public bool ConvertIntended
+        {
+            get { return convertIntended; }
+            set { convertIntended = value; }
+        }
+
+        private VideoFormat intendedVideoFormat = VideoFormat.UNSPECIFIED;
+        private bool disableIntendedVideoUpdate = false;
+        private AudioFormat intendedAudioFormat = AudioFormat.UNSPECIFIED;
+        private bool disableIntendedAudioUpdate = false;
+
         private Classes.YTDLFormatPair currentFormatPair = new Classes.YTDLFormatPair();
 
         [Browsable(false)]
@@ -192,22 +204,33 @@ namespace YT_RED.Controls
                 {
                     cbVideoFormat.Properties.Items.Clear();
                     cbAudioFormat.Properties.Items.Clear();
-                    cbAudioFormat.Properties.Items.AddRange(audioFormats);
+                    cbAudioFormat.Properties.Items.AddRange(audioFormats.Where(af => af.ToLower() != currentFormatPair.AudioFormat.Extension.ToLower()).ToList());
                     cbVideoFormat.Enabled = false;
                     cbAudioFormat.Enabled = toggleConvert.IsOn;
                     cbVideoFormat.SelectedItem = null;
-                    ConvertAudioFormat = AppSettings.Default.Advanced.PreferredAudioFormat;
-
+                    var afs = Enum.GetNames(typeof(AudioFormat)).Cast<string>();
+                    disableIntendedAudioUpdate = true;
+                    ConvertAudioFormat = AppSettings.Default.Advanced.PreferredAudioFormat.ToFriendlyString(true) == currentFormatPair.AudioFormat.Extension.ToLower()
+                        ? SystemCodecMaps.GetAudioFormatByExtension(afs.FirstOrDefault(af => af.ToLower() != currentFormatPair.AudioFormat.Extension.ToLower()))
+                        : intendedAudioFormat;
+                    disableIntendedAudioUpdate = false;
+                    checkRedundancy();
                 }
                 else
                 {
                     cbVideoFormat.Properties.Items.Clear();
-                    cbVideoFormat.Properties.Items.AddRange(videoFormats);
+                    cbVideoFormat.Properties.Items.AddRange(videoFormats.Where(vf => vf.ToLower() != currentFormatPair.VideoFormat.Extension.ToLower()).ToList());
                     cbAudioFormat.Properties.Items.Clear();
                     cbAudioFormat.Enabled = false;
                     cbVideoFormat.Enabled = toggleConvert.IsOn;
                     cbAudioFormat.SelectedItem = null;
-                    ConvertVideoFormat = AppSettings.Default.Advanced.PreferredVideoFormat;
+                    var vfs = Enum.GetNames(typeof(VideoFormat)).Cast<string>();
+                    disableIntendedVideoUpdate = true;
+                    ConvertVideoFormat = AppSettings.Default.Advanced.PreferredVideoFormat.ToFriendlyString(true) == currentFormatPair.VideoFormat.Extension.ToLower()
+                        ? SystemCodecMaps.GetVideoFormatByExtension(vfs.FirstOrDefault(vf => vf.ToLower() != currentFormatPair.VideoFormat.Extension.ToLower()))
+                        : intendedVideoFormat;
+                    disableIntendedVideoUpdate = false;
+                    checkRedundancy();
                 }
             }
             else
@@ -220,11 +243,35 @@ namespace YT_RED.Controls
                 ConvertAudioFormat = AppSettings.Default.Advanced.PreferredAudioFormat;
                 cbVideoFormat.Enabled = toggleConvert.IsOn;
                 cbAudioFormat.Enabled = toggleConvert.IsOn;
+                checkRedundancy();
             }
             cbAudioFormat.Enabled = toggleConvert.IsOn && !AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
             cbVideoFormat.Enabled = toggleConvert.IsOn && !AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
             hlblOpenSettings.Visible = toggleConvert.IsOn && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
             lblAlwaysConvert.Visible = toggleConvert.IsOn && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
+        }
+
+        private void checkRedundancy()
+        {
+            if (currentFormatPair != null)
+            {
+                if (currentFormatPair.VideoFormat != null && toggleConvert.Enabled && cbVideoFormat.SelectedItem != null)
+                {
+                    if ((this.intendedVideoFormat.ToFriendlyString(true) == currentFormatPair.VideoFormat.Extension.ToLower() && this.toggleConvert.IsOn)
+                        || (this.intendedVideoFormat.ToFriendlyString(true) != currentFormatPair.VideoFormat.Extension.ToLower() && !this.toggleConvert.IsOn && this.convertIntended))
+                    {
+                        this.toggleConvert.Toggle();
+                    }
+                }
+                else if(currentFormatPair.AudioFormat != null && toggleConvert.Enabled && cbAudioFormat.SelectedItem != null)
+                {
+                    if ((this.intendedAudioFormat.ToFriendlyString(true) == currentFormatPair.AudioFormat.Extension.ToLower() && this.toggleConvert.IsOn)
+                        || (this.intendedAudioFormat.ToFriendlyString(true) != currentFormatPair.AudioFormat.Extension.ToLower() && !this.toggleConvert.IsOn && this.convertIntended))
+                    {
+                        this.toggleConvert.Toggle();
+                    }
+                }
+            }
         }
 
         public TimeSpan SegmentStart
@@ -540,8 +587,22 @@ namespace YT_RED.Controls
         public ControlPanel()
         {
             InitializeComponent();
-            toggleForeColor = toggleSegment.ForeColor;            
+            toggleForeColor = toggleSegment.ForeColor;
+            if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
+            {
+                this.intendedAudioFormat = AppSettings.Default.Advanced.PreferredAudioFormat;
+                this.intendedVideoFormat = AppSettings.Default.Advanced.PreferredVideoFormat;
+            }
             InitControls();
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            if (parentMainForm != null)
+            {
+                this.parentMainForm.UpdateControlPanelDisplay();
+            }
+            base.OnPaint(e);
         }
 
         public void InitControls()
@@ -549,7 +610,7 @@ namespace YT_RED.Controls
             videoFormats = new List<string>();
             List<string> vFormats = new List<string>() { "" };
             vFormats.AddRange(Enum.GetNames(typeof(VideoFormat)).Cast<string>());
-            videoFormats.AddRange(vFormats.Where(f => f != "UNSPECIFIED"));
+            videoFormats.AddRange(vFormats.Where(f => f != "UNSPECIFIED" && f != "GIF"));
             cbVideoFormat.Properties.Items.AddRange(videoFormats);
             cbVideoFormat.SelectedIndex = 0;
             audioFormats = new List<string>();
@@ -848,6 +909,19 @@ namespace YT_RED.Controls
             btnDownloadAudio.Enabled = !toggleCrop.IsOn;
         }
 
+        private void toggleConvert_Click(object sender, EventArgs e)
+        {
+            this.convertIntended = !this.toggleConvert.IsOn;
+            if(this.intendedVideoFormat == VideoFormat.UNSPECIFIED && cbVideoFormat.SelectedIndex >= 0)
+            {
+                this.intendedVideoFormat = SystemCodecMaps.GetVideoFormatByExtension(cbVideoFormat.SelectedItem.ToString());
+            }
+            if(this.intendedAudioFormat == AudioFormat.UNSPECIFIED && cbVideoFormat.SelectedIndex >= 0)
+            {
+                this.intendedAudioFormat = SystemCodecMaps.GetAudioFormatByExtension(cbAudioFormat.SelectedItem.ToString());
+            }
+        }
+
         private void toggleConvert_Toggled(object sender, EventArgs e)
         {
             UpdateConvertState();
@@ -953,11 +1027,19 @@ namespace YT_RED.Controls
 
         private void cbVideoFormat_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (!AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat && !disableIntendedVideoUpdate)
+            {
+                this.intendedVideoFormat = SystemCodecMaps.GetVideoFormatByExtension(cbVideoFormat.SelectedItem.ToString());
+            }
             checkConversionOptions();
         }
 
         private void cbAudioFormat_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (!AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat && !disableIntendedAudioUpdate)
+            {
+                this.intendedAudioFormat = SystemCodecMaps.GetAudioFormatByExtension(cbAudioFormat.SelectedItem.ToString());
+            }
             checkConversionOptions();
         }
 
@@ -1169,6 +1251,7 @@ namespace YT_RED.Controls
             }
         }
 
+        
     }
 
     public enum ControlGroups
