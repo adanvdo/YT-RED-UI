@@ -107,6 +107,47 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 8/10/2023 v1.0.3.0
+- Beta Branch Updated from v1.0.2.8-alpha
+
+### 8/10/2023 v1.0.2.8
+- Added ability to update YT-DLP and FFMPEG dependencies in the app (Found in Settings->About)
+
+### 6/10/2023 v1.0.2.7
+- Fixed bug where control panel scroll bar would cover part of the control panel
+- Fixed bug where format conversions could be run when the source media was already in the desired format
+
+### 03/16/2023 v1.0.2.6
+- Fixed bug where attempting to download unprocessed youtube media or list formats caused a .NET Crash
+- Updated YT-DLP and FFMPEG
+
+### 12/13/2022 v1.0.2.5
+- Fixed bug where an error message was displayed and logged when a download was cancelled by the user
+- Fixed bug where Conversion controls were improperly changed after changing a format selection
+- Fixed bug where a conversion error occurred if Always Convert setting was enabled
+- Fixed bug that required you to unselect an audio format before selecting another audio format
+
+### 11/23/2022 v1.0.2.4
+- Fixed bug where Control Panel was not scrollable when too large to fit in the window
+
+### 11/23/2022 v1.0.2.3
+- Fixed bug where non-youtube downloads caused a crash
+- Fixed issue where the download history could be cut off if the app window was too small
+
+### 11/15/2022 v1.0.2.2
+ - Fixed bug with custom format layout where format rows could no longer be selected unless you click directly in the checkbox
+ - Added Youtube Playlist Support (List and select Playlist Items, or Download an Entire Playlist)
+ - Added Playlist-related Settings
+ - Added Video Thumbnail and Detail Display when listing formats
+ - Added support for entering Youtube Video IDs and Playlist IDs in the URL box
+ - Added options to specify a Max Resolution and Max Filesize when using "Download Best" and "Download All" feature
+ - Changed Behavior of Preferred Format Conversion Settings
+ - Minor UI and Behavior Tweaks
+
+### 10/21/2022 v1.0.2.1
+ - Fixed bug where button states were not properly reset after changing URL
+ - Fixed bug where a crash occurred if you clicked an area in the format grid that was not a column
+
 ### 10/19/2022 v1.0.2.0
  - Beta Branch Updated from v1.0.1.20-alpha
 
