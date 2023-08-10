@@ -9,11 +9,14 @@ using System.Windows.Forms;
 using YT_RED.Logging;
 using YT_RED.Settings;
 using YT_RED.Controls;
+using SevenZipExtractor;
 
 namespace YT_RED.Utils
 {
     public static class UpdateHelper
     {
+
+        #region YT-RED UPDATES
 
         private static string updateDirectory = "";
         public static async Task<string> GetUpdateDirectoryAsync()
@@ -170,5 +173,201 @@ namespace YT_RED.Utils
             }
             return result;
         }
+
+        #endregion
+
+        #region DEPENDENCY UPDATES
+
+        public static async Task<DirectoryInfo> PrepareTempDirectory()
+        {
+            DirectoryInfo tempDir = await Task.Run(() =>
+            {
+                DirectoryInfo resources = new DirectoryInfo(Path.Combine(AppSettings.Default.General.ExeDirectoryPath, "Resources", "App"));
+                if (resources.Exists)
+                {
+                    DirectoryInfo temp = new DirectoryInfo(Path.Combine(resources.FullName, "Temp"));
+                    if (!temp.Exists)
+                    {
+                        temp.Create();
+                    }
+                    return temp;
+                }
+                return null;
+            });
+            return tempDir;
+        }
+
+        public static async Task<string> InstallFfmpeg()
+        {
+            string result = "";
+            string package = Path.Combine(AppSettings.Default.General.ExeDirectoryPath, "Resources", "App", "Temp", "ffmpeg-git-essentials.7z");
+            if (File.Exists(package))
+            {
+                try
+                {
+                    await Task.Run(() =>
+                    {
+                        using (var archive = new ArchiveFile(package))
+                        {
+                            var execs = archive.Entries.Where(e => !e.IsFolder && (e.FileName.EndsWith("ffmpeg.exe") || e.FileName.EndsWith("ffprobe.exe")));
+                            foreach(var entry in execs)
+                            {
+                                string path = Path.Combine(AppSettings.Default.General.ExeDirectoryPath, "Resources", "App", "Temp", entry.FileName.Substring(entry.FileName.IndexOf("bin\\") + 4, entry.FileName.Length - (entry.FileName.IndexOf("bin\\") + 4)));
+                                entry.Extract(path);
+                            }
+                            
+                            string target1 = Path.Combine(AppSettings.Default.General.ExeDirectoryPath, "Resources", "App", "ffmpeg.exe");
+                            string target2 = Path.Combine(Path.Combine(AppSettings.Default.General.ExeDirectoryPath, "Resources", "App", "ffprobe.exe"));
+                            if (File.Exists(target1))
+                                File.Delete(target1);
+                            if (File.Exists(target2))
+                                File.Delete(target2);
+
+                            File.Move(Path.Combine(AppSettings.Default.General.ExeDirectoryPath, "Resources", "App", "Temp", "ffmpeg.exe"), target1);
+                            File.Move(Path.Combine(AppSettings.Default.General.ExeDirectoryPath, "Resources", "App", "Temp", "ffprobe.exe"), target2);
+                        }
+                    });
+                    result = "Installation Complete";
+                }
+                catch(Exception ex)
+                {
+                    ExceptionHandler.LogException(ex);
+                    result = "Installation Failed";
+                }
+            }
+            else
+            {
+                result = "Installation Failed";
+            }
+            return result;
+        }
+
+        public static async Task<bool> CleanUpFFMPEG()
+        {
+            string package = Path.Combine(AppSettings.Default.General.ExeDirectoryPath, "Resources", "App", "Temp", "ffmpeg-git-essentials.7z");
+            return await Task.Run(() =>
+            {
+                if (File.Exists(package))
+                {
+                    try
+                    {
+                        File.Delete(package);
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionHandler.LogException(ex);
+                        return false;
+                    }
+                }
+                return true;
+            });
+        }
+
+        public static async Task<string> UpdateFfmpeg(System.Net.DownloadProgressChangedEventHandler progressChanged)
+        {
+            string result = "";
+            try
+            {
+                DirectoryInfo temp = await PrepareTempDirectory();
+                if (temp != null)
+                {
+                    await Task.Run(() =>
+                    {
+                        FileInfo f = new FileInfo(Path.Combine(temp.FullName, "ffmpeg-git-essentials.7z"));
+                        if (f.Exists)
+                        {
+                            f.Delete();
+                        }
+                    });
+
+                    string downloadPath = Path.Combine(temp.FullName, "ffmpeg-git-essentials.7z");
+                    bool dl = await WebUtil.DownloadFileWithProgress(AppSettings.Default.General.FfmpegUrl, downloadPath, progressChanged);
+                    if (dl)
+                    {
+                        result = "Download Complete";
+                    }
+                    else
+                    {
+                        result = "Download Failed";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.LogException(ex);
+                result = "Download Failed";
+            }
+            return result;
+        }
+
+        public static async Task<string> UpdateYTDLP(System.Net.DownloadProgressChangedEventHandler progressChanged)
+        {
+            string result = "";
+            try
+            {
+                DirectoryInfo temp = await PrepareTempDirectory();
+                if (temp != null)
+                {
+                    await Task.Run(() =>
+                    {
+                        FileInfo f = new FileInfo(Path.Combine(temp.FullName, "yt-dlp.exe"));
+                        if (f.Exists)
+                        {
+                            f.Delete();
+                        }
+
+                        FileInfo f86 = new FileInfo(Path.Combine(temp.FullName, "yt-dlp_x86.exe"));
+                        if (f86.Exists)
+                        {
+                            f86.Delete();
+                        }
+                    });
+
+                    string downloadPath1 = Path.Combine(temp.FullName, $"yt-dlp_x86.exe");
+                    string downloadPath2 = Path.Combine(temp.FullName, $"yt-dlp.exe");
+                    var Task1 = WebUtil.DownloadFileWithProgress(string.Format(AppSettings.Default.General.YtdlpUrl, "_x86"), downloadPath1, progressChanged);
+                    var Task2 = WebUtil.DownloadFileWithProgress(string.Format(AppSettings.Default.General.YtdlpUrl, ""), downloadPath2, progressChanged);
+                    var dlResult = await Task.WhenAll(Task1, Task2);
+                    if (dlResult[0] && dlResult[1])
+                    {
+                        DirectoryInfo appDir = temp.Parent;
+                        if (appDir.Exists)
+                        {
+                            string targetPath1 = Path.Combine(appDir.FullName, "yt-dlp_x86.exe");
+                            if (File.Exists(targetPath1))
+                            {
+                                File.Delete(targetPath1);
+                            }
+                            File.Move(downloadPath1, targetPath1);
+
+                            string targetPath2 = Path.Combine(appDir.FullName, "yt-dlp.exe");
+                            if (File.Exists(targetPath2))
+                            {
+                                File.Delete(targetPath2);
+                            }
+                            File.Move(downloadPath2, targetPath2);
+
+                            result = "Download Complete";
+                        }
+                        else
+                        {
+                            result = "Download Failed";
+                        }
+                    }
+                    else
+                    {
+                        result = "Download Failed";
+                    }
+                }
+            }
+            catch( Exception ex)
+            {
+                ExceptionHandler.LogException(ex);
+                result = "Download Failed";
+            }
+            return result;
+        }
+
+        #endregion
     }
 }

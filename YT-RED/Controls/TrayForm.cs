@@ -198,14 +198,36 @@ namespace YT_RED.Controls
                 if (res == DialogResult.No)
                     return;
             }
+            if(currentDownload == DownloadType.YouTube)
+            {
+                YoutubeLink link = VideoUtil.ConvertToYouTubeLink(txtUrl.Text);
+                if (link.Type == YoutubeLinkType.Playlist)
+                {
+                    DialogResult res = MsgBox.Show("Quick Download does not support Youtube Playlists", "Unsupported", Buttons.OK,YT_RED.Controls.Icon.Exclamation, FormStartPosition.CenterScreen, true);
+                    if(res != DialogResult.None)
+                    {
+                        this.txtUrl.Text = "";
+                        this.txtUrl.Enabled = true;
+                        this.Locked = false;
+                        this.Hide();
+                    }
+                    return;
+                }
+            }
+
+            string useFormatString = "bestvideo{0}{1}+bestaudio/best{0}{1}";
+            string finalFormatString = String.Format(useFormatString,
+                AppSettings.Default.General.MaxResolutionValue > 0 ? $"[height<={AppSettings.Default.General.MaxResolutionValue}]" : "",
+                AppSettings.Default.General.MaxFilesizeBest > 0 ? $"[filesize<={AppSettings.Default.General.MaxFilesizeBest}M]" : "");       
 
             RunResult<string> result = null;
-            string url = VideoUtil.CorrectYouTubeString(txtUrl.Text);
+            var convertedLink = VideoUtil.ConvertToYouTubeLink(txtUrl.Text);
+            string url = convertedLink != null ? convertedLink.Url : txtUrl.Text;
 
             var pendingDL = new PendingDownload()
             {
                 Url = url,
-                Format = "bestvideo+bestaudio/best"
+                Format = finalFormatString
             };
 
             if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
@@ -225,7 +247,7 @@ namespace YT_RED.Controls
             if (result.Data != "canceled")
             {
                 await Historian.RecordDownload(new DownloadLog(
-                    VideoUtil.CorrectYouTubeString(txtUrl.Text),
+                    url,
                     currentDownload,
                     Classes.StreamType.AudioAndVideo,
                     DateTime.Now,

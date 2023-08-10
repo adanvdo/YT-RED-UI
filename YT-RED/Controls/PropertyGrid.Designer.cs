@@ -43,15 +43,21 @@
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject10 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject11 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject12 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject13 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject14 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject15 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject16 = new DevExpress.Utils.SerializableAppearanceObject();
             this.pgPropertyGridPanel = new DevExpress.XtraVerticalGrid.PGPanel();
             this.pgcPropertyGrid = new DevExpress.XtraVerticalGrid.PropertyGridControl();
             this.repButtonEdit = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
+            this.repButtonEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
             this.repPopup = new DevExpress.XtraEditors.Repository.RepositoryItemPopupContainerEdit();
             this.pgcDescription = new DevExpress.XtraVerticalGrid.PropertyDescriptionControl();
             ((System.ComponentModel.ISupportInitialize)(this.pgPropertyGridPanel)).BeginInit();
             this.pgPropertyGridPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pgcPropertyGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repButtonEdit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repButtonEdit2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repPopup)).BeginInit();
             this.SuspendLayout();
             // 
@@ -85,6 +91,7 @@
             this.pgcPropertyGrid.OptionsView.AllowRowHeaderReadOnlyAppearance = DevExpress.Utils.DefaultBoolean.False;
             this.pgcPropertyGrid.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repButtonEdit,
+            this.repButtonEdit2,
             this.repPopup});
             this.pgPropertyGridPanel.SetRow(this.pgcPropertyGrid, 0);
             this.pgcPropertyGrid.ShowButtonMode = DevExpress.XtraVerticalGrid.ShowButtonModeEnum.ShowAlways;
@@ -99,7 +106,6 @@
             this.repButtonEdit.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
             this.repButtonEdit.AutoHeight = false;
             editorButtonImageOptions2.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
-            editorButtonImageOptions2.SvgImage = global::YT_RED.Properties.Resources.loading_1;
             editorButtonImageOptions2.SvgImageColorizationMode = DevExpress.Utils.SvgImageColorizationMode.Full;
             editorButtonImageOptions2.SvgImageSize = new System.Drawing.Size(20, 20);
             editorButtonImageOptions3.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
@@ -113,6 +119,17 @@
             this.repButtonEdit.Name = "repButtonEdit";
             this.repButtonEdit.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.repButtonEdit.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.repButtonEdit_ButtonPressed);
+            // 
+            // repButtonEdit2
+            // 
+            this.repButtonEdit2.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
+            this.repButtonEdit2.AutoHeight = false;
+            this.repButtonEdit2.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "Update Dependencies", -1, true, true, false, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject13, serializableAppearanceObject14, serializableAppearanceObject15, serializableAppearanceObject16, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
+            this.repButtonEdit2.ContextImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
+            this.repButtonEdit2.Name = "repButtonEdit2";
+            this.repButtonEdit2.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.repButtonEdit2.ButtonPressed += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.repButtonEdit2_ButtonPressed);
             // 
             // repPopup
             // 
@@ -144,6 +161,7 @@
             this.pgPropertyGridPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pgcPropertyGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repButtonEdit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repButtonEdit2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repPopup)).EndInit();
             this.ResumeLayout(false);
 
@@ -155,6 +173,7 @@
         protected DevExpress.XtraVerticalGrid.PropertyGridControl pgcPropertyGrid;
         protected DevExpress.XtraVerticalGrid.PropertyDescriptionControl pgcDescription;
         private DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit repButtonEdit;
+        private DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit repButtonEdit2;
         private DevExpress.XtraEditors.Repository.RepositoryItemPopupContainerEdit repPopup;
     }
 }

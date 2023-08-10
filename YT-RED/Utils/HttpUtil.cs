@@ -3,15 +3,18 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Threading.Tasks;
 using YT_RED.Classes;
 using YT_RED.Logging;
 using YT_RED.Settings;
+using System.Drawing;
 
 namespace YT_RED.Utils
 {
     public static class HttpUtil
     {
+        #region API
         private static string serverUrl = Program.DevRun ? @"http://localhost:3000/api" : @"https://www.jamgalactic.com/api";
         private static async Task<HttpWebResponse> postErrorLogs(DateTime date)
         {
@@ -142,7 +145,7 @@ namespace YT_RED.Utils
                 ExceptionHandler.LogException(ex);
             }
             return false;
-        }        
+        }
 
         public static async Task<HttpResponseMessage> Get(string endpoint, string query)
         {
@@ -156,11 +159,38 @@ namespace YT_RED.Utils
                     return response;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ExceptionHandler.LogException(ex);
             }
             return null;
         }
+
+        #endregion
+
+        #region WEB
+
+        public static async Task<byte[]> GetImageAsByteArrayAsync(string url, bool useAbsoluteUri = true)
+        {
+            try
+            {
+                Uri uri = new Uri(url);
+                string useUrl = useAbsoluteUri ? $"https://{uri.Host}{uri.AbsolutePath}" : uri.ToString();
+                using(HttpClient client = new HttpClient())
+                {
+                    var response = await client.GetAsync(useUrl);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return await response.Content.ReadAsByteArrayAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.LogException(ex);
+            }
+            return null;
+        }
+        #endregion
     }
 }

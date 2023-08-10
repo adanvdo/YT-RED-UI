@@ -5,18 +5,18 @@ namespace YT_RED
 {
 	public static class EnumExtensions
 	{
-		public static string GetCustomDescription(object objEnum)
+		public static string GetCustomDescription(object objEnum, bool trimResolutions = true)
 		{
 			var fi = objEnum.GetType().GetField(objEnum.ToString());
 			var attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
 			var adjusted = (attributes.Length > 0) ? attributes[0].Description.Replace("_","") : objEnum.ToString().Replace("_", "");
-			if (adjusted.EndsWith("p")) adjusted = adjusted.Replace("p", "");
+			if (adjusted.EndsWith("p") && trimResolutions) adjusted = adjusted.Replace("p", "");
 			return adjusted;
 		}
 
-		public static string ToFriendlyString(this Enum value, bool lowerCase = false)
+		public static string ToFriendlyString(this Enum value, bool lowerCase = false, bool trimResolutions = true)
 		{
-			return lowerCase ? GetCustomDescription(value).ToLower() : GetCustomDescription(value);
+			return lowerCase ? GetCustomDescription(value, trimResolutions).ToLower() : GetCustomDescription(value, trimResolutions);
 		}
 
 		/// <summary>

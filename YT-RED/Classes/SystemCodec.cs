@@ -121,6 +121,48 @@ namespace YT_RED.Classes
             }
         }
 
+        public static VideoFormat GetVideoFormatByExtension(string extension)
+        {
+            switch (extension.ToLower())
+            {
+                case "mp4":
+                    return VideoFormat.MP4;
+                case "webm":
+                    return VideoFormat.WEBM;
+                case "flv":
+                    return VideoFormat.FLV;
+                case "mkv":
+                    return VideoFormat.MKV;
+                case "ogg":
+                    return VideoFormat.OGG;                
+            }
+            return VideoFormat.UNSPECIFIED;
+        }
+
+        public static AudioFormat GetAudioFormatByExtension(string extension)
+        {
+            switch(extension.ToLower())
+            {
+                case "mp3":
+                    return AudioFormat.MP3;
+                case "m4a":
+                    return AudioFormat.M4A;
+                case "aac":
+                    return AudioFormat.AAC;
+                case "ogg":
+                    return AudioFormat.OGG;
+                case "wav":
+                    return AudioFormat.WAV;
+                case "flac":
+                    return AudioFormat.FLAC;
+                case "opus":
+                    return AudioFormat.OPUS;
+                case "vorbis":
+                    return AudioFormat.VORBIS;
+            }
+            return AudioFormat.UNSPECIFIED;
+        }
+
         public static VideoFormat GetBestFormat(SystemVideoCodec codec)
         {
             switch (codec)

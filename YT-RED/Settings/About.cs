@@ -36,12 +36,19 @@ namespace YT_RED.Settings
         [JsonIgnore]
         public string Contact { get; set; }
 
+        [Category("About")]
+        [DisplayName("Dependencies")]
+        [Description("YT-RED depends on the YT-DLP and FFMPEG Libraries for dowloading and processing media.\nIf you suddenly start getting errors during downloads, these tools may need to be updated.")]
+        [JsonIgnore]
+        public string Dependencies { get; set; }
+
         public About()
         {
             Version = "0.0.0.0";
             Build = "Beta";
             GitHub = @"https://github.com/adanvdo/YT-RED-UI";
             Contact = @"jesse@jamgalactic.com";
+            Dependencies = "YT-DLP + FFMPEG";
         }
     }
 

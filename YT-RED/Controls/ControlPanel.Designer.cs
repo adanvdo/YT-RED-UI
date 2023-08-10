@@ -32,6 +32,7 @@
             DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions1 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions2 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions3 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
+            DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions4 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             this.lblSelectionText = new DevExpress.XtraEditors.LabelControl();
             this.pnlOptionPanel = new DevExpress.XtraEditors.PanelControl();
             this.gcDLButtons = new DevExpress.XtraEditors.GroupControl();
@@ -39,6 +40,13 @@
             this.btnDownloadBest = new DevExpress.XtraEditors.SimpleButton();
             this.btnDownloadAudio = new DevExpress.XtraEditors.SimpleButton();
             this.btnSelectionDL = new DevExpress.XtraEditors.SimpleButton();
+            this.gcDownloadLimits = new DevExpress.XtraEditors.GroupControl();
+            this.pnlLimitPanel = new DevExpress.XtraEditors.PanelControl();
+            this.txtMaxFilesize = new DevExpress.XtraEditors.TextEdit();
+            this.lblMaxFilesize = new DevExpress.XtraEditors.LabelControl();
+            this.lblMaxRes = new DevExpress.XtraEditors.LabelControl();
+            this.cbMaxRes = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.toggleDownloadLimits = new DevExpress.XtraEditors.ToggleSwitch();
             this.gcConvert = new DevExpress.XtraEditors.GroupControl();
             this.hlblOpenSettings = new DevExpress.XtraEditors.HyperlinkLabelControl();
             this.lblAlwaysConvert = new DevExpress.XtraEditors.LabelControl();
@@ -71,6 +79,7 @@
             this.btnOpenDL = new DevExpress.XtraEditors.SimpleButton();
             this.lblLastDL = new DevExpress.XtraEditors.LabelControl();
             this.pbProgress = new DevExpress.XtraEditors.ProgressBarControl();
+            this.pbListProgress = new DevExpress.XtraEditors.ProgressBarControl();
             this.gcHistory = new DevExpress.XtraGrid.GridControl();
             this.gvHistory = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.historyBarManager = new DevExpress.XtraBars.BarManager(this.components);
@@ -88,6 +97,13 @@
             this.pnlOptionPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gcDLButtons)).BeginInit();
             this.gcDLButtons.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gcDownloadLimits)).BeginInit();
+            this.gcDownloadLimits.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlLimitPanel)).BeginInit();
+            this.pnlLimitPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.txtMaxFilesize.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbMaxRes.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.toggleDownloadLimits.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gcConvert)).BeginInit();
             this.gcConvert.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pnlConvertPanel)).BeginInit();
@@ -114,6 +130,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pnlProgressPanel)).BeginInit();
             this.pnlProgressPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbProgress.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbListProgress.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gcHistory)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvHistory)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.historyBarManager)).BeginInit();
@@ -145,6 +162,7 @@
             this.pnlOptionPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.pnlOptionPanel.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.pnlOptionPanel.Controls.Add(this.gcDLButtons);
+            this.pnlOptionPanel.Controls.Add(this.gcDownloadLimits);
             this.pnlOptionPanel.Controls.Add(this.gcConvert);
             this.pnlOptionPanel.Controls.Add(this.gcCrop);
             this.pnlOptionPanel.Controls.Add(this.gcSegments);
@@ -153,7 +171,7 @@
             this.pnlOptionPanel.Margin = new System.Windows.Forms.Padding(0);
             this.pnlOptionPanel.MinimumSize = new System.Drawing.Size(323, 136);
             this.pnlOptionPanel.Name = "pnlOptionPanel";
-            this.pnlOptionPanel.Size = new System.Drawing.Size(323, 605);
+            this.pnlOptionPanel.Size = new System.Drawing.Size(323, 722);
             this.pnlOptionPanel.TabIndex = 0;
             // 
             // gcDLButtons
@@ -167,7 +185,7 @@
             this.gcDLButtons.Controls.Add(this.btnDownloadAudio);
             this.gcDLButtons.Controls.Add(this.btnSelectionDL);
             this.gcDLButtons.Dock = System.Windows.Forms.DockStyle.Top;
-            this.gcDLButtons.Location = new System.Drawing.Point(0, 446);
+            this.gcDLButtons.Location = new System.Drawing.Point(0, 563);
             this.gcDLButtons.Margin = new System.Windows.Forms.Padding(0);
             this.gcDLButtons.Name = "gcDLButtons";
             this.gcDLButtons.Size = new System.Drawing.Size(323, 159);
@@ -245,6 +263,106 @@
             this.btnSelectionDL.Visible = false;
             this.btnSelectionDL.Click += new System.EventHandler(this.btnSelectionDL_Click);
             // 
+            // gcDownloadLimits
+            // 
+            this.gcDownloadLimits.AutoSize = true;
+            this.gcDownloadLimits.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.gcDownloadLimits.CaptionImageOptions.AllowGlyphSkinning = true;
+            this.gcDownloadLimits.Controls.Add(this.pnlLimitPanel);
+            buttonImageOptions1.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
+            buttonImageOptions1.SvgImageSize = new System.Drawing.Size(18, 18);
+            this.gcDownloadLimits.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions1, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
+            this.gcDownloadLimits.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
+            this.gcDownloadLimits.Dock = System.Windows.Forms.DockStyle.Top;
+            this.gcDownloadLimits.Location = new System.Drawing.Point(0, 436);
+            this.gcDownloadLimits.Margin = new System.Windows.Forms.Padding(0);
+            this.gcDownloadLimits.Name = "gcDownloadLimits";
+            this.gcDownloadLimits.Size = new System.Drawing.Size(323, 127);
+            this.gcDownloadLimits.TabIndex = 6;
+            this.gcDownloadLimits.Text = "Best Download Settings";
+            this.gcDownloadLimits.Click += new System.EventHandler(this.gcDownloadLimits_Click);
+            // 
+            // pnlLimitPanel
+            // 
+            this.pnlLimitPanel.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.pnlLimitPanel.Controls.Add(this.txtMaxFilesize);
+            this.pnlLimitPanel.Controls.Add(this.lblMaxFilesize);
+            this.pnlLimitPanel.Controls.Add(this.lblMaxRes);
+            this.pnlLimitPanel.Controls.Add(this.cbMaxRes);
+            this.pnlLimitPanel.Controls.Add(this.toggleDownloadLimits);
+            this.pnlLimitPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlLimitPanel.Location = new System.Drawing.Point(2, 29);
+            this.pnlLimitPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlLimitPanel.MinimumSize = new System.Drawing.Size(0, 96);
+            this.pnlLimitPanel.Name = "pnlLimitPanel";
+            this.pnlLimitPanel.Size = new System.Drawing.Size(319, 96);
+            this.pnlLimitPanel.TabIndex = 0;
+            // 
+            // txtMaxFilesize
+            // 
+            this.txtMaxFilesize.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.txtMaxFilesize.EditValue = "0";
+            this.txtMaxFilesize.Enabled = false;
+            this.txtMaxFilesize.Location = new System.Drawing.Point(162, 61);
+            this.txtMaxFilesize.Name = "txtMaxFilesize";
+            this.txtMaxFilesize.Properties.AutoHeight = false;
+            this.txtMaxFilesize.Properties.DisplayFormat.FormatString = "{0} MB";
+            this.txtMaxFilesize.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.txtMaxFilesize.Properties.EditFormat.FormatString = "{0} MB";
+            this.txtMaxFilesize.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.txtMaxFilesize.Properties.NullText = "0";
+            this.txtMaxFilesize.Size = new System.Drawing.Size(142, 25);
+            this.txtMaxFilesize.TabIndex = 11;
+            this.txtMaxFilesize.TextChanged += new System.EventHandler(this.txtMaxFilesize_TextChanged);
+            // 
+            // lblMaxFilesize
+            // 
+            this.lblMaxFilesize.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lblMaxFilesize.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.lblMaxFilesize.Appearance.Options.UseFont = true;
+            this.lblMaxFilesize.Location = new System.Drawing.Point(43, 66);
+            this.lblMaxFilesize.Name = "lblMaxFilesize";
+            this.lblMaxFilesize.Size = new System.Drawing.Size(101, 16);
+            this.lblMaxFilesize.TabIndex = 0;
+            this.lblMaxFilesize.Text = "Maximum Filesize";
+            // 
+            // lblMaxRes
+            // 
+            this.lblMaxRes.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lblMaxRes.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.lblMaxRes.Appearance.Options.UseFont = true;
+            this.lblMaxRes.Location = new System.Drawing.Point(26, 35);
+            this.lblMaxRes.Name = "lblMaxRes";
+            this.lblMaxRes.Size = new System.Drawing.Size(118, 16);
+            this.lblMaxRes.TabIndex = 0;
+            this.lblMaxRes.Text = "Maximum Resolution";
+            // 
+            // cbMaxRes
+            // 
+            this.cbMaxRes.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.cbMaxRes.Enabled = false;
+            this.cbMaxRes.Location = new System.Drawing.Point(162, 30);
+            this.cbMaxRes.Name = "cbMaxRes";
+            this.cbMaxRes.Properties.AutoHeight = false;
+            this.cbMaxRes.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.cbMaxRes.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cbMaxRes.Size = new System.Drawing.Size(142, 25);
+            this.cbMaxRes.TabIndex = 10;
+            this.cbMaxRes.SelectedIndexChanged += new System.EventHandler(this.cbMaxRes_SelectedIndexChanged);
+            // 
+            // toggleDownloadLimits
+            // 
+            this.toggleDownloadLimits.Location = new System.Drawing.Point(7, 3);
+            this.toggleDownloadLimits.Name = "toggleDownloadLimits";
+            this.toggleDownloadLimits.Properties.AllowFocused = false;
+            this.toggleDownloadLimits.Properties.OffText = "Off";
+            this.toggleDownloadLimits.Properties.OnText = "On";
+            this.toggleDownloadLimits.Size = new System.Drawing.Size(95, 24);
+            this.toggleDownloadLimits.TabIndex = 9;
+            this.toggleDownloadLimits.Toggled += new System.EventHandler(this.toggleDownloadLimits_Toggled);
+            // 
             // gcConvert
             // 
             this.gcConvert.AutoSize = true;
@@ -253,13 +371,13 @@
             this.gcConvert.Controls.Add(this.hlblOpenSettings);
             this.gcConvert.Controls.Add(this.lblAlwaysConvert);
             this.gcConvert.Controls.Add(this.pnlConvertPanel);
-            buttonImageOptions1.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
-            buttonImageOptions1.SvgImageSize = new System.Drawing.Size(18, 18);
+            buttonImageOptions2.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
+            buttonImageOptions2.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcConvert.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
-            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions1, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions2, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
             this.gcConvert.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
             this.gcConvert.Dock = System.Windows.Forms.DockStyle.Top;
-            this.gcConvert.Location = new System.Drawing.Point(0, 285);
+            this.gcConvert.Location = new System.Drawing.Point(0, 275);
             this.gcConvert.Margin = new System.Windows.Forms.Padding(0);
             this.gcConvert.Name = "gcConvert";
             this.gcConvert.Size = new System.Drawing.Size(323, 161);
@@ -312,6 +430,7 @@
             this.pnlConvertPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlConvertPanel.Location = new System.Drawing.Point(2, 29);
             this.pnlConvertPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlConvertPanel.MinimumSize = new System.Drawing.Size(0, 67);
             this.pnlConvertPanel.Name = "pnlConvertPanel";
             this.pnlConvertPanel.Size = new System.Drawing.Size(319, 67);
             this.pnlConvertPanel.TabIndex = 0;
@@ -376,6 +495,7 @@
             this.toggleConvert.Size = new System.Drawing.Size(95, 24);
             this.toggleConvert.TabIndex = 9;
             this.toggleConvert.Toggled += new System.EventHandler(this.toggleConvert_Toggled);
+            this.toggleConvert.Click += new System.EventHandler(this.toggleConvert_Click);
             // 
             // gcCrop
             // 
@@ -383,16 +503,16 @@
             this.gcCrop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gcCrop.CaptionImageOptions.AllowGlyphSkinning = true;
             this.gcCrop.Controls.Add(this.pnlCropPanel);
-            buttonImageOptions2.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
-            buttonImageOptions2.SvgImageSize = new System.Drawing.Size(18, 18);
+            buttonImageOptions3.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
+            buttonImageOptions3.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcCrop.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
-            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions2, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions3, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
             this.gcCrop.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
             this.gcCrop.Dock = System.Windows.Forms.DockStyle.Top;
             this.gcCrop.Location = new System.Drawing.Point(0, 151);
             this.gcCrop.Margin = new System.Windows.Forms.Padding(0);
             this.gcCrop.Name = "gcCrop";
-            this.gcCrop.Size = new System.Drawing.Size(323, 134);
+            this.gcCrop.Size = new System.Drawing.Size(323, 124);
             this.gcCrop.TabIndex = 0;
             this.gcCrop.Text = "Crop Video";
             this.gcCrop.Click += new System.EventHandler(this.gcCrop_Click);
@@ -412,8 +532,9 @@
             this.pnlCropPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlCropPanel.Location = new System.Drawing.Point(2, 29);
             this.pnlCropPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlCropPanel.MinimumSize = new System.Drawing.Size(0, 93);
             this.pnlCropPanel.Name = "pnlCropPanel";
-            this.pnlCropPanel.Size = new System.Drawing.Size(319, 103);
+            this.pnlCropPanel.Size = new System.Drawing.Size(319, 93);
             this.pnlCropPanel.TabIndex = 0;
             // 
             // toggleCrop
@@ -550,10 +671,10 @@
             this.gcSegments.CaptionImageOptions.AllowGlyphSkinning = true;
             this.gcSegments.Controls.Add(this.lblSegmentDisclaimer);
             this.gcSegments.Controls.Add(this.pnlSegPanel);
-            buttonImageOptions3.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
-            buttonImageOptions3.SvgImageSize = new System.Drawing.Size(18, 18);
+            buttonImageOptions4.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
+            buttonImageOptions4.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcSegments.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
-            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions3, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, false, true, "ytSegment", -1)});
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions4, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, false, true, "ytSegment", -1)});
             this.gcSegments.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
             this.gcSegments.Dock = System.Windows.Forms.DockStyle.Top;
             this.gcSegments.Location = new System.Drawing.Point(0, 0);
@@ -593,6 +714,7 @@
             this.pnlSegPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlSegPanel.Location = new System.Drawing.Point(2, 29);
             this.pnlSegPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlSegPanel.MinimumSize = new System.Drawing.Size(0, 69);
             this.pnlSegPanel.Name = "pnlSegPanel";
             this.pnlSegPanel.Size = new System.Drawing.Size(319, 69);
             this.pnlSegPanel.TabIndex = 0;
@@ -677,17 +799,18 @@
             this.pnlProgressPanel.Controls.Add(this.btnOpenDL);
             this.pnlProgressPanel.Controls.Add(this.lblLastDL);
             this.pnlProgressPanel.Controls.Add(this.pbProgress);
+            this.pnlProgressPanel.Controls.Add(this.pbListProgress);
             this.pnlProgressPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlProgressPanel.Location = new System.Drawing.Point(0, 605);
+            this.pnlProgressPanel.Location = new System.Drawing.Point(0, 722);
             this.pnlProgressPanel.Margin = new System.Windows.Forms.Padding(0);
             this.pnlProgressPanel.Name = "pnlProgressPanel";
-            this.pnlProgressPanel.Size = new System.Drawing.Size(323, 78);
+            this.pnlProgressPanel.Size = new System.Drawing.Size(323, 109);
             this.pnlProgressPanel.TabIndex = 0;
             // 
             // btnOpenDL
             // 
             this.btnOpenDL.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnOpenDL.Location = new System.Drawing.Point(0, 52);
+            this.btnOpenDL.Location = new System.Drawing.Point(0, 83);
             this.btnOpenDL.Name = "btnOpenDL";
             this.btnOpenDL.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;
             this.btnOpenDL.Size = new System.Drawing.Size(323, 26);
@@ -702,7 +825,7 @@
             this.lblLastDL.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
             this.lblLastDL.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.lblLastDL.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblLastDL.Location = new System.Drawing.Point(0, 31);
+            this.lblLastDL.Location = new System.Drawing.Point(0, 62);
             this.lblLastDL.Margin = new System.Windows.Forms.Padding(0);
             this.lblLastDL.Name = "lblLastDL";
             this.lblLastDL.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
@@ -714,7 +837,7 @@
             // pbProgress
             // 
             this.pbProgress.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pbProgress.Location = new System.Drawing.Point(0, 0);
+            this.pbProgress.Location = new System.Drawing.Point(0, 31);
             this.pbProgress.Name = "pbProgress";
             this.pbProgress.Properties.AllowFocused = false;
             this.pbProgress.Properties.ShowTitle = true;
@@ -722,17 +845,31 @@
             this.pbProgress.TabIndex = 0;
             this.pbProgress.Visible = false;
             // 
+            // pbListProgress
+            // 
+            this.pbListProgress.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pbListProgress.Location = new System.Drawing.Point(0, 0);
+            this.pbListProgress.Name = "pbListProgress";
+            this.pbListProgress.Properties.AllowFocused = false;
+            this.pbListProgress.Properties.PercentView = false;
+            this.pbListProgress.Properties.ShowTitle = true;
+            this.pbListProgress.Size = new System.Drawing.Size(323, 31);
+            this.pbListProgress.TabIndex = 2;
+            this.pbListProgress.Visible = false;
+            this.pbListProgress.CustomDisplayText += new DevExpress.XtraEditors.Controls.CustomDisplayTextEventHandler(this.pbListProgress_CustomDisplayText);
+            // 
             // gcHistory
             // 
             this.gcHistory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcHistory.Location = new System.Drawing.Point(0, 683);
+            this.gcHistory.Location = new System.Drawing.Point(0, 831);
             this.gcHistory.MainView = this.gvHistory;
             this.gcHistory.MenuManager = this.historyBarManager;
+            this.gcHistory.MinimumSize = new System.Drawing.Size(0, 200);
             this.gcHistory.Name = "gcHistory";
             this.gcHistory.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repFileExists,
             this.repPostProcessed});
-            this.gcHistory.Size = new System.Drawing.Size(323, 152);
+            this.gcHistory.Size = new System.Drawing.Size(323, 200);
             this.gcHistory.TabIndex = 0;
             this.gcHistory.ToolTipController = this.historyTooltip;
             this.gcHistory.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -783,7 +920,7 @@
             // 
             this.barDockControlBottom.CausesValidation = false;
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 835);
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 1031);
             this.barDockControlBottom.Manager = this.historyBarManager;
             this.barDockControlBottom.Size = new System.Drawing.Size(323, 0);
             // 
@@ -793,7 +930,7 @@
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.barDockControlLeft.Location = new System.Drawing.Point(0, 0);
             this.barDockControlLeft.Manager = this.historyBarManager;
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 835);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 1031);
             // 
             // barDockControlRight
             // 
@@ -801,7 +938,7 @@
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
             this.barDockControlRight.Location = new System.Drawing.Point(323, 0);
             this.barDockControlRight.Manager = this.historyBarManager;
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 835);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 1031);
             // 
             // bbiReDownload
             // 
@@ -861,14 +998,22 @@
             this.Controls.Add(this.barDockControlRight);
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
-            this.MinimumSize = new System.Drawing.Size(323, 0);
+            this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "ControlPanel";
-            this.Size = new System.Drawing.Size(323, 835);
+            this.Size = new System.Drawing.Size(323, 1031);
             ((System.ComponentModel.ISupportInitialize)(this.pnlOptionPanel)).EndInit();
             this.pnlOptionPanel.ResumeLayout(false);
             this.pnlOptionPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gcDLButtons)).EndInit();
             this.gcDLButtons.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gcDownloadLimits)).EndInit();
+            this.gcDownloadLimits.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pnlLimitPanel)).EndInit();
+            this.pnlLimitPanel.ResumeLayout(false);
+            this.pnlLimitPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.txtMaxFilesize.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbMaxRes.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.toggleDownloadLimits.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gcConvert)).EndInit();
             this.gcConvert.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pnlConvertPanel)).EndInit();
@@ -898,6 +1043,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pnlProgressPanel)).EndInit();
             this.pnlProgressPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbProgress.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbListProgress.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gcHistory)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvHistory)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.historyBarManager)).EndInit();
@@ -925,14 +1071,6 @@
         private DevExpress.XtraEditors.TextEdit txtCropLeft;
         private DevExpress.XtraEditors.LabelControl labelControl5;
         private DevExpress.XtraEditors.TextEdit txtCropRight;
-        private DevExpress.XtraEditors.GroupControl gcSegments;
-        private DevExpress.XtraEditors.LabelControl lblSegmentDisclaimer;
-        private DevExpress.XtraEditors.PanelControl pnlSegPanel;
-        private DevExpress.XtraEditors.ToggleSwitch toggleSegment;
-        private DevExpress.XtraEditors.LabelControl labelControl3;
-        private DevExpress.XtraEditors.LabelControl labelControl4;
-        private DevExpress.XtraEditors.TimeSpanEdit tsStart;
-        private DevExpress.XtraEditors.TimeSpanEdit tsDuration;
         private DevExpress.XtraEditors.PanelControl pnlProgressPanel;
         private DevExpress.XtraEditors.SimpleButton btnOpenDL;
         private DevExpress.XtraEditors.ProgressBarControl pbProgress;
@@ -963,5 +1101,21 @@
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repFileExists;
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repPostProcessed;
         private DevExpress.XtraEditors.HyperlinkLabelControl hlblOpenSettings;
+        private DevExpress.XtraEditors.ProgressBarControl pbListProgress;
+        private DevExpress.XtraEditors.GroupControl gcDownloadLimits;
+        private DevExpress.XtraEditors.PanelControl pnlLimitPanel;
+        private DevExpress.XtraEditors.LabelControl lblMaxFilesize;
+        private DevExpress.XtraEditors.LabelControl lblMaxRes;
+        private DevExpress.XtraEditors.ComboBoxEdit cbMaxRes;
+        private DevExpress.XtraEditors.ToggleSwitch toggleDownloadLimits;
+        private DevExpress.XtraEditors.TextEdit txtMaxFilesize;
+        private DevExpress.XtraEditors.GroupControl gcSegments;
+        private DevExpress.XtraEditors.LabelControl lblSegmentDisclaimer;
+        private DevExpress.XtraEditors.PanelControl pnlSegPanel;
+        private DevExpress.XtraEditors.ToggleSwitch toggleSegment;
+        private DevExpress.XtraEditors.LabelControl labelControl3;
+        private DevExpress.XtraEditors.LabelControl labelControl4;
+        private DevExpress.XtraEditors.TimeSpanEdit tsStart;
+        private DevExpress.XtraEditors.TimeSpanEdit tsDuration;
     }
 }

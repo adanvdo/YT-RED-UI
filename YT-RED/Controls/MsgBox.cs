@@ -14,20 +14,25 @@ namespace YT_RED.Controls
         private static Buttons _buttons = Buttons.OK;
         private static Icon _icon = YT_RED.Controls.Icon.Warning;
 
-        //[DllImport("user32.dll", CharSet = CharSet.Auto)]
-        //private static extern bool MessageBeep(uint type);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern bool MessageBeep(uint type);
+
+        [DllImport("user32.dll")]
+        public static extern bool FlashWindow(IntPtr hwnd, bool bInvert);
 
         private bool urlCheck = false;
+        private bool flash = false;
 
-        public MsgBox(bool urlCheck = false)
+        public MsgBox(bool urlCheck = false, bool flash = false)
         {
             InitializeComponent();
             this.urlCheck = urlCheck;
+            this.flash = flash;
         }
 
-        public static DialogResult Show(string message, FormStartPosition startPosition = FormStartPosition.CenterScreen)
+        public static DialogResult Show(string message, FormStartPosition startPosition = FormStartPosition.CenterScreen, bool beep = false)
         {
-            _msgBox = new MsgBox();
+            _msgBox = new MsgBox(false, beep);
             _msgBox.StartPosition = startPosition;
             _msgBox.lblMessage.Text = message;
             _msgBox.lblCaption.Visible = false;
@@ -36,13 +41,14 @@ namespace YT_RED.Controls
             int addHeight = heightIncrease(message);
             _msgBox.messagePanel.Height = _msgBox.messagePanel.Height + addHeight;
             _msgBox.lblMessage.Height = _msgBox.lblMessage.Height + addHeight;
+            if (beep) MessageBeep((uint)beepType.OK);
             _msgBox.ShowDialog();
             return _msgBox.DialogResult;
         }
 
-        public static DialogResult Show(string message, string caption, FormStartPosition startPosition = FormStartPosition.CenterScreen)
+        public static DialogResult Show(string message, string caption, FormStartPosition startPosition = FormStartPosition.CenterScreen, bool beep = false)
         {
-            _msgBox = new MsgBox();
+            _msgBox = new MsgBox(false, beep);
             _msgBox.StartPosition = startPosition;
             _msgBox.initButtons(_buttons);
             _msgBox.initIcon(_icon);
@@ -52,13 +58,14 @@ namespace YT_RED.Controls
             _msgBox.lblMessage.Height = _msgBox.lblMessage.Height + addHeight;
             _msgBox.lblCaption.Text = caption;
             _msgBox.lblCaption.Visible = true;
+            if (beep) MessageBeep((uint)beepType.OK);
             _msgBox.ShowDialog();
             return _msgBox.DialogResult;
         }
 
-        public static DialogResult Show(string message, Buttons buttons, FormStartPosition startPosition = FormStartPosition.CenterScreen)
+        public static DialogResult Show(string message, Buttons buttons, FormStartPosition startPosition = FormStartPosition.CenterScreen, bool beep = false)
         {
-            _msgBox = new MsgBox();
+            _msgBox = new MsgBox(false, beep);
             _msgBox.StartPosition = startPosition;
             _msgBox.lblMessage.Text = message;
             int addHeight = heightIncrease(message);
@@ -67,13 +74,14 @@ namespace YT_RED.Controls
             _msgBox.lblCaption.Visible = false;
             _msgBox.initButtons(buttons);
             _msgBox.initIcon(_icon);
+            if (beep) MessageBeep((uint)beepType.OK);
             _msgBox.ShowDialog();
             return _msgBox.DialogResult;
         }
 
-        public static DialogResult Show(string message, string caption, Buttons buttons, FormStartPosition startPosition = FormStartPosition.CenterScreen)
+        public static DialogResult Show(string message, string caption, Buttons buttons, FormStartPosition startPosition = FormStartPosition.CenterScreen, bool beep = false)
         {            
-            _msgBox = new MsgBox();
+            _msgBox = new MsgBox(false, beep);
             _msgBox.StartPosition = startPosition;
             _msgBox.lblMessage.Text = message;
             int addHeight = heightIncrease(message);
@@ -83,13 +91,15 @@ namespace YT_RED.Controls
             _msgBox.initButtons(buttons);
             _msgBox.initIcon(_icon);
             _msgBox.lblCaption.Visible = true;
+            if (buttons == Buttons.OK && beep) MessageBeep((uint)beepType.OK);
+            else MessageBeep((uint)beepType.Question);
             _msgBox.ShowDialog();
             return _msgBox.DialogResult;
         }
 
-        public static DialogResult Show(string message, Buttons buttons, Icon icon, FormStartPosition startPosition = FormStartPosition.CenterScreen)
+        public static DialogResult Show(string message, Buttons buttons, Icon icon, FormStartPosition startPosition = FormStartPosition.CenterScreen, bool beep = false)
         {
-            _msgBox = new MsgBox();
+            _msgBox = new MsgBox(false, beep);
             _msgBox.StartPosition = startPosition;
             _msgBox.lblMessage.Text = message;
             int addHeight = heightIncrease(message);
@@ -98,13 +108,38 @@ namespace YT_RED.Controls
             _msgBox.lblCaption.Visible = false;
             _msgBox.initButtons(buttons);
             _msgBox.initIcon(icon);
+            if (beep)
+            {
+                switch (icon)
+                {
+                    case YT_RED.Controls.Icon.Application:
+                        MessageBeep((uint)beepType.OK);
+                        break;
+                    case YT_RED.Controls.Icon.Error:
+                        MessageBeep((uint)beepType.Exclamation);
+                        break;
+                    case YT_RED.Controls.Icon.Exclamation:
+                        MessageBeep((uint)beepType.Exclamation);
+                        break;
+                    case YT_RED.Controls.Icon.Info:
+                        MessageBeep((uint)beepType.SimpleBeep);
+                        break;
+                    case YT_RED.Controls.Icon.Shield:
+                        MessageBeep((uint)beepType.Asterisk);
+                        break;
+                    default:
+                        if (buttons == Buttons.OK && beep) MessageBeep((uint)beepType.OK);
+                        else MessageBeep((uint)beepType.Question);
+                        break;
+                }
+            }
             _msgBox.ShowDialog();
             return _msgBox.DialogResult;
         }
 
-        public static DialogResult Show(string message, string caption, Buttons buttons, Icon icon, FormStartPosition startPosition = FormStartPosition.CenterScreen)
+        public static DialogResult Show(string message, string caption, Buttons buttons, Icon icon, FormStartPosition startPosition = FormStartPosition.CenterScreen, bool beep = false)
         {
-            _msgBox = new MsgBox();
+            _msgBox = new MsgBox(false, beep);
             _msgBox.StartPosition = startPosition;
             _msgBox.lblMessage.Text = message;
             int addHeight = heightIncrease(message);
@@ -114,13 +149,38 @@ namespace YT_RED.Controls
             _msgBox.initButtons(buttons);
             _msgBox.initIcon(icon);
             _msgBox.lblCaption.Visible = true;
+            if (beep)
+            {
+                switch (icon)
+                {
+                    case YT_RED.Controls.Icon.Application:
+                        MessageBeep((uint)beepType.OK);
+                        break;
+                    case YT_RED.Controls.Icon.Error:
+                        MessageBeep((uint)beepType.Exclamation);
+                        break;
+                    case YT_RED.Controls.Icon.Exclamation:
+                        MessageBeep((uint)beepType.Exclamation);
+                        break;
+                    case YT_RED.Controls.Icon.Info:
+                        MessageBeep((uint)beepType.SimpleBeep);
+                        break;
+                    case YT_RED.Controls.Icon.Shield:
+                        MessageBeep((uint)beepType.Asterisk);
+                        break;
+                    default:
+                        if (buttons == Buttons.OK && beep) MessageBeep((uint)beepType.OK);
+                        else MessageBeep((uint)beepType.Question);
+                        break;
+                }
+            }
             _msgBox.ShowDialog();
             return _msgBox.DialogResult;
         }
 
-        public static DialogResult ShowUrlCheckWarning(string message, string caption, Buttons buttons, Icon icon, FormStartPosition startPosition = FormStartPosition.CenterScreen)
+        public static DialogResult ShowUrlCheckWarning(string message, string caption, Buttons buttons, Icon icon, FormStartPosition startPosition = FormStartPosition.CenterScreen, bool beep = false)
         {
-            _msgBox = new MsgBox(true);
+            _msgBox = new MsgBox(true, beep);
             _msgBox.StartPosition = startPosition;
             _msgBox.lblMessage.Text = message;
             int addHeight = heightIncrease(message);
@@ -131,13 +191,38 @@ namespace YT_RED.Controls
             _msgBox.initIcon(icon);
             _msgBox.lblCaption.Visible = true;
             _msgBox.pnlSuppressPanel.Visible = true;
+            if (beep)
+            {
+                switch (icon)
+                {
+                    case YT_RED.Controls.Icon.Application:
+                        MessageBeep((uint)beepType.OK);
+                        break;
+                    case YT_RED.Controls.Icon.Error:
+                        MessageBeep((uint)beepType.Exclamation);
+                        break;
+                    case YT_RED.Controls.Icon.Exclamation:
+                        MessageBeep((uint)beepType.Exclamation);
+                        break;
+                    case YT_RED.Controls.Icon.Info:
+                        MessageBeep((uint)beepType.SimpleBeep);
+                        break;
+                    case YT_RED.Controls.Icon.Shield:
+                        MessageBeep((uint)beepType.Asterisk);
+                        break;
+                    default:
+                        if (buttons == Buttons.OK && beep) MessageBeep((uint)beepType.OK);
+                        else MessageBeep((uint)beepType.Question);
+                        break;
+                }
+            }
             _msgBox.ShowDialog();
             return _msgBox.DialogResult;
         }
 
-        public static DialogResult Show(string message, string caption, Buttons buttons, Icon icon, Point location, FormStartPosition startPosition = FormStartPosition.CenterScreen)
+        public static DialogResult Show(string message, string caption, Buttons buttons, Icon icon, Point location, FormStartPosition startPosition = FormStartPosition.CenterScreen, bool beep = false)
         {
-            _msgBox = new MsgBox();
+            _msgBox = new MsgBox(false, beep);
             _msgBox.StartPosition = startPosition;
             _msgBox.StartPosition = FormStartPosition.Manual;
             _msgBox.lblMessage.Text = message;
@@ -149,6 +234,31 @@ namespace YT_RED.Controls
             _msgBox.initButtons(buttons);
             _msgBox.initIcon(icon);
             _msgBox.lblCaption.Visible = true;
+            if (beep)
+            {
+                switch (icon)
+                {
+                    case YT_RED.Controls.Icon.Application:
+                        MessageBeep((uint)beepType.OK);
+                        break;
+                    case YT_RED.Controls.Icon.Error:
+                        MessageBeep((uint)beepType.Exclamation);
+                        break;
+                    case YT_RED.Controls.Icon.Exclamation:
+                        MessageBeep((uint)beepType.Exclamation);
+                        break;
+                    case YT_RED.Controls.Icon.Info:
+                        MessageBeep((uint)beepType.SimpleBeep);
+                        break;
+                    case YT_RED.Controls.Icon.Shield:
+                        MessageBeep((uint)beepType.Asterisk);
+                        break;
+                    default:
+                        if (buttons == Buttons.OK && beep) MessageBeep((uint)beepType.OK);
+                        else MessageBeep((uint)beepType.Question);
+                        break;
+                }
+            }
             _msgBox.ShowDialog();
             return _msgBox.DialogResult;
         }        
@@ -277,6 +387,14 @@ namespace YT_RED.Controls
                 Settings.AppSettings.Default.Save();
             }
         }
+
+        private void MsgBox_Shown(object sender, EventArgs e)
+        {
+            if (this.flash)
+            {
+                FlashWindow(this.Handle, true);
+            }
+        }
     }
 
     public enum Buttons
@@ -306,5 +424,29 @@ namespace YT_RED.Controls
         SlideDown = 1,
         FadeIn = 2,
         ZoomIn = 3
+    }
+
+    public enum beepType : uint
+    {
+        /// <summary>
+        /// A simple windows beep
+        /// </summary>            
+        SimpleBeep = 0xFFFFFFFF,
+        /// <summary>
+        /// A standard windows OK beep
+        /// </summary>
+        OK = 0x00,
+        /// <summary>
+        /// A standard windows Question beep
+        /// </summary>
+        Question = 0x20,
+        /// <summary>
+        /// A standard windows Exclamation beep
+        /// </summary>
+        Exclamation = 0x30,
+        /// <summary>
+        /// A standard windows Asterisk beep
+        /// </summary>
+        Asterisk = 0x40,
     }
 }

@@ -10,6 +10,12 @@ namespace YT_RED.Logging
     {
         [JsonProperty("url")]
         public string Url { get; set; }
+        [JsonProperty("in_subfolder")]
+        public bool InSubFolder { get; set; } = false;
+        [JsonProperty("playlist_title")]
+        public string PlaylistTitle { get; set; } = "";
+        [JsonProperty("playlist_url")]
+        public string PlaylistUrl { get; set; } = "";
         [JsonProperty("dl_type")]
         public DownloadType DownloadType { get; set; }
         [JsonProperty("type")]
@@ -23,9 +29,9 @@ namespace YT_RED.Logging
         [JsonProperty("format")]
         public string Format { get; set; }
         [JsonIgnore]
-        public bool PostProcessed
+        public bool AdditionalSettings
         {
-            get { return Start != null || Duration != null || Crops != null || VideoConversionFormat != null || AudioConversionFormat != null; }
+            get { return Start != null || Duration != null || Crops != null || VideoConversionFormat != null || AudioConversionFormat != null || MaxResolution != null || MaxFileSize != null; }
         }
         [JsonProperty("format_pair")]
         public YTDLFormatPair FormatPair { get; set; }
@@ -39,6 +45,10 @@ namespace YT_RED.Logging
         public VideoFormat? VideoConversionFormat { get; set; } = null;
         [JsonProperty("audio_conversion")]
         public AudioFormat? AudioConversionFormat { get; set; } = null;
+        [JsonProperty("max_resolution")]
+        public Resolution? MaxResolution { get; set; } = null;
+        [JsonProperty("max_filesize")]
+        public int? MaxFileSize { get; set; } = null;
 
         [JsonIgnore]
         public bool FileExists
@@ -80,6 +90,7 @@ namespace YT_RED.Logging
         Vimeo = 3,
         Instagram = 4,
         Twitch = 5,
-        Unknown = 6
+        Playlist = 6,
+        Unknown = 7
     }
 }

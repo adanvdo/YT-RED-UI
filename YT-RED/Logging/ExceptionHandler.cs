@@ -20,11 +20,13 @@ namespace YT_RED.Logging
 
         public static bool LogException(Exception exception, bool showDialog = true, bool ffmpeg = false, string videoUrl = "", string audioUrl = "")
         {
+            string media = "";
+            if (!string.IsNullOrEmpty(videoUrl)) media += $"\nVideo URL: {videoUrl}";
+            if (!string.IsNullOrEmpty(audioUrl)) media += $"\nAudio URL: {audioUrl}";
             string formattedException = $@"
 {DateTime.Now.ToString()} ----------------------------
 
-Video URL: {videoUrl}
-Audio URL: {audioUrl}
+{media}
 
 {exception.Message}
 

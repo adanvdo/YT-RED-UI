@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using YT_RED.Logging;
 
@@ -30,7 +31,12 @@ namespace YT_RED.Utils
                 return DownloadType.Vimeo;
             if (url.StartsWith(@"https://instagram.com") || url.StartsWith(@"https://www.instagram.com"))
                 return DownloadType.Instagram;
+
+            var test = @"^[a-zA-Z][a-zA-Z0-9]*$";
+            var t2 = Regex.Match(url, test);
+            if (t2.Success && (url.Length == 11 || url.Length == 34)) return DownloadType.YouTube;
+
             return DownloadType.Unknown;
-        }       
-    }
+        }        
+    }    
 }

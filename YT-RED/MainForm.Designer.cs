@@ -39,9 +39,14 @@
             this.sccMainSplitter = new DevExpress.XtraEditors.SplitContainerControl();
             this.gcFormats = new DevExpress.XtraGrid.GridControl();
             this.gvFormats = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.repPictureEdit = new DevExpress.XtraEditors.Repository.RepositoryItemPictureEdit();
+            this.pnlPlaylistControls = new DevExpress.XtraEditors.PanelControl();
+            this.btnPLSelectAll = new DevExpress.XtraEditors.SimpleButton();
             this.lblSelectAFormat = new DevExpress.XtraEditors.LabelControl();
+            this.videoInfoPanel = new YT_RED.Controls.VideoInfoPanel();
             this.marqueeProgressBarControl1 = new DevExpress.XtraEditors.MarqueeProgressBarControl();
             this.ipMainInput = new YT_RED.Controls.InputPanel();
+            this.pnlScrollableControls = new DevExpress.XtraEditors.XtraScrollableControl();
             this.cpMainControlPanel = new YT_RED.Controls.ControlPanel();
             this.toolTipController = new DevExpress.Utils.ToolTipController(this.components);
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
@@ -59,7 +64,11 @@
             this.sccMainSplitter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gcFormats)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvFormats)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repPictureEdit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlPlaylistControls)).BeginInit();
+            this.pnlPlaylistControls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.marqueeProgressBarControl1.Properties)).BeginInit();
+            this.pnlScrollableControls.SuspendLayout();
             this.taskBarMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -122,7 +131,7 @@
             this.tabFormContentContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabFormContentContainer1.Location = new System.Drawing.Point(0, 66);
             this.tabFormContentContainer1.Name = "tabFormContentContainer1";
-            this.tabFormContentContainer1.Size = new System.Drawing.Size(1188, 717);
+            this.tabFormContentContainer1.Size = new System.Drawing.Size(1188, 767);
             this.tabFormContentContainer1.TabIndex = 0;
             // 
             // sccMainSplitter
@@ -137,7 +146,8 @@
             // sccMainSplitter.Panel1
             // 
             this.sccMainSplitter.Panel1.Controls.Add(this.gcFormats);
-            this.sccMainSplitter.Panel1.Controls.Add(this.lblSelectAFormat);
+            this.sccMainSplitter.Panel1.Controls.Add(this.pnlPlaylistControls);
+            this.sccMainSplitter.Panel1.Controls.Add(this.videoInfoPanel);
             this.sccMainSplitter.Panel1.Controls.Add(this.marqueeProgressBarControl1);
             this.sccMainSplitter.Panel1.Controls.Add(this.ipMainInput);
             this.sccMainSplitter.Panel1.MinSize = 482;
@@ -145,11 +155,11 @@
             // 
             // sccMainSplitter.Panel2
             // 
-            this.sccMainSplitter.Panel2.Controls.Add(this.cpMainControlPanel);
+            this.sccMainSplitter.Panel2.Controls.Add(this.pnlScrollableControls);
             this.sccMainSplitter.Panel2.MinSize = 323;
             this.sccMainSplitter.Panel2.Text = "Panel2";
             this.sccMainSplitter.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.sccMainSplitter.Size = new System.Drawing.Size(1188, 717);
+            this.sccMainSplitter.Size = new System.Drawing.Size(1188, 767);
             this.sccMainSplitter.SplitterPosition = 839;
             this.sccMainSplitter.TabIndex = 0;
             this.sccMainSplitter.SplitterMoved += new System.EventHandler(this.sccMainSplitter_SplitterMoved);
@@ -158,10 +168,12 @@
             // gcFormats
             // 
             this.gcFormats.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcFormats.Location = new System.Drawing.Point(0, 148);
+            this.gcFormats.Location = new System.Drawing.Point(0, 298);
             this.gcFormats.MainView = this.gvFormats;
             this.gcFormats.Name = "gcFormats";
-            this.gcFormats.Size = new System.Drawing.Size(839, 569);
+            this.gcFormats.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
+            this.repPictureEdit});
+            this.gcFormats.Size = new System.Drawing.Size(839, 469);
             this.gcFormats.TabIndex = 0;
             this.gcFormats.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvFormats});
@@ -193,6 +205,50 @@
             this.gvFormats.FocusedRowChanged += new DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventHandler(this.gvFormats_FocusedRowChanged);
             this.gvFormats.CustomColumnDisplayText += new DevExpress.XtraGrid.Views.Base.CustomColumnDisplayTextEventHandler(this.gvFormats_CustomColumnDisplayText);
             // 
+            // repPictureEdit
+            // 
+            this.repPictureEdit.AllowAnimationOnValueChanged = DevExpress.Utils.DefaultBoolean.True;
+            this.repPictureEdit.AllowDisposeImage = true;
+            this.repPictureEdit.AllowFocused = false;
+            this.repPictureEdit.AllowHtmlDraw = DevExpress.Utils.DefaultBoolean.False;
+            this.repPictureEdit.AllowScrollOnMouseWheel = DevExpress.Utils.DefaultBoolean.False;
+            this.repPictureEdit.AllowZoom = DevExpress.Utils.DefaultBoolean.False;
+            this.repPictureEdit.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.repPictureEdit.Name = "repPictureEdit";
+            this.repPictureEdit.ReadOnly = true;
+            this.repPictureEdit.ShowEditMenuItem = DevExpress.Utils.DefaultBoolean.False;
+            this.repPictureEdit.ShowMenu = false;
+            this.repPictureEdit.ShowZoomSubMenu = DevExpress.Utils.DefaultBoolean.False;
+            this.repPictureEdit.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Zoom;
+            // 
+            // pnlPlaylistControls
+            // 
+            this.pnlPlaylistControls.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.pnlPlaylistControls.Controls.Add(this.btnPLSelectAll);
+            this.pnlPlaylistControls.Controls.Add(this.lblSelectAFormat);
+            this.pnlPlaylistControls.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlPlaylistControls.Location = new System.Drawing.Point(0, 273);
+            this.pnlPlaylistControls.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlPlaylistControls.Name = "pnlPlaylistControls";
+            this.pnlPlaylistControls.Size = new System.Drawing.Size(839, 25);
+            this.pnlPlaylistControls.TabIndex = 3;
+            // 
+            // btnPLSelectAll
+            // 
+            this.btnPLSelectAll.Dock = System.Windows.Forms.DockStyle.Left;
+            this.btnPLSelectAll.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
+            this.btnPLSelectAll.ImageOptions.SvgImage = global::YT_RED.Properties.Resources.checkbox;
+            this.btnPLSelectAll.ImageOptions.SvgImageColorizationMode = DevExpress.Utils.SvgImageColorizationMode.Full;
+            this.btnPLSelectAll.ImageOptions.SvgImageSize = new System.Drawing.Size(18, 18);
+            this.btnPLSelectAll.Location = new System.Drawing.Point(0, 0);
+            this.btnPLSelectAll.Margin = new System.Windows.Forms.Padding(0);
+            this.btnPLSelectAll.Name = "btnPLSelectAll";
+            this.btnPLSelectAll.Size = new System.Drawing.Size(110, 25);
+            this.btnPLSelectAll.TabIndex = 0;
+            this.btnPLSelectAll.Text = "Select All";
+            this.btnPLSelectAll.Visible = false;
+            this.btnPLSelectAll.Click += new System.EventHandler(this.btnPLSelectAll_Click);
+            // 
             // lblSelectAFormat
             // 
             this.lblSelectAFormat.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
@@ -200,13 +256,23 @@
             this.lblSelectAFormat.Appearance.Options.UseTextOptions = true;
             this.lblSelectAFormat.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.lblSelectAFormat.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
-            this.lblSelectAFormat.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblSelectAFormat.Location = new System.Drawing.Point(0, 123);
+            this.lblSelectAFormat.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblSelectAFormat.Location = new System.Drawing.Point(0, 0);
+            this.lblSelectAFormat.Margin = new System.Windows.Forms.Padding(0);
             this.lblSelectAFormat.Name = "lblSelectAFormat";
             this.lblSelectAFormat.Size = new System.Drawing.Size(839, 25);
             this.lblSelectAFormat.TabIndex = 0;
             this.lblSelectAFormat.Text = "Select a Video and/or Audio Format";
-            this.lblSelectAFormat.Visible = false;
+            // 
+            // videoInfoPanel
+            // 
+            this.videoInfoPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.videoInfoPanel.Location = new System.Drawing.Point(0, 123);
+            this.videoInfoPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.videoInfoPanel.Name = "videoInfoPanel";
+            this.videoInfoPanel.Size = new System.Drawing.Size(839, 150);
+            this.videoInfoPanel.TabIndex = 2;
+            this.videoInfoPanel.Visible = false;
             // 
             // marqueeProgressBarControl1
             // 
@@ -225,6 +291,7 @@
             this.ipMainInput.AutoSize = true;
             this.ipMainInput.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ipMainInput.Dock = System.Windows.Forms.DockStyle.Top;
+            this.ipMainInput.ListMode = YT_RED.Classes.ListMode.Format;
             this.ipMainInput.Location = new System.Drawing.Point(0, 0);
             this.ipMainInput.Margin = new System.Windows.Forms.Padding(0);
             this.ipMainInput.MinimumSize = new System.Drawing.Size(400, 100);
@@ -241,8 +308,20 @@
             this.ipMainInput.ListFormats_MouseMove += new System.EventHandler(this.cancelProcessButtons_MouseMove);
             this.ipMainInput.ListFormats_MouseLeave += new System.EventHandler(this.cancelProcessButtons_MouseLeave);
             // 
+            // pnlScrollableControls
+            // 
+            this.pnlScrollableControls.Controls.Add(this.cpMainControlPanel);
+            this.pnlScrollableControls.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlScrollableControls.Location = new System.Drawing.Point(0, 0);
+            this.pnlScrollableControls.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlScrollableControls.Name = "pnlScrollableControls";
+            this.pnlScrollableControls.Size = new System.Drawing.Size(323, 767);
+            this.pnlScrollableControls.TabIndex = 3;
+            // 
             // cpMainControlPanel
             // 
+            this.cpMainControlPanel.ConvertAudioFormat = null;
+            this.cpMainControlPanel.ConvertVideoFormat = null;
             this.cpMainControlPanel.CropBottom = "0";
             this.cpMainControlPanel.CropLeft = "0";
             this.cpMainControlPanel.CropRight = "0";
@@ -252,14 +331,17 @@
             this.cpMainControlPanel.DownloadBestVisible = true;
             this.cpMainControlPanel.DownloadSelectionVisible = false;
             this.cpMainControlPanel.Location = new System.Drawing.Point(0, 0);
-            this.cpMainControlPanel.MinimumSize = new System.Drawing.Size(323, 0);
+            this.cpMainControlPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.cpMainControlPanel.MaxFilesize = 0;
+            this.cpMainControlPanel.MaxResolution = null;
             this.cpMainControlPanel.Name = "cpMainControlPanel";
             this.cpMainControlPanel.SegmentDuration = System.TimeSpan.Parse("00:00:01");
             this.cpMainControlPanel.SegmentStart = System.TimeSpan.Parse("00:00:00");
-            this.cpMainControlPanel.Size = new System.Drawing.Size(323, 717);
+            this.cpMainControlPanel.Size = new System.Drawing.Size(323, 767);
             this.cpMainControlPanel.TabIndex = 2;
             this.cpMainControlPanel.Cancel_MouseMove += new System.EventHandler(this.cancelProcessButtons_MouseMove);
             this.cpMainControlPanel.Cancel_MouseLeave += new System.EventHandler(this.cancelProcessButtons_MouseLeave);
+            this.cpMainControlPanel.Controls_Updated += new System.EventHandler(this.cpMainControlPanel_Controls_Updated);
             this.cpMainControlPanel.DownloadSelection_Click += new System.EventHandler(this.cpMainControlPanel_DownloadSelection_Click);
             this.cpMainControlPanel.DownloadAudio_Click += new System.EventHandler(this.cpMainControlPanel_DownloadAudio_Click);
             this.cpMainControlPanel.DownloadBest_Click += new System.EventHandler(this.cpMainControlPanel_DownloadBest_Click);
@@ -318,7 +400,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1188, 783);
+            this.ClientSize = new System.Drawing.Size(1188, 833);
             this.Controls.Add(this.tabFormContentContainer1);
             this.Controls.Add(this.tcMainTabControl);
             this.DoubleBuffered = true;
@@ -340,7 +422,11 @@
             this.sccMainSplitter.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gcFormats)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvFormats)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repPictureEdit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlPlaylistControls)).EndInit();
+            this.pnlPlaylistControls.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.marqueeProgressBarControl1.Properties)).EndInit();
+            this.pnlScrollableControls.ResumeLayout(false);
             this.taskBarMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -366,6 +452,11 @@
         private DevExpress.XtraGrid.Views.Grid.GridView gvFormats;
         private DevExpress.XtraEditors.MarqueeProgressBarControl marqueeProgressBarControl1;
         private Controls.ControlPanel cpMainControlPanel;
+        private Controls.VideoInfoPanel videoInfoPanel;
+        private DevExpress.XtraEditors.Repository.RepositoryItemPictureEdit repPictureEdit;
+        private DevExpress.XtraEditors.PanelControl pnlPlaylistControls;
+        private DevExpress.XtraEditors.SimpleButton btnPLSelectAll;
+        private DevExpress.XtraEditors.XtraScrollableControl pnlScrollableControls;
     }
 }
 

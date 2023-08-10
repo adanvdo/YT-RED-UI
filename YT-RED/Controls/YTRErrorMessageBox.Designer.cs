@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(YTRErrorMessageBox));
             this.pnlButtons = new DevExpress.XtraEditors.PanelControl();
             this.btnUpload = new DevExpress.XtraEditors.SimpleButton();
             this.btnRetry = new DevExpress.XtraEditors.SimpleButton();
@@ -183,6 +184,8 @@
             this.Controls.Add(this.uploadMarquee);
             this.Controls.Add(this.lblIndicator);
             this.Controls.Add(this.pnlButtons);
+            this.IconOptions.Icon = ((System.Drawing.Icon)(resources.GetObject("YTRErrorMessageBox.IconOptions.Icon")));
+            this.IconOptions.Image = ((System.Drawing.Image)(resources.GetObject("YTRErrorMessageBox.IconOptions.Image")));
             this.Name = "YTRErrorMessageBox";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ErrorMessageBox";

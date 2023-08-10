@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
 using System.Reflection;
+using System.ComponentModel.DataAnnotations;
 
 namespace YT_RED.Settings
 {
@@ -38,14 +39,59 @@ namespace YT_RED.Settings
         [JsonProperty("skin_palette")]
 		public string SkinPalette { get; set; }
 
-		[Category("Downloads")]
+		[Category("Download Restrictions")]
+		[DisplayName("Enforce Restrictions")]
+		[Description("Always Enable Restrictions For New Downloads\n(Can be toggled off per-download in Control Panel)")]
+		[DefaultValue(true)]
+		[JsonProperty("enforce_restrictions")]
+		public bool EnforceRestrictions { get; set; }
+
+        [Category("Download Restrictions")]
+        [DisplayName("Best Resolution Max")]
+        [Description("The maximum resolution allowed when using \"Download Best\"")]
+		[DefaultValue(Classes.Resolution.ANY)]
+        [JsonProperty("best_max_res")]
+        public Classes.Resolution MaxResolutionBest { get; set; }
+
+		[Browsable(false)]
+		public int MaxResolutionValue
+		{
+			get
+			{
+				switch (MaxResolutionBest)
+				{
+					case Classes.Resolution.SD:
+						return 480;
+					case Classes.Resolution.HD720p:
+						return 720;
+					case Classes.Resolution.HD1080p:
+						return 1080;
+					case Classes.Resolution.UHD2160p:
+						return 2160;
+					case Classes.Resolution.ANY:
+						return 0;
+					default:
+						return 0;
+				}
+			}
+		}
+
+        [Category("Download Restrictions")]
+        [DisplayName("Best Filesize Max")]
+        [Description("The maximum filesize in MB allowed when using \"Download Best\"\n0 = Unlimited")]
+		[DisplayFormat(DataFormatString = "{0}MB", ApplyFormatInEditMode = false)]
+		[DefaultValue(0)]
+        [JsonProperty("best_max_size")]
+		public int MaxFilesizeBest { get; set; }
+
+        [Category("Download History")]
 		[DisplayName("Enable Download History")]
 		[Description("Enable YT-RED to keep a list of downloads for quick access on the Home screen")]
 		[DefaultValue(true)]
 		[JsonProperty("history_enabled")]
 		public bool EnableDownloadHistory { get; set; }
 
-		[Category("Downloads")]
+		[Category("Download History")]
 		[DisplayName("History Age")]
 		[Description("The number of days to keep download history if it is enabled")]
 		[DefaultValue(30)]
@@ -79,6 +125,12 @@ namespace YT_RED.Settings
 		[JsonProperty("audio_dl_path")]
 		public string AudioDownloadPath { get; set; }
 
+        [Category("Downloads")]
+        [DisplayName("Create Folder For Playlist Downloads")]
+        [Description("When true, a subfolder will be created for media downloaded from a Youtube playlist")]
+        [JsonProperty("playlist_folders")]
+        public bool CreateFolderForPlaylists { get; set; }
+
 		[Browsable(false)]
 		[JsonProperty("use_preferred_format")]
 		public bool UsePreferredFormat { get; set; }
@@ -97,7 +149,19 @@ namespace YT_RED.Settings
 		[Browsable(false)]
 		[JsonIgnore]
 		public string YouTubeSampleUrl { get; set; } = @"";
-        #endregion;
+		#endregion;
+
+		#region Dependencies
+
+		[Browsable(false)]
+		[JsonProperty("yt-dlp_resource_url")]
+		public string YtdlpUrl { get; set; }
+
+		[Browsable(false)]
+		[JsonProperty("ffmpeg_resource_url")]
+		public string FfmpegUrl { get; set; }
+
+        #endregion
 
         public GeneralSettings()
         {
@@ -115,6 +179,9 @@ namespace YT_RED.Settings
 			ShowHostWarning = true;
 			ActiveSkin = "WXI";
 			SkinPalette = "Darkness";
+			EnforceRestrictions = false;
+			MaxResolutionBest = Classes.Resolution.ANY;
+			MaxFilesizeBest = 0;
 			EnableDownloadHistory = true;
 			HistoryAge = 30;
 			AutomaticallyOpenDownloadLocation = false;
@@ -124,8 +191,11 @@ namespace YT_RED.Settings
 			UseTitleAsFileName = false;
 			VideoDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
 			AudioDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+			CreateFolderForPlaylists = true;
 			UsePreferredFormat = false;
-		}
+			YtdlpUrl = @"https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp{0}.exe";
+			FfmpegUrl = @"https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-essentials.7z";
+        }
 
 		public override async Task<string> ValidateSettings()
         {
@@ -137,5 +207,5 @@ namespace YT_RED.Settings
 				return "You must specify an audio download folder";
 			return await base.ValidateSettings();
         }
-	}
+	}	
 }
