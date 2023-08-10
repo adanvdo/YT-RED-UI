@@ -6,15 +6,19 @@ using System.Windows.Forms;
 using YT_RED.Settings;
 using YT_RED.Logging;
 using YT_RED.Utils;
+using DevExpress.Utils.Extensions;
+using System.Linq;
 
 namespace YT_RED.Controls
 {
     public partial class PropertyGrid : DevExpress.XtraEditors.XtraUserControl
     {
-        public bool IsBusy { get { return loadingUpdateInfo || downloadingUpdate; } }
+        public bool IsBusy { get { return loadingUpdateInfo || downloadingUpdate || downloadingDependencies; } }
         private bool loadingUpdateInfo = false;
         private bool pendingUpdateInfo = false;
         private bool downloadingUpdate = false;
+        private bool downloadingDependencies = false;
+        private string dependencyName = string.Empty;
         private Classes.Release pendingReleaseInfo = null;
         private Version currentVersion = null;
         private int indicatorStep = 0;
@@ -104,7 +108,7 @@ namespace YT_RED.Controls
 			if(e.Properties.Find("Version", false) != null)
             {
 				this.pgcPropertyGrid.OptionsBehavior.PropertySort = DevExpress.XtraVerticalGrid.PropertySort.NoSort;
-				e.Properties = e.Properties.Sort(new string[] { "Version", "Build", "GitHub", "Contact" });
+				e.Properties = e.Properties.Sort(new string[] { "Version", "Build", "GitHub", "Contact", "Dependencies" });
             } 
 			if(e.Properties.Find("UseTitleAsFileName", false) != null)
             {
@@ -140,6 +144,10 @@ namespace YT_RED.Controls
                         {
                             e.RepositoryItem = repButtonEdit;
                         }
+                    }
+                    else if(e.Row.Index == 4)
+                    {
+                        e.RepositoryItem = repButtonEdit2;
                     }
                     else
                     {
@@ -177,6 +185,43 @@ namespace YT_RED.Controls
                     repButtonEdit.Buttons[0].Caption = "Check for Update";
                 }
             }
+        }
+
+        private async void repButtonEdit2_ButtonPressed(object sender, DevExpress.XtraEditors.Controls.ButtonPressedEventArgs e)
+        {
+            if (downloadingDependencies)
+                return;
+            Cursor.Current = Cursors.WaitCursor;
+            downloadingDependencies = true;
+            AppSettings.Default.About.Dependencies = "";
+            pgcPropertyGrid.Refresh();
+            dependencyName = " YT-DLP";
+            var dlytdlp = await UpdateHelper.UpdateYTDLP(new System.Net.DownloadProgressChangedEventHandler(progressChanged2));
+            dependencyName = " FFMPEG";
+            var dlffmpeg = await UpdateHelper.UpdateFfmpeg(new System.Net.DownloadProgressChangedEventHandler(progressChanged2));
+            string installFfmpeg = "";
+            if (dlffmpeg == "Download Complete")
+            {
+                repButtonEdit2.Buttons[0].Caption = "Extracting FFMPEG Files..";
+                installFfmpeg = await UpdateHelper.InstallFfmpeg();
+                await UpdateHelper.CleanUpFFMPEG();
+            }
+            dependencyName = string.Empty;
+
+            if(dlytdlp == "Download Failed" || dlffmpeg == "Download Failed" || installFfmpeg == "Installation Failed")
+            {
+                MsgBox.Show("Error Downlaoding Dependency Updates", Buttons.OK, Icon.Error);
+            }
+            else
+            {
+                repButtonEdit2.Buttons[0].Caption = "Dependency Update Complete!";
+                await Task.Delay(3000);
+            }
+            downloadingDependencies = false;
+            AppSettings.Default.About.Dependencies = "YT-DLP + FFMPEG";
+            repButtonEdit2.Buttons[0].Caption = $"Update Dependencies";
+            pgcPropertyGrid.Refresh();
+            Cursor.Current = Cursors.Default;
         }
 
         private void repPopup_CustomDisplayText(object sender, DevExpress.XtraEditors.Controls.CustomDisplayTextEventArgs e)
@@ -266,5 +311,12 @@ namespace YT_RED.Controls
         {
             repButtonEdit.Buttons[2].Caption = $"Downloading.. {e.ProgressPercentage}%";
         }
+
+        private void progressChanged2(object sender, System.Net.DownloadProgressChangedEventArgs e)
+        {
+            repButtonEdit2.Buttons[0].Caption = $"Downloading{dependencyName}.. {e.ProgressPercentage}%";
+        }
+
+        
     }
 }

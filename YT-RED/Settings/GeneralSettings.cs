@@ -149,7 +149,19 @@ namespace YT_RED.Settings
 		[Browsable(false)]
 		[JsonIgnore]
 		public string YouTubeSampleUrl { get; set; } = @"";
-        #endregion;
+		#endregion;
+
+		#region Dependencies
+
+		[Browsable(false)]
+		[JsonProperty("yt-dlp_resource_url")]
+		public string YtdlpUrl { get; set; }
+
+		[Browsable(false)]
+		[JsonProperty("ffmpeg_resource_url")]
+		public string FfmpegUrl { get; set; }
+
+        #endregion
 
         public GeneralSettings()
         {
@@ -181,7 +193,9 @@ namespace YT_RED.Settings
 			AudioDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
 			CreateFolderForPlaylists = true;
 			UsePreferredFormat = false;
-		}
+			YtdlpUrl = @"https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp{0}.exe";
+			FfmpegUrl = @"https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-essentials.7z";
+        }
 
 		public override async Task<string> ValidateSettings()
         {

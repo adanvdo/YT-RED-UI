@@ -107,6 +107,9 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 8/10/2023 v1.0.2.8
+- Added ability to update YT-DLP and FFMPEG dependencies in the app (Found in Settings->About)
+
 ### 6/10/2023 v1.0.2.7
 - Fixed bug where control panel scroll bar would cover part of the control panel
 - Fixed bug where format conversions could be run when the source media was already in the desired format

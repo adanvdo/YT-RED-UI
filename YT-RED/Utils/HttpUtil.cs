@@ -145,7 +145,7 @@ namespace YT_RED.Utils
                 ExceptionHandler.LogException(ex);
             }
             return false;
-        }        
+        }
 
         public static async Task<HttpResponseMessage> Get(string endpoint, string query)
         {
@@ -159,12 +159,13 @@ namespace YT_RED.Utils
                     return response;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ExceptionHandler.LogException(ex);
             }
             return null;
         }
+
         #endregion
 
         #region WEB
