@@ -196,17 +196,17 @@ namespace YT_RED.Controls
             AppSettings.Default.About.Dependencies = "";
             pgcPropertyGrid.Refresh();
             dependencyName = " YT-DLP";
-            string latestVersion = await UpdateHelper.GetLatestYtdlpVersionNumber();
+            string ytdlpLatestVersion = await UpdateHelper.GetLatestYtdlpVersionNumber();
             string dlytdlp = "";
-            if (latestVersion != null && latestVersion != AppSettings.Default.General.YtdlpLocalVersion)
+            if (ytdlpLatestVersion != null && ytdlpLatestVersion != AppSettings.Default.General.YtdlpLocalVersion)
             {
                 dlytdlp = await UpdateHelper.UpdateYTDLP(new System.Net.DownloadProgressChangedEventHandler(progressChanged2));
             }
             dependencyName = " FFMPEG";
             string dlffmpeg = "";
             string installFfmpeg = "";
-            latestVersion = await UpdateHelper.GetLatestFfmpegVersionNumber();
-            if (latestVersion != null && latestVersion != AppSettings.Default.General.FfmpegLocalVersion)
+            string ffmpegLatestVersion = await UpdateHelper.GetLatestFfmpegVersionNumber();
+            if (ffmpegLatestVersion != null && ffmpegLatestVersion != AppSettings.Default.General.FfmpegLocalVersion)
             {
                 dlffmpeg = await UpdateHelper.UpdateFfmpeg(new System.Net.DownloadProgressChangedEventHandler(progressChanged2));
                 if (dlffmpeg == "Download Complete")
@@ -229,6 +229,9 @@ namespace YT_RED.Controls
             }
             else
             {
+                AppSettings.Default.General.YtdlpLocalVersion = ytdlpLatestVersion;
+                AppSettings.Default.General.FfmpegLocalVersion = ffmpegLatestVersion;
+                AppSettings.Default.Save();
                 repButtonEdit2.Buttons[0].Caption = "Dependency Update Complete!";
                 await Task.Delay(3000);
             }
