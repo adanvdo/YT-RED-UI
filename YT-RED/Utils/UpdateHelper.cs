@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -10,6 +11,7 @@ using YT_RED.Logging;
 using YT_RED.Settings;
 using YT_RED.Controls;
 using SevenZipExtractor;
+using YT_RED.Classes;
 
 namespace YT_RED.Utils
 {
@@ -177,6 +179,36 @@ namespace YT_RED.Utils
         #endregion
 
         #region DEPENDENCY UPDATES
+
+        public static async Task<string> GetLatestYtdlpVersionNumber()
+        {
+            var response = await HttpUtil.SendGetRequest(AppSettings.Default.General.YtdlpVersionUrl, "request");
+            if (response.IsSuccessStatusCode)
+            {
+                try
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    List<GithubTag> tags = JsonConvert.DeserializeObject<List<GithubTag>>(content);
+                    return tags.FirstOrDefault().Name;
+                }
+                catch(Exception ex)
+                {
+                    ExceptionHandler.LogException(ex);
+                }
+            }
+            return null;
+        }
+
+        public static async Task<string> GetLatestFfmpegVersionNumber()
+        {
+            var response = await HttpUtil.SendGetRequest(AppSettings.Default.General.FfmpegVersionUrl);
+            if(response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                return content;
+            }
+            return null;
+        }
 
         public static async Task<DirectoryInfo> PrepareTempDirectory()
         {

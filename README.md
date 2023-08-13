@@ -107,6 +107,9 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 8/12/2023 v1.0.3.1
+- Added Dependency Version Check before Downloading Dependencies
+
 ### 8/10/2023 v1.0.2.8
 - Added ability to update YT-DLP and FFMPEG dependencies in the app (Found in Settings->About)
 

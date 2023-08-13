@@ -196,21 +196,36 @@ namespace YT_RED.Controls
             AppSettings.Default.About.Dependencies = "";
             pgcPropertyGrid.Refresh();
             dependencyName = " YT-DLP";
-            var dlytdlp = await UpdateHelper.UpdateYTDLP(new System.Net.DownloadProgressChangedEventHandler(progressChanged2));
-            dependencyName = " FFMPEG";
-            var dlffmpeg = await UpdateHelper.UpdateFfmpeg(new System.Net.DownloadProgressChangedEventHandler(progressChanged2));
-            string installFfmpeg = "";
-            if (dlffmpeg == "Download Complete")
+            string latestVersion = await UpdateHelper.GetLatestYtdlpVersionNumber();
+            string dlytdlp = "";
+            if (latestVersion != null && latestVersion != AppSettings.Default.General.YtdlpLocalVersion)
             {
-                repButtonEdit2.Buttons[0].Caption = "Extracting FFMPEG Files..";
-                installFfmpeg = await UpdateHelper.InstallFfmpeg();
-                await UpdateHelper.CleanUpFFMPEG();
+                dlytdlp = await UpdateHelper.UpdateYTDLP(new System.Net.DownloadProgressChangedEventHandler(progressChanged2));
+            }
+            dependencyName = " FFMPEG";
+            string dlffmpeg = "";
+            string installFfmpeg = "";
+            latestVersion = await UpdateHelper.GetLatestFfmpegVersionNumber();
+            if (latestVersion != null && latestVersion != AppSettings.Default.General.FfmpegLocalVersion)
+            {
+                dlffmpeg = await UpdateHelper.UpdateFfmpeg(new System.Net.DownloadProgressChangedEventHandler(progressChanged2));
+                if (dlffmpeg == "Download Complete")
+                {
+                    repButtonEdit2.Buttons[0].Caption = "Extracting FFMPEG Files..";
+                    installFfmpeg = await UpdateHelper.InstallFfmpeg();
+                    await UpdateHelper.CleanUpFFMPEG();
+                }
             }
             dependencyName = string.Empty;
 
             if(dlytdlp == "Download Failed" || dlffmpeg == "Download Failed" || installFfmpeg == "Installation Failed")
             {
                 MsgBox.Show("Error Downlaoding Dependency Updates", Buttons.OK, Icon.Error);
+            }
+            else if(dlytdlp == "" && dlffmpeg == "")
+            {
+                repButtonEdit2.Buttons[0].Caption = "Up-To-Date!";
+                await Task.Delay(3000);
             }
             else
             {
