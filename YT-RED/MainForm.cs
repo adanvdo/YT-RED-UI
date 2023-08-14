@@ -1172,21 +1172,28 @@ namespace YT_RED
                     IConversion conversion = await VideoUtil.PrepareBestYtdlConversion(url, finalFormatString, start, duration, 
                         cpMainControlPanel.ConversionEnabled && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat, crops, videoFormat == null ? VideoFormat.UNSPECIFIED : (VideoFormat)videoFormat, 
                         audioFormat == null ? AudioFormat.UNSPECIFIED : (AudioFormat)audioFormat, false, processOutput);
-                    string destination = conversion.OutputFilePath;
-                    conversion.OnProgress += Conversion_OnProgress;
-                    try
+                    if (conversion != null)
                     {
-                        VideoUtil.CancellationTokenSource = new System.Threading.CancellationTokenSource();
-                        cpMainControlPanel.ShowProgress();
-                        await conversion.Start(VideoUtil.CancellationTokenSource.Token);
-                        result = new RunResult<string>(true, new string[] { }, destination);
-                        cpMainControlPanel.HideProgress();
+                        string destination = conversion.OutputFilePath;
+                        conversion.OnProgress += Conversion_OnProgress;
+                        try
+                        {
+                            VideoUtil.CancellationTokenSource = new System.Threading.CancellationTokenSource();
+                            cpMainControlPanel.ShowProgress();
+                            await conversion.Start(VideoUtil.CancellationTokenSource.Token);
+                            result = new RunResult<string>(true, new string[] { }, destination);
+                            cpMainControlPanel.HideProgress();
+                        }
+                        catch (Exception ex)
+                        {
+                            if (ex.Message.ToLower() != "a task was canceled.")
+                                ExceptionHandler.LogFFmpegException(ex);
+                            result = new RunResult<string>(false, new string[] { ex.Message }, null);
+                        }
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        if (ex.Message.ToLower() != "a task was canceled.")
-                            ExceptionHandler.LogFFmpegException(ex);
-                        result = new RunResult<string>(false, new string[] { ex.Message }, null);
+                        result = new RunResult<string>(false, new string[] { "Conversion Failed" }, null);
                     }
                 }
                 else
@@ -1195,19 +1202,26 @@ namespace YT_RED
                     IConversion conversion = await VideoUtil.PrepareBestYtdlConversion(url, finalAudioFormatString, start, duration, 
                         cpMainControlPanel.ConversionEnabled && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat, null, VideoFormat.UNSPECIFIED, 
                         audioFormat == null ? AudioFormat.UNSPECIFIED : (AudioFormat)audioFormat, cpMainControlPanel.EmbedThumbnail, processOutput);
-                    string destination = conversion.OutputFilePath;
-                    conversion.OnProgress += Conversion_OnProgress;
-                    try
+                    if (conversion != null)
                     {
-                        VideoUtil.CancellationTokenSource = new System.Threading.CancellationTokenSource();
-                        await conversion.Start(VideoUtil.CancellationTokenSource.Token);
-                        result = new RunResult<string>(true, new string[] { }, destination);
+                        string destination = conversion.OutputFilePath;
+                        conversion.OnProgress += Conversion_OnProgress;
+                        try
+                        {
+                            VideoUtil.CancellationTokenSource = new System.Threading.CancellationTokenSource();
+                            await conversion.Start(VideoUtil.CancellationTokenSource.Token);
+                            result = new RunResult<string>(true, new string[] { }, destination);
+                        }
+                        catch (Exception ex)
+                        {
+                            if (ex.Message.ToLower() != "a task was canceled.")
+                                ExceptionHandler.LogFFmpegException(ex);
+                            result = new RunResult<string>(false, new string[] { ex.Message }, null);
+                        }
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        if (ex.Message.ToLower() != "a task was canceled.")
-                            ExceptionHandler.LogFFmpegException(ex);
-                        result = new RunResult<string>(false, new string[] { ex.Message }, null);
+                        result = new RunResult<string>(false, new string[] { "Conversion Failed" }, null);
                     }
                 }
             }
@@ -1385,42 +1399,49 @@ namespace YT_RED
                 IConversion conversion = await Utils.VideoUtil.PrepareYoutubeConversion(VideoUtil.ConvertToYouTubeLink(ipMainInput.URL).Url, cpMainControlPanel.CurrentFormatPair, 
                     start, duration, cpMainControlPanel.ConversionEnabled && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat, crops, videoFormat == null ? VideoFormat.UNSPECIFIED : (VideoFormat)videoFormat, 
                     audioFormat == null ? AudioFormat.UNSPECIFIED : (AudioFormat)audioFormat);
-                string destination = conversion.OutputFilePath;
-                conversion.OnProgress += Conversion_OnProgress;
-                cpMainControlPanel.ShowProgress();
-
-                try
+                if (conversion != null)
                 {
-                    VideoUtil.CancellationTokenSource = new System.Threading.CancellationTokenSource();
-                    await conversion.Start(VideoUtil.CancellationTokenSource.Token);
+                    string destination = conversion.OutputFilePath;
+                    conversion.OnProgress += Conversion_OnProgress;
+                    cpMainControlPanel.ShowProgress();
 
-                    if (cpMainControlPanel.EmbedThumbnail)
+                    try
                     {
-                        if (cpMainControlPanel.ConversionEnabled && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
-                            audioFormat = AppSettings.Default.Advanced.PreferredAudioFormat;
+                        VideoUtil.CancellationTokenSource = new System.Threading.CancellationTokenSource();
+                        await conversion.Start(VideoUtil.CancellationTokenSource.Token);
 
-                        var data = await VideoUtil.GetVideoData(VideoUtil.ConvertToYouTubeLink(ipMainInput.URL).Url);
-                        if (data != null)
+                        if (cpMainControlPanel.EmbedThumbnail)
                         {
-                            var thumb = data.Thumbnails.Where(t => !t.Url.EndsWith("webp")).OrderByDescending(t => t.Height).ToArray()[0];
-                            if (audioFormat == AudioFormat.MP3)
+                            if (cpMainControlPanel.ConversionEnabled && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
+                                audioFormat = AppSettings.Default.Advanced.PreferredAudioFormat;
+
+                            var data = await VideoUtil.GetVideoData(VideoUtil.ConvertToYouTubeLink(ipMainInput.URL).Url);
+                            if (data != null)
                             {
-                                await TagUtil.AddMp3Tags(destination, thumb.Url, data.Title, "", -1, data.UploadDate != null ? ((DateTime)data.UploadDate).Year : -1);
-                            }
-                            else
-                            {
-                                await TagUtil.AddAlbumCover(destination, thumb.Url);
+                                var thumb = data.Thumbnails.Where(t => !t.Url.EndsWith("webp")).OrderByDescending(t => t.Height).ToArray()[0];
+                                if (audioFormat == AudioFormat.MP3)
+                                {
+                                    await TagUtil.AddMp3Tags(destination, thumb.Url, data.Title, "", -1, data.UploadDate != null ? ((DateTime)data.UploadDate).Year : -1);
+                                }
+                                else
+                                {
+                                    await TagUtil.AddAlbumCover(destination, thumb.Url);
+                                }
                             }
                         }
+
+                        result = new RunResult<string>(true, new string[] { }, destination);
                     }
-                    
-                    result = new RunResult<string>(true, new string[] { }, destination);
+                    catch (Exception ex)
+                    {
+                        result = new RunResult<string>(false, new string[] { ex.Message }, null);
+                        if (ex.Message.ToLower() != "a task was canceled.")
+                            ExceptionHandler.LogFFmpegException(ex);
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    result = new RunResult<string>(false, new string[] { ex.Message }, null);
-                    if (ex.Message.ToLower() != "a task was canceled.")
-                        ExceptionHandler.LogFFmpegException(ex);
+                    result = new RunResult<string>(false, new string[] { "Conversion Failed" }, null);
                 }
                 cpMainControlPanel.HideProgress();
             }

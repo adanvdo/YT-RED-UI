@@ -216,143 +216,151 @@ namespace YT_RED.Utils
 
         public static async Task<IConversion> PrepareBestYtdlConversion(string url, string format, TimeSpan? start = null, TimeSpan? duration = null, bool usePreferences = false, int[] crops = null, VideoFormat convertVideo = VideoFormat.UNSPECIFIED, AudioFormat convertAudio = AudioFormat.UNSPECIFIED, bool embedThumbnail = false, Action<string> showOutput = null)
         {
-            showOutput("Evaluating Formats..");
-            var getUrls = await GetFormatUrls(url, format);
-            if (getUrls == null || getUrls.Count < 1)
-                return null;
-            
-            Uri vUrl = new Uri(getUrls[0]);
-            string baseUrl = vUrl.GetLeftPart(UriPartial.Path); 
-
-            IMediaInfo videoInfo = null;
-            IMediaInfo audioInfo = null;
-            showOutput("Fetching Media Info..");
-            CancellationTokenSource = new CancellationTokenSource();
-            if (format.StartsWith("bestvideo") || format.Contains("+bestaudio/best"))
-                videoInfo = await FFmpeg.GetMediaInfo(getUrls[0], CancellationTokenSource.Token);
-            else if (format.StartsWith("bestaudio"))
+            try
             {
-                audioInfo = await FFmpeg.GetMediaInfo(getUrls[0], CancellationTokenSource.Token);
-            }
+                showOutput("Evaluating Formats..");
+                var getUrls = await GetFormatUrls(url, format);
+                if (getUrls == null || getUrls.Count < 1)
+                    return null;
 
-            CancellationTokenSource = new CancellationTokenSource();
-            if (videoInfo != null && format.Contains("+bestaudio/best") && getUrls.Count > 1)
-            {
-                audioInfo = await FFmpeg.GetMediaInfo(getUrls[1], CancellationTokenSource.Token);
-            }
+                Uri vUrl = new Uri(getUrls[0]);
+                string baseUrl = vUrl.GetLeftPart(UriPartial.Path);
 
-            IVideoStream videoStream = null;
-            IAudioStream audioStream = null;
-            if (videoInfo != null) 
-            {
-                videoStream = videoInfo.VideoStreams.FirstOrDefault();
-            }
-            if (audioInfo != null)
-            {
-                audioStream = audioInfo.AudioStreams.FirstOrDefault();
-            }
-
-            showOutput("Preparing Post-Processing Args..");
-
-            string videoUrl = string.Empty;
-            string audioUrl = string.Empty;
-            int outWidth = -1;
-            int outHeight = -1;
-            int x = -1;
-            int y = -1;
-
-            if (crops != null && crops.Length == 4 && videoStream != null)
-            {
-                int[] ffmpegCrop = ConvertCrop(crops, videoStream.Width, videoStream.Height);
-                x = ffmpegCrop[0];
-                y = ffmpegCrop[1];
-                outWidth = ffmpegCrop[2];
-                outHeight = ffmpegCrop[3];
-            }
-
-            VideoFormat vFormat = VideoFormat.UNSPECIFIED;
-            AudioFormat aFormat = AudioFormat.UNSPECIFIED;
-            Classes.VideoCodecMap vMap = null;
-            Classes.FFmpegVideoCodec vCodec = null;
-            Classes.FFmpegAudioCodec aCodec = null;
-
-            if (convertVideo != VideoFormat.UNSPECIFIED)
-            {
-                vFormat = convertVideo;
-                vMap = Classes.SystemCodecMaps.GetMappedCodecs(convertVideo);
-                vCodec = vMap.BestVideo;
-                aCodec = vMap.BestAudio;
-            }
-            else if (convertAudio != AudioFormat.UNSPECIFIED)
-            {
-                aFormat = convertAudio;
-                aCodec = Classes.SystemCodecMaps.GetAudioCodec(convertAudio);
-            }
-
-            if (videoStream != null && !string.IsNullOrEmpty(videoStream.Codec))
-            {
-                videoUrl = getUrls[0];
-                if (audioStream != null && !string.IsNullOrEmpty(audioStream.Codec) && getUrls.Count > 1)
-                    audioUrl = getUrls[1];
-
-                if (vCodec == null)
+                IMediaInfo videoInfo = null;
+                IMediaInfo audioInfo = null;
+                showOutput("Fetching Media Info..");
+                CancellationTokenSource = new CancellationTokenSource();
+                if (format.StartsWith("bestvideo") || format.Contains("+bestaudio/best"))
+                    videoInfo = await FFmpeg.GetMediaInfo(getUrls[0], CancellationTokenSource.Token);
+                else if (format.StartsWith("bestaudio"))
                 {
+                    audioInfo = await FFmpeg.GetMediaInfo(getUrls[0], CancellationTokenSource.Token);
+                }
 
-                    if (usePreferences)
-                        vFormat = AppSettings.Default.Advanced.PreferredVideoFormat;
-                    else
-                    {
-                        var tryGetMap = Classes.SystemCodecMaps.GetMappedCodecs(videoStream.Codec);
-                        vFormat = tryGetMap != null ? tryGetMap.Format : AppSettings.Default.Advanced.PreferredVideoFormat;
-                    }
+                CancellationTokenSource = new CancellationTokenSource();
+                if (videoInfo != null && format.Contains("+bestaudio/best") && getUrls.Count > 1)
+                {
+                    audioInfo = await FFmpeg.GetMediaInfo(getUrls[1], CancellationTokenSource.Token);
+                }
 
-                    vMap = Classes.SystemCodecMaps.GetMappedCodecs(vFormat);
-                    if (string.IsNullOrEmpty(videoStream.PixelFormat))
-                        vCodec = vMap.BestVideo;
-                    else if (vFormat == VideoFormat.GIF)
-                        vCodec = SystemCodecMaps.RGB24;
+                IVideoStream videoStream = null;
+                IAudioStream audioStream = null;
+                if (videoInfo != null)
+                {
+                    videoStream = videoInfo.VideoStreams.FirstOrDefault();
+                }
+                if (audioInfo != null)
+                {
+                    audioStream = audioInfo.AudioStreams.FirstOrDefault();
+                }
+
+                showOutput("Preparing Post-Processing Args..");
+
+                string videoUrl = string.Empty;
+                string audioUrl = string.Empty;
+                int outWidth = -1;
+                int outHeight = -1;
+                int x = -1;
+                int y = -1;
+
+                if (crops != null && crops.Length == 4 && videoStream != null)
+                {
+                    int[] ffmpegCrop = ConvertCrop(crops, videoStream.Width, videoStream.Height);
+                    x = ffmpegCrop[0];
+                    y = ffmpegCrop[1];
+                    outWidth = ffmpegCrop[2];
+                    outHeight = ffmpegCrop[3];
+                }
+
+                VideoFormat vFormat = VideoFormat.UNSPECIFIED;
+                AudioFormat aFormat = AudioFormat.UNSPECIFIED;
+                Classes.VideoCodecMap vMap = null;
+                Classes.FFmpegVideoCodec vCodec = null;
+                Classes.FFmpegAudioCodec aCodec = null;
+
+                if (convertVideo != VideoFormat.UNSPECIFIED)
+                {
+                    vFormat = convertVideo;
+                    vMap = Classes.SystemCodecMaps.GetMappedCodecs(convertVideo);
+                    vCodec = vMap.BestVideo;
                     aCodec = vMap.BestAudio;
                 }
-            }
-            else if (audioStream != null && !string.IsNullOrEmpty(audioStream.Codec))
-            {
-                audioUrl = getUrls[0];
-
-                if (aCodec == null && usePreferences)
+                else if (convertAudio != AudioFormat.UNSPECIFIED)
                 {
-                    aFormat = AppSettings.Default.Advanced.PreferredAudioFormat;
-                    aCodec = Classes.SystemCodecMaps.GetAudioCodec(aFormat);
+                    aFormat = convertAudio;
+                    aCodec = Classes.SystemCodecMaps.GetAudioCodec(convertAudio);
                 }
-            }
 
-            List<Classes.FFmpegParam> parameters = new List<Classes.FFmpegParam>(); 
-            if (start != null)
-            {
-                parameters.Add(new Classes.FFmpegParam(Classes.ParamType.StartTime, $"-ss {((TimeSpan)start)}"));
-            }
-            if (duration != null)
-            {
-                parameters.Add(new Classes.FFmpegParam(Classes.ParamType.Duration, $"-t {((TimeSpan)duration)}"));
-            }
-            if(vCodec != null)
-            {
-                parameters.Add(new Classes.FFmpegParam(Classes.ParamType.VideoOutFormat, vFormat == VideoFormat.GIF ? $"-pix_fmt {vCodec.Encoder}" : $"-c:v {vCodec.Encoder}"));
-            }
-            if(aCodec != null)
-            {
-                parameters.Add(new Classes.FFmpegParam(Classes.ParamType.AudioOutFormat, $"-c:a {aCodec.Encoder}"));
-            }            
+                if (videoStream != null && !string.IsNullOrEmpty(videoStream.Codec))
+                {
+                    videoUrl = getUrls[0];
+                    if (audioStream != null && !string.IsNullOrEmpty(audioStream.Codec) && getUrls.Count > 1)
+                        audioUrl = getUrls[1];
 
-            if (outWidth >= 0 && outHeight >= 0 && x >= 0 && y >= 0)
-            {
-                parameters.Add(new Classes.FFmpegParam(Classes.ParamType.Crop, $"-filter:v \"crop={outWidth}:{outHeight}:{x}:{y}\""));
+                    if (vCodec == null)
+                    {
+
+                        if (usePreferences)
+                            vFormat = AppSettings.Default.Advanced.PreferredVideoFormat;
+                        else
+                        {
+                            var tryGetMap = Classes.SystemCodecMaps.GetMappedCodecs(videoStream.Codec);
+                            vFormat = tryGetMap != null ? tryGetMap.Format : AppSettings.Default.Advanced.PreferredVideoFormat;
+                        }
+
+                        vMap = Classes.SystemCodecMaps.GetMappedCodecs(vFormat);
+                        if (string.IsNullOrEmpty(videoStream.PixelFormat))
+                            vCodec = vMap.BestVideo;
+                        else if (vFormat == VideoFormat.GIF)
+                            vCodec = SystemCodecMaps.RGB24;
+                        aCodec = vMap.BestAudio;
+                    }
+                }
+                else if (audioStream != null && !string.IsNullOrEmpty(audioStream.Codec))
+                {
+                    audioUrl = getUrls[0];
+
+                    if (aCodec == null && usePreferences)
+                    {
+                        aFormat = AppSettings.Default.Advanced.PreferredAudioFormat;
+                        aCodec = Classes.SystemCodecMaps.GetAudioCodec(aFormat);
+                    }
+                }
+
+                List<Classes.FFmpegParam> parameters = new List<Classes.FFmpegParam>();
+                if (start != null)
+                {
+                    parameters.Add(new Classes.FFmpegParam(Classes.ParamType.StartTime, $"-ss {((TimeSpan)start)}"));
+                }
+                if (duration != null)
+                {
+                    parameters.Add(new Classes.FFmpegParam(Classes.ParamType.Duration, $"-t {((TimeSpan)duration)}"));
+                }
+                if (vCodec != null)
+                {
+                    parameters.Add(new Classes.FFmpegParam(Classes.ParamType.VideoOutFormat, vFormat == VideoFormat.GIF ? $"-pix_fmt {vCodec.Encoder}" : $"-c:v {vCodec.Encoder}"));
+                }
+                if (aCodec != null)
+                {
+                    parameters.Add(new Classes.FFmpegParam(Classes.ParamType.AudioOutFormat, $"-c:a {aCodec.Encoder}"));
+                }
+
+                if (outWidth >= 0 && outHeight >= 0 && x >= 0 && y >= 0)
+                {
+                    parameters.Add(new Classes.FFmpegParam(Classes.ParamType.Crop, $"-filter:v \"crop={outWidth}:{outHeight}:{x}:{y}\""));
+                }
+
+                showOutput("Preparing Conversion..");
+
+                var createConversion = await PrepareStreamConversion(videoUrl, audioUrl, parameters.ToArray(), vFormat, aFormat);
+                showOutput("Starting Conversion..");
+                return createConversion;
             }
-
-            showOutput("Preparing Conversion..");
-
-            var createConversion = await PrepareStreamConversion(videoUrl, audioUrl, parameters.ToArray(), vFormat, aFormat);
-            showOutput("Starting Conversion..");
-            return createConversion;
+            catch(Exception ex)
+            {
+                ExceptionHandler.LogException(ex);
+            }
+            return null;
         }
 
         public static async Task<IConversion> PrepareStreamConversion(string videoUrl = "", string audioUrl = "", Classes.FFmpegParam[] parameters = null, VideoFormat format = VideoFormat.UNSPECIFIED, AudioFormat aformat = AudioFormat.UNSPECIFIED)

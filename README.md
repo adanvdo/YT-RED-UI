@@ -107,6 +107,9 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 8/13/2023 v1.0.3.3
+- Fixed bug where program crashed if a conversion process failed
+
 ### 8/13/2023 v1.0.3.2
 - Fixed bug where local dependency versions were not saved after being updated
 
