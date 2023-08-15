@@ -72,7 +72,7 @@
             this.pnlSegPanel = new DevExpress.XtraEditors.PanelControl();
             this.toggleSegment = new DevExpress.XtraEditors.ToggleSwitch();
             this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl4 = new DevExpress.XtraEditors.LabelControl();
+            this.lblDuration = new DevExpress.XtraEditors.LabelControl();
             this.tsStart = new DevExpress.XtraEditors.TimeSpanEdit();
             this.tsDuration = new DevExpress.XtraEditors.TimeSpanEdit();
             this.pnlProgressPanel = new DevExpress.XtraEditors.PanelControl();
@@ -708,7 +708,7 @@
             this.pnlSegPanel.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.pnlSegPanel.Controls.Add(this.toggleSegment);
             this.pnlSegPanel.Controls.Add(this.labelControl3);
-            this.pnlSegPanel.Controls.Add(this.labelControl4);
+            this.pnlSegPanel.Controls.Add(this.lblDuration);
             this.pnlSegPanel.Controls.Add(this.tsStart);
             this.pnlSegPanel.Controls.Add(this.tsDuration);
             this.pnlSegPanel.Dock = System.Windows.Forms.DockStyle.Top;
@@ -742,16 +742,20 @@
             this.labelControl3.TabIndex = 0;
             this.labelControl3.Text = "Start";
             // 
-            // labelControl4
+            // lblDuration
             // 
-            this.labelControl4.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.labelControl4.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
-            this.labelControl4.Appearance.Options.UseFont = true;
-            this.labelControl4.Location = new System.Drawing.Point(160, 36);
-            this.labelControl4.Name = "labelControl4";
-            this.labelControl4.Size = new System.Drawing.Size(48, 16);
-            this.labelControl4.TabIndex = 0;
-            this.labelControl4.Text = "Duration";
+            this.lblDuration.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lblDuration.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.lblDuration.Appearance.Options.UseFont = true;
+            this.lblDuration.Appearance.Options.UseTextOptions = true;
+            this.lblDuration.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
+            this.lblDuration.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
+            this.lblDuration.Location = new System.Drawing.Point(160, 36);
+            this.lblDuration.Name = "lblDuration";
+            this.lblDuration.Size = new System.Drawing.Size(48, 16);
+            this.lblDuration.TabIndex = 0;
+            this.lblDuration.Text = "Duration";
+            this.lblDuration.TextChanged += new System.EventHandler(this.lblDuration_TextChanged);
             // 
             // tsStart
             // 
@@ -771,6 +775,7 @@
             this.tsStart.Properties.MinValue = System.TimeSpan.Parse("00:00:00");
             this.tsStart.Size = new System.Drawing.Size(100, 25);
             this.tsStart.TabIndex = 2;
+            this.tsStart.EditValueChanged += new System.EventHandler(this.tsStart_EditValueChanged);
             // 
             // tsDuration
             // 
@@ -790,6 +795,7 @@
             this.tsDuration.Properties.MinValue = System.TimeSpan.Parse("00:00:01");
             this.tsDuration.Size = new System.Drawing.Size(100, 25);
             this.tsDuration.TabIndex = 3;
+            this.tsDuration.EditValueChanged += new System.EventHandler(this.tsDuration_EditValueChanged);
             // 
             // pnlProgressPanel
             // 
@@ -1114,7 +1120,7 @@
         private DevExpress.XtraEditors.PanelControl pnlSegPanel;
         private DevExpress.XtraEditors.ToggleSwitch toggleSegment;
         private DevExpress.XtraEditors.LabelControl labelControl3;
-        private DevExpress.XtraEditors.LabelControl labelControl4;
+        private DevExpress.XtraEditors.LabelControl lblDuration;
         private DevExpress.XtraEditors.TimeSpanEdit tsStart;
         private DevExpress.XtraEditors.TimeSpanEdit tsDuration;
     }

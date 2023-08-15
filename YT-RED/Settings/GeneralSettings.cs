@@ -176,6 +176,22 @@ namespace YT_RED.Settings
 		[Browsable(false)]
 		[JsonProperty("ffmpeg_version_url")]
 		public string FfmpegVersionUrl { get; set; }
+
+		[Browsable(false)]
+		[JsonProperty("segment_collapsed")]
+		public bool CollapseSegmentControl { get; set; }
+
+		[Browsable(false)]
+		[JsonProperty("crop_collapsed")]
+		public bool CollapseCropControl { get; set; }
+
+		[Browsable(false)]
+		[JsonProperty("convert_collapsed")]
+		public bool CollapseConvertControl { get; set; }
+
+		[Browsable(false)]
+		[JsonProperty("limits_collapsed")]
+		public bool CollapseLimitsControl { get; set; }
         #endregion
 
         public GeneralSettings()
@@ -214,6 +230,10 @@ namespace YT_RED.Settings
 			FfmpegLocalVersion = "2023-08-10-git-d9d5695390";
             FfmpegUrl = @"https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-essentials.7z";
 			FfmpegVersionUrl = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-essentials.7z.ver";
+			CollapseSegmentControl = false;
+			CollapseCropControl = false;
+			CollapseConvertControl = false;
+			CollapseLimitsControl = false;
         }
 
 		public override async Task<string> ValidateSettings()

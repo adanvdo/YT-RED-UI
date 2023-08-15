@@ -262,6 +262,7 @@ namespace YT_RED
             }
             cpMainControlPanel.MaxResolution = AppSettings.Default.General.MaxResolutionBest;
             cpMainControlPanel.MaxFilesize = AppSettings.Default.General.MaxFilesizeBest;
+            cpMainControlPanel.RestoreControlGroupCollapseStates();
             base.OnLoad(e);
         }
 
@@ -1127,7 +1128,7 @@ namespace YT_RED
             if (cpMainControlPanel.SegmentEnabled)
             {
                 start = cpMainControlPanel.SegmentStart;
-                duration = cpMainControlPanel.SegmentDuration;
+                duration = AppSettings.Default.Layout.SegmentControlMode == SegmentControlMode.Duration ? cpMainControlPanel.SegmentDuration : cpMainControlPanel.SegmentDuration - cpMainControlPanel.SegmentStart;
             }
 
             if (streamType == Classes.StreamType.AudioAndVideo && cpMainControlPanel.CropEnabled && cpMainControlPanel.ValidCrops())
@@ -1377,7 +1378,7 @@ namespace YT_RED
                 if (cpMainControlPanel.SegmentEnabled)
                 {
                     start = cpMainControlPanel.SegmentStart;
-                    duration = cpMainControlPanel.SegmentDuration;
+                    duration = AppSettings.Default.Layout.SegmentControlMode == SegmentControlMode.Duration ? cpMainControlPanel.SegmentDuration : cpMainControlPanel.SegmentDuration - cpMainControlPanel.SegmentStart;
                 }
 
                 if (cpMainControlPanel.ConversionEnabled)
@@ -1833,13 +1834,13 @@ namespace YT_RED
 
                 if (cpMainControlPanel.TargetLog.Start != null && cpMainControlPanel.TargetLog.Duration != null)
                 {
-                    cpMainControlPanel.EnableToggle(true, false, false, false);
+                    cpMainControlPanel.EnableToggle(true, false, false, true);
                     cpMainControlPanel.SegmentStart = (TimeSpan)cpMainControlPanel.TargetLog.Start;
-                    cpMainControlPanel.SegmentDuration = (TimeSpan)cpMainControlPanel.TargetLog.Duration;
+                    cpMainControlPanel.SegmentDuration = cpMainControlPanel.TargetLog.SegmentMode == SegmentControlMode.Duration ? (TimeSpan)cpMainControlPanel.TargetLog.Duration : (TimeSpan)cpMainControlPanel.TargetLog.Start + (TimeSpan)cpMainControlPanel.TargetLog.Duration;
                 }
                 if (cpMainControlPanel.TargetLog.Crops != null && cpMainControlPanel.TargetLog.Crops.Length > 0)
                 {
-                    cpMainControlPanel.EnableToggle(false, true, false, false);
+                    cpMainControlPanel.EnableToggle(false, true, false, true);
                     cpMainControlPanel.CropTop = cpMainControlPanel.TargetLog.Crops[0].ToString();
                     cpMainControlPanel.CropBottom = cpMainControlPanel.TargetLog.Crops[1].ToString();
                     cpMainControlPanel.CropLeft = cpMainControlPanel.TargetLog.Crops[2].ToString();
@@ -1848,7 +1849,7 @@ namespace YT_RED
                 if ((cpMainControlPanel.TargetLog.VideoConversionFormat != null && cpMainControlPanel.TargetLog.VideoConversionFormat != VideoFormat.UNSPECIFIED)
                     || (cpMainControlPanel.TargetLog.AudioConversionFormat != null && cpMainControlPanel.TargetLog.AudioConversionFormat != AudioFormat.UNSPECIFIED))
                 {
-                    cpMainControlPanel.EnableToggle(false, false, true, false);
+                    cpMainControlPanel.EnableToggle(false, false, true, true);
                     cpMainControlPanel.ConvertVideoFormat = cpMainControlPanel.TargetLog.VideoConversionFormat;
                 }
                 if (cpMainControlPanel.TargetLog.MaxResolution != null && cpMainControlPanel.TargetLog.MaxResolution != Resolution.ANY)

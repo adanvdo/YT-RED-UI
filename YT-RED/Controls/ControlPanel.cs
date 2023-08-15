@@ -622,6 +622,7 @@ namespace YT_RED.Controls
             cbMaxRes.Properties.Items.AddRange(Utils.VideoUtil.ResolutionList);
             cbMaxRes.SelectedIndex = 4;
             txtMaxFilesize.Text = "0";
+            lblDuration.Text = AppSettings.Default.Layout.SegmentControlMode == SegmentControlMode.Duration ? "Duration" : "End";
             inInit = false;
             this.controlsUpdated();
         }
@@ -677,6 +678,8 @@ namespace YT_RED.Controls
                 cbVideoFormat.Enabled = false;
                 cbAudioFormat.Enabled = false;
             }
+
+            lblDuration.Text = AppSettings.Default.Layout.SegmentControlMode == SegmentControlMode.Duration ? "Duration" : "End";
 
             hlblOpenSettings.Visible = toggleConvert.IsOn && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
             lblAlwaysConvert.Visible = toggleConvert.IsOn && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
@@ -786,6 +789,73 @@ namespace YT_RED.Controls
             }
         }
 
+        public void RestoreControlGroupCollapseStates()
+        {
+            restoreControlGroupCollapseState(ControlGroups.Segment, AppSettings.Default.General.CollapseSegmentControl);
+            restoreControlGroupCollapseState(ControlGroups.Crop, AppSettings.Default.General.CollapseCropControl);
+            restoreControlGroupCollapseState(ControlGroups.Convert, AppSettings.Default.General.CollapseConvertControl);
+            restoreControlGroupCollapseState(ControlGroups.Limits, AppSettings.Default.General.CollapseLimitsControl);
+        }
+
+        private void restoreControlGroupCollapseState(ControlGroups controlGroup, bool collapse)
+        {
+            switch (controlGroup)
+            {
+                case ControlGroups.Segment:
+                    if (toggleSegment.IsOn) return;
+                    if (pnlSegPanel.Visible && collapse)
+                    {
+                        pnlSegPanel.Visible = false;
+                        gcSegments.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
+                    }
+                    else if(!collapse)
+                    {
+                        pnlSegPanel.Visible = true;
+                        gcSegments.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
+                    }
+                    break;
+                case ControlGroups.Crop:
+                    if (toggleCrop.IsOn) return;
+                    if (pnlCropPanel.Visible && collapse)
+                    {
+                        pnlCropPanel.Visible = false;
+                        gcCrop.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
+                    }
+                    else if (!collapse)
+                    {
+                        pnlCropPanel.Visible = true;
+                        gcCrop.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
+                    }
+                    break;
+                case ControlGroups.Convert:
+                    if (toggleConvert.IsOn) return;
+                    if (pnlConvertPanel.Visible && collapse)
+                    {
+                        pnlConvertPanel.Visible = false;
+                        gcConvert.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
+                    }
+                    else if (!collapse)
+                    {
+                        pnlConvertPanel.Visible = true;
+                        gcConvert.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
+                    }
+                    break;
+                case ControlGroups.Limits:
+                    if (toggleDownloadLimits.IsOn) return;
+                    if (pnlLimitPanel.Visible && collapse)
+                    {
+                        pnlLimitPanel.Visible = false;
+                        gcDownloadLimits.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_add;
+                    }
+                    else if (!collapse)
+                    {
+                        pnlLimitPanel.Visible = true;
+                        gcDownloadLimits.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
+                    }
+                    break;
+            }
+        }
+
         public void ExpandCollapseControlGroup(ControlGroups controlGroup)
         {
             switch(controlGroup)
@@ -802,6 +872,7 @@ namespace YT_RED.Controls
                         pnlSegPanel.Visible = true;
                         gcSegments.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
                     }
+                    AppSettings.Default.General.CollapseSegmentControl = !pnlSegPanel.Visible;
                     break;
                 case ControlGroups.Crop:
                     if (toggleCrop.IsOn) return;
@@ -815,6 +886,7 @@ namespace YT_RED.Controls
                         pnlCropPanel.Visible = true;
                         gcCrop.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
                     }
+                    AppSettings.Default.General.CollapseCropControl = !pnlCropPanel.Visible;
                     break;
                 case ControlGroups.Convert:
                     if (toggleConvert.IsOn) return;
@@ -828,6 +900,7 @@ namespace YT_RED.Controls
                         pnlConvertPanel.Visible = true;
                         gcConvert.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
                     }
+                    AppSettings.Default.General.CollapseConvertControl = !pnlConvertPanel.Visible;
                     break;
                 case ControlGroups.Limits:
                     if (toggleDownloadLimits.IsOn) return;
@@ -841,8 +914,10 @@ namespace YT_RED.Controls
                         pnlLimitPanel.Visible = true;
                         gcDownloadLimits.CustomHeaderButtons[0].Properties.ImageOptions.SvgImage = Properties.Resources.actions_remove;
                     }
+                    AppSettings.Default.General.CollapseLimitsControl = !pnlLimitPanel.Visible;
                     break;
             }
+            AppSettings.Default.Save();
         }
 
         public void UpdatePanelStates()
@@ -1202,6 +1277,7 @@ namespace YT_RED.Controls
             gvHistory.Columns["AudioConversionFormat"].Visible = false;
             gvHistory.Columns["MaxResolution"].Visible = false;
             gvHistory.Columns["MaxFileSize"].Visible = false;
+            gvHistory.Columns["SegmentMode"].Visible = false;
             gvHistory.RefreshData();
         }
 
@@ -1251,7 +1327,29 @@ namespace YT_RED.Controls
             }
         }
 
-        
+        private void tsStart_EditValueChanged(object sender, EventArgs e)
+        {
+            if(AppSettings.Default.Layout.SegmentControlMode == SegmentControlMode.EndTime && tsDuration.TimeSpan <= tsStart.TimeSpan)
+            {
+                tsDuration.TimeSpan = tsStart.TimeSpan.Add(TimeSpan.FromSeconds(1));
+            }
+        }
+
+        private void lblDuration_TextChanged(object sender, EventArgs e)
+        {
+            if(lblDuration.Text == "End" && tsDuration.TimeSpan <= tsStart.TimeSpan)
+                tsDuration.TimeSpan = tsStart.TimeSpan.Add(TimeSpan.FromSeconds(1));
+            else
+                tsDuration.TimeSpan = TimeSpan.FromSeconds(1);
+        }
+
+        private void tsDuration_EditValueChanged(object sender, EventArgs e)
+        {
+            if(AppSettings.Default.Layout.SegmentControlMode == SegmentControlMode.EndTime && tsDuration.TimeSpan <= tsStart.TimeSpan)
+            {
+                tsDuration.TimeSpan = tsStart.TimeSpan.Add(TimeSpan.FromSeconds(1));
+            }
+        }
     }
 
     public enum ControlGroups

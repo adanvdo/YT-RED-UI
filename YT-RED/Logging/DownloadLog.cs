@@ -59,6 +59,9 @@ namespace YT_RED.Logging
             }
         }
 
+        [JsonProperty("segment_mode")]
+        public SegmentControlMode SegmentMode { get; set; } = SegmentControlMode.Duration;
+
         public DownloadLog()
         { }
 
@@ -79,6 +82,7 @@ namespace YT_RED.Logging
                 VideoConversionFormat = pendingDownload.VideoConversionFormat;
                 AudioConversionFormat = pendingDownload.AudioConversionFormat;
             }
+            SegmentMode = AppSettings.Default.Layout.SegmentControlMode;
         }
     }
 
