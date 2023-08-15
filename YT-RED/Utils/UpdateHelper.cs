@@ -12,6 +12,7 @@ using YT_RED.Settings;
 using YT_RED.Controls;
 using SevenZipExtractor;
 using YT_RED.Classes;
+using System.Diagnostics;
 
 namespace YT_RED.Utils
 {
@@ -179,6 +180,25 @@ namespace YT_RED.Utils
         #endregion
 
         #region DEPENDENCY UPDATES
+
+        public static async Task<string[]> GetLocalAppVersions()
+        {
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    DirectoryInfo resources = new DirectoryInfo(Path.Combine(AppSettings.Default.General.ExeDirectoryPath, "Resources", "App"));
+                    var ytdlpInfo = FileVersionInfo.GetVersionInfo(Path.Combine(resources.FullName, "yt-dlp.exe"));
+                    var ffmpegInfo = FileVersionInfo.GetVersionInfo(Path.Combine(resources.FullName, "ffmpeg.exe"));
+                    return new string[] { ytdlpInfo.FileVersion, ffmpegInfo.FileVersion };
+                }
+                catch(Exception ex)
+                {
+                    ExceptionHandler.LogException(ex);
+                }
+                return null;
+            });
+        }
 
         public static async Task<string> GetLatestYtdlpVersionNumber()
         {

@@ -197,8 +197,9 @@ namespace YT_RED.Controls
             pgcPropertyGrid.Refresh();
             dependencyName = " YT-DLP";
             string ytdlpLatestVersion = await UpdateHelper.GetLatestYtdlpVersionNumber();
+            string[] localVersions = await UpdateHelper.GetLocalAppVersions();
             string dlytdlp = "";
-            if (ytdlpLatestVersion != null && ytdlpLatestVersion != AppSettings.Default.General.YtdlpLocalVersion)
+            if (ytdlpLatestVersion != null && (ytdlpLatestVersion != localVersions[0] || ytdlpLatestVersion != AppSettings.Default.General.YtdlpLocalVersion))
             {
                 dlytdlp = await UpdateHelper.UpdateYTDLP(new System.Net.DownloadProgressChangedEventHandler(progressChanged2));
             }
@@ -206,7 +207,7 @@ namespace YT_RED.Controls
             string dlffmpeg = "";
             string installFfmpeg = "";
             string ffmpegLatestVersion = await UpdateHelper.GetLatestFfmpegVersionNumber();
-            if (ffmpegLatestVersion != null && ffmpegLatestVersion != AppSettings.Default.General.FfmpegLocalVersion)
+            if (ffmpegLatestVersion != null && ((!string.IsNullOrEmpty(localVersions[1]) && ffmpegLatestVersion != localVersions[1]) || ffmpegLatestVersion != AppSettings.Default.General.FfmpegLocalVersion))
             {
                 dlffmpeg = await UpdateHelper.UpdateFfmpeg(new System.Net.DownloadProgressChangedEventHandler(progressChanged2));
                 if (dlffmpeg == "Download Complete")

@@ -224,10 +224,10 @@ namespace YT_RED.Settings
 			AudioDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
 			CreateFolderForPlaylists = true;
 			UsePreferredFormat = false;
-			YtdlpLocalVersion = "2023.07.06";
+			YtdlpLocalVersion = "2023.7.6.0";
 			YtdlpUrl = @"https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp{0}.exe";
 			YtdlpVersionUrl = "https://api.github.com/repos/yt-dlp/yt-dlp/tags";
-			FfmpegLocalVersion = "2023-08-10-git-d9d5695390";
+			FfmpegLocalVersion = "unknown";
             FfmpegUrl = @"https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-essentials.7z";
 			FfmpegVersionUrl = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-essentials.7z.ver";
 			CollapseSegmentControl = false;
