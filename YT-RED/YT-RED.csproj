@@ -200,6 +200,7 @@
     <Compile Include="AppFeature.cs" />
     <Compile Include="Classes\ApplicationController.cs" />
     <Compile Include="Classes\AssemblyBuildAttribute.cs" />
+    <Compile Include="Classes\GithubTag.cs" />
     <Compile Include="Classes\ListMode.cs" />
     <Compile Include="Classes\Release.cs" />
     <Compile Include="Classes\Resolution.cs" />

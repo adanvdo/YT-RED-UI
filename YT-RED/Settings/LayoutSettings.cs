@@ -30,17 +30,31 @@ namespace YT_RED.Settings
         [JsonProperty("format_mode")]
         public FormatMode FormatMode { get; set; }
 
+        [Category("Control Panel")]
+        [DisplayName("Segment Control Mode")]
+        [Description("Duration: Specify the duration of the segment after the Start Time\n"
+            + "EntTime: Specify the End Time of the segment")]
+        [JsonProperty("segment_control_mode")]
+        public SegmentControlMode SegmentControlMode { get; set; }
+
         public LayoutSettings()
         {
             this.InputPanelPosition = VerticalPanelPosition.Top;
             this.ControlPanelPosition = HorizontalPanelPosition.Right;
             this.FormatMode = FormatMode.Preset;
+            SegmentControlMode = SegmentControlMode.Duration;
         }
 
         public override async Task<string> ValidateSettings()
         {
             return await base.ValidateSettings();
         }
+    }
+
+    public enum SegmentControlMode
+    {
+        Duration = 0,
+        EndTime = 1
     }
 
     public enum FormatMode

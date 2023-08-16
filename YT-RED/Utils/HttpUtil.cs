@@ -9,11 +9,37 @@ using YT_RED.Classes;
 using YT_RED.Logging;
 using YT_RED.Settings;
 using System.Drawing;
+using DevExpress.Xpo.DB.Helpers;
 
 namespace YT_RED.Utils
 {
     public static class HttpUtil
     {
+        #region General
+
+        public static async Task<HttpResponseMessage> SendGetRequest(string url, string userAgent = "")
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    UriBuilder baseUri = new UriBuilder(url);
+                    HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, baseUri.Uri);
+                    if (!string.IsNullOrEmpty(userAgent))
+                        client.DefaultRequestHeaders.Add("User-Agent", userAgent);
+                    HttpResponseMessage response = await client.SendAsync(request);
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.LogException(ex);
+            }
+            return null;
+        }
+
+        #endregion
+
         #region API
         private static string serverUrl = Program.DevRun ? @"http://localhost:3000/api" : @"https://www.jamgalactic.com/api";
         private static async Task<HttpWebResponse> postErrorLogs(DateTime date)

@@ -1,4 +1,5 @@
 ﻿using DevExpress.XtraEditors;
+using DevExpress.XtraRichEdit.Import.Html;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -68,6 +69,30 @@ namespace YT_RED.Controls
             if(!string.IsNullOrEmpty(validate))
             {
                 MsgBox.Show(validate, "Invalid Settings", Buttons.OK, YT_RED.Controls.Icon.Exclamation);
+                if (this.tcSettingsTabControl.SelectedTabPage.Name != $"tpg{AppFeature.General}")
+                {
+                    this.tcSettingsTabControl.SelectedTabPage = this.tcSettingsTabControl.TabPages.Where(tpg => tpg.Name == $"tpg{AppFeature.General}").ToArray()[0];
+                }
+                return;
+            }
+            validate = await AppSettings.Default.Layout.ValidateSettings();
+            if (!string.IsNullOrEmpty(validate))
+            {
+                MsgBox.Show(validate, "Invalid Settings", Buttons.OK, YT_RED.Controls.Icon.Exclamation);
+                if (this.tcSettingsTabControl.SelectedTabPage.Name != $"tpg{AppFeature.Layout}")
+                {
+                    this.tcSettingsTabControl.SelectedTabPage = this.tcSettingsTabControl.TabPages.Where(tpg => tpg.Name == $"tpg{AppFeature.Layout}").ToArray()[0];
+                }
+                return;
+            }
+            validate = await AppSettings.Default.Advanced.ValidateSettings();
+            if (!string.IsNullOrEmpty(validate))
+            {
+                MsgBox.Show(validate, "Invalid Settings", Buttons.OK, YT_RED.Controls.Icon.Exclamation);
+                if(this.tcSettingsTabControl.SelectedTabPage.Name != $"tpg{AppFeature.Advanced}")
+                {
+                    this.tcSettingsTabControl.SelectedTabPage = this.tcSettingsTabControl.TabPages.Where(tpg => tpg.Name == $"tpg{AppFeature.Advanced}").ToArray()[0];
+                }
                 return;
             }
             AppSettings.Default.Save();

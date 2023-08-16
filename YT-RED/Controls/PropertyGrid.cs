@@ -196,15 +196,26 @@ namespace YT_RED.Controls
             AppSettings.Default.About.Dependencies = "";
             pgcPropertyGrid.Refresh();
             dependencyName = " YT-DLP";
-            var dlytdlp = await UpdateHelper.UpdateYTDLP(new System.Net.DownloadProgressChangedEventHandler(progressChanged2));
-            dependencyName = " FFMPEG";
-            var dlffmpeg = await UpdateHelper.UpdateFfmpeg(new System.Net.DownloadProgressChangedEventHandler(progressChanged2));
-            string installFfmpeg = "";
-            if (dlffmpeg == "Download Complete")
+            string ytdlpLatestVersion = await UpdateHelper.GetLatestYtdlpVersionNumber();
+            string[] localVersions = await UpdateHelper.GetLocalAppVersions();
+            string dlytdlp = "";
+            if (ytdlpLatestVersion != null && (ytdlpLatestVersion != localVersions[0] || ytdlpLatestVersion != AppSettings.Default.General.YtdlpLocalVersion))
             {
-                repButtonEdit2.Buttons[0].Caption = "Extracting FFMPEG Files..";
-                installFfmpeg = await UpdateHelper.InstallFfmpeg();
-                await UpdateHelper.CleanUpFFMPEG();
+                dlytdlp = await UpdateHelper.UpdateYTDLP(new System.Net.DownloadProgressChangedEventHandler(progressChanged2));
+            }
+            dependencyName = " FFMPEG";
+            string dlffmpeg = "";
+            string installFfmpeg = "";
+            string ffmpegLatestVersion = await UpdateHelper.GetLatestFfmpegVersionNumber();
+            if (ffmpegLatestVersion != null && ((!string.IsNullOrEmpty(localVersions[1]) && ffmpegLatestVersion != localVersions[1]) || ffmpegLatestVersion != AppSettings.Default.General.FfmpegLocalVersion))
+            {
+                dlffmpeg = await UpdateHelper.UpdateFfmpeg(new System.Net.DownloadProgressChangedEventHandler(progressChanged2));
+                if (dlffmpeg == "Download Complete")
+                {
+                    repButtonEdit2.Buttons[0].Caption = "Extracting FFMPEG Files..";
+                    installFfmpeg = await UpdateHelper.InstallFfmpeg();
+                    await UpdateHelper.CleanUpFFMPEG();
+                }
             }
             dependencyName = string.Empty;
 
@@ -212,8 +223,16 @@ namespace YT_RED.Controls
             {
                 MsgBox.Show("Error Downlaoding Dependency Updates", Buttons.OK, Icon.Error);
             }
+            else if(dlytdlp == "" && dlffmpeg == "")
+            {
+                repButtonEdit2.Buttons[0].Caption = "Up-To-Date!";
+                await Task.Delay(3000);
+            }
             else
             {
+                AppSettings.Default.General.YtdlpLocalVersion = ytdlpLatestVersion;
+                AppSettings.Default.General.FfmpegLocalVersion = ffmpegLatestVersion;
+                AppSettings.Default.Save();
                 repButtonEdit2.Buttons[0].Caption = "Dependency Update Complete!";
                 await Task.Delay(3000);
             }
