@@ -171,7 +171,7 @@
             this.pnlOptionPanel.Margin = new System.Windows.Forms.Padding(0);
             this.pnlOptionPanel.MinimumSize = new System.Drawing.Size(323, 136);
             this.pnlOptionPanel.Name = "pnlOptionPanel";
-            this.pnlOptionPanel.Size = new System.Drawing.Size(323, 722);
+            this.pnlOptionPanel.Size = new System.Drawing.Size(323, 720);
             this.pnlOptionPanel.TabIndex = 0;
             // 
             // gcDLButtons
@@ -185,7 +185,7 @@
             this.gcDLButtons.Controls.Add(this.btnDownloadAudio);
             this.gcDLButtons.Controls.Add(this.btnSelectionDL);
             this.gcDLButtons.Dock = System.Windows.Forms.DockStyle.Top;
-            this.gcDLButtons.Location = new System.Drawing.Point(0, 563);
+            this.gcDLButtons.Location = new System.Drawing.Point(0, 561);
             this.gcDLButtons.Margin = new System.Windows.Forms.Padding(0);
             this.gcDLButtons.Name = "gcDLButtons";
             this.gcDLButtons.Size = new System.Drawing.Size(323, 159);
@@ -275,7 +275,7 @@
             new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions1, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
             this.gcDownloadLimits.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
             this.gcDownloadLimits.Dock = System.Windows.Forms.DockStyle.Top;
-            this.gcDownloadLimits.Location = new System.Drawing.Point(0, 436);
+            this.gcDownloadLimits.Location = new System.Drawing.Point(0, 434);
             this.gcDownloadLimits.Margin = new System.Windows.Forms.Padding(0);
             this.gcDownloadLimits.Name = "gcDownloadLimits";
             this.gcDownloadLimits.Size = new System.Drawing.Size(323, 127);
@@ -380,7 +380,7 @@
             this.gcConvert.Location = new System.Drawing.Point(0, 275);
             this.gcConvert.Margin = new System.Windows.Forms.Padding(0);
             this.gcConvert.Name = "gcConvert";
-            this.gcConvert.Size = new System.Drawing.Size(323, 161);
+            this.gcConvert.Size = new System.Drawing.Size(323, 159);
             this.gcConvert.TabIndex = 0;
             this.gcConvert.Text = "Conversion Override";
             this.gcConvert.Click += new System.EventHandler(this.gcConvert_Click);
@@ -393,7 +393,7 @@
             this.hlblOpenSettings.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
             this.hlblOpenSettings.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.hlblOpenSettings.Dock = System.Windows.Forms.DockStyle.Top;
-            this.hlblOpenSettings.Location = new System.Drawing.Point(2, 143);
+            this.hlblOpenSettings.Location = new System.Drawing.Point(2, 141);
             this.hlblOpenSettings.Name = "hlblOpenSettings";
             this.hlblOpenSettings.Size = new System.Drawing.Size(319, 16);
             this.hlblOpenSettings.TabIndex = 1;
@@ -408,12 +408,12 @@
             this.lblAlwaysConvert.Appearance.Options.UseTextOptions = true;
             this.lblAlwaysConvert.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.lblAlwaysConvert.Appearance.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap;
-            this.lblAlwaysConvert.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
+            this.lblAlwaysConvert.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.Vertical;
             this.lblAlwaysConvert.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblAlwaysConvert.Location = new System.Drawing.Point(2, 96);
             this.lblAlwaysConvert.Name = "lblAlwaysConvert";
             this.lblAlwaysConvert.Padding = new System.Windows.Forms.Padding(3);
-            this.lblAlwaysConvert.Size = new System.Drawing.Size(319, 47);
+            this.lblAlwaysConvert.Size = new System.Drawing.Size(319, 45);
             this.lblAlwaysConvert.TabIndex = 0;
             this.lblAlwaysConvert.Text = "YT-RED is currently set to Always Convert to your \r\nPreferred Video and Audio For" +
     "mat. \r\nThis can be changed in Advanced Settings";
@@ -807,7 +807,7 @@
             this.pnlProgressPanel.Controls.Add(this.pbProgress);
             this.pnlProgressPanel.Controls.Add(this.pbListProgress);
             this.pnlProgressPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlProgressPanel.Location = new System.Drawing.Point(0, 722);
+            this.pnlProgressPanel.Location = new System.Drawing.Point(0, 720);
             this.pnlProgressPanel.Margin = new System.Windows.Forms.Padding(0);
             this.pnlProgressPanel.Name = "pnlProgressPanel";
             this.pnlProgressPanel.Size = new System.Drawing.Size(323, 109);
@@ -867,7 +867,7 @@
             // gcHistory
             // 
             this.gcHistory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcHistory.Location = new System.Drawing.Point(0, 831);
+            this.gcHistory.Location = new System.Drawing.Point(0, 829);
             this.gcHistory.MainView = this.gvHistory;
             this.gcHistory.MenuManager = this.historyBarManager;
             this.gcHistory.MinimumSize = new System.Drawing.Size(0, 200);
@@ -875,7 +875,7 @@
             this.gcHistory.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repFileExists,
             this.repPostProcessed});
-            this.gcHistory.Size = new System.Drawing.Size(323, 200);
+            this.gcHistory.Size = new System.Drawing.Size(323, 202);
             this.gcHistory.TabIndex = 0;
             this.gcHistory.ToolTipController = this.historyTooltip;
             this.gcHistory.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {

@@ -149,8 +149,8 @@ namespace YT_RED.Utils
             {
                 vFormat = convertVideo;
                 vMap = Classes.SystemCodecMaps.GetMappedCodecs(convertVideo);
-                vCodec = vMap.BestVideo;
-                aCodec = vMap.BestAudio;
+                vCodec = vMap?.BestVideo;
+                aCodec = vMap?.BestAudio;
             }
             
             if (convertAudio != AudioFormat.UNSPECIFIED)
@@ -171,8 +171,8 @@ namespace YT_RED.Utils
                 {
                     vFormat = AppSettings.Default.Advanced.PreferredVideoFormat;
                     vMap = Classes.SystemCodecMaps.GetMappedCodecs(vFormat);
-                    vCodec = vMap.BestVideo;
-                    aCodec = vMap.BestAudio;
+                    vCodec = vMap?.BestVideo;
+                    aCodec = vMap?.BestAudio;
                 }
             }
             else if (!string.IsNullOrEmpty(formatPair.AudioCodec) && formatPair.AudioCodec != "none")
@@ -193,24 +193,37 @@ namespace YT_RED.Utils
             if(duration != null)
             {
                 parameters.Add(new Classes.FFmpegParam(Classes.ParamType.Duration, $"-t {((TimeSpan)duration)}"));
-            }           
+            }
             if (vCodec != null)
             {
-                if (vCodec == SystemCodecMaps.RGB24)
-                    parameters.Add(new Classes.FFmpegParam(Classes.ParamType.VideoOutFormat, $"-pix_fmt {vCodec.Encoder}"));
+                parameters.Add(new Classes.FFmpegParam(Classes.ParamType.VideoOutFormat, $"-c:v {vCodec.Encoder}"));
+            }
+            else if(vFormat == VideoFormat.GIF)
+            {
+                string paramString = CalculateGifConversionParams(formatPair.VideoFormat.Width, formatPair.VideoFormat.Height, formatPair.VideoFormat.Duration, duration);
+                if (paramString != null) 
+                {
+                    parameters.Add(new Classes.FFmpegParam(Classes.ParamType.VideoOutFormat, paramString));
+                    audioUrl = string.Empty;
+                } 
                 else
-                    parameters.Add(new Classes.FFmpegParam(Classes.ParamType.VideoOutFormat, $"-c:v {vCodec.Encoder}"));
-            }
-            if (aCodec != null)
-            {
-                parameters.Add(new Classes.FFmpegParam(Classes.ParamType.AudioOutFormat, $"-c:a {aCodec.Encoder}"));
+                {
+                    throw new Exception("Media Evaluation Failed for GIF Conversion");
+                }
             }
 
-            if (outWidth >= 0 && outHeight >= 0 && x >= 0 && y >= 0)
+            if (vFormat != VideoFormat.GIF)
             {
-                parameters.Add(new Classes.FFmpegParam(Classes.ParamType.Crop, $"-filter:v \"crop={outWidth}:{outHeight}:{x}:{y}\""));
-            }           
+                if (aCodec != null)
+                {
+                    parameters.Add(new Classes.FFmpegParam(Classes.ParamType.AudioOutFormat, $"-c:a {aCodec.Encoder}"));
+                }
 
+                if (outWidth >= 0 && outHeight >= 0 && x >= 0 && y >= 0)
+                {
+                    parameters.Add(new Classes.FFmpegParam(Classes.ParamType.Crop, $"-filter:v \"crop={outWidth}:{outHeight}:{x}:{y}\""));
+                }
+            }
             return await PrepareStreamConversion(videoUrl, audioUrl, parameters.ToArray(), vFormat, aFormat);
         }
 
@@ -282,8 +295,8 @@ namespace YT_RED.Utils
                 {
                     vFormat = convertVideo;
                     vMap = Classes.SystemCodecMaps.GetMappedCodecs(convertVideo);
-                    vCodec = vMap.BestVideo;
-                    aCodec = vMap.BestAudio;
+                    vCodec = vMap?.BestVideo;
+                    aCodec = vMap?.BestAudio;
                 }
                 else if (convertAudio != AudioFormat.UNSPECIFIED)
                 {
@@ -297,7 +310,7 @@ namespace YT_RED.Utils
                     if (audioStream != null && !string.IsNullOrEmpty(audioStream.Codec) && getUrls.Count > 1)
                         audioUrl = getUrls[1];
 
-                    if (vCodec == null)
+                    if (vCodec == null && vFormat != VideoFormat.GIF)
                     {
 
                         if (usePreferences)
@@ -309,10 +322,7 @@ namespace YT_RED.Utils
                         }
 
                         vMap = Classes.SystemCodecMaps.GetMappedCodecs(vFormat);
-                        if (string.IsNullOrEmpty(videoStream.PixelFormat))
-                            vCodec = vMap.BestVideo;
-                        else if (vFormat == VideoFormat.GIF)
-                            vCodec = SystemCodecMaps.RGB24;
+                        vCodec = vMap.BestVideo;
                         aCodec = vMap.BestAudio;
                     }
                 }
@@ -336,18 +346,33 @@ namespace YT_RED.Utils
                 {
                     parameters.Add(new Classes.FFmpegParam(Classes.ParamType.Duration, $"-t {((TimeSpan)duration)}"));
                 }
-                if (vCodec != null)
+
+                if(vCodec == null && vFormat == VideoFormat.GIF)
                 {
-                    parameters.Add(new Classes.FFmpegParam(Classes.ParamType.VideoOutFormat, vFormat == VideoFormat.GIF ? $"-pix_fmt {vCodec.Encoder}" : $"-c:v {vCodec.Encoder}"));
+                    string paramString = CalculateGifConversionParams(videoStream.Width, videoStream.Height, videoStream.Duration, duration);
+                    if (paramString != null)
+                    {
+                        parameters.Add(new FFmpegParam(ParamType.VideoOutFormat, paramString));
+                        audioUrl = string.Empty;
+                    }
+                    else throw new Exception("Media Evaluation Failed for GIF Conversion");                    
                 }
-                if (aCodec != null)
+                else if (vCodec != null)
                 {
-                    parameters.Add(new Classes.FFmpegParam(Classes.ParamType.AudioOutFormat, $"-c:a {aCodec.Encoder}"));
+                    parameters.Add(new Classes.FFmpegParam(Classes.ParamType.VideoOutFormat, $"-c:v {vCodec.Encoder}"));                    
                 }
 
-                if (outWidth >= 0 && outHeight >= 0 && x >= 0 && y >= 0)
+                if (vFormat != VideoFormat.GIF)
                 {
-                    parameters.Add(new Classes.FFmpegParam(Classes.ParamType.Crop, $"-filter:v \"crop={outWidth}:{outHeight}:{x}:{y}\""));
+                    if (aCodec != null)
+                    {
+                        parameters.Add(new Classes.FFmpegParam(Classes.ParamType.AudioOutFormat, $"-c:a {aCodec.Encoder}"));
+                    }
+
+                    if (outWidth >= 0 && outHeight >= 0 && x >= 0 && y >= 0)
+                    {
+                        parameters.Add(new Classes.FFmpegParam(Classes.ParamType.Crop, $"-filter:v \"crop={outWidth}:{outHeight}:{x}:{y}\""));
+                    }
                 }
 
                 showOutput("Preparing Conversion..");
@@ -355,6 +380,33 @@ namespace YT_RED.Utils
                 var createConversion = await PrepareStreamConversion(videoUrl, audioUrl, parameters.ToArray(), vFormat, aFormat);
                 showOutput("Starting Conversion..");
                 return createConversion;
+            }
+            catch(Exception ex)
+            {
+                ExceptionHandler.LogException(ex);
+            }
+            return null;
+        }
+
+        private static string CalculateGifConversionParams(int? sourceWidth, int? sourceHeight, TimeSpan? sourceDuration, TimeSpan? duration)
+        {
+            if(sourceDuration == null && duration == null)
+            {
+                return null;
+            }
+
+            try
+            {
+                var useDuration = duration != null ? (TimeSpan)duration : (TimeSpan)sourceDuration;
+                if (useDuration.Seconds > 60) useDuration = TimeSpan.FromSeconds(60);
+                int fps = Convert.ToInt32(300 / useDuration.Seconds);
+                int width = sourceWidth == null ? 300 : (int)sourceWidth;
+                int height = sourceHeight == null ? 300 : (int)sourceHeight;
+                int size = width > height ? width : height;
+                int scale = size > 600 ? 600 : size;
+                string scaleString = width > height ? $"{scale}:-1" : $"-1:{scale}";
+
+                return $"-vf \"fps={fps},scale={scaleString}:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse\" -loop 0";
             }
             catch(Exception ex)
             {

@@ -108,6 +108,7 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 ## CHANGELOG <a name="changelog"></a>
 
 ### 8/15/2023 v1.0.3.4
+- Fixed and Implemented GIF Conversion option
 - Fixed Bug with Dependency Updater Version Check
 - Made Download Processing Option Collapse State Persist
 - Added Option to Layout Settings that allows specifying Segment End Time instead of Duration

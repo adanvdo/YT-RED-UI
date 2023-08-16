@@ -16,6 +16,7 @@ namespace YT_RED.Controls
     public partial class ControlPanel : DevExpress.XtraEditors.XtraUserControl
     {
         private string formatWarning = "YT-RED is currently set to Always Convert to your\nPreferred Video and Audio Format.\nThis can be changed in Advanced Settings";
+        private string gifWarning = "GIF Conversion has the following limitations\nMax Size: 600px\nMax Frames: 300\nMax Duration: 60 Seconds\nFramerate is adjusted to meet this criteria";
 
         [Browsable(false)]
         public DownloadLog TargetLog
@@ -610,7 +611,7 @@ namespace YT_RED.Controls
             videoFormats = new List<string>();
             List<string> vFormats = new List<string>() { "" };
             vFormats.AddRange(Enum.GetNames(typeof(VideoFormat)).Cast<string>());
-            videoFormats.AddRange(vFormats.Where(f => f != "UNSPECIFIED" && f != "GIF"));
+            videoFormats.AddRange(vFormats.Where(f => f != "UNSPECIFIED"));// && f != "GIF"));
             cbVideoFormat.Properties.Items.AddRange(videoFormats);
             cbVideoFormat.SelectedIndex = 0;
             audioFormats = new List<string>();
@@ -1085,12 +1086,19 @@ namespace YT_RED.Controls
 
         private void checkConversionOptions()
         {
-            if (cbVideoFormat.SelectedItem != null && cbAudioFormat.SelectedItem != null 
-                && !string.IsNullOrEmpty(cbVideoFormat.SelectedItem.ToString()) && !string.IsNullOrEmpty(cbAudioFormat.SelectedItem.ToString()))
+            if (cbVideoFormat.SelectedItem != null && !string.IsNullOrEmpty(cbVideoFormat.SelectedItem.ToString()))
             {
-                lblAlwaysConvert.Text = formatWarning;
-                hlblOpenSettings.Visible = true;
-                lblAlwaysConvert.Visible = true;
+                if (this.intendedVideoFormat == VideoFormat.GIF)
+                {
+                    lblAlwaysConvert.Text = gifWarning;
+                    lblAlwaysConvert.Visible = true;
+                }
+                else
+                {
+                    lblAlwaysConvert.Text = formatWarning;
+                    hlblOpenSettings.Visible = AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
+                    lblAlwaysConvert.Visible = AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat;
+                }
             }
             else
             {

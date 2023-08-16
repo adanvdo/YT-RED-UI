@@ -80,6 +80,10 @@ If there is existing text in your clipboard, YT-RED will restore it after starti
 
         public override async Task<string> ValidateSettings()
         {
+            if(PreferredVideoFormat == VideoFormat.GIF)
+            {
+                return "Preferred Video Format cannot be set to GIF. Please choose another option.";
+            }
             return await base.ValidateSettings();
         }
     }

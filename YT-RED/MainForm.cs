@@ -1141,6 +1141,20 @@ namespace YT_RED
             {
                 videoFormat = cpMainControlPanel.ConvertVideoFormat == null ? VideoFormat.UNSPECIFIED : cpMainControlPanel.ConvertVideoFormat;
                 audioFormat = cpMainControlPanel.ConvertAudioFormat == null ? AudioFormat.UNSPECIFIED : cpMainControlPanel.ConvertAudioFormat;
+                if(videoFormat == VideoFormat.GIF)
+                {
+                    DialogResult confirm = MsgBox.Show($"GIF Conversion is limited to 60 seconds.\nOnly the first 60 seconds will be downloaded.\n\nContinue?", "GIF Duration", Buttons.YesNo, YT_RED.Controls.Icon.Exclamation);
+                    if (confirm == DialogResult.No)
+                    {
+                        this.UseWaitCursor = false;
+                        VideoUtil.Running = false;
+                        ipMainInput.marqeeMain.Hide();
+                        ipMainInput.marqeeMain.Text = "";
+                        cpMainControlPanel.DownloadSelectionVisible = false;
+                        this.cpMainControlPanel.btnCancelProcess.Visible = false;
+                        return;
+                    }
+                }
             }
             PendingDownload pendingDL = new PendingDownload()
             {
@@ -1385,7 +1399,42 @@ namespace YT_RED
                 {
                     videoFormat = cpMainControlPanel.ConvertVideoFormat;
                     audioFormat = cpMainControlPanel.ConvertAudioFormat;
-                } 
+
+                    if (videoFormat == VideoFormat.GIF)
+                    {
+                        if (cpMainControlPanel.SegmentEnabled && duration != null && ((TimeSpan)duration).TotalSeconds > 60)
+                        {
+                            DialogResult confirm = MsgBox.Show($"You have specified a duration of {((TimeSpan)duration).TotalSeconds} seconds.\nGIF Conversion is limited to 60 seconds.\n\nContinue?", "GIF Duration", Buttons.YesNo, YT_RED.Controls.Icon.Exclamation);
+                            if (confirm == DialogResult.No)
+                            {
+                                this.UseWaitCursor = false;
+                                VideoUtil.Running = false;
+                                ipMainInput.marqeeMain.Hide();
+                                ipMainInput.marqeeMain.Text = "";
+                                cpMainControlPanel.DownloadSelectionVisible = false;
+                                this.cpMainControlPanel.btnCancelProcess.Visible = false;
+                                return;
+                            }
+                        }
+                        else if (!cpMainControlPanel.SegmentEnabled && 
+                            cpMainControlPanel.CurrentFormatPair.VideoFormat != null && 
+                            cpMainControlPanel.CurrentFormatPair.VideoFormat.Duration != null &&
+                            ((TimeSpan)cpMainControlPanel.CurrentFormatPair.VideoFormat.Duration).TotalSeconds > 60)
+                        {
+                            DialogResult confirm = MsgBox.Show($"GIF Conversion is limited to 60 seconds.\nOnly the first 60 seconds will be downloaded.\n\nContinue?", "GIF Duration", Buttons.YesNo, YT_RED.Controls.Icon.Exclamation);
+                            if(confirm == DialogResult.No)
+                            {
+                                this.UseWaitCursor = false;
+                                VideoUtil.Running = false;
+                                ipMainInput.marqeeMain.Hide();
+                                ipMainInput.marqeeMain.Text = "";
+                                cpMainControlPanel.DownloadSelectionVisible = false;
+                                this.cpMainControlPanel.btnCancelProcess.Visible = false;
+                                return;
+                            }
+                        }
+                    }
+                }
 
                 pendingDL = new PendingDownload()
                 {
@@ -1395,7 +1444,7 @@ namespace YT_RED
                     Crops = crops,
                     VideoConversionFormat = videoFormat,
                     AudioConversionFormat = audioFormat
-                };
+                };                
 
                 IConversion conversion = await Utils.VideoUtil.PrepareYoutubeConversion(VideoUtil.ConvertToYouTubeLink(ipMainInput.URL).Url, cpMainControlPanel.CurrentFormatPair, 
                     start, duration, cpMainControlPanel.ConversionEnabled && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat, crops, videoFormat == null ? VideoFormat.UNSPECIFIED : (VideoFormat)videoFormat, 

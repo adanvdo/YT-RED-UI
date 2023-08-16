@@ -21,7 +21,6 @@ namespace YT_RED.Classes
         public static FFmpegAudioCodec MP3 = new FFmpegAudioCodec(AudioFormat.MP3, "libmp3lame");
         public static FFmpegAudioCodec VORBIS = new FFmpegAudioCodec(AudioFormat.VORBIS, "libvorbis -qscale:a 3");
         public static FFmpegAudioCodec WAV = new FFmpegAudioCodec(AudioFormat.WAV, "pcm_s32le");
-        public static FFmpegVideoCodec RGB24 = new FFmpegVideoCodec(SystemVideoCodec.RGB24, "rgb24 -qscale:v 3");
 
         public static VideoCodecMap FLV = new VideoCodecMap(VideoFormat.FLV, 
             new List<FFmpegVideoCodec>(){ 
@@ -93,13 +92,6 @@ namespace YT_RED.Classes
             }
         );
 
-        public static VideoCodecMap GIF = new VideoCodecMap(VideoFormat.GIF,
-            new List<FFmpegVideoCodec>()
-            {
-                RGB24
-            },
-            new List<FFmpegAudioCodec>());
-
         public static VideoCodecMap GetMappedCodecs(string format)
         {
             switch (format.ToUpper())
@@ -114,8 +106,6 @@ namespace YT_RED.Classes
                     return WEBM;
                 case "OGG":
                     return OGGVideo;
-                case "GIF":
-                    return GIF;
                 default:
                     return null;
             }
@@ -134,7 +124,9 @@ namespace YT_RED.Classes
                 case "mkv":
                     return VideoFormat.MKV;
                 case "ogg":
-                    return VideoFormat.OGG;                
+                    return VideoFormat.OGG;
+                case "gif":
+                    return VideoFormat.GIF;
             }
             return VideoFormat.UNSPECIFIED;
         }
@@ -206,8 +198,6 @@ namespace YT_RED.Classes
                     return VideoFormat.OGG;
                 case SystemVideoCodec.VP9:
                     return VideoFormat.WEBM;
-                case SystemVideoCodec.RGB24:
-                    return VideoFormat.GIF;
                 default:
                     return VideoFormat.MP4;
             }
@@ -227,8 +217,6 @@ namespace YT_RED.Classes
                     return OGGVideo;
                 case VideoFormat.WEBM:
                     return WEBM;
-                case VideoFormat.GIF:
-                    return GIF;
                 default:
                     return null;
             }
@@ -248,8 +236,6 @@ namespace YT_RED.Classes
                     return VP9;
                 case VideoFormat.WEBM:
                     return VP9;
-                case VideoFormat.GIF:
-                    return RGB24;
                 default:
                     throw new Exception("Unsupported Format");
             }
@@ -312,8 +298,6 @@ namespace YT_RED.Classes
                         return SystemCodecMaps.VP9;
                     case VideoFormat.WEBM:
                         return SystemCodecMaps.VP9;
-                    case VideoFormat.GIF:
-                        return SystemCodecMaps.RGB24;
                     default:
                         throw new Exception("Unsupported Format");
                 }
