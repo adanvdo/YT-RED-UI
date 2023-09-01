@@ -1344,6 +1344,8 @@ namespace YT_RED
                     return;
             }
 
+            cpMainControlPanel.SetProcessingLimits();
+
             VideoUtil.Running = true;
             this.UseWaitCursor = true;
             (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = true;

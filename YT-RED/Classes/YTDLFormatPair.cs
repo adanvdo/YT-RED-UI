@@ -90,6 +90,17 @@ namespace YT_RED.Classes
         }
 
         [JsonIgnore]
+        public TimeSpan? Duration
+        {
+            get
+            {
+                if (this.videoFormat != null) return this.videoFormat.Duration;
+                else if (this.audioFormat != null) return this.audioFormat.Duration;
+                return null;
+            }
+        }
+
+        [JsonIgnore]
         public string VideoCodec
         {
             get

@@ -132,11 +132,18 @@ namespace YT_RED.Utils
 
             if (crops != null && crops.Length == 4 && (formatPair.VideoFormat != null && formatPair.VideoFormat.Width != null && formatPair.VideoFormat.Height != null))
             {
-                int[] ffmpegCrop = ConvertCrop(crops, (int)formatPair.VideoFormat.Width, (int)formatPair.VideoFormat.Height);
-                x = ffmpegCrop[0];
-                y = ffmpegCrop[1];
-                outWidth = ffmpegCrop[2];
-                outHeight = ffmpegCrop[3];
+                try
+                {
+                    int[] ffmpegCrop = ConvertCrop(crops, (int)formatPair.VideoFormat.Width, (int)formatPair.VideoFormat.Height);
+                    x = ffmpegCrop[0];
+                    y = ffmpegCrop[1];
+                    outWidth = ffmpegCrop[2];
+                    outHeight = ffmpegCrop[3];
+                }
+                catch(Exception ex)
+                {
+                    ExceptionHandler.LogException(ex);
+                }
             }
 
             VideoFormat vFormat = VideoFormat.UNSPECIFIED;
@@ -188,10 +195,17 @@ namespace YT_RED.Utils
             List<Classes.FFmpegParam> parameters = new List<Classes.FFmpegParam>();
             if(start != null)
             {
+            //    if (formatPair.Duration != null && start > formatPair.Duration)
+            //        throw new Exception("Segment Start Exceeds Media Duration");
+
                 parameters.Add(new Classes.FFmpegParam(Classes.ParamType.StartTime, $"-ss {((TimeSpan)start)}"));
             }
             if(duration != null)
             {
+                //var st = start == null ? TimeSpan.Zero : start;
+                //if (formatPair.Duration != null && st + duration > formatPair.Duration)
+                //    throw new Exception("Segment Duration Exceeds Media Duration");
+
                 parameters.Add(new Classes.FFmpegParam(Classes.ParamType.Duration, $"-t {((TimeSpan)duration)}"));
             }
             if (vCodec != null)

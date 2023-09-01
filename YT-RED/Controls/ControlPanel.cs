@@ -177,6 +177,73 @@ namespace YT_RED.Controls
 
             lblSelectionText.Refresh();
             formatChanged();
+            setProcessingLimits();
+        }
+
+        public void SetProcessingLimits()
+        {
+            this.setProcessingLimits();
+        }
+
+        private void setProcessingLimits()
+        {
+            if (currentFormatPair == null || !currentFormatPair.IsValid())
+                return;
+
+            if(currentFormatPair.Type == StreamType.Video || currentFormatPair.Type == StreamType.AudioAndVideo)
+            {
+                if(CropEnabled)
+                {
+                    if (currentFormatPair.VideoFormat.Height != null && (currentFormatPair.VideoFormat.Height - TotalVerticalCrop) < 50)
+                    {
+                        int acceptableCrop = (int)currentFormatPair.VideoFormat.Height - 50;
+                        if(Convert.ToInt32(CropTop) > 0 || Convert.ToInt32(CropBottom) > 0)
+                        {
+                            if(Convert.ToInt32(CropTop) > Convert.ToInt32(CropBottom))
+                            {
+                                CropTop = (acceptableCrop - Convert.ToInt32(CropBottom)).ToString();
+                            }
+                            else
+                            {
+                                CropBottom = (acceptableCrop - Convert.ToInt32(CropTop)).ToString();
+                            }
+                        }
+                    }
+
+                    if(currentFormatPair.VideoFormat.Width != null && (currentFormatPair.VideoFormat.Width - TotalHorizontalCrop) < 50)
+                    {
+                        int acceptableCrop = (int)currentFormatPair.VideoFormat.Width - 50;
+                        if (Convert.ToInt32(CropLeft) > 0 || Convert.ToInt32(CropRight) > 0)
+                        {
+                            if (Convert.ToInt32(CropLeft) > Convert.ToInt32(CropRight))
+                            {
+                                CropLeft = (acceptableCrop - Convert.ToInt32(CropRight)).ToString();
+                            }
+                            else
+                            {
+                                CropRight = (acceptableCrop - Convert.ToInt32(CropLeft)).ToString();
+                            }
+                        }
+                    }
+                }
+            }
+
+            if(SegmentEnabled)
+            {
+                TimeSpan? dur = currentFormatPair.Duration;
+
+                if(dur != null && SegmentDuration.TotalSeconds > 0)
+                {
+                    if(AppSettings.Default.Layout.SegmentControlMode == SegmentControlMode.EndTime && dur > SegmentDuration)
+                    {
+                        SegmentDuration = (TimeSpan)dur;
+                    }
+                    else if(AppSettings.Default.Layout.SegmentControlMode == SegmentControlMode.Duration && SegmentStart + SegmentDuration > dur)
+                    {
+                        SegmentDuration = (TimeSpan)dur - SegmentStart;
+                    }
+                }
+            }
         }
 
         [Browsable(false)]
@@ -318,6 +385,16 @@ namespace YT_RED.Controls
         {
             get { return txtCropRight.Text; }
             set { txtCropRight.Text = value; }
+        }
+
+        public int TotalVerticalCrop
+        {
+            get { return Convert.ToInt32(txtCropTop.Text) + Convert.ToInt32(txtCropBottom.Text); }
+        }
+
+        public int TotalHorizontalCrop
+        {
+            get { return Convert.ToInt32(txtCropLeft.Text) + Convert.ToInt32(txtCropRight.Text); }
         }
 
         public Size TotalControlSize

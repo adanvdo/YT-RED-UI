@@ -107,6 +107,12 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 9/1/2023 v1.0.4.1
+- Fixed Bug where Invalid Crop Values caused a crash
+
+### 8/16/2023 v1.0.4.0
+- Beta Branch Updated from v1.0.3.4-alpha
+
 ### 8/15/2023 v1.0.3.4
 - Fixed and Implemented GIF Conversion option
 - Fixed Bug with Dependency Updater Version Check
