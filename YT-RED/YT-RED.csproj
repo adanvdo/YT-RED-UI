@@ -227,6 +227,12 @@
     <Compile Include="Controls\ControlPanel.Designer.cs">
       <DependentUpon>ControlPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\CropForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\CropForm.Designer.cs">
+      <DependentUpon>CropForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\CustomTabFormPage.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -313,6 +319,9 @@
     <Compile Include="Utils\WebUtil.cs" />
     <EmbeddedResource Include="Controls\ControlPanel.resx">
       <DependentUpon>ControlPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\CropForm.resx">
+      <DependentUpon>CropForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ImageControl.resx">
       <DependentUpon>ImageControl.cs</DependentUpon>
