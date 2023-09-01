@@ -15,6 +15,7 @@ namespace YT_RED.Controls
 {
     public partial class ControlPanel : DevExpress.XtraEditors.XtraUserControl
     {
+        bool designMode = (LicenseManager.UsageMode == LicenseUsageMode.Designtime);
         private string formatWarning = "YT-RED is currently set to Always Convert to your\nPreferred Video and Audio Format.\nThis can be changed in Advanced Settings";
         private string gifWarning = "GIF Conversion has the following limitations\nMax Size: 600px\nMax Frames: 300\nMax Duration: 60 Seconds\nFramerate is adjusted to meet this criteria";
 
@@ -666,10 +667,13 @@ namespace YT_RED.Controls
         {
             InitializeComponent();
             toggleForeColor = toggleSegment.ForeColor;
-            if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
+            if (!designMode)
             {
-                this.intendedAudioFormat = AppSettings.Default.Advanced.PreferredAudioFormat;
-                this.intendedVideoFormat = AppSettings.Default.Advanced.PreferredVideoFormat;
+                if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
+                {
+                    this.intendedAudioFormat = AppSettings.Default.Advanced.PreferredAudioFormat;
+                    this.intendedVideoFormat = AppSettings.Default.Advanced.PreferredVideoFormat;
+                }
             }
             InitControls();
         }
@@ -685,24 +689,27 @@ namespace YT_RED.Controls
 
         public void InitControls()
         {
-            videoFormats = new List<string>();
-            List<string> vFormats = new List<string>() { "" };
-            vFormats.AddRange(Enum.GetNames(typeof(VideoFormat)).Cast<string>());
-            videoFormats.AddRange(vFormats.Where(f => f != "UNSPECIFIED"));// && f != "GIF"));
-            cbVideoFormat.Properties.Items.AddRange(videoFormats);
-            cbVideoFormat.SelectedIndex = 0;
-            audioFormats = new List<string>();
-            List<string> aFormats = new List<string>() { "" };
-            aFormats.AddRange(Enum.GetNames(typeof(AudioFormat)).Cast<string>());
-            audioFormats.AddRange(aFormats.Where(f => f != "UNSPECIFIED"));
-            cbAudioFormat.Properties.Items.AddRange(audioFormats);
-            cbAudioFormat.SelectedIndex = 0;
-            cbMaxRes.Properties.Items.AddRange(Utils.VideoUtil.ResolutionList);
-            cbMaxRes.SelectedIndex = 4;
-            txtMaxFilesize.Text = "0";
-            lblDuration.Text = AppSettings.Default.Layout.SegmentControlMode == SegmentControlMode.Duration ? "Duration" : "End";
-            inInit = false;
-            this.controlsUpdated();
+            if (!designMode)
+            {
+                videoFormats = new List<string>();
+                List<string> vFormats = new List<string>() { "" };
+                vFormats.AddRange(Enum.GetNames(typeof(VideoFormat)).Cast<string>());
+                videoFormats.AddRange(vFormats.Where(f => f != "UNSPECIFIED"));// && f != "GIF"));
+                cbVideoFormat.Properties.Items.AddRange(videoFormats);
+                cbVideoFormat.SelectedIndex = 0;
+                audioFormats = new List<string>();
+                List<string> aFormats = new List<string>() { "" };
+                aFormats.AddRange(Enum.GetNames(typeof(AudioFormat)).Cast<string>());
+                audioFormats.AddRange(aFormats.Where(f => f != "UNSPECIFIED"));
+                cbAudioFormat.Properties.Items.AddRange(audioFormats);
+                cbAudioFormat.SelectedIndex = 0;
+                cbMaxRes.Properties.Items.AddRange(Utils.VideoUtil.ResolutionList);
+                cbMaxRes.SelectedIndex = 4;
+                txtMaxFilesize.Text = "0";
+                lblDuration.Text = AppSettings.Default.Layout.SegmentControlMode == SegmentControlMode.Duration ? "Duration" : "End";
+                inInit = false;
+                this.controlsUpdated();
+            }
         }
 
         private List<string> videoFormats;
