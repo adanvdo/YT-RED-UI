@@ -1636,7 +1636,19 @@ namespace YT_RED
             cpMainControlPanel.DownloadAudioVisible = false;
             Classes.YTDLFormatData fd = gvFormats.GetFocusedRow() as Classes.YTDLFormatData;
             if (fd.Type == Classes.StreamType.Video || fd.Type == Classes.StreamType.AudioAndVideo)
+            {
                 cpMainControlPanel.SetCurrentFormats(fd);
+                if (fd.Width != null && fd.Height != null)
+                {
+                    videoInfoPanel.UseMediaSize = new Size((int)fd.Width, (int)fd.Height);
+                    videoInfoPanel.ShowCropButton(true);
+                }
+                else
+                {
+                    videoInfoPanel.UseMediaSize = new Size(0, 0);
+                    videoInfoPanel.ShowCropButton(false);
+                }
+            }
             else if (fd.Type == Classes.StreamType.Audio)
                 cpMainControlPanel.SetCurrentFormats(null, fd);
             if(fd.VideoCodec == "none")
@@ -1801,6 +1813,20 @@ namespace YT_RED
                     else
                         selectedVideoIndex = -1;
                     cpMainControlPanel.RemoveCurrentFormat(selection.Type);
+                }
+
+                if (cpMainControlPanel.CurrentFormatPair != null)
+                {
+                    if (cpMainControlPanel.CurrentFormatPair.Width != null && cpMainControlPanel.CurrentFormatPair.Height != null)
+                    {
+                        videoInfoPanel.UseMediaSize = new Size((int)cpMainControlPanel.CurrentFormatPair.Width, (int)cpMainControlPanel.CurrentFormatPair.Height);
+                        videoInfoPanel.ShowCropButton(true);
+                    }
+                    else
+                    {
+                        videoInfoPanel.UseMediaSize = new Size(0, 0);
+                        videoInfoPanel.ShowCropButton(false);
+                    }
                 }
 
                 if (gvFormats.GetSelectedRows().Length < 1)
@@ -2012,6 +2038,37 @@ namespace YT_RED
                 cpMainControlPanel.MinimumSize = new Size(0, 0);
                 cpMainControlPanel.AdjustControls(pnlScrollableControls.Height);
             }
+        }
+
+        private void videoInfoPanel_Crop_Click(object sender, EventArgs e)
+        {
+            using (var cropForm = new CropForm(videoInfoPanel.CurrentImage.Clone() as Image, videoInfoPanel.UseMediaSize))
+            {
+                cropForm.StartPosition = FormStartPosition.CenterScreen;
+                DialogResult cropRes = cropForm.ShowDialog();
+                if (cropRes == DialogResult.OK)
+                {
+                    if(!cpMainControlPanel.CropEnabled)
+                        cpMainControlPanel.EnableToggle(false, true, false, true, false);
+
+                    cpMainControlPanel.CropTop = cropForm.Crops[0].ToString();
+                    cpMainControlPanel.CropBottom = cropForm.Crops[1].ToString();
+                    cpMainControlPanel.CropLeft = cropForm.Crops[2].ToString();
+                    cpMainControlPanel.CropRight = cropForm.Crops[3].ToString();
+                }
+                else if (cropRes == DialogResult.Cancel)
+                {
+                    return;
+                }
+            }
+        }
+
+        private void gvFormats_RowCountChanged(object sender, EventArgs e)
+        {
+            videoInfoPanel.ShowCropButton(
+                (gvFormats.RowCount == 0 && cpMainControlPanel.CurrentFormatPair == null)
+                || (gvFormats.RowCount > 0 && cpMainControlPanel.CurrentFormatPair != null
+                && (cpMainControlPanel.CurrentFormatPair.Type == Classes.StreamType.Video || cpMainControlPanel.CurrentFormatPair.Type == Classes.StreamType.AudioAndVideo)));
         }
     }
 }

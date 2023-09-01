@@ -204,6 +204,7 @@
             this.gvFormats.SelectionChanged += new DevExpress.Data.SelectionChangedEventHandler(this.gvFormats_SelectionChanged);
             this.gvFormats.FocusedRowChanged += new DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventHandler(this.gvFormats_FocusedRowChanged);
             this.gvFormats.CustomColumnDisplayText += new DevExpress.XtraGrid.Views.Base.CustomColumnDisplayTextEventHandler(this.gvFormats_CustomColumnDisplayText);
+            this.gvFormats.RowCountChanged += new System.EventHandler(this.gvFormats_RowCountChanged);
             // 
             // repPictureEdit
             // 
@@ -273,6 +274,7 @@
             this.videoInfoPanel.Size = new System.Drawing.Size(839, 150);
             this.videoInfoPanel.TabIndex = 2;
             this.videoInfoPanel.Visible = false;
+            this.videoInfoPanel.Crop_Click += new System.EventHandler(this.videoInfoPanel_Crop_Click);
             // 
             // marqueeProgressBarControl1
             // 
@@ -321,6 +323,7 @@
             // cpMainControlPanel
             // 
             this.cpMainControlPanel.ConvertAudioFormat = null;
+            this.cpMainControlPanel.ConvertIntended = false;
             this.cpMainControlPanel.ConvertVideoFormat = null;
             this.cpMainControlPanel.CropBottom = "0";
             this.cpMainControlPanel.CropLeft = "0";

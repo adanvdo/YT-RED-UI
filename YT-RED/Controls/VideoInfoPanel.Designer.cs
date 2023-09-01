@@ -30,6 +30,7 @@
         {
             this.lblMediaInfo = new DevExpress.XtraEditors.LabelControl();
             this.pnlMediaInfo = new DevExpress.XtraEditors.PanelControl();
+            this.btnCropMedia = new DevExpress.XtraEditors.SimpleButton();
             this.pnlTextPanel = new DevExpress.XtraEditors.PanelControl();
             this.txtDescription = new DevExpress.XtraEditors.MemoEdit();
             this.txtDuration = new DevExpress.XtraEditors.TextEdit();
@@ -64,6 +65,7 @@
             // pnlMediaInfo
             // 
             this.pnlMediaInfo.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.pnlMediaInfo.Controls.Add(this.btnCropMedia);
             this.pnlMediaInfo.Controls.Add(this.pnlTextPanel);
             this.pnlMediaInfo.Controls.Add(this.peThumbnail);
             this.pnlMediaInfo.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -72,6 +74,22 @@
             this.pnlMediaInfo.Name = "pnlMediaInfo";
             this.pnlMediaInfo.Size = new System.Drawing.Size(572, 125);
             this.pnlMediaInfo.TabIndex = 3;
+            // 
+            // btnCropMedia
+            // 
+            this.btnCropMedia.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnCropMedia.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
+            this.btnCropMedia.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
+            this.btnCropMedia.ImageOptions.SvgImage = global::YT_RED.Properties.Resources.crop;
+            this.btnCropMedia.ImageOptions.SvgImageColorizationMode = DevExpress.Utils.SvgImageColorizationMode.Full;
+            this.btnCropMedia.ImageOptions.SvgImageSize = new System.Drawing.Size(20, 20);
+            this.btnCropMedia.Location = new System.Drawing.Point(187, 8);
+            this.btnCropMedia.Name = "btnCropMedia";
+            this.btnCropMedia.Size = new System.Drawing.Size(23, 23);
+            this.btnCropMedia.TabIndex = 4;
+            this.btnCropMedia.ToolTip = "Crop Media";
+            this.btnCropMedia.Visible = false;
+            this.btnCropMedia.Click += new System.EventHandler(this.btnCropMedia_Click);
             // 
             // pnlTextPanel
             // 
@@ -140,6 +158,7 @@
             this.peThumbnail.Margin = new System.Windows.Forms.Padding(0);
             this.peThumbnail.Name = "peThumbnail";
             this.peThumbnail.Properties.AllowFocused = false;
+            this.peThumbnail.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.peThumbnail.Properties.NullText = " ";
             this.peThumbnail.Properties.ReadOnly = true;
             this.peThumbnail.Properties.ShowCameraMenuItem = DevExpress.XtraEditors.Controls.CameraMenuItemVisibility.Auto;
@@ -148,7 +167,6 @@
             this.peThumbnail.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Zoom;
             this.peThumbnail.Size = new System.Drawing.Size(219, 125);
             this.peThumbnail.TabIndex = 2;
-            this.peThumbnail.LoadCompleted += new System.EventHandler(this.peThumbnail_LoadCompleted);
             // 
             // VideoInfoPanel
             // 
@@ -180,5 +198,6 @@
         private DevExpress.XtraEditors.TextEdit txtTitle;
         private DevExpress.XtraEditors.TextEdit txtDuration;
         private DevExpress.XtraEditors.MemoEdit txtDescription;
+        private DevExpress.XtraEditors.SimpleButton btnCropMedia;
     }
 }

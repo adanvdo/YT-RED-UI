@@ -439,7 +439,7 @@ namespace YT_RED.Controls
             {
                 VideoFormat? v = value;
                 if (v != null)
-                    cbVideoFormat.SelectedIndex = cbVideoFormat.Properties.Items.IndexOf(value.ToString());
+                    cbVideoFormat.SelectedIndex = value == VideoFormat.UNSPECIFIED ? 0 : cbVideoFormat.Properties.Items.IndexOf(value.ToString());
             }
         }
 
@@ -462,7 +462,7 @@ namespace YT_RED.Controls
             {
                 AudioFormat? v = value;
                 if (v != null)
-                    cbAudioFormat.SelectedIndex = cbAudioFormat.Properties.Items.IndexOf(value.ToString());
+                    cbAudioFormat.SelectedIndex = value == AudioFormat.UNSPECIFIED ? 0 : cbAudioFormat.Properties.Items.IndexOf(value.ToString());
             }
         }
 

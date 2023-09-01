@@ -35,7 +35,18 @@ namespace YT_RED.Classes
                 else this.Type = StreamType.Unknown;
             }
         }
-        
+
+        [JsonIgnore]
+        public int? Width
+        {
+            get { return  (int)this.videoFormat?.Width; }
+        }
+
+        [JsonIgnore] 
+        public int? Height
+        {
+            get { return (int)this.videoFormat?.Height; }
+        }
 
         private YTDLFormatData audioFormat;
         [JsonProperty("audio_format")]

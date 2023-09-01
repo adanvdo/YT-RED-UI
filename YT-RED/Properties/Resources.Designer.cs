@@ -173,6 +173,16 @@ namespace YT_RED.Properties {
         /// <summary>
         ///   Looks up a localized resource of type DevExpress.Utils.Svg.SvgImage.
         /// </summary>
+        internal static DevExpress.Utils.Svg.SvgImage crop {
+            get {
+                object obj = ResourceManager.GetObject("crop", resourceCulture);
+                return ((DevExpress.Utils.Svg.SvgImage)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type DevExpress.Utils.Svg.SvgImage.
+        /// </summary>
         internal static DevExpress.Utils.Svg.SvgImage enablesearch {
             get {
                 object obj = ResourceManager.GetObject("enablesearch", resourceCulture);
