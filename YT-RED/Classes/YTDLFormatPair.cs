@@ -39,7 +39,10 @@ namespace YT_RED.Classes
         [JsonIgnore]
         public int? Width
         {
-            get { return  (int)this.videoFormat?.Width; }
+            get {
+                if (this.videoFormat != null) return (int)this.videoFormat.Width;
+                else return null;
+            }
         }
 
         [JsonIgnore] 

@@ -99,6 +99,7 @@
             // btnOk
             // 
             this.btnOk.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnOk.Enabled = false;
             this.btnOk.Location = new System.Drawing.Point(439, 2);
             this.btnOk.Name = "btnOk";
             this.btnOk.ShowFocusRectangle = DevExpress.Utils.DefaultBoolean.False;

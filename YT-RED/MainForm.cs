@@ -2046,7 +2046,7 @@ namespace YT_RED
             {
                 cropForm.StartPosition = FormStartPosition.CenterScreen;
                 DialogResult cropRes = cropForm.ShowDialog();
-                if (cropRes == DialogResult.OK)
+                if (cropRes == DialogResult.OK && cropForm.Crops != null)
                 {
                     if(!cpMainControlPanel.CropEnabled)
                         cpMainControlPanel.EnableToggle(false, true, false, true, false);

@@ -39,13 +39,14 @@ namespace YT_RED.Controls
         private void resetArea()
         {
             area = Rectangle.Empty;
+            pePictureEdit.Refresh();
         }
 
         bool checkBounds(int x, int y)
         {
             var viewInfo = pePictureEdit.GetViewInfo() as PictureEditViewInfo;
             var visibleBounds = viewInfo.PictureScreenBounds;
-            bool result = x >= 0 && x <= (visibleBounds.X + visibleBounds.Width) && y >= 0 && y <= (visibleBounds.Y + visibleBounds.Height);
+            bool result = x >= visibleBounds.X && x <= (visibleBounds.X + visibleBounds.Width) && y >= visibleBounds.Y && y <= (visibleBounds.Y + visibleBounds.Height);
             return result;
         }
 
@@ -72,7 +73,7 @@ namespace YT_RED.Controls
 
         private void pePictureEdit_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button != MouseButtons.Left) return;
+            if (e.Button != MouseButtons.Left || !checkBounds(e.Location.X, e.Location.Y)) return;
             mouseDownPoint = e.Location;
             resetArea();
             PictureEdit edit = sender as PictureEdit;
@@ -81,19 +82,33 @@ namespace YT_RED.Controls
 
         private void pePictureEdit_MouseMove(object sender, MouseEventArgs e)
         {
-            if (mouseDownPoint.IsEmpty) return;
-            if (e.Button != MouseButtons.Left) return;
             Point mouseMovePoint = e.Location;
             if (checkBounds(mouseMovePoint.X, mouseMovePoint.Y))
             {
+                pePictureEdit.Cursor = Cursors.Cross;
+                if (mouseDownPoint.IsEmpty) return;
+                if (e.Button != MouseButtons.Left) return;
+
                 area = new Rectangle(mouseDownPoint.X, mouseDownPoint.Y, mouseMovePoint.X - mouseDownPoint.X, mouseMovePoint.Y - mouseDownPoint.Y);
                 PictureEdit edit = sender as PictureEdit;
                 edit.Refresh();
             }
+            else
+            {
+                pePictureEdit.Cursor = Cursors.Default;
+            }
         }
 
         private void pePictureEdit_MouseUp(object sender, MouseEventArgs e)
-        {
+        {            
+            if(area == Rectangle.Empty || area.Width < 50 || area.Height < 50)
+            {
+                resetArea();
+                this.crops = null;
+                btnOk.Enabled = false;
+                return;
+            }
+            btnOk.Enabled = true;
             PictureEdit edit = sender as PictureEdit;
             var viewInfo = edit.GetViewInfo() as PictureEditViewInfo;
             var visibleBounds = viewInfo.PictureScreenBounds;

@@ -107,7 +107,13 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 9/5/2023 v1.0.4.2
+- Fixed bug where app would crash if only an audio format was selected
+- Fixed bug where graphic crop tool accepted an empty crop area or area less than 50x50
+- Fixed bug where graphic crop tool ok button was enabled when there was no crop selection
+
 ### 9/1/2023 v1.0.4.1
+- Added Graphical Crop Feature for Selection Downloads
 - Fixed Bug where Invalid Crop Values caused a crash
 
 ### 8/16/2023 v1.0.4.0
