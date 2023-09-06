@@ -82,10 +82,10 @@
             this.btnCropMedia.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
             this.btnCropMedia.ImageOptions.SvgImage = global::YT_RED.Properties.Resources.crop;
             this.btnCropMedia.ImageOptions.SvgImageColorizationMode = DevExpress.Utils.SvgImageColorizationMode.Full;
-            this.btnCropMedia.ImageOptions.SvgImageSize = new System.Drawing.Size(20, 20);
-            this.btnCropMedia.Location = new System.Drawing.Point(187, 8);
+            this.btnCropMedia.ImageOptions.SvgImageSize = new System.Drawing.Size(28, 28);
+            this.btnCropMedia.Location = new System.Drawing.Point(183, 7);
             this.btnCropMedia.Name = "btnCropMedia";
-            this.btnCropMedia.Size = new System.Drawing.Size(23, 23);
+            this.btnCropMedia.Size = new System.Drawing.Size(30, 30);
             this.btnCropMedia.TabIndex = 4;
             this.btnCropMedia.ToolTip = "Crop Media";
             this.btnCropMedia.Visible = false;
