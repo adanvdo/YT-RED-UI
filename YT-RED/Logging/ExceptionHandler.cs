@@ -7,11 +7,10 @@ namespace YT_RED.Logging
 {
     public static class ExceptionHandler
     {
-        public static bool LogFFmpegException(Exception exception, bool showDialog = true)
+        public static bool LogFFmpegException(Exception exception, bool showDialog = true, string videoUrl = "", string audioUrl = "")
         {
-            return LogException(exception, showDialog, true);
+            return LogException(exception, showDialog, true, videoUrl, audioUrl);
         }
-
 
         public static bool LogException(Exception exception, string videoUrl, string audioUrl = null, bool ffmpeg = false)
         {

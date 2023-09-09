@@ -146,7 +146,7 @@ namespace YT_RED.Utils
                 }
                 catch(Exception ex)
                 {
-                    ExceptionHandler.LogException(ex);
+                    ExceptionHandler.LogException(ex, formatPair.VideoFormat.Url);
                 }
             }
 
@@ -322,6 +322,9 @@ namespace YT_RED.Utils
 
         public static async Task<IConversion> PrepareBestYtdlConversion(string url, string format, TimeSpan? start = null, TimeSpan? duration = null, bool usePreferences = false, int[] crops = null, VideoFormat convertVideo = VideoFormat.UNSPECIFIED, AudioFormat convertAudio = AudioFormat.UNSPECIFIED, bool embedThumbnail = false, Action<string> showOutput = null)
         {
+            string videoUrl = string.Empty;
+            string audioUrl = string.Empty;
+
             try
             {
                 showOutput("Evaluating Formats..");
@@ -362,8 +365,6 @@ namespace YT_RED.Utils
 
                 showOutput("Preparing Post-Processing Args..");
 
-                string videoUrl = string.Empty;
-                string audioUrl = string.Empty;
                 int outWidth = -1;
                 int outHeight = -1;
                 int x = -1;
@@ -476,7 +477,7 @@ namespace YT_RED.Utils
             }
             catch(Exception ex)
             {
-                ExceptionHandler.LogException(ex);
+                ExceptionHandler.LogException(ex, videoUrl, audioUrl);
             }
             return null;
         }

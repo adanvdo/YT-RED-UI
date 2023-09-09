@@ -1202,7 +1202,7 @@ namespace YT_RED
                         catch (Exception ex)
                         {
                             if (ex.Message.ToLower() != "a task was canceled.")
-                                ExceptionHandler.LogFFmpegException(ex);
+                                ExceptionHandler.LogFFmpegException(ex, true, url);
                             result = new RunResult<string>(false, new string[] { ex.Message }, null);
                         }
                     }
@@ -1230,7 +1230,7 @@ namespace YT_RED
                         catch (Exception ex)
                         {
                             if (ex.Message.ToLower() != "a task was canceled.")
-                                ExceptionHandler.LogFFmpegException(ex);
+                                ExceptionHandler.LogFFmpegException(ex, true, url);
                             result = new RunResult<string>(false, new string[] { ex.Message }, null);
                         }
                     }
@@ -1488,7 +1488,7 @@ namespace YT_RED
                     {
                         result = new RunResult<string>(false, new string[] { ex.Message }, null);
                         if (ex.Message.ToLower() != "a task was canceled.")
-                            ExceptionHandler.LogFFmpegException(ex);
+                            ExceptionHandler.LogFFmpegException(ex, true, VideoUtil.ConvertToYouTubeLink(ipMainInput.URL).Url);
                     }
                 }
                 else
