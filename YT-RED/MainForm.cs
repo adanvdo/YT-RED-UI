@@ -1520,7 +1520,7 @@ namespace YT_RED
             YT_RED.Classes.StreamType t = Classes.StreamType.Audio;
             if (cpMainControlPanel.CurrentFormatPair.AudioCodec == "none")
                 t = Classes.StreamType.Video;
-            else if (cpMainControlPanel.CurrentFormatPair.AudioFormat != null || (cpMainControlPanel.CurrentFormatPair.VideoFormat != null && cpMainControlPanel.CurrentFormatPair.VideoFormat.Resolution == "audio only"))
+            else if (cpMainControlPanel.CurrentFormatPair.AudioFormat != null && (cpMainControlPanel.CurrentFormatPair.VideoFormat == null || (cpMainControlPanel.CurrentFormatPair.VideoFormat != null && cpMainControlPanel.CurrentFormatPair.VideoFormat.Resolution == "audio only")))
                 t = Classes.StreamType.Audio;
             else
                 t = Classes.StreamType.AudioAndVideo;
@@ -1942,7 +1942,7 @@ namespace YT_RED
 
                 if (cpMainControlPanel.TargetLog.FormatPair == null)
                 {
-                    ytdlDownloadBest(cpMainControlPanel.TargetLog.Url, cpMainControlPanel.TargetLog.Type);
+                    ytdlDownloadBest(cpMainControlPanel.TargetLog.Url, cpMainControlPanel.TargetLog.StreamType);
                 }
                 else
                 {

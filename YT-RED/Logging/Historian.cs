@@ -69,11 +69,11 @@ namespace YT_RED.Logging
                     List<DownloadLog> filterLogs;
                     if(deleteDownloads == DownloadCategory.Video)
                     {
-                        filterLogs = DownloadHistory.Where(dl => dl.Type == Classes.StreamType.Video || dl.Type == Classes.StreamType.AudioAndVideo).ToList();                        
+                        filterLogs = DownloadHistory.Where(dl => dl.StreamType == Classes.StreamType.Video || dl.StreamType == Classes.StreamType.AudioAndVideo).ToList();
                     }
                     else if (deleteDownloads == DownloadCategory.Audio)
                     {
-                        filterLogs = DownloadHistory.Where(dl => dl.Type == Classes.StreamType.Audio).ToList();
+                        filterLogs = DownloadHistory.Where(dl => dl.StreamType == Classes.StreamType.Audio).ToList();
                     }
                     else
                     {
@@ -107,12 +107,12 @@ namespace YT_RED.Logging
                 }
                 else if(deleteLogs == DownloadCategory.Video)
                 {
-                    DownloadHistory.RemoveAll(h => h.Type == Classes.StreamType.Video || h.Type == Classes.StreamType.AudioAndVideo);
+                    DownloadHistory.RemoveAll(h => h.StreamType == Classes.StreamType.Video || h.StreamType == Classes.StreamType.AudioAndVideo);
                     hasChanges = true;
                 }
                 else if (deleteLogs == DownloadCategory.Audio)
                 {
-                    DownloadHistory.RemoveAll(h => h.Type == Classes.StreamType.Audio);
+                    DownloadHistory.RemoveAll(h => h.StreamType == Classes.StreamType.Audio);
                     hasChanges = true;
                 }
                 else 
