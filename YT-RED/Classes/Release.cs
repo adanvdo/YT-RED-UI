@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace YT_RED.Classes
+namespace YTR.Classes
 {
     public class Release
     {
@@ -44,6 +44,9 @@ namespace YT_RED.Classes
 
         [JsonProperty("ManualInstallRequired")]
         public bool ManualInstallRequired { get; set; }
+
+        [JsonProperty("ApplicationPrefix")]
+        public string ApplicationPrefix { get; set; }
 
         [JsonIgnore]
         public Version Version

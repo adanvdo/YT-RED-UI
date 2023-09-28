@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace YT_RED.Classes
+namespace YTR.Classes
 {
     public enum Resolution
     {

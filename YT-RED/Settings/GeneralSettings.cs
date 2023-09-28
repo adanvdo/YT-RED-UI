@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Reflection;
 using System.ComponentModel.DataAnnotations;
 
-namespace YT_RED.Settings
+namespace YTR.Settings
 {
     public class GeneralSettings : FeatureSettings
 	{
@@ -86,7 +86,7 @@ namespace YT_RED.Settings
 
         [Category("Download History")]
 		[DisplayName("Enable Download History")]
-		[Description("Enable YT-RED to keep a list of downloads for quick access on the Home screen")]
+		[Description("Enable YTR to keep a list of downloads for quick access on the Home screen")]
 		[DefaultValue(true)]
 		[JsonProperty("history_enabled")]
 		public bool EnableDownloadHistory { get; set; }

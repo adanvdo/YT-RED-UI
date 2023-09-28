@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace YT_RED_Updater
+namespace YTR_Updater
 {
     internal static class Program
     {
@@ -23,6 +23,8 @@ namespace YT_RED_Updater
             string appBase = string.Empty;
             string package = string.Empty;
             bool includeUpdater = false;
+            string oldPrefix = string.Empty;
+            string prefix = string.Empty;
 
             bool dummyRun = args.Length < 1;
 
@@ -40,11 +42,15 @@ namespace YT_RED_Updater
                     package = s.Remove(0, 5);
                 if(s.StartsWith("-updater"))
                     includeUpdater = true;
+                if (s.StartsWith("-oldprefix"))
+                    oldPrefix = s.Remove(0, 11);
+                if (s.StartsWith("-prefix"))
+                    prefix = s.Remove(0, 8);
             }
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(dummyRun ? new UpdaterForm() : new UpdaterForm(appBase, package, skin, palette, includeUpdater));
+            Application.Run(dummyRun ? new UpdaterForm() : new UpdaterForm(appBase, package, skin, palette, includeUpdater, string.IsNullOrEmpty(oldPrefix) ? prefix : oldPrefix, prefix));
         }
     }
 }

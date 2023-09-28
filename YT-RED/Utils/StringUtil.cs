@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace YT_RED.Utils
+namespace YTR.Utils
 {
 	public class StringUtility
 	{

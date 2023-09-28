@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Xabe.FFmpeg;
 
-namespace YT_RED.Classes
+namespace YTR.Classes
 {
     public class MediaStream
     {

@@ -1,4 +1,4 @@
-﻿namespace YT_RED.Controls
+﻿namespace YTR.Controls
 {
     partial class ControlPanel
     {
@@ -198,7 +198,7 @@
             this.btnCancelProcess.Appearance.Options.UseFont = true;
             this.btnCancelProcess.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnCancelProcess.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
-            this.btnCancelProcess.ImageOptions.SvgImage = global::YT_RED.Properties.Resources.close;
+            this.btnCancelProcess.ImageOptions.SvgImage = global::YTR.Properties.Resources.close;
             this.btnCancelProcess.ImageOptions.SvgImageSize = new System.Drawing.Size(25, 25);
             this.btnCancelProcess.Location = new System.Drawing.Point(2, 125);
             this.btnCancelProcess.Margin = new System.Windows.Forms.Padding(0);
@@ -218,7 +218,7 @@
             this.btnDownloadBest.Appearance.Options.UseFont = true;
             this.btnDownloadBest.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnDownloadBest.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
-            this.btnDownloadBest.ImageOptions.SvgImage = global::YT_RED.Properties.Resources.VideoSound;
+            this.btnDownloadBest.ImageOptions.SvgImage = global::YTR.Properties.Resources.VideoSound;
             this.btnDownloadBest.ImageOptions.SvgImageSize = new System.Drawing.Size(25, 25);
             this.btnDownloadBest.Location = new System.Drawing.Point(2, 93);
             this.btnDownloadBest.Margin = new System.Windows.Forms.Padding(0);
@@ -235,7 +235,7 @@
             this.btnDownloadAudio.Appearance.Options.UseFont = true;
             this.btnDownloadAudio.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnDownloadAudio.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
-            this.btnDownloadAudio.ImageOptions.SvgImage = global::YT_RED.Properties.Resources.sound;
+            this.btnDownloadAudio.ImageOptions.SvgImage = global::YTR.Properties.Resources.sound;
             this.btnDownloadAudio.ImageOptions.SvgImageSize = new System.Drawing.Size(25, 25);
             this.btnDownloadAudio.Location = new System.Drawing.Point(2, 61);
             this.btnDownloadAudio.Margin = new System.Windows.Forms.Padding(0);
@@ -269,7 +269,7 @@
             this.gcDownloadLimits.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gcDownloadLimits.CaptionImageOptions.AllowGlyphSkinning = true;
             this.gcDownloadLimits.Controls.Add(this.pnlLimitPanel);
-            buttonImageOptions1.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
+            buttonImageOptions1.SvgImage = global::YTR.Properties.Resources.actions_remove;
             buttonImageOptions1.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcDownloadLimits.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
             new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions1, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
@@ -371,7 +371,7 @@
             this.gcConvert.Controls.Add(this.hlblOpenSettings);
             this.gcConvert.Controls.Add(this.lblAlwaysConvert);
             this.gcConvert.Controls.Add(this.pnlConvertPanel);
-            buttonImageOptions2.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
+            buttonImageOptions2.SvgImage = global::YTR.Properties.Resources.actions_remove;
             buttonImageOptions2.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcConvert.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
             new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions2, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
@@ -415,7 +415,7 @@
             this.lblAlwaysConvert.Padding = new System.Windows.Forms.Padding(3);
             this.lblAlwaysConvert.Size = new System.Drawing.Size(319, 45);
             this.lblAlwaysConvert.TabIndex = 0;
-            this.lblAlwaysConvert.Text = "YT-RED is currently set to Always Convert to your \r\nPreferred Video and Audio For" +
+            this.lblAlwaysConvert.Text = "YTR is currently set to Always Convert to your \r\nPreferred Video and Audio For" +
     "mat. \r\nThis can be changed in Advanced Settings";
             this.lblAlwaysConvert.Visible = false;
             // 
@@ -503,7 +503,7 @@
             this.gcCrop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gcCrop.CaptionImageOptions.AllowGlyphSkinning = true;
             this.gcCrop.Controls.Add(this.pnlCropPanel);
-            buttonImageOptions3.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
+            buttonImageOptions3.SvgImage = global::YTR.Properties.Resources.actions_remove;
             buttonImageOptions3.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcCrop.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
             new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions3, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
@@ -671,7 +671,7 @@
             this.gcSegments.CaptionImageOptions.AllowGlyphSkinning = true;
             this.gcSegments.Controls.Add(this.lblSegmentDisclaimer);
             this.gcSegments.Controls.Add(this.pnlSegPanel);
-            buttonImageOptions4.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
+            buttonImageOptions4.SvgImage = global::YTR.Properties.Resources.actions_remove;
             buttonImageOptions4.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcSegments.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
             new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions4, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, false, true, "ytSegment", -1)});
@@ -964,9 +964,9 @@
             // 
             this.repFileExists.AutoHeight = false;
             this.repFileExists.CheckBoxOptions.Style = DevExpress.XtraEditors.Controls.CheckBoxStyle.Custom;
-            this.repFileExists.ImageOptions.SvgImageChecked = global::YT_RED.Properties.Resources.actions_checkcircled;
+            this.repFileExists.ImageOptions.SvgImageChecked = global::YTR.Properties.Resources.actions_checkcircled;
             this.repFileExists.ImageOptions.SvgImageSize = new System.Drawing.Size(20, 20);
-            this.repFileExists.ImageOptions.SvgImageUnchecked = global::YT_RED.Properties.Resources.security_warningcircled2;
+            this.repFileExists.ImageOptions.SvgImageUnchecked = global::YTR.Properties.Resources.security_warningcircled2;
             this.repFileExists.Name = "repFileExists";
             // 
             // repPostProcessed
@@ -974,9 +974,9 @@
             this.repPostProcessed.AutoHeight = false;
             this.repPostProcessed.CheckBoxOptions.Style = DevExpress.XtraEditors.Controls.CheckBoxStyle.Custom;
             this.repPostProcessed.CheckBoxOptions.SvgImageSize = new System.Drawing.Size(20, 20);
-            this.repPostProcessed.ImageOptions.SvgImageChecked = global::YT_RED.Properties.Resources.functionsinformation;
+            this.repPostProcessed.ImageOptions.SvgImageChecked = global::YTR.Properties.Resources.functionsinformation;
             this.repPostProcessed.ImageOptions.SvgImageSize = new System.Drawing.Size(20, 20);
-            this.repPostProcessed.ImageOptions.SvgImageUnchecked = global::YT_RED.Properties.Resources.about1;
+            this.repPostProcessed.ImageOptions.SvgImageUnchecked = global::YTR.Properties.Resources.about1;
             this.repPostProcessed.Name = "repPostProcessed";
             // 
             // historyTooltip

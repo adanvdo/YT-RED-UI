@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace YT_RED.Controls
+namespace YTR.Controls
 {
     public partial class MsgBox : DevExpress.XtraEditors.XtraForm
     {
@@ -12,7 +12,7 @@ namespace YT_RED.Controls
         private static string _message = string.Empty;
         private static string _caption = string.Empty;
         private static Buttons _buttons = Buttons.OK;
-        private static Icon _icon = YT_RED.Controls.Icon.Warning;
+        private static Icon _icon = YTR.Controls.Icon.Warning;
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern bool MessageBeep(uint type);
@@ -112,19 +112,19 @@ namespace YT_RED.Controls
             {
                 switch (icon)
                 {
-                    case YT_RED.Controls.Icon.Application:
+                    case YTR.Controls.Icon.Application:
                         MessageBeep((uint)beepType.OK);
                         break;
-                    case YT_RED.Controls.Icon.Error:
+                    case YTR.Controls.Icon.Error:
                         MessageBeep((uint)beepType.Exclamation);
                         break;
-                    case YT_RED.Controls.Icon.Exclamation:
+                    case YTR.Controls.Icon.Exclamation:
                         MessageBeep((uint)beepType.Exclamation);
                         break;
-                    case YT_RED.Controls.Icon.Info:
+                    case YTR.Controls.Icon.Info:
                         MessageBeep((uint)beepType.SimpleBeep);
                         break;
-                    case YT_RED.Controls.Icon.Shield:
+                    case YTR.Controls.Icon.Shield:
                         MessageBeep((uint)beepType.Asterisk);
                         break;
                     default:
@@ -168,19 +168,19 @@ namespace YT_RED.Controls
             {
                 switch (icon)
                 {
-                    case YT_RED.Controls.Icon.Application:
+                    case YTR.Controls.Icon.Application:
                         MessageBeep((uint)beepType.OK);
                         break;
-                    case YT_RED.Controls.Icon.Error:
+                    case YTR.Controls.Icon.Error:
                         MessageBeep((uint)beepType.Exclamation);
                         break;
-                    case YT_RED.Controls.Icon.Exclamation:
+                    case YTR.Controls.Icon.Exclamation:
                         MessageBeep((uint)beepType.Exclamation);
                         break;
-                    case YT_RED.Controls.Icon.Info:
+                    case YTR.Controls.Icon.Info:
                         MessageBeep((uint)beepType.SimpleBeep);
                         break;
-                    case YT_RED.Controls.Icon.Shield:
+                    case YTR.Controls.Icon.Shield:
                         MessageBeep((uint)beepType.Asterisk);
                         break;
                     default:
@@ -210,19 +210,19 @@ namespace YT_RED.Controls
             {
                 switch (icon)
                 {
-                    case YT_RED.Controls.Icon.Application:
+                    case YTR.Controls.Icon.Application:
                         MessageBeep((uint)beepType.OK);
                         break;
-                    case YT_RED.Controls.Icon.Error:
+                    case YTR.Controls.Icon.Error:
                         MessageBeep((uint)beepType.Exclamation);
                         break;
-                    case YT_RED.Controls.Icon.Exclamation:
+                    case YTR.Controls.Icon.Exclamation:
                         MessageBeep((uint)beepType.Exclamation);
                         break;
-                    case YT_RED.Controls.Icon.Info:
+                    case YTR.Controls.Icon.Info:
                         MessageBeep((uint)beepType.SimpleBeep);
                         break;
-                    case YT_RED.Controls.Icon.Shield:
+                    case YTR.Controls.Icon.Shield:
                         MessageBeep((uint)beepType.Asterisk);
                         break;
                     default:
@@ -263,19 +263,19 @@ namespace YT_RED.Controls
             {
                 switch (icon)
                 {
-                    case YT_RED.Controls.Icon.Application:
+                    case YTR.Controls.Icon.Application:
                         MessageBeep((uint)beepType.OK);
                         break;
-                    case YT_RED.Controls.Icon.Error:
+                    case YTR.Controls.Icon.Error:
                         MessageBeep((uint)beepType.Exclamation);
                         break;
-                    case YT_RED.Controls.Icon.Exclamation:
+                    case YTR.Controls.Icon.Exclamation:
                         MessageBeep((uint)beepType.Exclamation);
                         break;
-                    case YT_RED.Controls.Icon.Info:
+                    case YTR.Controls.Icon.Info:
                         MessageBeep((uint)beepType.SimpleBeep);
                         break;
-                    case YT_RED.Controls.Icon.Shield:
+                    case YTR.Controls.Icon.Shield:
                         MessageBeep((uint)beepType.Asterisk);
                         break;
                     default:
@@ -328,28 +328,28 @@ namespace YT_RED.Controls
         {
             switch (icon)
             {
-                case YT_RED.Controls.Icon.Application:
+                case YTR.Controls.Icon.Application:
                     _msgBox.msgIcon.SvgImage = Properties.Resources.application;
                     break;
-                case YT_RED.Controls.Icon.Error:
+                case YTR.Controls.Icon.Error:
                     _msgBox.msgIcon.SvgImage = Properties.Resources.highimportance;
                     break;
-                case YT_RED.Controls.Icon.Exclamation:
+                case YTR.Controls.Icon.Exclamation:
                     _msgBox.msgIcon.SvgImage = Properties.Resources.exclamation;
                     break;
-                case YT_RED.Controls.Icon.Info:
+                case YTR.Controls.Icon.Info:
                     _msgBox.msgIcon.SvgImage = Properties.Resources.about;
                     break;
-                case YT_RED.Controls.Icon.Question:
+                case YTR.Controls.Icon.Question:
                     _msgBox.msgIcon.SvgImage = Properties.Resources.actions_question;
                     break;
-                case YT_RED.Controls.Icon.Search:
+                case YTR.Controls.Icon.Search:
                     _msgBox.msgIcon.SvgImage = Properties.Resources.enablesearch;
                     break;
-                case YT_RED.Controls.Icon.Shield:
+                case YTR.Controls.Icon.Shield:
                     _msgBox.msgIcon.SvgImage = Properties.Resources.shield;
                     break;
-                case YT_RED.Controls.Icon.Warning:
+                case YTR.Controls.Icon.Warning:
                     _msgBox.msgIcon.SvgImage = Properties.Resources.bo_attention;
                     break;
                 default:

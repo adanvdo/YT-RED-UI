@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Net.NetworkInformation;
 
-namespace YT_RED.Utils
+namespace YTR.Utils
 {
     public static class ReportingUtil
     {

@@ -1,4 +1,4 @@
-﻿namespace YT_RED
+﻿namespace YTR
 {
     partial class MainForm
     {
@@ -34,7 +34,7 @@
             this.bsiMessage = new DevExpress.XtraBars.BarStaticItem();
             this.skinBarSubItem1 = new DevExpress.XtraBars.SkinBarSubItem();
             this.bbiSettings = new DevExpress.XtraBars.BarButtonItem();
-            this.tfpMain = new YT_RED.Controls.CustomTabFormPage();
+            this.tfpMain = new YTR.Controls.CustomTabFormPage();
             this.tabFormContentContainer1 = new DevExpress.XtraBars.TabFormContentContainer();
             this.sccMainSplitter = new DevExpress.XtraEditors.SplitContainerControl();
             this.gcFormats = new DevExpress.XtraGrid.GridControl();
@@ -43,11 +43,11 @@
             this.pnlPlaylistControls = new DevExpress.XtraEditors.PanelControl();
             this.btnPLSelectAll = new DevExpress.XtraEditors.SimpleButton();
             this.lblSelectAFormat = new DevExpress.XtraEditors.LabelControl();
-            this.videoInfoPanel = new YT_RED.Controls.VideoInfoPanel();
+            this.videoInfoPanel = new YTR.Controls.VideoInfoPanel();
             this.marqueeProgressBarControl1 = new DevExpress.XtraEditors.MarqueeProgressBarControl();
-            this.ipMainInput = new YT_RED.Controls.InputPanel();
+            this.ipMainInput = new YTR.Controls.InputPanel();
             this.pnlScrollableControls = new DevExpress.XtraEditors.XtraScrollableControl();
-            this.cpMainControlPanel = new YT_RED.Controls.ControlPanel();
+            this.cpMainControlPanel = new YTR.Controls.ControlPanel();
             this.toolTipController = new DevExpress.Utils.ToolTipController(this.components);
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.taskBarMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -238,7 +238,7 @@
             // 
             this.btnPLSelectAll.Dock = System.Windows.Forms.DockStyle.Left;
             this.btnPLSelectAll.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
-            this.btnPLSelectAll.ImageOptions.SvgImage = global::YT_RED.Properties.Resources.checkbox;
+            this.btnPLSelectAll.ImageOptions.SvgImage = global::YTR.Properties.Resources.checkbox;
             this.btnPLSelectAll.ImageOptions.SvgImageColorizationMode = DevExpress.Utils.SvgImageColorizationMode.Full;
             this.btnPLSelectAll.ImageOptions.SvgImageSize = new System.Drawing.Size(18, 18);
             this.btnPLSelectAll.Location = new System.Drawing.Point(0, 0);
@@ -293,7 +293,7 @@
             this.ipMainInput.AutoSize = true;
             this.ipMainInput.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ipMainInput.Dock = System.Windows.Forms.DockStyle.Top;
-            this.ipMainInput.ListMode = YT_RED.Classes.ListMode.Format;
+            this.ipMainInput.ListMode = YTR.Classes.ListMode.Format;
             this.ipMainInput.Location = new System.Drawing.Point(0, 0);
             this.ipMainInput.Margin = new System.Windows.Forms.Padding(0);
             this.ipMainInput.MinimumSize = new System.Drawing.Size(400, 100);
@@ -360,11 +360,11 @@
             // 
             this.notifyIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.notifyIcon.BalloonTipText = "Quick Download is now enabled.\r\nConfigure Hotkey in Advanced Settings.\r\nDouble Cl" +
-    "ick to open YT-RED";
-            this.notifyIcon.BalloonTipTitle = "YT-RED is Still Running";
+    "ick to open YTR";
+            this.notifyIcon.BalloonTipTitle = "YTR is Still Running";
             this.notifyIcon.ContextMenuStrip = this.taskBarMenu;
             this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
-            this.notifyIcon.Text = "YT-RED";
+            this.notifyIcon.Text = "YTR";
             this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseDoubleClick);
             // 
             // taskBarMenu
@@ -412,7 +412,7 @@
             this.MinimumSize = new System.Drawing.Size(823, 664);
             this.Name = "MainForm";
             this.TabFormControl = this.tcMainTabControl;
-            this.Text = "YT-RED";
+            this.Text = "YTR";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.tcMainTabControl)).EndInit();
             this.tabFormContentContainer1.ResumeLayout(false);
@@ -446,7 +446,7 @@
         private System.Windows.Forms.ToolStripMenuItem tsiExit;
         private System.Windows.Forms.ToolStripMenuItem tsiSettings;
         private DevExpress.Utils.ToolTipController toolTipController;
-        private YT_RED.Controls.CustomTabFormPage tfpMain;
+        private YTR.Controls.CustomTabFormPage tfpMain;
         private DevExpress.XtraBars.TabFormContentContainer tabFormContentContainer1;
         private DevExpress.XtraEditors.SplitContainerControl sccMainSplitter;
         private Controls.InputPanel ipMainInput;

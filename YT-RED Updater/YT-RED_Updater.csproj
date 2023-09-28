@@ -7,7 +7,7 @@
     <ProjectGuid>{2D46F4CA-39DD-4414-9F45-17905824913E}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>YT_RED_Updater</RootNamespace>
+    <RootNamespace>YTR_Updater</RootNamespace>
     <AssemblyName>YT-RED_Updater</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

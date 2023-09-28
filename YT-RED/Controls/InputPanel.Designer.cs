@@ -1,4 +1,4 @@
-﻿namespace YT_RED.Controls
+﻿namespace YTR.Controls
 {
     partial class InputPanel
     {
@@ -150,7 +150,7 @@
             this.btnListFormats.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
             this.btnListFormats.Appearance.Options.UseFont = true;
             this.btnListFormats.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
-            this.btnListFormats.ImageOptions.SvgImage = global::YT_RED.Properties.Resources.listnumbers;
+            this.btnListFormats.ImageOptions.SvgImage = global::YTR.Properties.Resources.listnumbers;
             this.btnListFormats.ImageOptions.SvgImageSize = new System.Drawing.Size(25, 25);
             this.btnListFormats.Location = new System.Drawing.Point(218, 62);
             this.btnListFormats.Name = "btnListFormats";
@@ -187,7 +187,7 @@
             // pictureEdit6
             // 
             this.pictureEdit6.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pictureEdit6.EditValue = global::YT_RED.Properties.Resources.twitch_circle;
+            this.pictureEdit6.EditValue = global::YTR.Properties.Resources.twitch_circle;
             this.pictureEdit6.Location = new System.Drawing.Point(200, 2);
             this.pictureEdit6.Margin = new System.Windows.Forms.Padding(0);
             this.pictureEdit6.Name = "pictureEdit6";
@@ -210,7 +210,7 @@
             // pictureEdit5
             // 
             this.pictureEdit5.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pictureEdit5.EditValue = global::YT_RED.Properties.Resources.instagram_circle;
+            this.pictureEdit5.EditValue = global::YTR.Properties.Resources.instagram_circle;
             this.pictureEdit5.Location = new System.Drawing.Point(175, 2);
             this.pictureEdit5.Margin = new System.Windows.Forms.Padding(0);
             this.pictureEdit5.Name = "pictureEdit5";
@@ -233,7 +233,7 @@
             // pictureEdit4
             // 
             this.pictureEdit4.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pictureEdit4.EditValue = global::YT_RED.Properties.Resources.vimeo_circle;
+            this.pictureEdit4.EditValue = global::YTR.Properties.Resources.vimeo_circle;
             this.pictureEdit4.Location = new System.Drawing.Point(150, 2);
             this.pictureEdit4.Margin = new System.Windows.Forms.Padding(0);
             this.pictureEdit4.Name = "pictureEdit4";
@@ -256,7 +256,7 @@
             // pictureEdit3
             // 
             this.pictureEdit3.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pictureEdit3.EditValue = global::YT_RED.Properties.Resources.twitter_circle;
+            this.pictureEdit3.EditValue = global::YTR.Properties.Resources.twitter_circle;
             this.pictureEdit3.Location = new System.Drawing.Point(125, 2);
             this.pictureEdit3.Margin = new System.Windows.Forms.Padding(0);
             this.pictureEdit3.Name = "pictureEdit3";
@@ -279,7 +279,7 @@
             // pictureEdit2
             // 
             this.pictureEdit2.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pictureEdit2.EditValue = global::YT_RED.Properties.Resources.reddit_circle;
+            this.pictureEdit2.EditValue = global::YTR.Properties.Resources.reddit_circle;
             this.pictureEdit2.Location = new System.Drawing.Point(100, 2);
             this.pictureEdit2.Margin = new System.Windows.Forms.Padding(0);
             this.pictureEdit2.Name = "pictureEdit2";
@@ -302,7 +302,7 @@
             // pictureEdit1
             // 
             this.pictureEdit1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pictureEdit1.EditValue = global::YT_RED.Properties.Resources.youtube_circle;
+            this.pictureEdit1.EditValue = global::YTR.Properties.Resources.youtube_circle;
             this.pictureEdit1.Location = new System.Drawing.Point(75, 2);
             this.pictureEdit1.Margin = new System.Windows.Forms.Padding(0);
             this.pictureEdit1.Name = "pictureEdit1";

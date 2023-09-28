@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
-using YT_RED.Classes;
+using YTR.Classes;
 
-namespace YT_RED.Controls
+namespace YTR.Controls
 {
     public partial class ReleaseItem : DevExpress.XtraEditors.XtraUserControl
     {

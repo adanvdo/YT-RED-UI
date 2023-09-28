@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using Xabe.FFmpeg;
 
 
-namespace YT_RED
+namespace YTR
 {
     internal static class Program
     {
@@ -15,6 +15,8 @@ namespace YT_RED
         public static string initialRedLink = string.Empty;
         public static bool newUpdater = false;
         public static bool updated = false;
+        public static string oldPrefix = string.Empty;
+        public static string prefix = string.Empty;
         public static InitialFunction initialFunction = InitialFunction.None;
 
         private static List<string> functions = new List<string>()
@@ -76,6 +78,16 @@ namespace YT_RED
                         if(s.StartsWith("-updated") || s == "updated")
                         {
                             updated = true;
+                        }
+
+                        if(s.StartsWith("-oldprefix"))
+                        {
+                            oldPrefix = s.Remove(0, 11);
+                        }
+
+                        if(s.StartsWith("-prefix"))
+                        {
+                            prefix = s.Remove(0, 8);
                         }
                     }
                 }

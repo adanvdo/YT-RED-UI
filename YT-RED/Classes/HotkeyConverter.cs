@@ -3,10 +3,10 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Windows.Forms;
-using YT_RED.Logging;
+using YTR.Logging;
 using DevExpress.Utils;
 
-namespace YT_RED.Classes
+namespace YTR.Classes
 {
     public  class HotkeyConverter : JsonConverter
     {

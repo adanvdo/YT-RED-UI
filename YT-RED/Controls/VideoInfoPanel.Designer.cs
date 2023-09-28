@@ -1,4 +1,4 @@
-﻿namespace YT_RED.Controls
+﻿namespace YTR.Controls
 {
     partial class VideoInfoPanel
     {
@@ -80,7 +80,7 @@
             this.btnCropMedia.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnCropMedia.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
             this.btnCropMedia.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
-            this.btnCropMedia.ImageOptions.SvgImage = global::YT_RED.Properties.Resources.crop;
+            this.btnCropMedia.ImageOptions.SvgImage = global::YTR.Properties.Resources.crop;
             this.btnCropMedia.ImageOptions.SvgImageColorizationMode = DevExpress.Utils.SvgImageColorizationMode.Full;
             this.btnCropMedia.ImageOptions.SvgImageSize = new System.Drawing.Size(28, 28);
             this.btnCropMedia.Location = new System.Drawing.Point(183, 7);

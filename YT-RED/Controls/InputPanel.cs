@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
-using YT_RED.Classes;
+using YTR.Classes;
 
-namespace YT_RED.Controls
+namespace YTR.Controls
 {
     public partial class InputPanel : DevExpress.XtraEditors.XtraUserControl
     {

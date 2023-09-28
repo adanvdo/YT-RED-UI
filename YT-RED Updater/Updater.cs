@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Ionic.Zip;
 
-namespace YT_RED_Updater
+namespace YTR_Updater
 {
     public static class Updater
     {
@@ -37,14 +37,14 @@ namespace YT_RED_Updater
             return message;
         }
 
-        public static async Task<ProcessResult> EndRunningProcesses()
+        public static async Task<ProcessResult> EndRunningProcesses(string prefix = "YT-RED")
         {
             ProcessResult result = new ProcessResult();
             await Task.Run(() =>
             {
                 try
                 {
-                    Process[] running = Process.GetProcessesByName("YT-RED");
+                    Process[] running = Process.GetProcessesByName(prefix);
                     int killed = 0;
                     foreach (var process in running)
                     {
@@ -62,7 +62,7 @@ namespace YT_RED_Updater
             return result;
         }
 
-        public static async Task<ProcessResult> ExtractPackage(DirectoryInfo baseDir, FileInfo package, Action<int> reportProgress)
+        public static async Task<ProcessResult> ExtractPackage(DirectoryInfo baseDir, FileInfo package, Action<int> reportProgress, string prefix = "YT-RED")
         {
             ProcessResult result = new ProcessResult();
 
@@ -78,14 +78,14 @@ namespace YT_RED_Updater
 
                         Directory.CreateDirectory(ExtractionFolder);
 
-                        List<ZipEntry> entries = zip.Entries.Where(e => (e.IsDirectory && e.FileName != "YT-RED/") || !e.IsDirectory).ToList();
+                        List<ZipEntry> entries = zip.Entries.Where(e => (e.IsDirectory && e.FileName != $"{prefix}/") || !e.IsDirectory).ToList();
                         decimal total = entries.Count;
                         decimal extracted = 0;
                         int percentage = 0;
 
                         foreach (ZipEntry entry in entries)
                         {
-                            entry.FileName = entry.FileName.Replace("YT-RED/", "");
+                            entry.FileName = entry.FileName.Replace($"{prefix}/", "");
                             entry.Extract(ExtractionFolder);
                             extracted++;
                             percentage = Convert.ToInt32(((extracted / total) * 100));
@@ -168,7 +168,7 @@ namespace YT_RED_Updater
             return result;
         }
 
-        public static async Task<ProcessResult> CleanBaseDirectory(Action<int> reportProgress)
+        public static async Task<ProcessResult> CleanBaseDirectory(Action<int> reportProgress, string prefix = "YT-RED")
         {
             ProcessResult result = new ProcessResult();
             try
@@ -179,7 +179,7 @@ namespace YT_RED_Updater
 
                     DirectoryInfo baseDir = new DirectoryInfo(BaseDir);
                     List<FileInfo> files = baseDir.GetFiles("*", SearchOption.AllDirectories)
-                        .Where(f => !f.FullName.EndsWith("YT-RED_Updater.exe")
+                        .Where(f => !f.FullName.EndsWith($"{prefix}_Updater.exe")
                             && !f.FullName.EndsWith("Ionic.Zip.Reduced.dll")
                             && !f.Name.EndsWith(".json")
                             && f.Directory.Name != "ErrorLogs"
@@ -258,7 +258,7 @@ namespace YT_RED_Updater
             return result;
         }
 
-        public static async Task<ProcessResult> CopyUpdateFiles(Action<int> reportCopyProgress, bool copyUpdater = false, List<FileInfo> pendingDelete = null)
+        public static async Task<ProcessResult> CopyUpdateFiles(Action<int> reportCopyProgress, bool copyUpdater = false, List<FileInfo> pendingDelete = null, string prefix = "YT-RED")
         {
             ProcessResult result = new ProcessResult();
             await Task.Run(() =>
@@ -278,7 +278,7 @@ namespace YT_RED_Updater
                     else
                     {
                         dirs = extractionFolder.GetDirectories("*", SearchOption.AllDirectories).ToList();
-                        files = extractionFolder.GetFiles("*", SearchOption.AllDirectories).Where(f => f.Name != "YT-RED_Updater.exe").ToList();
+                        files = extractionFolder.GetFiles("*", SearchOption.AllDirectories).Where(f => f.Name != $"{prefix}_Updater.exe").ToList();
                     }
 
                     decimal total = dirs.Count + files.Count;
@@ -300,7 +300,7 @@ namespace YT_RED_Updater
                     foreach (FileInfo newFile in files)
                     {
                         string dest = newFile.FullName.Replace(ExtractionFolder, BaseDir);
-                        if (newFile.Name == "YT-RED_Updater.exe"
+                        if (newFile.Name == $"{prefix}_Updater.exe"
                             || newFile.Name == "Ionic.Zip.Reduced.dll"
                             || (pendingDelete != null && pendingDelete.Find(fi => fi.Name == newFile.Name) != null))
                         {

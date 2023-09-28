@@ -5,18 +5,18 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using YT_RED.Settings;
+using YTR.Settings;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
-using YT_RED.Logging;
-using YT_RED.Classes;
+using YTR.Logging;
+using YTR.Classes;
 using DevExpress.XtraEditors;
 
-namespace YT_RED.Controls
+namespace YTR.Controls
 {
     public partial class ControlPanel : DevExpress.XtraEditors.XtraUserControl
     {
         bool designMode = (LicenseManager.UsageMode == LicenseUsageMode.Designtime);
-        private string formatWarning = "YT-RED is currently set to Always Convert to your\nPreferred Video and Audio Format.\nThis can be changed in Advanced Settings";
+        private string formatWarning = "YTR is currently set to Always Convert to your\nPreferred Video and Audio Format.\nThis can be changed in Advanced Settings";
         private string gifWarning = "GIF Conversion has the following limitations\nMax Size: 600px\nMax Frames: 300\nMax Duration: 60 Seconds\nFramerate is adjusted to meet this criteria";
 
         [Browsable(false)]

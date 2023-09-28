@@ -10,21 +10,23 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace YT_RED_Updater
+namespace YTR_Updater
 {
     public partial class UpdaterForm : DevExpress.XtraEditors.XtraForm
     {
         private DirectoryInfo appBase;
         private FileInfo updatePackage;
         private bool requiresUpdaterReplacement = false;
+        private string oldPrefix;
+        private string prefix;
 
         public UpdaterForm()
         {
             InitializeComponent();
-            lblMessage.Text = "YT-RED Updater cannot be run manually";
+            lblMessage.Text = "YTR Updater cannot be run manually";
         }
 
-        public UpdaterForm(string appBaseDirectory, string updatePackagePath, string skin, string palette, bool includeUpdater)
+        public UpdaterForm(string appBaseDirectory, string updatePackagePath, string skin, string palette, bool includeUpdater, string oldPrefix, string newPrefix)
         {
             InitializeComponent();
 
@@ -42,6 +44,8 @@ namespace YT_RED_Updater
                 this.requiresUpdaterReplacement = includeUpdater;
                 this.appBase = new DirectoryInfo(appBaseDirectory);
                 this.updatePackage = new FileInfo(updatePackagePath);
+                this.oldPrefix = oldPrefix;
+                this.prefix = newPrefix;
             }
             catch (Exception ex)
             {
@@ -72,7 +76,7 @@ namespace YT_RED_Updater
             marquee.Text = "Extracting Update";
             marquee.Properties.Stopped = false;
             progress.Position = 0;
-            ProcessResult extract = await Updater.ExtractPackage(this.appBase, this.updatePackage, reportProgress);
+            ProcessResult extract = await Updater.ExtractPackage(this.appBase, this.updatePackage, reportProgress, this.prefix);
             progress.Position = 0;
             marquee.Text = "";
             marquee.Properties.Stopped = true;
@@ -84,9 +88,9 @@ namespace YT_RED_Updater
                 return;
             }
 
-            marquee.Text = "Closing YT-RED";
+            marquee.Text = "Closing YTR";
             marquee.Properties.Stopped = false;
-            ProcessResult kill = await Updater.EndRunningProcesses();
+            ProcessResult kill = await Updater.EndRunningProcesses(this.oldPrefix != this.prefix ? this.oldPrefix : this.prefix);
             marquee.Text = "";
             marquee.Properties.Stopped = true;
             if (!string.IsNullOrEmpty(kill.Error))
@@ -115,7 +119,7 @@ namespace YT_RED_Updater
             marquee.Text = "Cleaning Up Files";
             marquee.Properties.Stopped = false;
             progress.Position = 0;
-            ProcessResult clean = await Updater.CleanBaseDirectory(reportProgress);
+            ProcessResult clean = await Updater.CleanBaseDirectory(reportProgress, this.prefix);
             progress.Position = 0;
             marquee.Text = "";
             marquee.Properties.Stopped = true;
@@ -130,7 +134,10 @@ namespace YT_RED_Updater
             ProcessResult createPostBat = null;
             
             string launchArg = requiresUpdaterReplacement ? "-updater -updated" : "-updated";
-            createPostBat = await FileHelper.CreateFileUpdateBatch(clean.Pending, $"{Path.Combine(this.appBase.FullName, "YT-RED.exe")} {launchArg}");
+            if (!string.IsNullOrEmpty(this.oldPrefix))
+                launchArg += $" -oldprefix:{this.oldPrefix} -prefix:{this.prefix}";
+
+            createPostBat = await FileHelper.CreateFileUpdateBatch(clean.Pending, $"{Path.Combine(this.appBase.FullName, $"{this.prefix}.exe")} {launchArg}");
             if (!string.IsNullOrEmpty(createPostBat.Error))
             {
                 marquee.Properties.ShowTitle = false;
@@ -143,7 +150,7 @@ namespace YT_RED_Updater
             marquee.Text = "Installing Update";
             marquee.Properties.Stopped = false;
             progress.Position = 0;
-            ProcessResult install = await Updater.CopyUpdateFiles(reportProgress, updateUpdater, clean.Pending);
+            ProcessResult install = await Updater.CopyUpdateFiles(reportProgress, updateUpdater, clean.Pending, this.prefix);
             progress.Position = 0;
             marquee.Text = "";
             marquee.Properties.Stopped = true;
@@ -170,7 +177,7 @@ namespace YT_RED_Updater
                 return;
             }
 
-            marquee.Text = "Launching YT-RED";
+            marquee.Text = $"Launching {this.prefix}";
             marquee.Properties.Stopped = false;
             try
             {

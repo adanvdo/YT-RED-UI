@@ -2,10 +2,10 @@
 using System;
 using System.IO;
 using System.Reflection;
-using YT_RED.Classes;
-using YT_RED.Logging;
+using YTR.Classes;
+using YTR.Logging;
 
-namespace YT_RED.Settings
+namespace YTR.Settings
 {
     public class AppSettings
 	{

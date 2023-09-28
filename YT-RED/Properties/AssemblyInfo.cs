@@ -1,15 +1,15 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using YT_RED.Classes;
+using YTR.Classes;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("YT_RED")]
+[assembly: AssemblyTitle("YTR")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("JAMGALACTIC")]
-[assembly: AssemblyProduct("YT_RED")]
+[assembly: AssemblyProduct("YTR")]
 [assembly: AssemblyCopyright("Copyright ©  2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -29,6 +29,6 @@ using YT_RED.Classes;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.4.3")]
+[assembly: AssemblyVersion("1.0.4.5")]
 [assembly: AssemblyBuild("Alpha") ]
 [assembly: AssemblyFileVersion("1.0.0.0")]

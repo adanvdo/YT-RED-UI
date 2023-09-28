@@ -11,12 +11,12 @@ using Xabe.FFmpeg.Events;
 using YoutubeDLSharp;
 using YoutubeDLSharp.Metadata;
 using YoutubeDLSharp.Options;
-using YT_RED.Classes;
-using YT_RED.Logging;
-using YT_RED.Settings;
+using YTR.Classes;
+using YTR.Logging;
+using YTR.Settings;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
-namespace YT_RED.Utils
+namespace YTR.Utils
 {
     public static class VideoUtil
     {

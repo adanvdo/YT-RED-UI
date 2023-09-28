@@ -9,11 +9,11 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using YT_RED.Classes;
-using YT_RED.Logging;
-using YT_RED.Settings;
+using YTR.Classes;
+using YTR.Logging;
+using YTR.Settings;
 
-namespace YT_RED.Utils
+namespace YTR.Utils
 {
     public static class WebUtil
     {
