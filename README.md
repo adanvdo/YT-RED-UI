@@ -1,6 +1,6 @@
 # YT-RED-UI ALPHA BRANCH
 
-![ytr-banner-1 0 1 1](https://user-images.githubusercontent.com/26498008/171912293-7d925959-aba1-4826-8da8-8fbbf2a35a8f.png)
+![YTRBanner](https://github.com/adanvdo/YTR-UI/assets/26498008/41780c21-5062-434e-b5e0-aa4147209a02)
 
 ## Windows .NET Framework GUI Application for Downloading Video and Audio Files from YouTube, Reddit, Vimeo, Twitter, Instagram, Twitch, and other popular media hosts.
 
