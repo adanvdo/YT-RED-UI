@@ -107,6 +107,10 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 9/29/2023 v1.0.4.4
+- Fixed Bug where segment End-Time was set to the media end time before download started
+- Fixed bug where some video+audio downloads were logged with a download type of audio
+
 ### 9/9/2023 v1.0.4.3 
 - Added Version Number to Error Log Uploads
 - Added Media URLs to Error Logs where they were missing
