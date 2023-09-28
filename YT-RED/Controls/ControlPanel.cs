@@ -235,7 +235,7 @@ namespace YT_RED.Controls
 
                 if(dur != null && SegmentDuration.TotalSeconds > 0)
                 {
-                    if(AppSettings.Default.Layout.SegmentControlMode == SegmentControlMode.EndTime && dur > SegmentDuration)
+                    if(AppSettings.Default.Layout.SegmentControlMode == SegmentControlMode.EndTime && SegmentDuration > dur)
                     {
                         SegmentDuration = (TimeSpan)dur;
                     }
@@ -1358,7 +1358,7 @@ namespace YT_RED.Controls
             gvHistory.Columns["PlaylistTitle"].Visible = false;
             gvHistory.Columns["PlaylistUrl"].Visible = false;
             gvHistory.Columns["TimeLogged"].Visible = false;
-            gvHistory.Columns["Type"].Visible = false;
+            gvHistory.Columns["StreamType"].Visible = false;
             gvHistory.Columns["Downloaded"].Visible = false;
             gvHistory.Columns["Format"].Visible = false;
             gvHistory.Columns["FormatPair"].Visible = false;
