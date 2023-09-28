@@ -1,4 +1,4 @@
-# YTR-UI ALPHA BRANCH
+# YTR ALPHA BRANCH
 
 ![YTRBanner](https://github.com/adanvdo/YTR-UI/assets/26498008/41780c21-5062-434e-b5e0-aa4147209a02)
 
