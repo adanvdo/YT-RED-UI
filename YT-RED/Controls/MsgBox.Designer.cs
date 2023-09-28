@@ -1,4 +1,4 @@
-﻿namespace YT_RED.Controls
+﻿namespace YTR.Controls
 {
     partial class MsgBox
     {
@@ -76,7 +76,7 @@
             // msgIcon
             // 
             this.msgIcon.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.msgIcon.EditValue = global::YT_RED.Properties.Resources.exclamation;
+            this.msgIcon.EditValue = global::YTR.Properties.Resources.exclamation;
             this.msgIcon.Location = new System.Drawing.Point(24, 43);
             this.msgIcon.Margin = new System.Windows.Forms.Padding(0);
             this.msgIcon.Name = "msgIcon";
@@ -87,7 +87,7 @@
             this.msgIcon.Properties.Appearance.Options.UseImage = true;
             this.msgIcon.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.msgIcon.Properties.ContextButtonOptions.AllowGlyphSkinning = true;
-            this.msgIcon.Properties.ErrorImageOptions.SvgImage = global::YT_RED.Properties.Resources.highimportance;
+            this.msgIcon.Properties.ErrorImageOptions.SvgImage = global::YTR.Properties.Resources.highimportance;
             this.msgIcon.Properties.ShowCameraMenuItem = DevExpress.XtraEditors.Controls.CameraMenuItemVisibility.Auto;
             this.msgIcon.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Zoom;
             this.msgIcon.Properties.SvgImageColorizationMode = DevExpress.Utils.SvgImageColorizationMode.Full;

@@ -3,13 +3,13 @@ using DevExpress.XtraVerticalGrid;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using YT_RED.Settings;
-using YT_RED.Logging;
-using YT_RED.Utils;
+using YTR.Settings;
+using YTR.Logging;
+using YTR.Utils;
 using DevExpress.Utils.Extensions;
 using System.Linq;
 
-namespace YT_RED.Controls
+namespace YTR.Controls
 {
     public partial class PropertyGrid : DevExpress.XtraEditors.XtraUserControl
     {
@@ -307,7 +307,7 @@ namespace YT_RED.Controls
                         string args = $"-dir={Settings.AppSettings.Default.General.ExeDirectoryPath} -pkg={location} -skin={Settings.AppSettings.Default.General.ActiveSkin} -pal={AppSettings.Default.General.SkinPalette}";
                         if (pendingReleaseInfo.ReplaceUpdater)
                             args += " -updater";
-                        string updaterProcess = System.IO.Path.Combine(Settings.AppSettings.Default.General.ExeDirectoryPath, "YT-RED_Updater.exe");
+                        string updaterProcess = System.IO.Path.Combine(Settings.AppSettings.Default.General.ExeDirectoryPath, "YTR_Updater.exe");
                         System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo(
                             updaterProcess,
                             args

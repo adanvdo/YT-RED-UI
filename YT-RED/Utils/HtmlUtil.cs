@@ -6,10 +6,10 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using YT_RED.Classes;
-using YT_RED.Logging;
+using YTR.Classes;
+using YTR.Logging;
 
-namespace YT_RED.Utils
+namespace YTR.Utils
 {
     public static class HtmlUtil
     {

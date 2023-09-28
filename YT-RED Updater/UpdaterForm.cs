@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace YT_RED_Updater
+namespace YTR_Updater
 {
     public partial class UpdaterForm : DevExpress.XtraEditors.XtraForm
     {
@@ -21,7 +21,7 @@ namespace YT_RED_Updater
         public UpdaterForm()
         {
             InitializeComponent();
-            lblMessage.Text = "YT-RED Updater cannot be run manually";
+            lblMessage.Text = "YTR Updater cannot be run manually";
         }
 
         public UpdaterForm(string appBaseDirectory, string updatePackagePath, string skin, string palette, bool includeUpdater)
@@ -84,7 +84,7 @@ namespace YT_RED_Updater
                 return;
             }
 
-            marquee.Text = "Closing YT-RED";
+            marquee.Text = "Closing YTR";
             marquee.Properties.Stopped = false;
             ProcessResult kill = await Updater.EndRunningProcesses();
             marquee.Text = "";
@@ -130,7 +130,7 @@ namespace YT_RED_Updater
             ProcessResult createPostBat = null;
             
             string launchArg = requiresUpdaterReplacement ? "-updater -updated" : "-updated";
-            createPostBat = await FileHelper.CreateFileUpdateBatch(clean.Pending, $"{Path.Combine(this.appBase.FullName, "YT-RED.exe")} {launchArg}");
+            createPostBat = await FileHelper.CreateFileUpdateBatch(clean.Pending, $"{Path.Combine(this.appBase.FullName, "YTR.exe")} {launchArg}");
             if (!string.IsNullOrEmpty(createPostBat.Error))
             {
                 marquee.Properties.ShowTitle = false;
@@ -170,7 +170,7 @@ namespace YT_RED_Updater
                 return;
             }
 
-            marquee.Text = "Launching YT-RED";
+            marquee.Text = "Launching YTR";
             marquee.Properties.Stopped = false;
             try
             {

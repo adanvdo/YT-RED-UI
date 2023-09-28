@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
-using YT_RED.Classes;
+using YTR.Classes;
 using Newtonsoft.Json;
-using YT_RED.Settings;
+using YTR.Settings;
 
-namespace YT_RED.Logging
+namespace YTR.Logging
 {
     public class DownloadLog
     {

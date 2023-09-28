@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
-using YT_RED.Settings;
+using YTR.Settings;
 
-namespace YT_RED.Logging
+namespace YTR.Logging
 {
     public static class ExceptionHandler
     {
@@ -59,7 +59,7 @@ namespace YT_RED.Logging
                     }
                     else
                     {
-                        using (YT_RED.Controls.YTRErrorMessageBox errorBox = new Controls.YTRErrorMessageBox(exception))
+                        using (YTR.Controls.YTRErrorMessageBox errorBox = new Controls.YTRErrorMessageBox(exception))
                         {
                             errorBox.ShowDialog();
                         }
@@ -70,7 +70,7 @@ namespace YT_RED.Logging
             }
             catch (Exception ex)
             {
-                using (YT_RED.Controls.YTRErrorMessageBox errorBox = new Controls.YTRErrorMessageBox(exception))
+                using (YTR.Controls.YTRErrorMessageBox errorBox = new Controls.YTRErrorMessageBox(exception))
                 {
                     errorBox.ShowDialog();
                 }

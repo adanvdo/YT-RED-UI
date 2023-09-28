@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using YT_RED.Settings;
+using YTR.Settings;
 
-namespace YT_RED.Classes
+namespace YTR.Classes
 {   
     public static class SystemCodecMaps
     {

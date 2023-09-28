@@ -1,5 +1,5 @@
 ﻿
-namespace YT_RED.Controls
+namespace YTR.Controls
 {
     partial class TrayForm
     {

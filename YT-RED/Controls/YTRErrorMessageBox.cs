@@ -2,9 +2,9 @@
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using YT_RED.Utils;
+using YTR.Utils;
 
-namespace YT_RED.Controls
+namespace YTR.Controls
 {
     public partial class YTRErrorMessageBox : DevExpress.XtraEditors.XtraForm
     {

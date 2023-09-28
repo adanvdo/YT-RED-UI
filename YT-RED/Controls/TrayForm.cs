@@ -5,14 +5,14 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using YoutubeDLSharp;
-using YT_RED.Classes;
-using YT_RED.Logging;
-using YT_RED.Settings;
-using YT_RED.Utils;
+using YTR.Classes;
+using YTR.Logging;
+using YTR.Settings;
+using YTR.Utils;
 using Xabe.FFmpeg;
 using System.Diagnostics;
 
-namespace YT_RED.Controls
+namespace YTR.Controls
 {
     public partial class TrayForm : DevExpress.XtraEditors.XtraForm
     {
@@ -194,7 +194,7 @@ namespace YT_RED.Controls
             currentDownload = HtmlUtil.CheckUrl(txtUrl.Text);
             if(currentDownload == DownloadType.Unknown && AppSettings.Default.General.ShowHostWarning)
             {
-                DialogResult res = MsgBox.ShowUrlCheckWarning("The URL entered is not from a supported host. Downloads from this URL may fail or result in errors.\n\nContinue?", "Unrecognized URL", Buttons.YesNo, YT_RED.Controls.Icon.Warning, FormStartPosition.CenterParent);
+                DialogResult res = MsgBox.ShowUrlCheckWarning("The URL entered is not from a supported host. Downloads from this URL may fail or result in errors.\n\nContinue?", "Unrecognized URL", Buttons.YesNo, YTR.Controls.Icon.Warning, FormStartPosition.CenterParent);
                 if (res == DialogResult.No)
                     return;
             }
@@ -203,7 +203,7 @@ namespace YT_RED.Controls
                 YoutubeLink link = VideoUtil.ConvertToYouTubeLink(txtUrl.Text);
                 if (link.Type == YoutubeLinkType.Playlist)
                 {
-                    DialogResult res = MsgBox.Show("Quick Download does not support Youtube Playlists", "Unsupported", Buttons.OK,YT_RED.Controls.Icon.Exclamation, FormStartPosition.CenterScreen, true);
+                    DialogResult res = MsgBox.Show("Quick Download does not support Youtube Playlists", "Unsupported", Buttons.OK,YTR.Controls.Icon.Exclamation, FormStartPosition.CenterScreen, true);
                     if(res != DialogResult.None)
                     {
                         this.txtUrl.Text = "";
@@ -315,7 +315,7 @@ namespace YT_RED.Controls
                 this.StartPosition = FormStartPosition.Manual;
                 System.Drawing.Rectangle workingArea = Screen.GetWorkingArea(this);
                 var loc = new System.Drawing.Point(workingArea.Right - 400, workingArea.Bottom - 200);
-                DialogResult res = MsgBox.Show("A download is in progress. Cancel the current download?", "Download In-Progress", YT_RED.Controls.Buttons.YesNo, YT_RED.Controls.Icon.Warning, loc);
+                DialogResult res = MsgBox.Show("A download is in progress. Cancel the current download?", "Download In-Progress", YTR.Controls.Buttons.YesNo, YTR.Controls.Icon.Warning, loc);
                 if(res == DialogResult.Yes)
                 {
                     VideoUtil.CancellationTokenSource.Cancel();

@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace YT_RED.Controls
+namespace YTR.Controls
 {
     public partial class CropForm : DevExpress.XtraEditors.XtraForm
     {

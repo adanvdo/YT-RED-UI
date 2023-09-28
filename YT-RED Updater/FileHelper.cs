@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace YT_RED_Updater
+namespace YTR_Updater
 {
     public static class FileHelper
     {

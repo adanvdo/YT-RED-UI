@@ -7,8 +7,8 @@
     <ProjectGuid>{CAAFEFEB-2C53-443B-AAE2-C3B84EBFBD80}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>YT_RED</RootNamespace>
-    <AssemblyName>YT-RED</AssemblyName>
+    <RootNamespace>YTR</RootNamespace>
+    <AssemblyName>YTR</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -103,7 +103,7 @@
     <ApplicationIcon>Resources\Media\ytr.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>YT_RED.Program</StartupObject>
+    <StartupObject>YTR.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DevExpress.BonusSkins.v22.1" />

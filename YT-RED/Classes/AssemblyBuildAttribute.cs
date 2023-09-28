@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace YT_RED.Classes
+namespace YTR.Classes
 {
     [AttributeUsage(AttributeTargets.Assembly)]
     public class AssemblyBuildAttribute : Attribute

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace YT_RED_Updater
+namespace YTR_Updater
 {
     internal static class Program
     {

@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using System.ComponentModel;
 using System.Threading.Tasks;
 
-namespace YT_RED.Settings
+namespace YTR.Settings
 {
     public class About : FeatureSettings
     {       
@@ -38,7 +38,7 @@ namespace YT_RED.Settings
 
         [Category("About")]
         [DisplayName("Dependencies")]
-        [Description("YT-RED depends on the YT-DLP and FFMPEG Libraries for dowloading and processing media.\nIf you suddenly start getting errors during downloads, these tools may need to be updated.")]
+        [Description("YTR depends on the YT-DLP and FFMPEG Libraries for dowloading and processing media.\nIf you suddenly start getting errors during downloads, these tools may need to be updated.")]
         [JsonIgnore]
         public string Dependencies { get; set; }
 

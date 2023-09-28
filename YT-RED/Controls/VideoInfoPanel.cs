@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using YoutubeDLSharp.Metadata;
 
-namespace YT_RED.Controls
+namespace YTR.Controls
 {
     public partial class VideoInfoPanel : DevExpress.XtraEditors.XtraUserControl
     {

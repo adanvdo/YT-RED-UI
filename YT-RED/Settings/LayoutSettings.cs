@@ -5,7 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Reflection;
 
-namespace YT_RED.Settings
+namespace YTR.Settings
 {
     public class LayoutSettings : FeatureSettings
     {

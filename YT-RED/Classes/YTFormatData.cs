@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using YoutubeDLSharp.Metadata;
 
 
-namespace YT_RED.Classes
+namespace YTR.Classes
 {
     public class YTDLFormatData : FormatData
     {

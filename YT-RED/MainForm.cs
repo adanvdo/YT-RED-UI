@@ -16,13 +16,13 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Xabe.FFmpeg;
 using YoutubeDLSharp;
-using YT_RED.Classes;
-using YT_RED.Controls;
-using YT_RED.Logging;
-using YT_RED.Settings;
-using YT_RED.Utils;
+using YTR.Classes;
+using YTR.Controls;
+using YTR.Logging;
+using YTR.Settings;
+using YTR.Utils;
 
-namespace YT_RED
+namespace YTR
 {
     public partial class MainForm : DevExpress.XtraBars.TabForm
     {
@@ -173,7 +173,7 @@ namespace YT_RED
                 var check = HtmlUtil.CheckUrl(copiedText);
                 if (check == DownloadType.Unknown && AppSettings.Default.General.ShowHostWarning)
                 {
-                    DialogResult res = MsgBox.ShowUrlCheckWarning("The URL entered is not from a supported host. Downloads from this URL may fail or result in errors.\n\nContinue?", "Unrecognized URL", Buttons.YesNo, YT_RED.Controls.Icon.Warning, FormStartPosition.CenterParent);
+                    DialogResult res = MsgBox.ShowUrlCheckWarning("The URL entered is not from a supported host. Downloads from this URL may fail or result in errors.\n\nContinue?", "Unrecognized URL", Buttons.YesNo, YTR.Controls.Icon.Warning, FormStartPosition.CenterParent);
                     if (res == DialogResult.No)
                         return;
                 }
@@ -182,7 +182,7 @@ namespace YT_RED
                     YoutubeLink link = VideoUtil.ConvertToYouTubeLink(copiedText);
                     if (link.Type == YoutubeLinkType.Playlist)
                     {
-                        MsgBox.Show("Quick Download does not support Youtube Playlists", "Unsupported", Buttons.OK, YT_RED.Controls.Icon.Exclamation, FormStartPosition.CenterScreen, true);
+                        MsgBox.Show("Quick Download does not support Youtube Playlists", "Unsupported", Buttons.OK, YTR.Controls.Icon.Exclamation, FormStartPosition.CenterScreen, true);
                         return;
                     }
                 }
@@ -337,7 +337,7 @@ namespace YT_RED
                 bool updaterReplaced = await UpdateHelper.ReplaceUpdater();
                 if (!updaterReplaced)
                 {
-                    YT_RED.Controls.MsgBox.Show($"Failed to Replace Updater", "Something Went Wrong", FormStartPosition.CenterParent);
+                    YTR.Controls.MsgBox.Show($"Failed to Replace Updater", "Something Went Wrong", FormStartPosition.CenterParent);
                 }
             }
 
@@ -537,7 +537,7 @@ namespace YT_RED
         {
             if (IsLocked || (activeTrayForm != null && activeTrayForm.Locked))
             {
-                DialogResult res = MsgBox.Show("A download is in progress.\nAre you sure you want to exit?", "Download In Progress", YT_RED.Controls.Buttons.OKCancel, YT_RED.Controls.Icon.Warning);
+                DialogResult res = MsgBox.Show("A download is in progress.\nAre you sure you want to exit?", "Download In Progress", YTR.Controls.Buttons.OKCancel, YTR.Controls.Icon.Warning);
                 if (res != DialogResult.OK)
                     return;
             }
@@ -888,7 +888,7 @@ namespace YT_RED
                 this.currentDownload = HtmlUtil.CheckUrl(ipMainInput.URL);
                 if (this.currentDownload == DownloadType.Unknown && AppSettings.Default.General.ShowHostWarning)
                 {
-                    DialogResult res = MsgBox.ShowUrlCheckWarning("The URL entered is not from a supported host. Downloads from this URL may fail or result in errors.\n\nContinue?", "Unrecognized URL", Buttons.YesNo, YT_RED.Controls.Icon.Warning, FormStartPosition.CenterParent);
+                    DialogResult res = MsgBox.ShowUrlCheckWarning("The URL entered is not from a supported host. Downloads from this URL may fail or result in errors.\n\nContinue?", "Unrecognized URL", Buttons.YesNo, YTR.Controls.Icon.Warning, FormStartPosition.CenterParent);
                     if (res == DialogResult.No)
                         return;
                 }
@@ -981,14 +981,14 @@ namespace YT_RED
                     DialogResult res = MsgBox.Show($"There are {this.playlistItemCollection.Count} videos in this playlist.\nContinue download?", 
                         "Confirm Download", 
                         Buttons.YesNo, 
-                        YT_RED.Controls.Icon.Warning, 
+                        YTR.Controls.Icon.Warning, 
                         FormStartPosition.CenterParent);
                     if(res == DialogResult.No) { return; }
                     cpMainControlPanel.SetCurrentPlaylistItems(this.playlistItemCollection);
                 }
                 else
                 {
-                    MsgBox.Show("Empty or Invalid Playlist", "Error", Buttons.OK, YT_RED.Controls.Icon.Error, FormStartPosition.CenterParent);
+                    MsgBox.Show("Empty or Invalid Playlist", "Error", Buttons.OK, YTR.Controls.Icon.Error, FormStartPosition.CenterParent);
                     return;
                 }
             }
@@ -1105,7 +1105,7 @@ namespace YT_RED
             this.currentDownload = HtmlUtil.CheckUrl(ipMainInput.URL);
             if (this.currentDownload == DownloadType.Unknown && AppSettings.Default.General.ShowHostWarning)
             {
-                DialogResult res = MsgBox.ShowUrlCheckWarning("The URL entered is not from a supported host. Downloads from this URL may fail or result in errors.\n\nContinue?", "Unrecognized URL", Buttons.YesNo, YT_RED.Controls.Icon.Warning, FormStartPosition.CenterParent);
+                DialogResult res = MsgBox.ShowUrlCheckWarning("The URL entered is not from a supported host. Downloads from this URL may fail or result in errors.\n\nContinue?", "Unrecognized URL", Buttons.YesNo, YTR.Controls.Icon.Warning, FormStartPosition.CenterParent);
                 if (res == DialogResult.No)
                     return;
             }
@@ -1143,7 +1143,7 @@ namespace YT_RED
                 audioFormat = cpMainControlPanel.ConvertAudioFormat == null ? AudioFormat.UNSPECIFIED : cpMainControlPanel.ConvertAudioFormat;
                 if(videoFormat == VideoFormat.GIF)
                 {
-                    DialogResult confirm = MsgBox.Show($"GIF Conversion is limited to 60 seconds.\nOnly the first 60 seconds will be downloaded.\n\nContinue?", "GIF Duration", Buttons.YesNo, YT_RED.Controls.Icon.Exclamation);
+                    DialogResult confirm = MsgBox.Show($"GIF Conversion is limited to 60 seconds.\nOnly the first 60 seconds will be downloaded.\n\nContinue?", "GIF Duration", Buttons.YesNo, YTR.Controls.Icon.Exclamation);
                     if (confirm == DialogResult.No)
                     {
                         this.UseWaitCursor = false;
@@ -1261,7 +1261,7 @@ namespace YT_RED
                         List<YTDLFormatData> converted = new List<YTDLFormatData>();
                         if (data.Formats != null && data.Formats.Count() > 0)
                         {
-                            YT_RED.Classes.StreamType detect = AppSettings.DetectStreamTypeFromExtension(data.Extension);
+                            YTR.Classes.StreamType detect = AppSettings.DetectStreamTypeFromExtension(data.Extension);
                             if (detect != Classes.StreamType.Unknown)
                             {                                
                                 if (cpMainControlPanel.ConversionEnabled && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
@@ -1339,7 +1339,7 @@ namespace YT_RED
             this.currentDownload = HtmlUtil.CheckUrl(ipMainInput.URL);
             if(this.currentDownload == DownloadType.Unknown && AppSettings.Default.General.ShowHostWarning)
             {
-                DialogResult res = MsgBox.ShowUrlCheckWarning("The URL entered is not from a supported host. Downloads from this URL may fail or result in errors.\n\nContinue?", "Unrecognized URL", Buttons.YesNo, YT_RED.Controls.Icon.Warning, FormStartPosition.CenterParent);
+                DialogResult res = MsgBox.ShowUrlCheckWarning("The URL entered is not from a supported host. Downloads from this URL may fail or result in errors.\n\nContinue?", "Unrecognized URL", Buttons.YesNo, YTR.Controls.Icon.Warning, FormStartPosition.CenterParent);
                 if (res == DialogResult.No)
                     return;
             }
@@ -1406,7 +1406,7 @@ namespace YT_RED
                     {
                         if (cpMainControlPanel.SegmentEnabled && duration != null && ((TimeSpan)duration).TotalSeconds > 60)
                         {
-                            DialogResult confirm = MsgBox.Show($"You have specified a duration of {((TimeSpan)duration).TotalSeconds} seconds.\nGIF Conversion is limited to 60 seconds.\n\nContinue?", "GIF Duration", Buttons.YesNo, YT_RED.Controls.Icon.Exclamation);
+                            DialogResult confirm = MsgBox.Show($"You have specified a duration of {((TimeSpan)duration).TotalSeconds} seconds.\nGIF Conversion is limited to 60 seconds.\n\nContinue?", "GIF Duration", Buttons.YesNo, YTR.Controls.Icon.Exclamation);
                             if (confirm == DialogResult.No)
                             {
                                 this.UseWaitCursor = false;
@@ -1423,7 +1423,7 @@ namespace YT_RED
                             cpMainControlPanel.CurrentFormatPair.VideoFormat.Duration != null &&
                             ((TimeSpan)cpMainControlPanel.CurrentFormatPair.VideoFormat.Duration).TotalSeconds > 60)
                         {
-                            DialogResult confirm = MsgBox.Show($"GIF Conversion is limited to 60 seconds.\nOnly the first 60 seconds will be downloaded.\n\nContinue?", "GIF Duration", Buttons.YesNo, YT_RED.Controls.Icon.Exclamation);
+                            DialogResult confirm = MsgBox.Show($"GIF Conversion is limited to 60 seconds.\nOnly the first 60 seconds will be downloaded.\n\nContinue?", "GIF Duration", Buttons.YesNo, YTR.Controls.Icon.Exclamation);
                             if(confirm == DialogResult.No)
                             {
                                 this.UseWaitCursor = false;
@@ -1517,7 +1517,7 @@ namespace YT_RED
             }
             pendingDL.Format = cpMainControlPanel.CurrentFormatPair.FormatId;
 
-            YT_RED.Classes.StreamType t = Classes.StreamType.Audio;
+            YTR.Classes.StreamType t = Classes.StreamType.Audio;
             if (cpMainControlPanel.CurrentFormatPair.AudioCodec == "none")
                 t = Classes.StreamType.Video;
             else if (cpMainControlPanel.CurrentFormatPair.AudioFormat != null && (cpMainControlPanel.CurrentFormatPair.VideoFormat == null || (cpMainControlPanel.CurrentFormatPair.VideoFormat != null && cpMainControlPanel.CurrentFormatPair.VideoFormat.Resolution == "audio only")))
@@ -1703,7 +1703,7 @@ namespace YT_RED
             if(e.Column.FieldName == "Type")
             {
                 var palette = SvgPaletteHelper.GetSvgPalette(this.LookAndFeel, ObjectState.Normal);
-                YT_RED.Classes.StreamType? type = e.CellValue as Classes.StreamType?;
+                YTR.Classes.StreamType? type = e.CellValue as Classes.StreamType?;
                 switch (type)
                 {
                     case Classes.StreamType.AudioAndVideo:

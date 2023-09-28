@@ -7,19 +7,19 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using YT_RED.Logging;
-using YT_RED.Settings;
-using YT_RED.Controls;
+using YTR.Logging;
+using YTR.Settings;
+using YTR.Controls;
 using SevenZipExtractor;
-using YT_RED.Classes;
+using YTR.Classes;
 using System.Diagnostics;
 
-namespace YT_RED.Utils
+namespace YTR.Utils
 {
     public static class UpdateHelper
     {
 
-        #region YT-RED UPDATES
+        #region YTR UPDATES
 
         private static string updateDirectory = "";
         public static async Task<string> GetUpdateDirectoryAsync()
@@ -75,7 +75,7 @@ namespace YT_RED.Utils
             return null;
         }
 
-        public static async Task<YT_RED.Classes.Release> GetLatestRelease(Settings.ReleaseChannel channel)
+        public static async Task<YTR.Classes.Release> GetLatestRelease(Settings.ReleaseChannel channel)
         {
             try
             {
@@ -85,7 +85,7 @@ namespace YT_RED.Utils
                     string content = await getLatest.Content.ReadAsStringAsync();
                     if (content != "Unknown")
                     {
-                        YT_RED.Classes.Release release = JsonConvert.DeserializeObject<Classes.Release>(content);
+                        YTR.Classes.Release release = JsonConvert.DeserializeObject<Classes.Release>(content);
                         return release;
                     }
                 }
@@ -106,8 +106,8 @@ namespace YT_RED.Utils
                 await Task.Run(() =>
                 {
                     string path = AppSettings.Default.General.ExeDirectoryPath;
-                    string oldPath = Path.Combine(path, "YT-RED_Updater.exe");
-                    string newPath = Path.Combine(path, "YT-RED_Updater.exe.new");
+                    string oldPath = Path.Combine(path, "YTR_Updater.exe");
+                    string newPath = Path.Combine(path, "YTR_Updater.exe.new");
                     if (File.Exists(newPath))
                     {
                         if (File.Exists(oldPath))

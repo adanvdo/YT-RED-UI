@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 
-namespace YT_RED.Classes
+namespace YTR.Classes
 {
     public sealed class KeyboardHook : IDisposable
     {
