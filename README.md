@@ -109,6 +109,7 @@ YTR's main interface is pretty straight forward. Simply enter the URL of any vid
 
 ### 9/28/2023 v1.0.4.5
 - Updated Assembly Name to "YTR"
+- Added Support for Planned Application Name Change to Updater and Update Processes
 
 ### 9/28/2023 v1.0.4.4
 - Fixed Bug where segment End-Time was set to the media end time before download started
