@@ -76,7 +76,7 @@ namespace YTR_Updater
             marquee.Text = "Extracting Update";
             marquee.Properties.Stopped = false;
             progress.Position = 0;
-            ProcessResult extract = await Updater.ExtractPackage(this.appBase, this.updatePackage, reportProgress, this.prefix);
+            ProcessResult extract = await Updater.ExtractPackage(this.appBase, this.updatePackage, reportProgress, this.oldPrefix, this.prefix);
             progress.Position = 0;
             marquee.Text = "";
             marquee.Properties.Stopped = true;
@@ -137,7 +137,7 @@ namespace YTR_Updater
             if (!string.IsNullOrEmpty(this.oldPrefix))
                 launchArg += $" -oldprefix:{this.oldPrefix} -prefix:{this.prefix}";
 
-            createPostBat = await FileHelper.CreateFileUpdateBatch(clean.Pending, $"{Path.Combine(this.appBase.FullName, $"{this.prefix}.exe")} {launchArg}");
+            createPostBat = await FileHelper.CreateFileUpdateBatch(this.appBase, clean.PendingFiles, clean.PendingFolders, $"{Path.Combine(this.appBase.FullName, $"{this.prefix}.exe")} {launchArg}");
             if (!string.IsNullOrEmpty(createPostBat.Error))
             {
                 marquee.Properties.ShowTitle = false;
@@ -150,7 +150,7 @@ namespace YTR_Updater
             marquee.Text = "Installing Update";
             marquee.Properties.Stopped = false;
             progress.Position = 0;
-            ProcessResult install = await Updater.CopyUpdateFiles(reportProgress, updateUpdater, clean.Pending, this.prefix);
+            ProcessResult install = await Updater.CopyUpdateFiles(reportProgress, updateUpdater, clean.PendingFiles, this.prefix);
             progress.Position = 0;
             marquee.Text = "";
             marquee.Properties.Stopped = true;
@@ -177,6 +177,23 @@ namespace YTR_Updater
                 return;
             }
 
+            if(this.oldPrefix != this.prefix)
+            {
+                marquee.Text = "Updating Shortcuts";
+                marquee.Properties.Stopped = false;
+                progress.Position = 0;
+                ProcessResult update = await Updater.SearchAndReplaceShortcuts(reportProgress, this.oldPrefix, this.prefix, $"{Path.Combine(this.appBase.FullName, $"{this.prefix}.exe")}");
+                progress.Position = 0;
+                marquee.Text = "";
+                marquee.Properties.Stopped = true;
+                if(!string.IsNullOrEmpty(update.Error))
+                {
+                    marquee.Properties.ShowTitle = false;
+                    progress.Properties.ShowTitle = false;
+                    lblMessage.Text = $"Failed to Update Shortcuts\n{update.Error}";
+                }
+            }
+
             marquee.Text = $"Launching {this.prefix}";
             marquee.Properties.Stopped = false;
             try
@@ -189,10 +206,13 @@ namespace YTR_Updater
                 p.Start();
             }
             catch(Exception ex)
-            {
+            {                
                 lblMessage.Text = ex.Message;
                 return;
             }
+            await Task.Delay(500);
+            progress.Position = 100;
+            await Task.Delay(500);
             Environment.Exit(0);
         }
 
