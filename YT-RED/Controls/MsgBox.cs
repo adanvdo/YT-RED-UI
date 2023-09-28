@@ -137,14 +137,29 @@ namespace YT_RED.Controls
             return _msgBox.DialogResult;
         }
 
-        public static DialogResult Show(string message, string caption, Buttons buttons, Icon icon, FormStartPosition startPosition = FormStartPosition.CenterScreen, bool beep = false)
+        public static DialogResult Show(string message, string footerMessage, string caption, Buttons buttons, Icon icon, FormStartPosition startPosition = FormStartPosition.CenterScreen, bool beep = false)
+        {
+            return Show(message, caption, buttons, icon, startPosition, beep, footerMessage);
+        }
+
+        public static DialogResult Show(string message, string caption, Buttons buttons, Icon icon, FormStartPosition startPosition = FormStartPosition.CenterScreen, bool beep = false, string footerMessage = "")
         {
             _msgBox = new MsgBox(false, beep);
             _msgBox.StartPosition = startPosition;
             _msgBox.lblMessage.Text = message;
             int addHeight = heightIncrease(message);
-            _msgBox.messagePanel.Height = _msgBox.messagePanel.Height + addHeight;
-            _msgBox.lblMessage.Height = _msgBox.lblMessage.Height + addHeight;
+            if(footerMessage.Length > 0)
+            {
+                _msgBox.pnlNotePanel.Height = _msgBox.pnlNotePanel.Height + addHeight;
+                _msgBox.lblNoteLabel.Height = _msgBox.lblNoteLabel.Height + addHeight;
+                _msgBox.lblNoteLabel.Text = footerMessage;
+                _msgBox.pnlNotePanel.Visible = true;
+            }
+            else
+            {
+                _msgBox.messagePanel.Height = _msgBox.messagePanel.Height + addHeight;
+                _msgBox.lblMessage.Height = _msgBox.lblMessage.Height + addHeight;
+            }
             _msgBox.lblCaption.Text = caption; 
             _msgBox.initButtons(buttons);
             _msgBox.initIcon(icon);
@@ -220,15 +235,25 @@ namespace YT_RED.Controls
             return _msgBox.DialogResult;
         }
 
-        public static DialogResult Show(string message, string caption, Buttons buttons, Icon icon, Point location, FormStartPosition startPosition = FormStartPosition.CenterScreen, bool beep = false)
+        public static DialogResult Show(string message, string caption, Buttons buttons, Icon icon, Point location, FormStartPosition startPosition = FormStartPosition.CenterScreen, bool beep = false, string footerMessage = "")
         {
             _msgBox = new MsgBox(false, beep);
             _msgBox.StartPosition = startPosition;
             _msgBox.StartPosition = FormStartPosition.Manual;
             _msgBox.lblMessage.Text = message;
             int addHeight = heightIncrease(message);
-            _msgBox.messagePanel.Height = _msgBox.messagePanel.Height + addHeight;
-            _msgBox.lblMessage.Height = _msgBox.lblMessage.Height + addHeight;
+            if (footerMessage.Length > 0)
+            {
+                _msgBox.pnlNotePanel.Height = _msgBox.pnlNotePanel.Height + addHeight;
+                _msgBox.lblNoteLabel.Height = _msgBox.lblNoteLabel.Height + addHeight;
+                _msgBox.lblNoteLabel.Text = footerMessage;
+                _msgBox.pnlNotePanel.Visible = true;
+            }
+            else
+            {
+                _msgBox.messagePanel.Height = _msgBox.messagePanel.Height + addHeight;
+                _msgBox.lblMessage.Height = _msgBox.lblMessage.Height + addHeight;
+            }
             _msgBox.Location = new Point(location.X, location.Y - _msgBox.Height);
             _msgBox.lblCaption.Text = caption;
             _msgBox.initButtons(buttons);
@@ -339,11 +364,11 @@ namespace YT_RED.Controls
             int width = 287;
             int height = 72;
 
-            SizeF size = g.MeasureString(message, new Font("Tahoma", (float)10), width);
+            SizeF size = g.MeasureString(message, new Font("Tahoma", (float)9.75), width);
 
             if(size.Height > height)
             {
-                return (int)size.Height;
+                return (int)size.Height - height;
             }
             return 0;
         }

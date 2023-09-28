@@ -158,26 +158,43 @@ namespace YT_RED.Controls
         }
 
         private async void repButtonEdit_ButtonPressed(object sender, DevExpress.XtraEditors.Controls.ButtonPressedEventArgs e)
-        {     
+        {
             if(!pendingUpdateInfo)
             {
+                if(AppSettings.Default.About.ReleaseChannel != AppSettings.Default.Advanced.Channel)
+                {
+                    DialogResult dialog = MsgBox.Show($"Your selected Release Channel is set to {AppSettings.Default.Advanced.Channel},\n" +
+                        $"but this version of YTR is a{(AppSettings.Default.About.ReleaseChannel == Classes.ReleaseChannel.Alpha ? "n" : "")} {AppSettings.Default.About.Build} Release\n\n" +
+                        $"Proceed and check for an updated {AppSettings.Default.Advanced.Channel} release?",
+                        "To change the target Release Channel, click the 'Advanced' tab", 
+                        "Release Channel Conflict", 
+                        Buttons.YesNo, 
+                        Icon.Exclamation, 
+                        FormStartPosition.CenterParent, 
+                        true);
+
+                    if(dialog == DialogResult.No)
+                    {
+                        return;
+                    }
+                }
+
                 loadingUpdateInfo = true;
                 repButtonEdit.Buttons[0].Visible = !loadingUpdateInfo;
                 repButtonEdit.Buttons[1].Visible = loadingUpdateInfo;
                 pendingReleaseInfo = await UpdateHelper.GetLatestRelease(Settings.AppSettings.Default.Advanced.Channel);
-                if (pendingReleaseInfo != null)
+                
+                currentVersion = new Version(Settings.AppSettings.Default.About.Version);
+                if (pendingReleaseInfo?.Version > currentVersion)
                 {
-                    currentVersion = new Version(Settings.AppSettings.Default.About.Version);
-                    if (pendingReleaseInfo.Version > currentVersion)
-                    {   
-                        pendingUpdateInfo = true;
-                        pgcPropertyGrid.Refresh();
-                    }
-                    else
-                    {
-                        repButtonEdit.Buttons[0].Caption = "Up To Date!";
-                    }
+                    pendingUpdateInfo = true;
+                    pgcPropertyGrid.Refresh();
                 }
+                else
+                {
+                    repButtonEdit.Buttons[0].Caption = "Up To Date!";
+                }
+                
                 loadingUpdateInfo = false;
                 if (!pendingUpdateInfo)
                 {

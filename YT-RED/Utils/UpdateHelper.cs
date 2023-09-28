@@ -75,7 +75,7 @@ namespace YT_RED.Utils
             return null;
         }
 
-        public static async Task<YT_RED.Classes.Release> GetLatestRelease(Settings.ReleaseChannel channel)
+        public static async Task<YT_RED.Classes.Release> GetLatestRelease(ReleaseChannel channel)
         {
             try
             {

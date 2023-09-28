@@ -3,6 +3,7 @@ using DevExpress.Utils;
 using Newtonsoft.Json;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using YT_RED.Classes;
 
 namespace YT_RED.Settings
 {
@@ -22,7 +23,15 @@ namespace YT_RED.Settings
         [DisplayName("Build")]
         [Description("Current Build")]
         [JsonIgnore]
-        public string Build { get; set; }
+        public string Build
+        {
+            get { return ReleaseChannel.ToString(); }
+            set { ReleaseChannel = EnumExtensions.ToEnum<ReleaseChannel>(value); }
+        }
+
+        [Browsable(false)]
+        [JsonIgnore]
+        public ReleaseChannel ReleaseChannel { get; set; }
 
         [Category("About")]
         [DisplayName("GitHub")]
@@ -45,17 +54,10 @@ namespace YT_RED.Settings
         public About()
         {
             Version = "0.0.0.0";
-            Build = "Alpha";
+            ReleaseChannel = ReleaseChannel.Alpha;
             GitHub = @"https://github.com/adanvdo/YT-RED-UI";
             Contact = @"jesse@jamgalactic.com";
             Dependencies = "YT-DLP + FFMPEG";
         }
-    }
-
-    public enum ReleaseChannel
-    {
-        Stable = 0,
-        Beta = 1,
-        Alpha = 2
-    }
+    }    
 }

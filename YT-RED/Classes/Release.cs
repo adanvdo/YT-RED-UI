@@ -13,7 +13,7 @@ namespace YT_RED.Classes
         public Guid ReleaseID { get; set; }
 
         [JsonProperty("Channel")]
-        public Settings.ReleaseChannel Channel { get; set; }
+        public ReleaseChannel Channel { get; set; }
 
         [JsonProperty("Major")]
         public int Major { get; set; }

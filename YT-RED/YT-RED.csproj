@@ -213,6 +213,7 @@
     <Compile Include="Classes\ListMode.cs" />
     <Compile Include="Classes\MediaDuration.cs" />
     <Compile Include="Classes\Release.cs" />
+    <Compile Include="Classes\ReleaseChannel.cs" />
     <Compile Include="Classes\Resolution.cs" />
     <Compile Include="Classes\StreamType.cs" />
     <Compile Include="Classes\SystemCodec.cs" />

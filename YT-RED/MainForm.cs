@@ -112,7 +112,7 @@ namespace YT_RED
         {
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
             AppSettings.Default.About.Version = assembly.GetName().Version.ToString();
-            AppSettings.Default.About.Build = assembly.GetCustomAttributes(typeof(AssemblyBuildAttribute), false).Cast<AssemblyBuildAttribute>().FirstOrDefault().Value;
+            AppSettings.Default.About.ReleaseChannel = EnumExtensions.ToEnum<ReleaseChannel>(assembly.GetCustomAttributes(typeof(AssemblyBuildAttribute), false).Cast<AssemblyBuildAttribute>().FirstOrDefault().Value);
             MainForm.hook.KeyPressed += new EventHandler<KeyPressedEventArgs>(Hook_KeyPressed);
             MainForm.UpdateDownloadHotkey();
             this.historyTimer = new Timer();

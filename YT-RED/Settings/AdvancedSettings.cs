@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using YT_RED.Classes;
 
 namespace YT_RED.Settings
 {
