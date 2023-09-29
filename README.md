@@ -107,6 +107,10 @@ YTR's main interface is pretty straight forward. Simply enter the URL of any vid
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 9/29/2023 v1.0.4.6
+- Fixed crash when attempting to download or get format list
+- YT-RED is now YTR
+
 ### 9/28/2023 v1.0.4.5
 - Updated Assembly Name to "YTR"
 - Added Support for Planned Application Name Change to Updater and Update Processes
