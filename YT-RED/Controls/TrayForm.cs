@@ -237,7 +237,7 @@ namespace YTR.Controls
             else
                 result = await VideoUtil.DownloadBestYtdl(url, Classes.StreamType.AudioAndVideo);
 
-            if (!result.Success && result.Data != "canceled")
+            if (result == null || (!result.Success && result.Data != "canceled"))
             {
                 MsgBox.Show("Download Failed\n" + String.Join("\n", result.ErrorOutput));
             }
