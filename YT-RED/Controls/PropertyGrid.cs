@@ -324,13 +324,8 @@ namespace YTR.Controls
                         string args = $"-dir={Settings.AppSettings.Default.General.ExeDirectoryPath} -pkg={location} -skin={Settings.AppSettings.Default.General.ActiveSkin} -pal={AppSettings.Default.General.SkinPalette}";
                         if (pendingReleaseInfo.ReplaceUpdater)
                             args += " -updater";
-
-                        var assemblyName = System.Reflection.Assembly.GetExecutingAssembly().FullName;
-                        if (pendingReleaseInfo.ApplicationPrefix != assemblyName)
-                        {
-                            args += $" -oldprefix:{assemblyName} -prefix:{pendingReleaseInfo.ApplicationPrefix}";
-                        }
-                        string updaterProcess = System.IO.Path.Combine(Settings.AppSettings.Default.General.ExeDirectoryPath, $"{assemblyName}_Updater.exe");
+                        
+                        string updaterProcess = System.IO.Path.Combine(Settings.AppSettings.Default.General.ExeDirectoryPath, "YTR_Updater.exe");
                         System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo(
                             updaterProcess,
                             args

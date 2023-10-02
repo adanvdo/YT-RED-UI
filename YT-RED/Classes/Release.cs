@@ -45,9 +45,6 @@ namespace YTR.Classes
         [JsonProperty("ManualInstallRequired")]
         public bool ManualInstallRequired { get; set; }
 
-        [JsonProperty("ApplicationPrefix")]
-        public string ApplicationPrefix { get; set; }
-
         [JsonIgnore]
         public Version Version
         {

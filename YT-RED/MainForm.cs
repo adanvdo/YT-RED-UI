@@ -51,8 +51,6 @@ namespace YTR
         private DownloadType initialDownloadType = DownloadType.Unknown;
         private bool newUpdater = false;
         private bool updated = false;
-        private string oldPrefix = string.Empty;
-        private string prefix = string.Empty;
         private bool enableQuickDownload = false;
         private bool trayBalloonShown = false;
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repHistoryCheckEdit;
@@ -68,15 +66,13 @@ namespace YTR
             InitializeComponent();
         }
 
-        public MainForm(bool newUpdater = false, bool updated = false, string oldPrefix = "", string prefix = "YT-RED")
+        public MainForm(bool newUpdater = false, bool updated = false)
         {
             InitializeComponent();
             this.updated = updated;
             this.initialFunction = InitialFunction.None;
             this.initialLink = "";
             this.newUpdater = newUpdater;
-            this.prefix = prefix;
-            this.oldPrefix = string.IsNullOrEmpty(oldPrefix) ? prefix : oldPrefix;
             this.activeTrayForm = new TrayForm();
             activeTrayForm.FormClosed += TrayForm_FormClosed;
             activeTrayForm.StartPosition = FormStartPosition.Manual;
@@ -267,6 +263,7 @@ namespace YTR
             cpMainControlPanel.MaxResolution = AppSettings.Default.General.MaxResolutionBest;
             cpMainControlPanel.MaxFilesize = AppSettings.Default.General.MaxFilesizeBest;
             cpMainControlPanel.RestoreControlGroupCollapseStates();
+            updateControlPanelDisplay();
             base.OnLoad(e);
         }
 
@@ -338,7 +335,7 @@ namespace YTR
             
             if (newUpdater)
             {
-                bool updaterReplaced = await UpdateHelper.ReplaceUpdater(this.oldPrefix, this.prefix);
+                bool updaterReplaced = await UpdateHelper.ReplaceUpdater();
                 if (!updaterReplaced)
                 {
                     YTR.Controls.MsgBox.Show($"Failed to Replace Updater", "Something Went Wrong", FormStartPosition.CenterParent);

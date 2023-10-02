@@ -97,10 +97,8 @@ namespace YTR.Utils
             return null;
         }
 
-        public static async Task<bool> ReplaceUpdater(string oldPrefix = "", string prefix = "YT-RED")
+        public static async Task<bool> ReplaceUpdater()
         {
-            if (string.IsNullOrEmpty(oldPrefix))
-                oldPrefix = prefix;
             bool result = false;
             try
             {
@@ -108,8 +106,8 @@ namespace YTR.Utils
                 await Task.Run(() =>
                 {
                     string path = AppSettings.Default.General.ExeDirectoryPath;
-                    string oldPath = Path.Combine(path, $"{oldPrefix}_Updater.exe");
-                    string newPath = Path.Combine(path, $"{prefix}_Updater.exe.new");
+                    string oldPath = Path.Combine(path, "YTR_Updater.exe");
+                    string newPath = Path.Combine(path, "YTR_Updater.exe.new");
                     if (File.Exists(newPath))
                     {
                         if (File.Exists(oldPath))

@@ -273,6 +273,7 @@
             this.videoInfoPanel.Name = "videoInfoPanel";
             this.videoInfoPanel.Size = new System.Drawing.Size(839, 150);
             this.videoInfoPanel.TabIndex = 2;
+            this.videoInfoPanel.UseMediaSize = new System.Drawing.Size(0, 0);
             this.videoInfoPanel.Visible = false;
             this.videoInfoPanel.Crop_Click += new System.EventHandler(this.videoInfoPanel_Crop_Click);
             // 

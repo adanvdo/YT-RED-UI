@@ -17,8 +17,6 @@ namespace YTR_Updater
         private DirectoryInfo appBase;
         private FileInfo updatePackage;
         private bool requiresUpdaterReplacement = false;
-        private string oldPrefix;
-        private string prefix;
 
         public UpdaterForm()
         {
@@ -26,7 +24,7 @@ namespace YTR_Updater
             lblMessage.Text = "YTR Updater cannot be run manually";
         }
 
-        public UpdaterForm(string appBaseDirectory, string updatePackagePath, string skin, string palette, bool includeUpdater, string oldPrefix, string newPrefix)
+        public UpdaterForm(string appBaseDirectory, string updatePackagePath, string skin, string palette, bool includeUpdater)
         {
             InitializeComponent();
 
@@ -44,8 +42,6 @@ namespace YTR_Updater
                 this.requiresUpdaterReplacement = includeUpdater;
                 this.appBase = new DirectoryInfo(appBaseDirectory);
                 this.updatePackage = new FileInfo(updatePackagePath);
-                this.oldPrefix = oldPrefix;
-                this.prefix = newPrefix;
             }
             catch (Exception ex)
             {
@@ -76,7 +72,7 @@ namespace YTR_Updater
             marquee.Text = "Extracting Update";
             marquee.Properties.Stopped = false;
             progress.Position = 0;
-            ProcessResult extract = await Updater.ExtractPackage(this.appBase, this.updatePackage, reportProgress, this.oldPrefix, this.prefix);
+            ProcessResult extract = await Updater.ExtractPackage(this.appBase, this.updatePackage, reportProgress);
             progress.Position = 0;
             marquee.Text = "";
             marquee.Properties.Stopped = true;
@@ -90,7 +86,7 @@ namespace YTR_Updater
 
             marquee.Text = "Closing YTR";
             marquee.Properties.Stopped = false;
-            ProcessResult kill = await Updater.EndRunningProcesses(this.oldPrefix != this.prefix ? this.oldPrefix : this.prefix);
+            ProcessResult kill = await Updater.EndRunningProcesses();
             marquee.Text = "";
             marquee.Properties.Stopped = true;
             if (!string.IsNullOrEmpty(kill.Error))
@@ -119,7 +115,7 @@ namespace YTR_Updater
             marquee.Text = "Cleaning Up Files";
             marquee.Properties.Stopped = false;
             progress.Position = 0;
-            ProcessResult clean = await Updater.CleanBaseDirectory(reportProgress, this.prefix);
+            ProcessResult clean = await Updater.CleanBaseDirectory(reportProgress);
             progress.Position = 0;
             marquee.Text = "";
             marquee.Properties.Stopped = true;
@@ -134,10 +130,8 @@ namespace YTR_Updater
             ProcessResult createPostBat = null;
             
             string launchArg = requiresUpdaterReplacement ? "-updater -updated" : "-updated";
-            if (!string.IsNullOrEmpty(this.oldPrefix))
-                launchArg += $" -oldprefix:{this.oldPrefix} -prefix:{this.prefix}";
 
-            createPostBat = await FileHelper.CreateFileUpdateBatch(this.appBase, clean.PendingFiles, clean.PendingFolders, $"{Path.Combine(this.appBase.FullName, $"{this.prefix}.exe")} {launchArg}");
+            createPostBat = await FileHelper.CreateFileUpdateBatch(this.appBase, clean.PendingFiles, clean.PendingFolders, $"{Path.Combine(this.appBase.FullName, "YTR.exe")} {launchArg}");
             if (!string.IsNullOrEmpty(createPostBat.Error))
             {
                 marquee.Properties.ShowTitle = false;
@@ -150,7 +144,7 @@ namespace YTR_Updater
             marquee.Text = "Installing Update";
             marquee.Properties.Stopped = false;
             progress.Position = 0;
-            ProcessResult install = await Updater.CopyUpdateFiles(reportProgress, updateUpdater, clean.PendingFiles, this.prefix);
+            ProcessResult install = await Updater.CopyUpdateFiles(reportProgress, updateUpdater, clean.PendingFiles);
             progress.Position = 0;
             marquee.Text = "";
             marquee.Properties.Stopped = true;
@@ -177,12 +171,10 @@ namespace YTR_Updater
                 return;
             }
 
-            if(this.oldPrefix != this.prefix)
-            {
                 marquee.Text = "Updating Shortcuts";
                 marquee.Properties.Stopped = false;
                 progress.Position = 0;
-                ProcessResult update = await Updater.SearchAndReplaceShortcuts(reportProgress, this.oldPrefix, this.prefix, $"{Path.Combine(this.appBase.FullName, $"{this.prefix}.exe")}");
+                ProcessResult update = await Updater.SearchAndReplaceShortcuts(reportProgress, $"{Path.Combine(this.appBase.FullName, "YTR.exe")}");
                 progress.Position = 0;
                 marquee.Text = "";
                 marquee.Properties.Stopped = true;
@@ -192,9 +184,9 @@ namespace YTR_Updater
                     progress.Properties.ShowTitle = false;
                     lblMessage.Text = $"Failed to Update Shortcuts\n{update.Error}";
                 }
-            }
 
-            marquee.Text = $"Launching {this.prefix}";
+
+            marquee.Text = $"Launching YTR";
             marquee.Properties.Stopped = false;
             try
             {
