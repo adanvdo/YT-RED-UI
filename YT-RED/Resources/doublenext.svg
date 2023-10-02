@@ -1,0 +1,11 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<svg x="0px" y="0px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="enable-background:new 0 0 32 32">
+  <style type="text/css">
+	.Blue{fill:#1177D7;}
+</style>
+  <g id="Layer_1">
+    <path d="M23.7,14.4c0.5,0.3,0.5,0.8,0,1.1l-11.8,7.3v2.6c0,0.6,0.4,0.8,0.9,0.5l16.8-10.4c0.5-0.3,0.5-0.8,0-1.1   L12.8,4.1c-0.5-0.3-0.9-0.1-0.9,0.5v2.6L23.7,14.4z" class="Blue" />
+    <path d="M19.7,15.5c0.5-0.3,0.5-0.8,0-1.1L2.9,4.1C2.4,3.8,2,4,2,4.6v20.6c0,0.6,0.4,0.8,0.9,0.5L19.7,15.5z" class="Blue" />
+  </g>
+  <g id="Layer_2" />
+</svg>

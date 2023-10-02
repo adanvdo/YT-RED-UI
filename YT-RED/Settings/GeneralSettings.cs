@@ -143,6 +143,7 @@ namespace YTR.Settings
 		[Browsable(false)]
 		[JsonIgnore]
 		public string RedditMediaURLPrefix { get; set; }
+
 		#endregion
 
 		#region youtube
@@ -176,8 +177,11 @@ namespace YTR.Settings
 		[Browsable(false)]
 		[JsonProperty("ffmpeg_version_url")]
 		public string FfmpegVersionUrl { get; set; }
+        #endregion
 
-		[Browsable(false)]
+
+        #region Layout
+        [Browsable(false)]
 		[JsonProperty("segment_collapsed")]
 		public bool CollapseSegmentControl { get; set; }
 
@@ -192,6 +196,10 @@ namespace YTR.Settings
 		[Browsable(false)]
 		[JsonProperty("limits_collapsed")]
 		public bool CollapseLimitsControl { get; set; }
+
+        [Browsable(false)]
+		[JsonProperty("history_collapsed")]
+        public bool CollapseHistoryPanel { get; set; }
         #endregion
 
         public GeneralSettings()
@@ -234,6 +242,7 @@ namespace YTR.Settings
 			CollapseCropControl = false;
 			CollapseConvertControl = false;
 			CollapseLimitsControl = false;
+			CollapseHistoryPanel = false;
         }
 
 		public override async Task<string> ValidateSettings()

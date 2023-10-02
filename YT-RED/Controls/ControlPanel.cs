@@ -20,20 +20,6 @@ namespace YTR.Controls
         private string gifWarning = "GIF Conversion has the following limitations\nMax Size: 600px\nMax Frames: 300\nMax Duration: 60 Seconds\nFramerate is adjusted to meet this criteria";
 
         [Browsable(false)]
-        public DownloadLog TargetLog
-        {
-            get
-            {
-                if (selectedHistoryIndex >= 0)
-                {
-                    var log = gvHistory.GetRow(selectedHistoryIndex) as DownloadLog;
-                    return log;
-                }
-                return null;
-            }
-        }
-
-        [Browsable(false)]
         public bool PostProcessingEnabled
         {
             get
@@ -408,8 +394,7 @@ namespace YTR.Controls
                     + (gcConvert.Visible ? gcConvert.Height : 0)
                     + (gcDownloadLimits.Visible ? gcDownloadLimits.Height : 0)
                     + gcDLButtons.Height
-                    + pnlProgressPanel.Height
-                    + gcHistory.MinimumSize.Height;
+                    + pnlProgressPanel.Height;
                 return new Size(this.Size.Width, totalMinHeight);
             }
         }
@@ -1209,23 +1194,7 @@ namespace YTR.Controls
             }
             checkConversionOptions();
         }
-
-        private void gvHistory_DoubleClick(object sender, EventArgs e)
-        {
-            try
-            {
-                Logging.DownloadLog row = gvHistory.GetRow(gvHistory.FocusedRowHandle) as Logging.DownloadLog;
-                if (row != null && row.FileExists)
-                {
-                    openFileLocation(row.DownloadLocation);
-                }
-            }
-            catch (Exception ex)
-            {
-                Logging.ExceptionHandler.LogException(ex);
-            }
-        }
-
+        
         private void btnOpenDL_Click(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(btnOpenDL.Text) && System.IO.File.Exists(btnOpenDL.Text))
@@ -1239,59 +1208,7 @@ namespace YTR.Controls
             string argument = "/select, \"" + path + "\"";
 
             System.Diagnostics.Process.Start("explorer.exe", argument);
-        }
-
-        private void historyTooltip_GetActiveObjectInfo(object sender, DevExpress.Utils.ToolTipControllerGetActiveObjectInfoEventArgs e)
-        {
-            GridHitInfo hitInfo = gvHistory.CalcHitInfo(e.ControlMousePosition);
-            if (hitInfo != null && hitInfo.InRowCell)
-            {
-                object o;
-                if (hitInfo.Column.FieldName == "FileExists")
-                {
-                    bool fileExits = Convert.ToBoolean(gvHistory.GetRowCellValue(hitInfo.RowHandle, "FileExists"));
-                    o = $"{hitInfo.HitTest}{hitInfo.RowHandle}";
-                    e.Info = new DevExpress.Utils.ToolTipControlInfo(o, fileExits ? "File Exists" : "File Not Found");
-                }
-                if(hitInfo.Column.FieldName == "AdditionalSettings")
-                {
-                    string details = "";
-                    o = $"{hitInfo.HitTest}{hitInfo.RowHandle}";
-                    var row = gvHistory.GetRow(hitInfo.RowHandle) as DownloadLog;                    
-                    if (!string.IsNullOrEmpty(row.PlaylistUrl))
-                    {
-                        details += $"Playlist: {row.PlaylistTitle}\nPlaylist URL: {row.PlaylistUrl}\n";
-                    }
-                    
-                    details += $"URL: {row.Url}\nFormat: {row.Format}\n";                    
-
-                    if (row.AdditionalSettings)
-                    {
-                        if (row.Start != null && row.Duration != null)
-                        {
-                            details += $"Segment Start: {(TimeSpan)row.Start} - Duration: {(TimeSpan)row.Duration}\n";
-                        }
-                        if (row.Crops != null && row.Crops.Length > 0)
-                        {
-                            details += $"Crop: Top ({row.Crops[0]}) Bottom ({row.Crops[1]}) Left ({row.Crops[2]}) Right ({row.Crops[3]})\n";
-                        }
-                        if (row.VideoConversionFormat != null)
-                        {
-                            details += $"Convert Video: {row.VideoConversionFormat}\n";
-                        }
-                        if (row.AudioConversionFormat != null)
-                        {
-                            details += $"Convert Audio: {row.AudioConversionFormat}\n";
-                        }
-                        if(row.MaxResolution != null)
-                        {
-                            details += $"Max Resolution: {row.MaxResolution.ToFriendlyString(false, false)}\n";
-                        }
-                    }
-                    e.Info = new DevExpress.Utils.ToolTipControlInfo(o, details);
-                }
-            }
-        }
+        }       
 
         private void btnCancelProcess_MouseMove(object sender, MouseEventArgs e)
         {
@@ -1303,75 +1220,7 @@ namespace YTR.Controls
         {
             if (Cancel_MouseLeave != null)
                 Cancel_MouseLeave(sender, e);
-        }
-
-        private int selectedHistoryIndex = -1;
-        private void gcHistory_MouseClick(object sender, MouseEventArgs e)
-        {
-            if(e.Button == MouseButtons.Right)
-            {
-                GridHitInfo hitInfo = gvHistory.CalcHitInfo(e.Location);
-                if (hitInfo != null && hitInfo.InDataRow) {
-                    selectedHistoryIndex = hitInfo.RowHandle;
-                    historyPopup.ShowPopup(Control.MousePosition);
-                }
-            }
-        }
-
-        private void historyPopup_CloseUp(object sender, EventArgs e)
-        {
-        }
-
-        private void bbiReDownload_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            if(ReDownload_Click != null) ReDownload_Click(sender, e);
-        }
-
-        private void bbiNewDownload_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            if(NewDownload_Click != null) NewDownload_Click(sender, e);
-        }
-
-        public void PopulateHistoryColumns()
-        {
-            gvHistory.Columns.Clear();
-            gvHistory.PopulateColumns();
-            gvHistory.Columns["FileExists"].VisibleIndex = 0;
-            gvHistory.Columns["DownloadType"].VisibleIndex = 1;
-            gvHistory.Columns["DownloadLocation"].VisibleIndex = 2;
-            gvHistory.Columns["AdditionalSettings"].VisibleIndex = 3;
-            gvHistory.Columns["AdditionalSettings"].MaxWidth = 25;
-            gvHistory.Columns["AdditionalSettings"].ColumnEdit = repPostProcessed;
-            gvHistory.Columns["AdditionalSettings"].OptionsColumn.ShowCaption = false;
-            gvHistory.Columns["FileExists"].ColumnEdit = repFileExists;
-            gvHistory.Columns["FileExists"].FieldName = "FileExists";
-            gvHistory.Columns["FileExists"].OptionsColumn.ShowCaption = false;
-            gvHistory.Columns["FileExists"].MinWidth = 5;
-            gvHistory.Columns["FileExists"].MaxWidth = 25;
-            gvHistory.Columns["FileExists"].Width = 10;
-            gvHistory.Columns["FileExists"].ToolTip = "File Exists?";
-            gvHistory.Columns["DownloadType"].Width = 10;
-            gvHistory.Columns["DownloadType"].MaxWidth = 75;
-            gvHistory.Columns["DownloadType"].Caption = "Type";
-            gvHistory.Columns["Url"].Visible = false;
-            gvHistory.Columns["InSubFolder"].Visible = false;
-            gvHistory.Columns["PlaylistTitle"].Visible = false;
-            gvHistory.Columns["PlaylistUrl"].Visible = false;
-            gvHistory.Columns["TimeLogged"].Visible = false;
-            gvHistory.Columns["StreamType"].Visible = false;
-            gvHistory.Columns["Downloaded"].Visible = false;
-            gvHistory.Columns["Format"].Visible = false;
-            gvHistory.Columns["FormatPair"].Visible = false;
-            gvHistory.Columns["Start"].Visible = false;
-            gvHistory.Columns["Duration"].Visible = false;
-            gvHistory.Columns["Crops"].Visible = false;
-            gvHistory.Columns["VideoConversionFormat"].Visible = false;
-            gvHistory.Columns["AudioConversionFormat"].Visible = false;
-            gvHistory.Columns["MaxResolution"].Visible = false;
-            gvHistory.Columns["MaxFileSize"].Visible = false;
-            gvHistory.Columns["SegmentMode"].Visible = false;
-            gvHistory.RefreshData();
-        }
+        }        
 
         private void hlblOpenSettings_Click(object sender, EventArgs e)
         {

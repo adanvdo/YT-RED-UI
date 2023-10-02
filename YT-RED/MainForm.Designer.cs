@@ -48,12 +48,30 @@
             this.ipMainInput = new YTR.Controls.InputPanel();
             this.pnlScrollableControls = new DevExpress.XtraEditors.XtraScrollableControl();
             this.cpMainControlPanel = new YTR.Controls.ControlPanel();
+            this.scHistorySplitter = new DevExpress.XtraEditors.SplitterControl();
+            this.pnlHistoryPanel = new DevExpress.XtraEditors.PanelControl();
+            this.gcHistory = new DevExpress.XtraGrid.GridControl();
+            this.gvHistory = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.repFileExists = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
+            this.repPostProcessed = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.toolTipController = new DevExpress.Utils.ToolTipController(this.components);
+            this.lblHistoryVert = new DevExpress.XtraEditors.LabelControl();
+            this.pnlHistoryHeader = new DevExpress.XtraEditors.PanelControl();
+            this.lblHeaderLabel = new DevExpress.XtraEditors.LabelControl();
+            this.btnShowHideHistory = new DevExpress.XtraEditors.SimpleButton();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.taskBarMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsiDownload = new System.Windows.Forms.ToolStripMenuItem();
             this.tsiSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.tsiExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.historyBarManager = new DevExpress.XtraBars.BarManager(this.components);
+            this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
+            this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
+            this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
+            this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
+            this.bbiReDownload = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiNewDownload = new DevExpress.XtraBars.BarButtonItem();
+            this.historyPopup = new DevExpress.XtraBars.PopupMenu(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.tcMainTabControl)).BeginInit();
             this.tabFormContentContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sccMainSplitter)).BeginInit();
@@ -69,7 +87,17 @@
             this.pnlPlaylistControls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.marqueeProgressBarControl1.Properties)).BeginInit();
             this.pnlScrollableControls.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlHistoryPanel)).BeginInit();
+            this.pnlHistoryPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gcHistory)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gvHistory)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repFileExists)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repPostProcessed)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlHistoryHeader)).BeginInit();
+            this.pnlHistoryHeader.SuspendLayout();
             this.taskBarMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.historyBarManager)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.historyPopup)).BeginInit();
             this.SuspendLayout();
             // 
             // tcMainTabControl
@@ -128,6 +156,8 @@
             // tabFormContentContainer1
             // 
             this.tabFormContentContainer1.Controls.Add(this.sccMainSplitter);
+            this.tabFormContentContainer1.Controls.Add(this.scHistorySplitter);
+            this.tabFormContentContainer1.Controls.Add(this.pnlHistoryPanel);
             this.tabFormContentContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabFormContentContainer1.Location = new System.Drawing.Point(0, 66);
             this.tabFormContentContainer1.Name = "tabFormContentContainer1";
@@ -141,7 +171,7 @@
             this.sccMainSplitter.Location = new System.Drawing.Point(0, 0);
             this.sccMainSplitter.Margin = new System.Windows.Forms.Padding(0);
             this.sccMainSplitter.Name = "sccMainSplitter";
-            this.sccMainSplitter.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.sccMainSplitter.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
             // 
             // sccMainSplitter.Panel1
             // 
@@ -150,7 +180,7 @@
             this.sccMainSplitter.Panel1.Controls.Add(this.videoInfoPanel);
             this.sccMainSplitter.Panel1.Controls.Add(this.marqueeProgressBarControl1);
             this.sccMainSplitter.Panel1.Controls.Add(this.ipMainInput);
-            this.sccMainSplitter.Panel1.MinSize = 482;
+            this.sccMainSplitter.Panel1.MinSize = 350;
             this.sccMainSplitter.Panel1.Text = "Panel1";
             // 
             // sccMainSplitter.Panel2
@@ -159,8 +189,8 @@
             this.sccMainSplitter.Panel2.MinSize = 323;
             this.sccMainSplitter.Panel2.Text = "Panel2";
             this.sccMainSplitter.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.sccMainSplitter.Size = new System.Drawing.Size(1188, 767);
-            this.sccMainSplitter.SplitterPosition = 839;
+            this.sccMainSplitter.Size = new System.Drawing.Size(872, 767);
+            this.sccMainSplitter.SplitterPosition = 523;
             this.sccMainSplitter.TabIndex = 0;
             this.sccMainSplitter.SplitterMoved += new System.EventHandler(this.sccMainSplitter_SplitterMoved);
             this.sccMainSplitter.Resize += new System.EventHandler(this.sccMainSplitter_Resize);
@@ -173,7 +203,7 @@
             this.gcFormats.Name = "gcFormats";
             this.gcFormats.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repPictureEdit});
-            this.gcFormats.Size = new System.Drawing.Size(839, 469);
+            this.gcFormats.Size = new System.Drawing.Size(523, 469);
             this.gcFormats.TabIndex = 0;
             this.gcFormats.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvFormats});
@@ -231,7 +261,7 @@
             this.pnlPlaylistControls.Location = new System.Drawing.Point(0, 273);
             this.pnlPlaylistControls.Margin = new System.Windows.Forms.Padding(0);
             this.pnlPlaylistControls.Name = "pnlPlaylistControls";
-            this.pnlPlaylistControls.Size = new System.Drawing.Size(839, 25);
+            this.pnlPlaylistControls.Size = new System.Drawing.Size(523, 25);
             this.pnlPlaylistControls.TabIndex = 3;
             // 
             // btnPLSelectAll
@@ -261,7 +291,7 @@
             this.lblSelectAFormat.Location = new System.Drawing.Point(0, 0);
             this.lblSelectAFormat.Margin = new System.Windows.Forms.Padding(0);
             this.lblSelectAFormat.Name = "lblSelectAFormat";
-            this.lblSelectAFormat.Size = new System.Drawing.Size(839, 25);
+            this.lblSelectAFormat.Size = new System.Drawing.Size(523, 25);
             this.lblSelectAFormat.TabIndex = 0;
             this.lblSelectAFormat.Text = "Select a Video and/or Audio Format";
             // 
@@ -271,7 +301,7 @@
             this.videoInfoPanel.Location = new System.Drawing.Point(0, 123);
             this.videoInfoPanel.Margin = new System.Windows.Forms.Padding(0);
             this.videoInfoPanel.Name = "videoInfoPanel";
-            this.videoInfoPanel.Size = new System.Drawing.Size(839, 150);
+            this.videoInfoPanel.Size = new System.Drawing.Size(523, 150);
             this.videoInfoPanel.TabIndex = 2;
             this.videoInfoPanel.UseMediaSize = new System.Drawing.Size(0, 0);
             this.videoInfoPanel.Visible = false;
@@ -285,7 +315,7 @@
             this.marqueeProgressBarControl1.Name = "marqueeProgressBarControl1";
             this.marqueeProgressBarControl1.Properties.AllowFocused = false;
             this.marqueeProgressBarControl1.Properties.ShowTitle = true;
-            this.marqueeProgressBarControl1.Size = new System.Drawing.Size(839, 20);
+            this.marqueeProgressBarControl1.Size = new System.Drawing.Size(523, 20);
             this.marqueeProgressBarControl1.TabIndex = 0;
             this.marqueeProgressBarControl1.Visible = false;
             // 
@@ -297,10 +327,10 @@
             this.ipMainInput.ListMode = YTR.Classes.ListMode.Format;
             this.ipMainInput.Location = new System.Drawing.Point(0, 0);
             this.ipMainInput.Margin = new System.Windows.Forms.Padding(0);
-            this.ipMainInput.MinimumSize = new System.Drawing.Size(400, 100);
+            this.ipMainInput.MinimumSize = new System.Drawing.Size(350, 100);
             this.ipMainInput.Name = "ipMainInput";
             this.ipMainInput.ShowCrab = false;
-            this.ipMainInput.Size = new System.Drawing.Size(839, 103);
+            this.ipMainInput.Size = new System.Drawing.Size(523, 103);
             this.ipMainInput.TabIndex = 1;
             this.ipMainInput.URL = "";
             this.ipMainInput.ListFormats_Click += new System.EventHandler(this.ipMainInput_ListFormats_Click);
@@ -318,7 +348,7 @@
             this.pnlScrollableControls.Location = new System.Drawing.Point(0, 0);
             this.pnlScrollableControls.Margin = new System.Windows.Forms.Padding(0);
             this.pnlScrollableControls.Name = "pnlScrollableControls";
-            this.pnlScrollableControls.Size = new System.Drawing.Size(323, 767);
+            this.pnlScrollableControls.Size = new System.Drawing.Size(328, 767);
             this.pnlScrollableControls.TabIndex = 3;
             // 
             // cpMainControlPanel
@@ -341,7 +371,7 @@
             this.cpMainControlPanel.Name = "cpMainControlPanel";
             this.cpMainControlPanel.SegmentDuration = System.TimeSpan.Parse("00:00:01");
             this.cpMainControlPanel.SegmentStart = System.TimeSpan.Parse("00:00:00");
-            this.cpMainControlPanel.Size = new System.Drawing.Size(323, 767);
+            this.cpMainControlPanel.Size = new System.Drawing.Size(328, 767);
             this.cpMainControlPanel.TabIndex = 2;
             this.cpMainControlPanel.Cancel_MouseMove += new System.EventHandler(this.cancelProcessButtons_MouseMove);
             this.cpMainControlPanel.Cancel_MouseLeave += new System.EventHandler(this.cancelProcessButtons_MouseLeave);
@@ -353,9 +383,147 @@
             this.cpMainControlPanel.ReDownload_Click += new System.EventHandler(this.cpMainControlPanel_ReDownload_Click);
             this.cpMainControlPanel.NewDownload_Click += new System.EventHandler(this.cpMainControlPanel_NewDownload_Click);
             // 
+            // scHistorySplitter
+            // 
+            this.scHistorySplitter.Dock = System.Windows.Forms.DockStyle.Right;
+            this.scHistorySplitter.Location = new System.Drawing.Point(872, 0);
+            this.scHistorySplitter.MinExtra = 700;
+            this.scHistorySplitter.MinSize = 300;
+            this.scHistorySplitter.Name = "scHistorySplitter";
+            this.scHistorySplitter.Size = new System.Drawing.Size(16, 767);
+            this.scHistorySplitter.TabIndex = 2;
+            this.scHistorySplitter.TabStop = false;
+            // 
+            // pnlHistoryPanel
+            // 
+            this.pnlHistoryPanel.Controls.Add(this.gcHistory);
+            this.pnlHistoryPanel.Controls.Add(this.lblHistoryVert);
+            this.pnlHistoryPanel.Controls.Add(this.pnlHistoryHeader);
+            this.pnlHistoryPanel.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pnlHistoryPanel.Location = new System.Drawing.Point(888, 0);
+            this.pnlHistoryPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlHistoryPanel.MinimumSize = new System.Drawing.Size(300, 0);
+            this.pnlHistoryPanel.Name = "pnlHistoryPanel";
+            this.pnlHistoryPanel.Size = new System.Drawing.Size(300, 767);
+            this.pnlHistoryPanel.TabIndex = 1;
+            this.pnlHistoryPanel.Visible = false;
+            // 
+            // gcHistory
+            // 
+            this.gcHistory.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gcHistory.Location = new System.Drawing.Point(2, 240);
+            this.gcHistory.MainView = this.gvHistory;
+            this.gcHistory.MinimumSize = new System.Drawing.Size(0, 200);
+            this.gcHistory.Name = "gcHistory";
+            this.gcHistory.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
+            this.repFileExists,
+            this.repPostProcessed});
+            this.gcHistory.Size = new System.Drawing.Size(296, 525);
+            this.gcHistory.TabIndex = 1;
+            this.gcHistory.ToolTipController = this.toolTipController;
+            this.gcHistory.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
+            this.gvHistory});
+            this.gcHistory.MouseClick += new System.Windows.Forms.MouseEventHandler(this.gcHistory_MouseClick);
+            // 
+            // gvHistory
+            // 
+            this.gvHistory.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFocus;
+            this.gvHistory.GridControl = this.gcHistory;
+            this.gvHistory.Name = "gvHistory";
+            this.gvHistory.OptionsBehavior.AlignGroupSummaryInGroupRow = DevExpress.Utils.DefaultBoolean.False;
+            this.gvHistory.OptionsBehavior.Editable = false;
+            this.gvHistory.OptionsCustomization.AllowColumnMoving = false;
+            this.gvHistory.OptionsCustomization.AllowGroup = false;
+            this.gvHistory.OptionsCustomization.AllowQuickHideColumns = false;
+            this.gvHistory.OptionsDetail.EnableDetailToolTip = true;
+            this.gvHistory.OptionsDetail.ShowDetailTabs = false;
+            this.gvHistory.OptionsSelection.EnableAppearanceFocusedCell = false;
+            this.gvHistory.OptionsSelection.EnableAppearanceHideSelection = false;
+            this.gvHistory.OptionsView.ShowDetailButtons = false;
+            this.gvHistory.OptionsView.ShowGroupExpandCollapseButtons = false;
+            this.gvHistory.OptionsView.ShowGroupPanel = false;
+            this.gvHistory.OptionsView.ShowIndicator = false;
+            this.gvHistory.DoubleClick += new System.EventHandler(this.gvHistory_DoubleClick);
+            // 
+            // repFileExists
+            // 
+            this.repFileExists.AutoHeight = false;
+            this.repFileExists.CheckBoxOptions.Style = DevExpress.XtraEditors.Controls.CheckBoxStyle.Custom;
+            this.repFileExists.ImageOptions.SvgImageChecked = global::YTR.Properties.Resources.actions_checkcircled;
+            this.repFileExists.ImageOptions.SvgImageSize = new System.Drawing.Size(20, 20);
+            this.repFileExists.ImageOptions.SvgImageUnchecked = global::YTR.Properties.Resources.security_warningcircled2;
+            this.repFileExists.Name = "repFileExists";
+            // 
+            // repPostProcessed
+            // 
+            this.repPostProcessed.AutoHeight = false;
+            this.repPostProcessed.CheckBoxOptions.Style = DevExpress.XtraEditors.Controls.CheckBoxStyle.Custom;
+            this.repPostProcessed.CheckBoxOptions.SvgImageSize = new System.Drawing.Size(20, 20);
+            this.repPostProcessed.ImageOptions.SvgImageChecked = global::YTR.Properties.Resources.functionsinformation;
+            this.repPostProcessed.ImageOptions.SvgImageSize = new System.Drawing.Size(20, 20);
+            this.repPostProcessed.ImageOptions.SvgImageUnchecked = global::YTR.Properties.Resources.about1;
+            this.repPostProcessed.Name = "repPostProcessed";
+            // 
             // toolTipController
             // 
-            this.toolTipController.GetActiveObjectInfo += new DevExpress.Utils.ToolTipControllerGetActiveObjectInfoEventHandler(this.toolTipController_GetActiveObjectInfo);
+            this.toolTipController.GetActiveObjectInfo += new DevExpress.Utils.ToolTipControllerGetActiveObjectInfoEventHandler(this.historyTooltip_GetActiveObjectInfo);
+            // 
+            // lblHistoryVert
+            // 
+            this.lblHistoryVert.Appearance.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
+            this.lblHistoryVert.Appearance.Options.UseFont = true;
+            this.lblHistoryVert.Appearance.Options.UseTextOptions = true;
+            this.lblHistoryVert.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.lblHistoryVert.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.Vertical;
+            this.lblHistoryVert.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.lblHistoryVert.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblHistoryVert.Location = new System.Drawing.Point(2, 32);
+            this.lblHistoryVert.Margin = new System.Windows.Forms.Padding(0);
+            this.lblHistoryVert.Name = "lblHistoryVert";
+            this.lblHistoryVert.Size = new System.Drawing.Size(296, 208);
+            this.lblHistoryVert.TabIndex = 2;
+            this.lblHistoryVert.Text = "D\r\nO\r\nW\r\nN\r\nL\r\nO\r\nA\r\nD\r\n\r\nH\r\nI\r\nS\r\nT\r\nO\r\nR\r\nY";
+            this.lblHistoryVert.Visible = false;
+            // 
+            // pnlHistoryHeader
+            // 
+            this.pnlHistoryHeader.Controls.Add(this.lblHeaderLabel);
+            this.pnlHistoryHeader.Controls.Add(this.btnShowHideHistory);
+            this.pnlHistoryHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlHistoryHeader.Location = new System.Drawing.Point(2, 2);
+            this.pnlHistoryHeader.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlHistoryHeader.Name = "pnlHistoryHeader";
+            this.pnlHistoryHeader.Size = new System.Drawing.Size(296, 30);
+            this.pnlHistoryHeader.TabIndex = 0;
+            // 
+            // lblHeaderLabel
+            // 
+            this.lblHeaderLabel.Appearance.Options.UseTextOptions = true;
+            this.lblHeaderLabel.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.lblHeaderLabel.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
+            this.lblHeaderLabel.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.lblHeaderLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblHeaderLabel.Location = new System.Drawing.Point(2, 2);
+            this.lblHeaderLabel.Margin = new System.Windows.Forms.Padding(0);
+            this.lblHeaderLabel.Name = "lblHeaderLabel";
+            this.lblHeaderLabel.Size = new System.Drawing.Size(266, 26);
+            this.lblHeaderLabel.TabIndex = 1;
+            this.lblHeaderLabel.Text = "Download History";
+            // 
+            // btnShowHideHistory
+            // 
+            this.btnShowHideHistory.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnShowHideHistory.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
+            this.btnShowHideHistory.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
+            this.btnShowHideHistory.ImageOptions.SvgImage = global::YTR.Properties.Resources.doublenext;
+            this.btnShowHideHistory.ImageOptions.SvgImageColorizationMode = DevExpress.Utils.SvgImageColorizationMode.Full;
+            this.btnShowHideHistory.ImageOptions.SvgImageSize = new System.Drawing.Size(25, 25);
+            this.btnShowHideHistory.Location = new System.Drawing.Point(268, 2);
+            this.btnShowHideHistory.Margin = new System.Windows.Forms.Padding(0);
+            this.btnShowHideHistory.Name = "btnShowHideHistory";
+            this.btnShowHideHistory.Size = new System.Drawing.Size(26, 26);
+            this.btnShowHideHistory.TabIndex = 0;
+            this.btnShowHideHistory.Click += new System.EventHandler(this.btnShowHideHistory_Click);
             // 
             // notifyIcon
             // 
@@ -400,6 +568,72 @@
             this.tsiExit.Text = "Exit";
             this.tsiExit.Click += new System.EventHandler(this.tsiExit_Click);
             // 
+            // historyBarManager
+            // 
+            this.historyBarManager.DockControls.Add(this.barDockControlTop);
+            this.historyBarManager.DockControls.Add(this.barDockControlBottom);
+            this.historyBarManager.DockControls.Add(this.barDockControlLeft);
+            this.historyBarManager.DockControls.Add(this.barDockControlRight);
+            this.historyBarManager.Form = this;
+            this.historyBarManager.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
+            this.bbiReDownload,
+            this.bbiNewDownload});
+            this.historyBarManager.MaxItemId = 2;
+            // 
+            // barDockControlTop
+            // 
+            this.barDockControlTop.CausesValidation = false;
+            this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
+            this.barDockControlTop.Manager = this.historyBarManager;
+            this.barDockControlTop.Size = new System.Drawing.Size(1188, 0);
+            // 
+            // barDockControlBottom
+            // 
+            this.barDockControlBottom.CausesValidation = false;
+            this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 833);
+            this.barDockControlBottom.Manager = this.historyBarManager;
+            this.barDockControlBottom.Size = new System.Drawing.Size(1188, 0);
+            // 
+            // barDockControlLeft
+            // 
+            this.barDockControlLeft.CausesValidation = false;
+            this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
+            this.barDockControlLeft.Location = new System.Drawing.Point(0, 0);
+            this.barDockControlLeft.Manager = this.historyBarManager;
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 833);
+            // 
+            // barDockControlRight
+            // 
+            this.barDockControlRight.CausesValidation = false;
+            this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
+            this.barDockControlRight.Location = new System.Drawing.Point(1188, 0);
+            this.barDockControlRight.Manager = this.historyBarManager;
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 833);
+            // 
+            // bbiReDownload
+            // 
+            this.bbiReDownload.Caption = "Download Again";
+            this.bbiReDownload.Id = 0;
+            this.bbiReDownload.Name = "bbiReDownload";
+            this.bbiReDownload.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiReDownload_ItemClick);
+            // 
+            // bbiNewDownload
+            // 
+            this.bbiNewDownload.Caption = "Use URL for New Download";
+            this.bbiNewDownload.Id = 1;
+            this.bbiNewDownload.Name = "bbiNewDownload";
+            this.bbiNewDownload.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiNewDownload_ItemClick);
+            // 
+            // historyPopup
+            // 
+            this.historyPopup.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiReDownload),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiNewDownload)});
+            this.historyPopup.Manager = this.historyBarManager;
+            this.historyPopup.Name = "historyPopup";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -407,6 +641,10 @@
             this.ClientSize = new System.Drawing.Size(1188, 833);
             this.Controls.Add(this.tabFormContentContainer1);
             this.Controls.Add(this.tcMainTabControl);
+            this.Controls.Add(this.barDockControlLeft);
+            this.Controls.Add(this.barDockControlRight);
+            this.Controls.Add(this.barDockControlBottom);
+            this.Controls.Add(this.barDockControlTop);
             this.DoubleBuffered = true;
             this.IconOptions.Icon = ((System.Drawing.Icon)(resources.GetObject("MainForm.IconOptions.Icon")));
             this.IconOptions.Image = ((System.Drawing.Image)(resources.GetObject("MainForm.IconOptions.Image")));
@@ -431,8 +669,19 @@
             this.pnlPlaylistControls.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.marqueeProgressBarControl1.Properties)).EndInit();
             this.pnlScrollableControls.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pnlHistoryPanel)).EndInit();
+            this.pnlHistoryPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gcHistory)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gvHistory)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repFileExists)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repPostProcessed)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlHistoryHeader)).EndInit();
+            this.pnlHistoryHeader.ResumeLayout(false);
             this.taskBarMenu.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.historyBarManager)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.historyPopup)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -461,6 +710,24 @@
         private DevExpress.XtraEditors.PanelControl pnlPlaylistControls;
         private DevExpress.XtraEditors.SimpleButton btnPLSelectAll;
         private DevExpress.XtraEditors.XtraScrollableControl pnlScrollableControls;
+        private DevExpress.XtraEditors.PanelControl pnlHistoryPanel;
+        private DevExpress.XtraEditors.PanelControl pnlHistoryHeader;
+        public DevExpress.XtraGrid.GridControl gcHistory;
+        public DevExpress.XtraGrid.Views.Grid.GridView gvHistory;
+        private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repFileExists;
+        private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repPostProcessed;
+        private DevExpress.XtraEditors.SimpleButton btnShowHideHistory;
+        private DevExpress.XtraEditors.LabelControl lblHistoryVert;
+        private DevExpress.XtraEditors.LabelControl lblHeaderLabel;
+        private DevExpress.XtraBars.BarDockControl barDockControlLeft;
+        private DevExpress.XtraBars.BarManager historyBarManager;
+        private DevExpress.XtraBars.BarDockControl barDockControlTop;
+        private DevExpress.XtraBars.BarDockControl barDockControlBottom;
+        private DevExpress.XtraBars.BarDockControl barDockControlRight;
+        private DevExpress.XtraBars.BarButtonItem bbiReDownload;
+        private DevExpress.XtraBars.BarButtonItem bbiNewDownload;
+        private DevExpress.XtraBars.PopupMenu historyPopup;
+        private DevExpress.XtraEditors.SplitterControl scHistorySplitter;
     }
 }
 

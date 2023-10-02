@@ -391,6 +391,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\doubleprev.svg" />
+    <None Include="Resources\doublenext.svg" />
+    <None Include="Resources\chartverticalaxis_logscale.svg" />
     <None Include="Resources\crop.svg" />
     <None Include="Resources\cut.svg" />
     <None Include="Resources\functionsinformation.svg" />
