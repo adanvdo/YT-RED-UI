@@ -160,9 +160,14 @@ namespace YTR.Utils
                     DirectoryInfo backup = new DirectoryInfo(Path.Combine(AppSettings.Default.General.ExeDirectoryPath, "Backup"));
                     if (backup.Exists)
                     {
-                        foreach (FileInfo f in backup.GetFiles().Where(bf => !bf.Name.EndsWith(".json")))
+                        var files = backup.GetFiles("*", SearchOption.AllDirectories).Where(bf => !bf.Name.EndsWith(".json"));
+                        foreach (FileInfo f in files)
                         {
                             f.Delete();
+                        }
+                        foreach(DirectoryInfo dir in backup.GetDirectories("*", SearchOption.TopDirectoryOnly))
+                        {
+                            dir.Delete(true);
                         }
                     }
                     if (File.Exists(Path.Combine(AppSettings.Default.General.ExeDirectoryPath, "Updates", "DeletePending.bat")))

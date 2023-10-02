@@ -178,9 +178,7 @@ namespace YTR_Updater
 
                     DirectoryInfo baseDir = new DirectoryInfo(BaseDir);
                     List<FileInfo> files = baseDir.GetFiles("*", SearchOption.AllDirectories)
-                        .Where(f => !f.FullName.EndsWith("YTR_Updater.exe")
-                            && !f.FullName.EndsWith("Ionic.Zip.Reduced.dll")
-                            && !f.Name.EndsWith(".json")
+                        .Where(f => !f.Name.EndsWith(".json")
                             && f.Directory.Name != "ErrorLogs"
                             && !f.FullName.Contains(@"\ErrorLogs\")
                             && f.Directory.Name != "Updates"
@@ -196,9 +194,16 @@ namespace YTR_Updater
 
                     foreach (FileInfo f in files)
                     {
-                        FileActionResult tryDelete = await FileHelper.DeleteFile(f);
-                        if (!tryDelete.Success)
+                        if (f.FullName.EndsWith("YTR_Updater.exe") || f.FullName.EndsWith("Ionic.Zip.Reduced.dll"))
+                        {
                             failed.Add(f);
+                        }
+                        else
+                        {
+                            FileActionResult tryDelete = await FileHelper.DeleteFile(f);
+                            if (!tryDelete.Success)
+                                failed.Add(f);
+                        }
                         completed++;
                         percentComplete = Convert.ToInt32((completed / total) * 100);
                         reportProgress(percentComplete);

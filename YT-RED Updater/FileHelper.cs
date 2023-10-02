@@ -69,6 +69,45 @@ namespace YTR_Updater
             }
             return res;
         }
+
+        public static async Task<ProcessResult> CopyFilesRecursively(string sourcePath, string targetPath)
+        {
+            ProcessResult res = new ProcessResult();
+            try 
+            {
+                string result = await Task.Run(() =>
+                {
+                    int files = 0;
+                    int dirs = 0;
+
+                    //Now Create all of the directories
+                    foreach (string dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
+                    {
+                        string tDir = dirPath.Replace(sourcePath, targetPath);
+                        if (!Directory.Exists(tDir))
+                        {
+                            Directory.CreateDirectory(tDir);
+                            dirs++;
+                        }
+                    }
+
+                    //Copy all the files & Replaces any files with the same name
+                    foreach (string file in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
+                    {
+                        string tf = file.Replace(sourcePath, targetPath);
+                        File.Copy(file, tf, true);
+                        files++;
+                    }
+                    return $"Copied {files} files and {dirs} directories";
+                });
+                res.Output = result;
+            }
+            catch (Exception ex)
+            {
+                res.Error = ex.Message;
+            }
+            return res;
+        }
     }
 
     public class FileActionResult
