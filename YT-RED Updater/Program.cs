@@ -44,7 +44,7 @@ namespace YTR_Updater
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(dummyRun ? new UpdaterForm() : new UpdaterForm(appBase, package, skin, palette, includeUpdater));
+            Application.Run(dummyRun ? new UpdaterForm() : new UpdaterForm(appBase, package, skin, palette, includeUpdater, devRun));
         }
     }
 }

@@ -476,7 +476,7 @@
 set platformName=$(PlatformName)
 set versionNumber=@(VersionNumber)
 set releaseChannel=alpha
-set prefix=YTR
+set addToDB=0
 call "E:\Dev\BuildAndSignYTR.bat"</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\SevenZipExtractor.1.0.17\build\SevenZipExtractor.targets" Condition="Exists('..\packages\SevenZipExtractor.1.0.17\build\SevenZipExtractor.targets')" />

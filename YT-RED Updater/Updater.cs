@@ -1,12 +1,10 @@
-﻿using System;
+﻿using Ionic.Zip;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using IWshRuntimeLibrary;
-using Ionic.Zip;
 
 namespace YTR_Updater
 {
@@ -86,7 +84,7 @@ namespace YTR_Updater
 
                         foreach (ZipEntry entry in entries)
                         {
-                            entry.FileName = entry.FileName.Replace($"YTR/", "");
+                            entry.FileName = entry.FileName.Replace("YTR/", "");
                             entry.Extract(ExtractionFolder);
                             extracted++;
                             percentage = Convert.ToInt32(((extracted / total) * 100));
@@ -154,7 +152,7 @@ namespace YTR_Updater
                     //Copy all the files & Replaces any files with the same name
                     foreach (string newPath in files.Select(f => f.FullName))
                     {
-                        System.IO.File.Copy(newPath, newPath.Replace(BaseDir, Path.Combine(BaseDir, "Backup")), true);
+                        File.Copy(newPath, newPath.Replace(BaseDir, Path.Combine(BaseDir, "Backup")), true);
                         completed++;
                         percentComplete = Convert.ToInt32((completed / total) * 100);
                         reportProgress(percentComplete);
@@ -174,38 +172,11 @@ namespace YTR_Updater
             ProcessResult result = new ProcessResult();
             try
             {
-                Tuple<List<DirectoryInfo>, List<FileInfo>> pendingDeletes = await Task.Run(async () =>
+                List<FileInfo> pendingDeletes = await Task.Run(async () =>
                 {
-                    List<DirectoryInfo> failedDirs = new List<DirectoryInfo>();
-                    List<FileInfo> failedFiles = new List<FileInfo>();
+                    List<FileInfo> failed = new List<FileInfo>();
 
                     DirectoryInfo baseDir = new DirectoryInfo(BaseDir);
-                    List<DirectoryInfo> folders = new List<DirectoryInfo>();
-                    DirectoryInfo backupDir = new DirectoryInfo(Path.Combine(baseDir.FullName, "Backup"));
-                    decimal total = 0;
-                    decimal completed = 0;
-                    int percentComplete = 0;
-                    if (backupDir.Exists)
-                    {
-                        folders = backupDir.GetDirectories("*", SearchOption.TopDirectoryOnly).ToList();
-                        if(folders.Count > 0)
-                        {
-                            total = folders.Count;
-                            foreach(var di in folders)
-                            {
-                                FolderActionResult tryDelete = await FileHelper.DeleteFolder(di);
-                                if (!tryDelete.Success)
-                                    failedDirs.Add(di);
-                                completed++;
-                                percentComplete = Convert.ToInt32((completed / total) * 100);
-                                reportProgress(percentComplete);
-                            }
-                        }
-                    }
-
-                    total = 0;
-                    completed = 0;
-                    percentComplete = 0;
                     List<FileInfo> files = baseDir.GetFiles("*", SearchOption.AllDirectories)
                         .Where(f => !f.FullName.EndsWith("YTR_Updater.exe")
                             && !f.FullName.EndsWith("Ionic.Zip.Reduced.dll")
@@ -215,28 +186,29 @@ namespace YTR_Updater
                             && f.Directory.Name != "Updates"
                             && !f.FullName.Contains(@"\Updates\")
                             && f.Directory.Name != "Backup"
-                            && !f.FullName.Contains(@"\Backup")
+                            && !f.FullName.Contains(@"\Backup\")
                         )
                         .ToList();
 
-                    total = files.Count;
+                    decimal total = files.Count;
+                    decimal completed = 0;
+                    int percentComplete = 0;
 
                     foreach (FileInfo f in files)
                     {
                         FileActionResult tryDelete = await FileHelper.DeleteFile(f);
                         if (!tryDelete.Success)
-                            failedFiles.Add(f);
+                            failed.Add(f);
                         completed++;
                         percentComplete = Convert.ToInt32((completed / total) * 100);
                         reportProgress(percentComplete);
                     }
 
                     result.Output = "Completed";
-                    return Tuple.Create(failedDirs, failedFiles);
+                    return failed;
                 });
 
-                result.PendingFolders = pendingDeletes.Item1;
-                result.PendingFiles = pendingDeletes.Item2;
+                result.Pending = pendingDeletes;
             }
             catch (Exception ex)
             {
@@ -315,7 +287,7 @@ namespace YTR_Updater
                     //Now Create all of the directories
                     foreach (DirectoryInfo dir in dirs)
                     {
-                        if (!Directory.Exists(dir.FullName.Replace(extractionFolder.FullName, BaseDir)))
+                        if (!Directory.Exists(dir.FullName.Replace(ExtractionFolder, BaseDir)))
                             Directory.CreateDirectory(dir.FullName.Replace(ExtractionFolder, BaseDir));
                         completed++;
                         percentComplete = Convert.ToInt32((completed / total) * 100);
@@ -331,11 +303,11 @@ namespace YTR_Updater
                             || newFile.Name == "Ionic.Zip.Reduced.dll"
                             || (pendingDelete != null && pendingDelete.Find(fi => fi.Name == newFile.Name) != null))
                         {
-                            System.IO.File.Copy(newFile.FullName, $"{dest}.new");
+                            File.Copy(newFile.FullName, $"{dest}.new");
                         }
                         else
                         {
-                            System.IO.File.Copy(newFile.FullName, dest, true);
+                            File.Copy(newFile.FullName, dest, true);
                         }
                         completed++;
                         percentComplete = Convert.ToInt32((completed / total) * 100);
@@ -351,71 +323,20 @@ namespace YTR_Updater
             });
             return result;
         }
-
-        public static async Task<ProcessResult> SearchAndReplaceShortcuts(Action<int> reportProgress, string newApplicationPath)
-        {
-            ProcessResult result = new ProcessResult();
-            await Task.Run(() =>
-            {
-                try
-                {
-                    var checkFolders = new List<string>() {
-                        Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-                        Environment.GetFolderPath(Environment.SpecialFolder.StartMenu),
-                        Environment.GetFolderPath(Environment.SpecialFolder.CommonDesktopDirectory),
-                        Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu)
-                    };
-
-                    int processed = 0;
-                    WshShell shell = new WshShell();
-                    foreach (string folder in checkFolders)
-                    {
-                        DirectoryInfo dir = new DirectoryInfo(folder);
-                        if (dir.Exists) {
-                            var shortcuts = dir.GetFiles().Where(f => f.Extension.ToLower() == ".lnk");
-                            foreach(var sc in shortcuts)
-                            {
-                                string lnkLocation = string.Empty;
-                                IWshShortcut oldLink = (IWshShortcut)shell.CreateShortcut(sc.FullName);
-                                if (oldLink.TargetPath.Contains($"YT-RED.exe"))
-                                {
-                                    lnkLocation = sc.FullName;
-                                    sc.Delete();
-                                
-                                    IWshShortcut newLink = (IWshShortcut)shell.CreateShortcut(lnkLocation.Replace("YT-RED", "YTR"));
-                                    newLink.TargetPath = newApplicationPath;
-                                    newLink.Description = $"New YTR Shortcut";
-                                    newLink.Save();
-                                    processed++;
-                                }
-                            }
-                        }
-                    }
-                    result.Output = $"Replaced {processed} Shortcuts";
-                }
-                catch (Exception ex)
-                {
-                    result.Error = "Failed to Update Existing Shortcuts\n\n" + ex.ToString();
-                }
-            });
-            return result;
-        }            
     }
 
     public class ProcessResult
     {
         public string Output { get; set; }
 
-        public List<FileInfo> PendingFiles { get; set; }
-        public List<DirectoryInfo> PendingFolders { get; set; }
+        public List<FileInfo> Pending { get; set; }
         public string Error { get; set; }
 
         public ProcessResult()
         {
             Output = string.Empty;
-            PendingFiles = null;
-            PendingFolders = null;
+            Pending = null;
             Error = string.Empty;
-        }       
+        }
     }
 }
