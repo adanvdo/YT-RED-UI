@@ -107,6 +107,11 @@ YTR's main interface is pretty straight forward. Simply enter the URL of any vid
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 10/2/2023 v1.0.4.7
+- Moved Download History to new Side Panel
+- Fixed bug where Updater did not clean up all backup files
+- Fixed bug where post-update batch script was not completely generated
+
 ### 9/29/2023 v1.0.4.6
 - Fixed crash when attempting to download or get format list
 - YT-RED is now YTR
