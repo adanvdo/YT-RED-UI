@@ -232,10 +232,10 @@ namespace YTR.Settings
 			AudioDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
 			CreateFolderForPlaylists = true;
 			UsePreferredFormat = false;
-			YtdlpLocalVersion = "2023.7.6.0";
+			YtdlpLocalVersion = "2023.09.24";
 			YtdlpUrl = @"https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp{0}.exe";
 			YtdlpVersionUrl = "https://api.github.com/repos/yt-dlp/yt-dlp/tags";
-			FfmpegLocalVersion = "unknown";
+			FfmpegLocalVersion = "2023-09-29-git-40aa451154";
             FfmpegUrl = @"https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-essentials.7z";
 			FfmpegVersionUrl = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-essentials.7z.ver";
 			CollapseSegmentControl = false;
