@@ -107,6 +107,9 @@ YTR's main interface is pretty straight forward. Simply enter the URL of any vid
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 10/6/2023 v1.0.4.8
+- Added Controls for Managing History Log to the Main Form
+
 ### 10/2/2023 v1.0.4.7
 - Moved Download History to new Side Panel
 - Fixed bug where Updater did not clean up all backup files
