@@ -2197,7 +2197,6 @@ namespace YTR
             }
         }
 
-
         public void PopulateHistoryColumns()
         {
             gvHistory.Columns.Clear();
@@ -2249,6 +2248,7 @@ namespace YTR
         private async void btnClearHistory_Click(object sender, EventArgs e)
         {
             await Logging.Historian.CleanHistory(Logging.DownloadCategory.All);
+            refreshHistory();
             MsgBox.Show("Download History Cleared", FormStartPosition.CenterParent);
         }
 
@@ -2258,6 +2258,7 @@ namespace YTR
             if (res == DialogResult.OK)
             {
                 await Logging.Historian.CleanHistory(Logging.DownloadCategory.Video, Logging.DownloadCategory.Video);
+                refreshHistory();
                 MsgBox.Show("Downloads Cleared", FormStartPosition.CenterParent);
             }
         }
@@ -2268,6 +2269,7 @@ namespace YTR
             if (res == DialogResult.OK)
             {
                 await Logging.Historian.CleanHistory(Logging.DownloadCategory.Audio, Logging.DownloadCategory.Audio);
+                refreshHistory();
                 MsgBox.Show("Downloads Cleared", FormStartPosition.CenterParent);
             }
         }
@@ -2278,6 +2280,7 @@ namespace YTR
             if (res == DialogResult.OK)
             {
                 await Logging.Historian.CleanHistory(Logging.DownloadCategory.All, Logging.DownloadCategory.All);
+                refreshHistory();
                 MsgBox.Show("Downloads Cleared", FormStartPosition.CenterParent);
             }
         }
