@@ -24,20 +24,20 @@ namespace YTR.Settings
 		[JsonIgnore]
 		public string ExeDirectoryPath { get; set; }
 
-		[Category("Error Logs")]
+        [Browsable(false)]
+        [JsonProperty("active_skin")]
+        public string ActiveSkin { get; set; }
+
+        [Browsable(false)]
+        [JsonProperty("skin_palette")]
+        public string SkinPalette { get; set; }
+
+        [Category("Error Logs")]
 		[DisplayName("Error Log Path")]
 		[Description("The destination folder to store error logs")]
 		[EditorAttribute(typeof(System.Windows.Forms.Design.FolderNameEditor), typeof(System.Drawing.Design.UITypeEditor))]
 		[JsonProperty("error_logs")]
 		public string ErrorLogPath { get; set; }
-
-		[Browsable(false)]
-		[JsonProperty("active_skin")]
-		public string ActiveSkin { get; set; }
-
-        [Browsable(false)]
-        [JsonProperty("skin_palette")]
-		public string SkinPalette { get; set; }
 
 		[Category("Download Restrictions")]
 		[DisplayName("Enforce Restrictions")]
@@ -101,7 +101,7 @@ namespace YTR.Settings
 		[Category("Downloads")]
 		[DisplayName("Auto-Open Download Location")]
 		[Description("Automatically Open Completed Downloads in File Explorer")]
-		[DefaultValue(false)]
+		[DefaultValue(true)]
 		[JsonProperty("auto_open")]
 		public bool AutomaticallyOpenDownloadLocation { get; set; }
 
@@ -223,7 +223,7 @@ namespace YTR.Settings
 			MaxFilesizeBest = 0;
 			EnableDownloadHistory = true;
 			HistoryAge = 30;
-			AutomaticallyOpenDownloadLocation = false;
+			AutomaticallyOpenDownloadLocation = true;
 			RedditSampleUrl = @"https://www.reddit.com/r/PraiseTheCameraMan/comments/sj7iwr/couldnt_be_more_perfect/";
 			RedditMediaURLPrefix = @"https://v.redd.it/";
 			YouTubeSampleUrl = @"https://www.youtube.com/watch?v=dCAORZphnlY";
