@@ -55,6 +55,11 @@
             this.repFileExists = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.repPostProcessed = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.toolTipController = new DevExpress.Utils.ToolTipController(this.components);
+            this.pnlHistoryControls = new DevExpress.XtraEditors.PanelControl();
+            this.btnDelAllDLs = new DevExpress.XtraEditors.SimpleButton();
+            this.btnDelAudDLs = new DevExpress.XtraEditors.SimpleButton();
+            this.btnDelVidDLs = new DevExpress.XtraEditors.SimpleButton();
+            this.btnClearHistory = new DevExpress.XtraEditors.SimpleButton();
             this.lblHistoryVert = new DevExpress.XtraEditors.LabelControl();
             this.pnlHistoryHeader = new DevExpress.XtraEditors.PanelControl();
             this.lblHeaderLabel = new DevExpress.XtraEditors.LabelControl();
@@ -72,6 +77,9 @@
             this.bbiReDownload = new DevExpress.XtraBars.BarButtonItem();
             this.bbiNewDownload = new DevExpress.XtraBars.BarButtonItem();
             this.historyPopup = new DevExpress.XtraBars.PopupMenu(this.components);
+            this.spacer = new DevExpress.XtraEditors.PanelControl();
+            this.panelControl1 = new DevExpress.XtraEditors.PanelControl();
+            this.panelControl2 = new DevExpress.XtraEditors.PanelControl();
             ((System.ComponentModel.ISupportInitialize)(this.tcMainTabControl)).BeginInit();
             this.tabFormContentContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sccMainSplitter)).BeginInit();
@@ -93,11 +101,16 @@
             ((System.ComponentModel.ISupportInitialize)(this.gvHistory)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repFileExists)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repPostProcessed)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlHistoryControls)).BeginInit();
+            this.pnlHistoryControls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pnlHistoryHeader)).BeginInit();
             this.pnlHistoryHeader.SuspendLayout();
             this.taskBarMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.historyBarManager)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.historyPopup)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.spacer)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.panelControl2)).BeginInit();
             this.SuspendLayout();
             // 
             // tcMainTabControl
@@ -268,7 +281,7 @@
             // 
             this.btnPLSelectAll.Dock = System.Windows.Forms.DockStyle.Left;
             this.btnPLSelectAll.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
-            this.btnPLSelectAll.ImageOptions.SvgImage = global::YTR.Properties.Resources.checkbox;
+            this.btnPLSelectAll.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("btnPLSelectAll.ImageOptions.SvgImage")));
             this.btnPLSelectAll.ImageOptions.SvgImageColorizationMode = DevExpress.Utils.SvgImageColorizationMode.Full;
             this.btnPLSelectAll.ImageOptions.SvgImageSize = new System.Drawing.Size(18, 18);
             this.btnPLSelectAll.Location = new System.Drawing.Point(0, 0);
@@ -277,6 +290,7 @@
             this.btnPLSelectAll.Size = new System.Drawing.Size(110, 25);
             this.btnPLSelectAll.TabIndex = 0;
             this.btnPLSelectAll.Text = "Select All";
+            this.btnPLSelectAll.ToolTip = "Clear History";
             this.btnPLSelectAll.Visible = false;
             this.btnPLSelectAll.Click += new System.EventHandler(this.btnPLSelectAll_Click);
             // 
@@ -397,6 +411,7 @@
             // pnlHistoryPanel
             // 
             this.pnlHistoryPanel.Controls.Add(this.gcHistory);
+            this.pnlHistoryPanel.Controls.Add(this.pnlHistoryControls);
             this.pnlHistoryPanel.Controls.Add(this.lblHistoryVert);
             this.pnlHistoryPanel.Controls.Add(this.pnlHistoryHeader);
             this.pnlHistoryPanel.Dock = System.Windows.Forms.DockStyle.Right;
@@ -418,7 +433,7 @@
             this.gcHistory.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repFileExists,
             this.repPostProcessed});
-            this.gcHistory.Size = new System.Drawing.Size(296, 525);
+            this.gcHistory.Size = new System.Drawing.Size(296, 495);
             this.gcHistory.TabIndex = 1;
             this.gcHistory.ToolTipController = this.toolTipController;
             this.gcHistory.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -467,6 +482,82 @@
             // toolTipController
             // 
             this.toolTipController.GetActiveObjectInfo += new DevExpress.Utils.ToolTipControllerGetActiveObjectInfoEventHandler(this.historyTooltip_GetActiveObjectInfo);
+            // 
+            // pnlHistoryControls
+            // 
+            this.pnlHistoryControls.Controls.Add(this.btnDelAllDLs);
+            this.pnlHistoryControls.Controls.Add(this.panelControl2);
+            this.pnlHistoryControls.Controls.Add(this.btnDelAudDLs);
+            this.pnlHistoryControls.Controls.Add(this.panelControl1);
+            this.pnlHistoryControls.Controls.Add(this.btnDelVidDLs);
+            this.pnlHistoryControls.Controls.Add(this.spacer);
+            this.pnlHistoryControls.Controls.Add(this.btnClearHistory);
+            this.pnlHistoryControls.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlHistoryControls.Location = new System.Drawing.Point(2, 735);
+            this.pnlHistoryControls.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlHistoryControls.Name = "pnlHistoryControls";
+            this.pnlHistoryControls.Size = new System.Drawing.Size(296, 30);
+            this.pnlHistoryControls.TabIndex = 3;
+            // 
+            // btnDelAllDLs
+            // 
+            this.btnDelAllDLs.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnDelAllDLs.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
+            this.btnDelAllDLs.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
+            this.btnDelAllDLs.ImageOptions.SvgImage = global::YTR.Properties.Resources.actions_trash;
+            this.btnDelAllDLs.ImageOptions.SvgImageColorizationMode = DevExpress.Utils.SvgImageColorizationMode.Full;
+            this.btnDelAllDLs.ImageOptions.SvgImageSize = new System.Drawing.Size(22, 22);
+            this.btnDelAllDLs.Location = new System.Drawing.Point(175, 2);
+            this.btnDelAllDLs.Name = "btnDelAllDLs";
+            this.btnDelAllDLs.Size = new System.Drawing.Size(26, 26);
+            this.btnDelAllDLs.TabIndex = 3;
+            this.btnDelAllDLs.ToolTip = "Delete All Downloads";
+            this.btnDelAllDLs.Click += new System.EventHandler(this.btnDelAllDLs_Click);
+            // 
+            // btnDelAudDLs
+            // 
+            this.btnDelAudDLs.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnDelAudDLs.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
+            this.btnDelAudDLs.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
+            this.btnDelAudDLs.ImageOptions.SvgImage = global::YTR.Properties.Resources.audioslash;
+            this.btnDelAudDLs.ImageOptions.SvgImageColorizationMode = DevExpress.Utils.SvgImageColorizationMode.Full;
+            this.btnDelAudDLs.ImageOptions.SvgImageSize = new System.Drawing.Size(22, 22);
+            this.btnDelAudDLs.Location = new System.Drawing.Point(206, 2);
+            this.btnDelAudDLs.Name = "btnDelAudDLs";
+            this.btnDelAudDLs.Size = new System.Drawing.Size(26, 26);
+            this.btnDelAudDLs.TabIndex = 2;
+            this.btnDelAudDLs.ToolTip = "Delete Audio Downloads";
+            this.btnDelAudDLs.Click += new System.EventHandler(this.btnDelAudDLs_Click);
+            // 
+            // btnDelVidDLs
+            // 
+            this.btnDelVidDLs.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnDelVidDLs.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
+            this.btnDelVidDLs.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
+            this.btnDelVidDLs.ImageOptions.SvgImage = global::YTR.Properties.Resources.videoslash;
+            this.btnDelVidDLs.ImageOptions.SvgImageColorizationMode = DevExpress.Utils.SvgImageColorizationMode.Full;
+            this.btnDelVidDLs.ImageOptions.SvgImageSize = new System.Drawing.Size(22, 22);
+            this.btnDelVidDLs.Location = new System.Drawing.Point(237, 2);
+            this.btnDelVidDLs.Name = "btnDelVidDLs";
+            this.btnDelVidDLs.Size = new System.Drawing.Size(26, 26);
+            this.btnDelVidDLs.TabIndex = 1;
+            this.btnDelVidDLs.ToolTip = "Delete Downloaded Videos";
+            this.btnDelVidDLs.Click += new System.EventHandler(this.btnDelVidDLs_Click);
+            // 
+            // btnClearHistory
+            // 
+            this.btnClearHistory.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnClearHistory.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
+            this.btnClearHistory.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
+            this.btnClearHistory.ImageOptions.SvgImage = global::YTR.Properties.Resources.clear_all;
+            this.btnClearHistory.ImageOptions.SvgImageColorizationMode = DevExpress.Utils.SvgImageColorizationMode.Full;
+            this.btnClearHistory.ImageOptions.SvgImageSize = new System.Drawing.Size(22, 22);
+            this.btnClearHistory.Location = new System.Drawing.Point(268, 2);
+            this.btnClearHistory.Name = "btnClearHistory";
+            this.btnClearHistory.Size = new System.Drawing.Size(26, 26);
+            this.btnClearHistory.TabIndex = 0;
+            this.btnClearHistory.ToolTip = "Clear History";
+            this.btnClearHistory.Click += new System.EventHandler(this.btnClearHistory_Click);
             // 
             // lblHistoryVert
             // 
@@ -634,6 +725,36 @@
             this.historyPopup.Manager = this.historyBarManager;
             this.historyPopup.Name = "historyPopup";
             // 
+            // spacer
+            // 
+            this.spacer.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.spacer.Dock = System.Windows.Forms.DockStyle.Right;
+            this.spacer.Location = new System.Drawing.Point(263, 2);
+            this.spacer.Margin = new System.Windows.Forms.Padding(0);
+            this.spacer.Name = "spacer";
+            this.spacer.Size = new System.Drawing.Size(5, 26);
+            this.spacer.TabIndex = 4;
+            // 
+            // panelControl1
+            // 
+            this.panelControl1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.panelControl1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panelControl1.Location = new System.Drawing.Point(232, 2);
+            this.panelControl1.Margin = new System.Windows.Forms.Padding(0);
+            this.panelControl1.Name = "panelControl1";
+            this.panelControl1.Size = new System.Drawing.Size(5, 26);
+            this.panelControl1.TabIndex = 5;
+            // 
+            // panelControl2
+            // 
+            this.panelControl2.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.panelControl2.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panelControl2.Location = new System.Drawing.Point(201, 2);
+            this.panelControl2.Margin = new System.Windows.Forms.Padding(0);
+            this.panelControl2.Name = "panelControl2";
+            this.panelControl2.Size = new System.Drawing.Size(5, 26);
+            this.panelControl2.TabIndex = 6;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -675,11 +796,16 @@
             ((System.ComponentModel.ISupportInitialize)(this.gvHistory)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repFileExists)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repPostProcessed)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlHistoryControls)).EndInit();
+            this.pnlHistoryControls.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pnlHistoryHeader)).EndInit();
             this.pnlHistoryHeader.ResumeLayout(false);
             this.taskBarMenu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.historyBarManager)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.historyPopup)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.spacer)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.panelControl2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -728,6 +854,14 @@
         private DevExpress.XtraBars.BarButtonItem bbiNewDownload;
         private DevExpress.XtraBars.PopupMenu historyPopup;
         private DevExpress.XtraEditors.SplitterControl scHistorySplitter;
+        private DevExpress.XtraEditors.PanelControl pnlHistoryControls;
+        private DevExpress.XtraEditors.SimpleButton btnClearHistory;
+        private DevExpress.XtraEditors.SimpleButton btnDelVidDLs;
+        private DevExpress.XtraEditors.SimpleButton btnDelAudDLs;
+        private DevExpress.XtraEditors.SimpleButton btnDelAllDLs;
+        private DevExpress.XtraEditors.PanelControl panelControl2;
+        private DevExpress.XtraEditors.PanelControl panelControl1;
+        private DevExpress.XtraEditors.PanelControl spacer;
     }
 }
 

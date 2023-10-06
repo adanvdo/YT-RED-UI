@@ -382,6 +382,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\audioslash.svg" />
+    <None Include="Resources\videoslash.svg" />
+    <None Include="Resources\clear-all.svg" />
+    <None Include="Resources\video_slash.svg" />
+    <None Include="Resources\trashcan.svg" />
+    <None Include="Resources\audio_slash.svg" />
     <None Include="Resources\doubleprev.svg" />
     <None Include="Resources\doublenext.svg" />
     <None Include="Resources\chartverticalaxis_logscale.svg" />
@@ -428,6 +434,7 @@
     <None Include="Resources\application.svg" />
     <None Include="Resources\actions_checkcircled.svg" />
     <None Include="Resources\about1.svg" />
+    <None Include="Resources\actions_trash.svg" />
     <Content Include="Resources\App\ffmpeg.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

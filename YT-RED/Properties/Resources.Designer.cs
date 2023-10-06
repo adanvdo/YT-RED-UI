@@ -123,9 +123,29 @@ namespace YTR.Properties {
         /// <summary>
         ///   Looks up a localized resource of type DevExpress.Utils.Svg.SvgImage.
         /// </summary>
+        internal static DevExpress.Utils.Svg.SvgImage actions_trash {
+            get {
+                object obj = ResourceManager.GetObject("actions_trash", resourceCulture);
+                return ((DevExpress.Utils.Svg.SvgImage)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type DevExpress.Utils.Svg.SvgImage.
+        /// </summary>
         internal static DevExpress.Utils.Svg.SvgImage application {
             get {
                 object obj = ResourceManager.GetObject("application", resourceCulture);
+                return ((DevExpress.Utils.Svg.SvgImage)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type DevExpress.Utils.Svg.SvgImage.
+        /// </summary>
+        internal static DevExpress.Utils.Svg.SvgImage audioslash {
+            get {
+                object obj = ResourceManager.GetObject("audioslash", resourceCulture);
                 return ((DevExpress.Utils.Svg.SvgImage)(obj));
             }
         }
@@ -156,6 +176,16 @@ namespace YTR.Properties {
         internal static DevExpress.Utils.Svg.SvgImage checkbox {
             get {
                 object obj = ResourceManager.GetObject("checkbox", resourceCulture);
+                return ((DevExpress.Utils.Svg.SvgImage)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type DevExpress.Utils.Svg.SvgImage.
+        /// </summary>
+        internal static DevExpress.Utils.Svg.SvgImage clear_all {
+            get {
+                object obj = ResourceManager.GetObject("clear-all", resourceCulture);
                 return ((DevExpress.Utils.Svg.SvgImage)(obj));
             }
         }
@@ -416,6 +446,16 @@ namespace YTR.Properties {
         internal static DevExpress.Utils.Svg.SvgImage twitter_circle {
             get {
                 object obj = ResourceManager.GetObject("twitter-circle", resourceCulture);
+                return ((DevExpress.Utils.Svg.SvgImage)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type DevExpress.Utils.Svg.SvgImage.
+        /// </summary>
+        internal static DevExpress.Utils.Svg.SvgImage videoslash {
+            get {
+                object obj = ResourceManager.GetObject("videoslash", resourceCulture);
                 return ((DevExpress.Utils.Svg.SvgImage)(obj));
             }
         }

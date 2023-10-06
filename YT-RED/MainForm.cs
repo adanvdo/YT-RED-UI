@@ -377,6 +377,7 @@ namespace YTR
                 pnlHistoryPanel.MinimumSize = new Size(AppSettings.Default.General.CollapseHistoryPanel ? 32 : 300, 0);
                 pnlHistoryPanel.Width = AppSettings.Default.General.CollapseHistoryPanel ? 32 : prevHistoryWidth;
                 btnShowHideHistory.ImageOptions.SvgImage = AppSettings.Default.General.CollapseHistoryPanel ? Properties.Resources.doubleprev : Properties.Resources.doublenext;
+                pnlHistoryControls.Visible = !AppSettings.Default.General.CollapseHistoryPanel;
                 if (expanding && !AppSettings.Default.General.CollapseHistoryPanel)
                 {
                     sccMainSplitter.SplitterPosition = sccMainSplitter.SplitterPosition - (pnlHistoryPanel.Width - 300);
@@ -2245,8 +2246,40 @@ namespace YTR
             updateHistoryPanel();
         }
 
-        private void scHistorySplitter_LocationChanged(object sender, EventArgs e)
+        private async void btnClearHistory_Click(object sender, EventArgs e)
         {
+            await Logging.Historian.CleanHistory(Logging.DownloadCategory.All);
+            MsgBox.Show("Download History Cleared", FormStartPosition.CenterParent);
+        }
+
+        private async void btnDelVidDLs_Click(object sender, EventArgs e)
+        {
+            DialogResult res = MsgBox.Show("Files for all recorded Video downloads will be deleted\nand Video download logs will be removed.\n\nContinue?", "Delete Downloaded Files", YTR.Controls.Buttons.OKCancel, YTR.Controls.Icon.Warning, FormStartPosition.CenterParent);
+            if (res == DialogResult.OK)
+            {
+                await Logging.Historian.CleanHistory(Logging.DownloadCategory.Video, Logging.DownloadCategory.Video);
+                MsgBox.Show("Downloads Cleared", FormStartPosition.CenterParent);
+            }
+        }
+
+        private async void btnDelAudDLs_Click(object sender, EventArgs e)
+        {
+            DialogResult res = MsgBox.Show("Files for all recorded Audio downloads will be deleted\nand Audio download logs will be removed.\n\nContinue?", "Delete Downloaded Files", YTR.Controls.Buttons.OKCancel, YTR.Controls.Icon.Warning, FormStartPosition.CenterParent);
+            if (res == DialogResult.OK)
+            {
+                await Logging.Historian.CleanHistory(Logging.DownloadCategory.Audio, Logging.DownloadCategory.Audio);
+                MsgBox.Show("Downloads Cleared", FormStartPosition.CenterParent);
+            }
+        }
+
+        private async void btnDelAllDLs_Click(object sender, EventArgs e)
+        {
+            DialogResult res = MsgBox.Show("Files for all recorded downloads will be deleted\nand download history will be reset.\n\nContinue?", "Delete Downloaded Files", YTR.Controls.Buttons.OKCancel, YTR.Controls.Icon.Warning, FormStartPosition.CenterParent);
+            if (res == DialogResult.OK)
+            {
+                await Logging.Historian.CleanHistory(Logging.DownloadCategory.All, Logging.DownloadCategory.All);
+                MsgBox.Show("Downloads Cleared", FormStartPosition.CenterParent);
+            }
         }
     }
 }
