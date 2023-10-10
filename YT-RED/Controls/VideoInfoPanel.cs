@@ -19,6 +19,11 @@ namespace YTR.Controls
         [Browsable(true)]
         public event EventHandler Crop_Click;
 
+        public string Title
+        {
+            get { return txtTitle.Text; }
+        }
+
         private Image currentImage;
         public Image CurrentImage
         {

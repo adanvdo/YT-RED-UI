@@ -1,4 +1,5 @@
-﻿using DevExpress.Utils;
+﻿using DevExpress.ClipboardSource.SpreadsheetML;
+using DevExpress.Utils;
 using DevExpress.Utils.Drawing;
 using DevExpress.Utils.Svg;
 using DevExpress.XtraGrid.Views.Grid;
@@ -14,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Xabe.FFmpeg;
 using YoutubeDLSharp;
+using YoutubeDLSharp.Metadata;
 using YTR.Classes;
 using YTR.Controls;
 using YTR.Logging;
@@ -1152,6 +1154,16 @@ namespace YTR
             TimeSpan? duration = null;
             VideoFormat? videoFormat = null;
             AudioFormat? audioFormat = null;
+            VideoData mediaData = null;
+
+            try
+            {
+                mediaData = await VideoUtil.GetVideoData(url, false);
+            }
+            catch(Exception ex)
+            {
+                ExceptionHandler.LogException(ex);
+            }
 
             if (cpMainControlPanel.SegmentEnabled)
             {
@@ -1334,6 +1346,7 @@ namespace YTR
             cpMainControlPanel.DownloadBestVisible = true;
             this.cpMainControlPanel.btnCancelProcess.Visible = false;
             var dlLog = new DownloadLog(VideoUtil.ConvertToYouTubeLink(url).Url,
+                mediaData?.Title,
                 currentDownload,
                 streamType,
                 DateTime.Now,
@@ -1563,6 +1576,7 @@ namespace YTR
                 {
                     return new DownloadLog(
                         VideoUtil.ConvertToYouTubeLink(ipMainInput.URL).Url,
+                        this.videoInfoPanel.Title,
                         this.currentDownload,
                         t, DateTime.Now,
                         result.Data,
@@ -2167,7 +2181,7 @@ namespace YTR
                         details += $"Playlist: {row.PlaylistTitle}\nPlaylist URL: {row.PlaylistUrl}\n";
                     }
 
-                    details += $"URL: {row.Url}\nFormat: {row.Format}\n";
+                    details += $"Title: {row.Title}\nURL: {row.Url}\nFormat: {row.Format}\n";
 
                     if (row.AdditionalSettings)
                     {
@@ -2235,6 +2249,7 @@ namespace YTR
             gvHistory.Columns["MaxResolution"].Visible = false;
             gvHistory.Columns["MaxFileSize"].Visible = false;
             gvHistory.Columns["SegmentMode"].Visible = false;
+            gvHistory.Columns["Title"].Visible = false;
             gvHistory.RefreshData();
         }
 

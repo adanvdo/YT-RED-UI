@@ -3,6 +3,7 @@ using System.IO;
 using YTR.Classes;
 using Newtonsoft.Json;
 using YTR.Settings;
+using System.Runtime.CompilerServices;
 
 namespace YTR.Logging
 {
@@ -10,6 +11,8 @@ namespace YTR.Logging
     {
         [JsonProperty("url")]
         public string Url { get; set; }
+        [JsonProperty("title")]
+        public string Title { get; set; } = "";
         [JsonProperty("in_subfolder")]
         public bool InSubFolder { get; set; } = false;
         [JsonProperty("playlist_title")]
@@ -66,8 +69,12 @@ namespace YTR.Logging
         { }
 
         public DownloadLog(string url, DownloadType dlType, StreamType type, DateTime downloaded, string location, PendingDownload pendingDownload = null)
+            : this(url, "", dlType, type, downloaded, location, pendingDownload) { }
+
+        public DownloadLog(string url, string title, DownloadType dlType, StreamType type, DateTime downloaded, string location, PendingDownload pendingDownload = null)
         {
             Url = url;
+            Title = title;
             DownloadType = dlType;
             StreamType = type;
             Downloaded = downloaded;
