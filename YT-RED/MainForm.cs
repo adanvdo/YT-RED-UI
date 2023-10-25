@@ -1,5 +1,4 @@
-﻿using DevExpress.ClipboardSource.SpreadsheetML;
-using DevExpress.Utils;
+﻿using DevExpress.Utils;
 using DevExpress.Utils.Drawing;
 using DevExpress.Utils.Svg;
 using DevExpress.XtraGrid.Views.Grid;
@@ -26,6 +25,7 @@ namespace YTR
 {
     public partial class MainForm : DevExpress.XtraBars.TabForm
     {
+        private Size minimumSize = new Size(823, 664);
         private UIBlockDetector _blockDetector;
         private Timer historyTimer;
         public bool IsLocked
@@ -250,7 +250,7 @@ namespace YTR
                 if (!uploaded)
                     MsgBox.Show("Log Upload Failed", FormStartPosition.CenterParent);
             }
-            splitterNegativePosition = sccMainSplitter.Size.Width - sccMainSplitter.SplitterPosition;
+            splitterNegativePosition = sccMainSplitContainer.Size.Width - sccMainSplitContainer.SplitterPosition;
             if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
             {
                 cpMainControlPanel.EnableToggle(false, false, true, true, false);
@@ -266,7 +266,8 @@ namespace YTR
             cpMainControlPanel.MaxFilesize = AppSettings.Default.General.MaxFilesizeBest;
             cpMainControlPanel.RestoreControlGroupCollapseStates();
             updateControlPanelDisplay();
-            
+            this.MinimumSize = calculateMinSize();
+
             base.OnLoad(e);
         }
 
@@ -361,7 +362,7 @@ namespace YTR
                 bool expanding = !AppSettings.Default.General.CollapseHistoryPanel;
                 prevHistoryWidth = expanding ? prevHistoryWidth : pnlHistoryPanel.Width;
                 scHistorySplitter.Visible = !AppSettings.Default.General.CollapseHistoryPanel;
-                sccMainSplitter.Padding = new Padding(5, 0, AppSettings.Default.General.CollapseHistoryPanel ? 5 : 0, 0);
+                sccMainSplitContainer.Padding = new Padding(5, 0, AppSettings.Default.General.CollapseHistoryPanel ? 5 : 0, 0);
                 lblHeaderLabel.Visible = !AppSettings.Default.General.CollapseHistoryPanel;
                 lblHistoryVert.Visible = AppSettings.Default.General.CollapseHistoryPanel;
                 gcHistory.Visible = !AppSettings.Default.General.CollapseHistoryPanel;
@@ -371,7 +372,7 @@ namespace YTR
                 pnlHistoryControls.Visible = !AppSettings.Default.General.CollapseHistoryPanel;
                 if (expanding && !AppSettings.Default.General.CollapseHistoryPanel)
                 {
-                    sccMainSplitter.SplitterPosition = sccMainSplitter.SplitterPosition - (pnlHistoryPanel.Width - 300);
+                    sccMainSplitContainer.SplitterPosition = sccMainSplitContainer.SplitterPosition - (pnlHistoryPanel.Width - 300);
                     scHistorySplitter.Location = new Point(tabFormContentContainer1.Width - pnlHistoryPanel.Width, 0);
                 }
                 this.pnlHistoryPanel.Visible = true;
@@ -402,9 +403,9 @@ namespace YTR
                 }
 
                 if (AppSettings.Default.Layout.ControlPanelPosition == HorizontalPanelPosition.Right)
-                    sccMainSplitter.RightToLeft = RightToLeft.No;
+                    sccMainSplitContainer.RightToLeft = RightToLeft.No;
                 else
-                    sccMainSplitter.RightToLeft = RightToLeft.Yes;
+                    sccMainSplitContainer.RightToLeft = RightToLeft.Yes;
                 this.Refresh();
             }
 
@@ -1746,12 +1747,12 @@ namespace YTR
 
         private void sccMainSplitter_Resize(object sender, EventArgs e)
         {
-            sccMainSplitter.SplitterPosition = sccMainSplitter.Size.Width - splitterNegativePosition;
+            sccMainSplitContainer.SplitterPosition = sccMainSplitContainer.Size.Width - splitterNegativePosition;
         }
 
         private void sccMainSplitter_SplitterMoved(object sender, EventArgs e)
         {
-            splitterNegativePosition = sccMainSplitter.Size.Width - sccMainSplitter.SplitterPosition;
+            splitterNegativePosition = sccMainSplitContainer.Size.Width - sccMainSplitContainer.SplitterPosition;
         }
 
 
@@ -2040,11 +2041,11 @@ namespace YTR
         private bool adjustedSplitter = false;
         private void updateControlPanelDisplay()
         {
-            if (cpMainControlPanel.TotalControlSize.Height > sccMainSplitter.Panel2.Size.Height)
+            if (cpMainControlPanel.TotalControlSize.Height > sccMainSplitContainer.Panel2.Size.Height)
             {
                 if (pnlScrollableControls.VerticalScroll.Visible && !adjustedSplitter)
                 {
-                    sccMainSplitter.SplitterPosition = sccMainSplitter.SplitterPosition - 25;
+                    sccMainSplitContainer.SplitterPosition = sccMainSplitContainer.SplitterPosition - 25;
                     adjustedSplitter = true;
                 }
                 cpMainControlPanel.Dock = DockStyle.Top;
@@ -2055,7 +2056,7 @@ namespace YTR
             {
                 if (!pnlScrollableControls.VerticalScroll.Visible && adjustedSplitter)
                 {
-                    sccMainSplitter.SplitterPosition = sccMainSplitter.SplitterPosition + 25;
+                    sccMainSplitContainer.SplitterPosition = sccMainSplitContainer.SplitterPosition + 25;
                     adjustedSplitter = false;
                 }
                 cpMainControlPanel.Dock = DockStyle.Fill;
@@ -2280,6 +2281,16 @@ namespace YTR
                 refreshHistory();
                 MsgBox.Show("Downloads Cleared", FormStartPosition.CenterParent);
             }
+        }
+
+        private void pnlHistoryPanel_SizeChanged(object sender, EventArgs e)
+        {
+            this.MinimumSize = calculateMinSize();
+        }
+
+        private Size calculateMinSize()
+        {
+            return new Size(sccMainSplitContainer.MinimumSize.Width + pnlHistoryPanel.Width + scHistorySplitter.Width, this.minimumSize.Height);
         }
     }
 }

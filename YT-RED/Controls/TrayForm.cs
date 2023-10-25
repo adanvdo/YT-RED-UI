@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Threading;
 using System.Windows.Forms;
 using YoutubeDLSharp;
 using YTR.Classes;
 using YTR.Logging;
 using YTR.Settings;
 using YTR.Utils;
-using Xabe.FFmpeg;
-using System.Diagnostics;
 
 namespace YTR.Controls
 {

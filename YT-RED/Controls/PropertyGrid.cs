@@ -3,11 +3,9 @@ using DevExpress.XtraVerticalGrid;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using YTR.Settings;
 using YTR.Logging;
+using YTR.Settings;
 using YTR.Utils;
-using DevExpress.Utils.Extensions;
-using System.Linq;
 
 namespace YTR.Controls
 {

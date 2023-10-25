@@ -36,7 +36,7 @@
             this.bbiSettings = new DevExpress.XtraBars.BarButtonItem();
             this.tfpMain = new YTR.Controls.CustomTabFormPage();
             this.tabFormContentContainer1 = new DevExpress.XtraBars.TabFormContentContainer();
-            this.sccMainSplitter = new DevExpress.XtraEditors.SplitContainerControl();
+            this.sccMainSplitContainer = new DevExpress.XtraEditors.SplitContainerControl();
             this.gcFormats = new DevExpress.XtraGrid.GridControl();
             this.gvFormats = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.repPictureEdit = new DevExpress.XtraEditors.Repository.RepositoryItemPictureEdit();
@@ -82,12 +82,12 @@
             this.historyPopup = new DevExpress.XtraBars.PopupMenu(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.tcMainTabControl)).BeginInit();
             this.tabFormContentContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.sccMainSplitter)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.sccMainSplitter.Panel1)).BeginInit();
-            this.sccMainSplitter.Panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.sccMainSplitter.Panel2)).BeginInit();
-            this.sccMainSplitter.Panel2.SuspendLayout();
-            this.sccMainSplitter.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.sccMainSplitContainer)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sccMainSplitContainer.Panel1)).BeginInit();
+            this.sccMainSplitContainer.Panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.sccMainSplitContainer.Panel2)).BeginInit();
+            this.sccMainSplitContainer.Panel2.SuspendLayout();
+            this.sccMainSplitContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gcFormats)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvFormats)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repPictureEdit)).BeginInit();
@@ -168,7 +168,7 @@
             // 
             // tabFormContentContainer1
             // 
-            this.tabFormContentContainer1.Controls.Add(this.sccMainSplitter);
+            this.tabFormContentContainer1.Controls.Add(this.sccMainSplitContainer);
             this.tabFormContentContainer1.Controls.Add(this.scHistorySplitter);
             this.tabFormContentContainer1.Controls.Add(this.pnlHistoryPanel);
             this.tabFormContentContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -177,36 +177,37 @@
             this.tabFormContentContainer1.Size = new System.Drawing.Size(1188, 767);
             this.tabFormContentContainer1.TabIndex = 0;
             // 
-            // sccMainSplitter
+            // sccMainSplitContainer
             // 
-            this.sccMainSplitter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.sccMainSplitter.FixedPanel = DevExpress.XtraEditors.SplitFixedPanel.None;
-            this.sccMainSplitter.Location = new System.Drawing.Point(0, 0);
-            this.sccMainSplitter.Margin = new System.Windows.Forms.Padding(0);
-            this.sccMainSplitter.Name = "sccMainSplitter";
-            this.sccMainSplitter.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
+            this.sccMainSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.sccMainSplitContainer.FixedPanel = DevExpress.XtraEditors.SplitFixedPanel.None;
+            this.sccMainSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.sccMainSplitContainer.Margin = new System.Windows.Forms.Padding(0);
+            this.sccMainSplitContainer.MinimumSize = new System.Drawing.Size(690, 0);
+            this.sccMainSplitContainer.Name = "sccMainSplitContainer";
+            this.sccMainSplitContainer.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
             // 
-            // sccMainSplitter.Panel1
+            // sccMainSplitContainer.Panel1
             // 
-            this.sccMainSplitter.Panel1.Controls.Add(this.gcFormats);
-            this.sccMainSplitter.Panel1.Controls.Add(this.pnlPlaylistControls);
-            this.sccMainSplitter.Panel1.Controls.Add(this.videoInfoPanel);
-            this.sccMainSplitter.Panel1.Controls.Add(this.marqueeProgressBarControl1);
-            this.sccMainSplitter.Panel1.Controls.Add(this.ipMainInput);
-            this.sccMainSplitter.Panel1.MinSize = 350;
-            this.sccMainSplitter.Panel1.Text = "Panel1";
+            this.sccMainSplitContainer.Panel1.Controls.Add(this.gcFormats);
+            this.sccMainSplitContainer.Panel1.Controls.Add(this.pnlPlaylistControls);
+            this.sccMainSplitContainer.Panel1.Controls.Add(this.videoInfoPanel);
+            this.sccMainSplitContainer.Panel1.Controls.Add(this.marqueeProgressBarControl1);
+            this.sccMainSplitContainer.Panel1.Controls.Add(this.ipMainInput);
+            this.sccMainSplitContainer.Panel1.MinSize = 350;
+            this.sccMainSplitContainer.Panel1.Text = "Panel1";
             // 
-            // sccMainSplitter.Panel2
+            // sccMainSplitContainer.Panel2
             // 
-            this.sccMainSplitter.Panel2.Controls.Add(this.pnlScrollableControls);
-            this.sccMainSplitter.Panel2.MinSize = 323;
-            this.sccMainSplitter.Panel2.Text = "Panel2";
-            this.sccMainSplitter.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.sccMainSplitter.Size = new System.Drawing.Size(872, 767);
-            this.sccMainSplitter.SplitterPosition = 523;
-            this.sccMainSplitter.TabIndex = 0;
-            this.sccMainSplitter.SplitterMoved += new System.EventHandler(this.sccMainSplitter_SplitterMoved);
-            this.sccMainSplitter.Resize += new System.EventHandler(this.sccMainSplitter_Resize);
+            this.sccMainSplitContainer.Panel2.Controls.Add(this.pnlScrollableControls);
+            this.sccMainSplitContainer.Panel2.MinSize = 323;
+            this.sccMainSplitContainer.Panel2.Text = "Panel2";
+            this.sccMainSplitContainer.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.sccMainSplitContainer.Size = new System.Drawing.Size(872, 767);
+            this.sccMainSplitContainer.SplitterPosition = 523;
+            this.sccMainSplitContainer.TabIndex = 0;
+            this.sccMainSplitContainer.SplitterMoved += new System.EventHandler(this.sccMainSplitter_SplitterMoved);
+            this.sccMainSplitContainer.Resize += new System.EventHandler(this.sccMainSplitter_Resize);
             // 
             // gcFormats
             // 
@@ -422,6 +423,7 @@
             this.pnlHistoryPanel.Size = new System.Drawing.Size(300, 767);
             this.pnlHistoryPanel.TabIndex = 1;
             this.pnlHistoryPanel.Visible = false;
+            this.pnlHistoryPanel.SizeChanged += new System.EventHandler(this.pnlHistoryPanel_SizeChanged);
             // 
             // gcHistory
             // 
@@ -776,13 +778,13 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.tcMainTabControl)).EndInit();
             this.tabFormContentContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.sccMainSplitter.Panel1)).EndInit();
-            this.sccMainSplitter.Panel1.ResumeLayout(false);
-            this.sccMainSplitter.Panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.sccMainSplitter.Panel2)).EndInit();
-            this.sccMainSplitter.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.sccMainSplitter)).EndInit();
-            this.sccMainSplitter.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.sccMainSplitContainer.Panel1)).EndInit();
+            this.sccMainSplitContainer.Panel1.ResumeLayout(false);
+            this.sccMainSplitContainer.Panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.sccMainSplitContainer.Panel2)).EndInit();
+            this.sccMainSplitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.sccMainSplitContainer)).EndInit();
+            this.sccMainSplitContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gcFormats)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvFormats)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repPictureEdit)).EndInit();
@@ -824,7 +826,7 @@
         private DevExpress.Utils.ToolTipController toolTipController;
         private YTR.Controls.CustomTabFormPage tfpMain;
         private DevExpress.XtraBars.TabFormContentContainer tabFormContentContainer1;
-        private DevExpress.XtraEditors.SplitContainerControl sccMainSplitter;
+        private DevExpress.XtraEditors.SplitContainerControl sccMainSplitContainer;
         private Controls.InputPanel ipMainInput;
         private DevExpress.XtraEditors.LabelControl lblSelectAFormat;
         private DevExpress.XtraGrid.GridControl gcFormats;

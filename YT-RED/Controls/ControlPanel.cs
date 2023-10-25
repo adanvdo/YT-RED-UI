@@ -5,11 +5,8 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using YTR.Settings;
-using DevExpress.XtraGrid.Views.Grid.ViewInfo;
-using YTR.Logging;
 using YTR.Classes;
-using DevExpress.XtraEditors;
+using YTR.Settings;
 
 namespace YTR.Controls
 {
