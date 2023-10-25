@@ -334,7 +334,11 @@ namespace YTR.Controls
                     }
                     catch (Exception ex)
                     {
-                        ExceptionHandler.LogException(ex);
+                        if(ex.Message.Contains("The system cannot find the file specified"))
+                        {
+                            MsgBox.Show("YTR_Updater.exe could not be found\nA Manual Update is Required", "Error", Buttons.OK);
+                        }
+                        ExceptionHandler.LogException(ex, false);
                     }
                 }
                 else

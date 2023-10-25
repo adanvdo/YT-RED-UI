@@ -700,7 +700,7 @@ namespace YTR.Controls
         private List<string> videoFormats;
         private List<string> audioFormats;
 
-        public void ResetControls(bool forFormatList = false)
+        public void ResetControls(bool forFormatList = false, bool validUrl = true)
         {
             toggleSegment.IsOn = false;
             tsStart.TimeSpan = TimeSpan.Zero;
@@ -730,7 +730,9 @@ namespace YTR.Controls
             }
             btnSelectionDL.Text = "DOWNLOAD SELECTED FORMAT    ";
             btnDownloadAudio.Text = "DOWNLOAD AUDIO       ";
+            btnDownloadAudio.Enabled = validUrl;
             btnDownloadBest.Text = "DOWNLOAD BEST [audio+video]      ";
+            btnDownloadBest.Enabled = validUrl;
             HideDownloadLocation();
             if (currentPlaylistItems != null)
             {

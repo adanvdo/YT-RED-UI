@@ -87,7 +87,6 @@ namespace YTR
             this.initialLink = "";
             this.newUpdater = newUpdater;
             this.activeTrayForm = new TrayForm();
-            activeTrayForm.FormClosed += TrayForm_FormClosed;
             activeTrayForm.StartPosition = FormStartPosition.Manual;
             Rectangle workingArea = Screen.GetWorkingArea(this);
             var loc = new Point(workingArea.Right - activeTrayForm.Size.Width, workingArea.Bottom - activeTrayForm.Size.Height);
@@ -108,7 +107,6 @@ namespace YTR
             this.initialLink = initialLink;
             this.newUpdater = newUpdater;
             this.activeTrayForm = new TrayForm();
-            activeTrayForm.FormClosed += TrayForm_FormClosed;
             activeTrayForm.StartPosition = FormStartPosition.Manual;
             Rectangle workingArea = Screen.GetWorkingArea(this);
             var loc = new Point(workingArea.Right - activeTrayForm.Size.Width, workingArea.Bottom - activeTrayForm.Size.Height);
@@ -200,13 +198,16 @@ namespace YTR
                     }
                 }
 
-                if (activeTrayForm == null)
+                try
                 {
-                    try
+                    if (activeTrayForm == null)
                     {
                         activeTrayForm = new TrayForm();
-                        activeTrayForm.FormClosed += TrayForm_FormClosed;
                         activeTrayForm.StartPosition = FormStartPosition.Manual;
+                    }
+
+                    if (!activeTrayForm.Locked)
+                    {
                         Rectangle workingArea = Screen.GetWorkingArea(this);
                         var loc = new Point(workingArea.Right - activeTrayForm.Size.Width, workingArea.Bottom - activeTrayForm.Size.Height);
                         activeTrayForm.HideProgressPanel();
@@ -217,23 +218,11 @@ namespace YTR
                         activeTrayForm.TopMost = true;
                         activeTrayForm.TriggerDownload();
                     }
-                    catch (Exception ex)
-                    {
-                        if (ex.Message.ToLower() != "a task was canceled.")
-                            ExceptionHandler.LogException(ex);
-                    }
                 }
-                else if(!activeTrayForm.Locked)
+                catch (Exception ex)
                 {
-                    Rectangle workingArea = Screen.GetWorkingArea(this);
-                    var loc = new Point(workingArea.Right - activeTrayForm.Size.Width, workingArea.Bottom - activeTrayForm.Size.Height);
-                    activeTrayForm.HideProgressPanel();
-                    activeTrayForm.Location = loc;
-                    activeTrayForm.Url = copiedText;
-                    activeTrayForm.Show();
-                    activeTrayForm.BringToFront();
-                    activeTrayForm.TopMost = true;
-                    activeTrayForm.TriggerDownload();
+                    if (ex.Message.ToLower() != "a task was canceled")
+                        ExceptionHandler.LogException(ex);
                 }
             }
         }
@@ -533,34 +522,25 @@ namespace YTR
             this.Show();
             this.WindowState = FormWindowState.Normal;
         }
-        
+
         private void tsiDownload_Click(object sender, EventArgs e)
         {
-            if (activeTrayForm == null)
+            try
             {
-                try
-                {
-                    if (activeTrayForm == null) activeTrayForm = new TrayForm();
-                    activeTrayForm.FormClosed += TrayForm_FormClosed;
-                    activeTrayForm.StartPosition = FormStartPosition.Manual;
-                    Rectangle workingArea = Screen.GetWorkingArea(this);
-                    activeTrayForm.HideProgressPanel();
-                    var loc = new Point(workingArea.Right - activeTrayForm.Size.Width, workingArea.Bottom - (activeTrayForm.Size.Height - 81));
-                    activeTrayForm.Location = loc;
-                    activeTrayForm.ShowDialog();
-                    
-                }
-                catch (Exception ex)
-                {
-                    if (ex.Message.ToLower() != "a task was canceled.")
-                        ExceptionHandler.LogException(ex);
-                }
-            }
-        }
+                if (activeTrayForm == null) activeTrayForm = new TrayForm();
+                activeTrayForm.StartPosition = FormStartPosition.Manual;
+                Rectangle workingArea = Screen.GetWorkingArea(this);
+                activeTrayForm.HideProgressPanel();
+                var loc = new Point(workingArea.Right - activeTrayForm.Size.Width, workingArea.Bottom - (activeTrayForm.Size.Height - 81));
+                activeTrayForm.Location = loc;
+                activeTrayForm.ShowDialog();
 
-        private void TrayForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            //activeTrayForm = null;
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.ToLower() != "a task was canceled")
+                    ExceptionHandler.LogException(ex);
+            }
         }
 
         private void tsiExit_Click(object sender, EventArgs e)
@@ -588,10 +568,12 @@ namespace YTR
                 playlistItemCollection = null;
             }
 
+            var checkUrl = HtmlUtil.CheckUrl(ipMainInput.URL);
+
             gcFormats.DataSource = null;
             gvFormats.RefreshData();
             cpMainControlPanel.CurrentFormatPair.Clear();
-            cpMainControlPanel.ResetControls(false);
+            cpMainControlPanel.ResetControls(false, checkUrl != DownloadType.Empty);
             selectedAudioIndex = -1;
             selectedVideoIndex = -1; 
             videoInfoPanel.Clear();
@@ -600,7 +582,6 @@ namespace YTR
             btnPLSelectAll.Text = "Select All";
             allSelected = false;
             
-            var checkUrl = HtmlUtil.CheckUrl(ipMainInput.URL);
             if (gvFormats.GetSelectedRows().Length < 1 && checkUrl != DownloadType.Unknown && checkUrl == DownloadType.YouTube)
             {
                 YoutubeLink link = VideoUtil.ConvertToYouTubeLink(ipMainInput.URL);
@@ -900,7 +881,7 @@ namespace YTR
             }
             catch (Exception ex)
             {
-                if (ex.Message.ToLower() != "a task was canceled.")
+                if (ex.Message.ToLower() != "a task was canceled")
                     ExceptionHandler.LogException(ex);
             }
 
@@ -980,7 +961,7 @@ namespace YTR
             }
             catch (Exception ex)
             {
-                if (ex.Message.ToLower() != "a task was canceled.")
+                if (ex.Message.ToLower() != "a task was canceled")
                     ExceptionHandler.LogException(ex);
             }
             this.ipMainInput.btnListFormats.Text = "List Available Formats";
@@ -1242,7 +1223,7 @@ namespace YTR
                         }
                         catch (Exception ex)
                         {
-                            if (ex.Message.ToLower() != "a task was canceled.")
+                            if (ex.Message.ToLower() != "a task was canceled")
                                 ExceptionHandler.LogFFmpegException(ex, true, url);
                             result = new RunResult<string>(false, new string[] { ex.Message }, null);
                         }
@@ -1270,7 +1251,7 @@ namespace YTR
                         }
                         catch (Exception ex)
                         {
-                            if (ex.Message.ToLower() != "a task was canceled.")
+                            if (ex.Message.ToLower() != "a task was canceled")
                                 ExceptionHandler.LogFFmpegException(ex, true, url);
                             result = new RunResult<string>(false, new string[] { ex.Message }, null);
                         }
@@ -1529,7 +1510,7 @@ namespace YTR
                     catch (Exception ex)
                     {
                         result = new RunResult<string>(false, new string[] { ex.Message }, null);
-                        if (ex.Message.ToLower() != "a task was canceled.")
+                        if (ex.Message.ToLower() != "a task was canceled")
                             ExceptionHandler.LogFFmpegException(ex, true, VideoUtil.ConvertToYouTubeLink(ipMainInput.URL).Url);
                     }
                 }
@@ -1656,7 +1637,7 @@ namespace YTR
             }
             catch(Exception ex)
             {
-                if (ex.Message.ToLower() != "a task was canceled.")
+                if (ex.Message.ToLower() != "a task was canceled")
                     ExceptionHandler.LogException(ex);
             }
         }

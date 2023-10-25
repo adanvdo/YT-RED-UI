@@ -15,6 +15,7 @@ namespace YTR.Classes
         Instagram = 4,
         Twitch = 5,
         Playlist = 6,
-        Unknown = 7
+        Unknown = 7,
+        Empty = 8
     }
 }

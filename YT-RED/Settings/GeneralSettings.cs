@@ -179,7 +179,6 @@ namespace YTR.Settings
 		public string FfmpegVersionUrl { get; set; }
         #endregion
 
-
         #region Layout
         [Browsable(false)]
 		[JsonProperty("segment_collapsed")]

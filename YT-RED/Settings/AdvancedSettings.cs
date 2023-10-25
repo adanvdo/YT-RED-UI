@@ -73,9 +73,9 @@ If there is existing text in your clipboard, YTR will restore it after starting 
             EnableHotKeys = false;
             DownloadHotKey = Shortcut.None;
             GetMissingMetadata = true;
-            AlwaysConvertToPreferredFormat = false;
-            PreferredVideoFormat = VideoFormat.UNSPECIFIED;
-            PreferredAudioFormat = AudioFormat.UNSPECIFIED;
+            AlwaysConvertToPreferredFormat = true;
+            PreferredVideoFormat = VideoFormat.MP4;
+            PreferredAudioFormat = AudioFormat.MP3;
             VerboseOutput = false;
         }
 

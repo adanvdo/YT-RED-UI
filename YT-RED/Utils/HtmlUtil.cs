@@ -37,6 +37,8 @@ namespace YTR.Utils
             var t2 = Regex.Match(url, test);
             if (t2.Success && (url.Length == 11 || url.Length == 34)) return DownloadType.YouTube;
 
+            if (string.IsNullOrEmpty(url)) return DownloadType.Empty;
+
             return DownloadType.Unknown;
         }        
     }    

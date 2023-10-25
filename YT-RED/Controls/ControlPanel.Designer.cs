@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions4 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
-            DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions5 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions1 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions2 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
+            DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions3 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
+            DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions4 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             this.lblSelectionText = new DevExpress.XtraEditors.LabelControl();
             this.pnlOptionPanel = new DevExpress.XtraEditors.PanelControl();
             this.gcDLButtons = new DevExpress.XtraEditors.GroupControl();
@@ -41,44 +41,44 @@
             this.btnSelectionDL = new DevExpress.XtraEditors.SimpleButton();
             this.gcDownloadLimits = new DevExpress.XtraEditors.GroupControl();
             this.pnlLimitPanel = new DevExpress.XtraEditors.PanelControl();
+            this.txtMaxFilesize = new DevExpress.XtraEditors.TextEdit();
             this.lblMaxFilesize = new DevExpress.XtraEditors.LabelControl();
             this.lblMaxRes = new DevExpress.XtraEditors.LabelControl();
+            this.cbMaxRes = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.toggleDownloadLimits = new DevExpress.XtraEditors.ToggleSwitch();
             this.gcConvert = new DevExpress.XtraEditors.GroupControl();
             this.hlblOpenSettings = new DevExpress.XtraEditors.HyperlinkLabelControl();
             this.lblAlwaysConvert = new DevExpress.XtraEditors.LabelControl();
             this.pnlConvertPanel = new DevExpress.XtraEditors.PanelControl();
             this.labelControl7 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl6 = new DevExpress.XtraEditors.LabelControl();
+            this.cbAudioFormat = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.cbVideoFormat = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.toggleConvert = new DevExpress.XtraEditors.ToggleSwitch();
             this.gcCrop = new DevExpress.XtraEditors.GroupControl();
             this.pnlCropPanel = new DevExpress.XtraEditors.PanelControl();
+            this.toggleCrop = new DevExpress.XtraEditors.ToggleSwitch();
             this.labelControl10 = new DevExpress.XtraEditors.LabelControl();
+            this.txtCropTop = new DevExpress.XtraEditors.TextEdit();
             this.labelControl9 = new DevExpress.XtraEditors.LabelControl();
+            this.txtCropBottom = new DevExpress.XtraEditors.TextEdit();
             this.labelControl8 = new DevExpress.XtraEditors.LabelControl();
+            this.txtCropLeft = new DevExpress.XtraEditors.TextEdit();
             this.labelControl5 = new DevExpress.XtraEditors.LabelControl();
+            this.txtCropRight = new DevExpress.XtraEditors.TextEdit();
             this.gcSegments = new DevExpress.XtraEditors.GroupControl();
             this.lblSegmentDisclaimer = new DevExpress.XtraEditors.LabelControl();
             this.pnlSegPanel = new DevExpress.XtraEditors.PanelControl();
+            this.toggleSegment = new DevExpress.XtraEditors.ToggleSwitch();
             this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
             this.lblDuration = new DevExpress.XtraEditors.LabelControl();
+            this.tsStart = new DevExpress.XtraEditors.TimeSpanEdit();
+            this.tsDuration = new DevExpress.XtraEditors.TimeSpanEdit();
             this.pnlProgressPanel = new DevExpress.XtraEditors.PanelControl();
             this.btnOpenDL = new DevExpress.XtraEditors.SimpleButton();
             this.lblLastDL = new DevExpress.XtraEditors.LabelControl();
             this.pbProgress = new DevExpress.XtraEditors.ProgressBarControl();
             this.pbListProgress = new DevExpress.XtraEditors.ProgressBarControl();
-            this.txtMaxFilesize = new DevExpress.XtraEditors.TextEdit();
-            this.cbMaxRes = new DevExpress.XtraEditors.ComboBoxEdit();
-            this.toggleDownloadLimits = new DevExpress.XtraEditors.ToggleSwitch();
-            this.cbAudioFormat = new DevExpress.XtraEditors.ComboBoxEdit();
-            this.cbVideoFormat = new DevExpress.XtraEditors.ComboBoxEdit();
-            this.toggleConvert = new DevExpress.XtraEditors.ToggleSwitch();
-            this.toggleCrop = new DevExpress.XtraEditors.ToggleSwitch();
-            this.txtCropTop = new DevExpress.XtraEditors.TextEdit();
-            this.txtCropBottom = new DevExpress.XtraEditors.TextEdit();
-            this.txtCropLeft = new DevExpress.XtraEditors.TextEdit();
-            this.txtCropRight = new DevExpress.XtraEditors.TextEdit();
-            this.toggleSegment = new DevExpress.XtraEditors.ToggleSwitch();
-            this.tsStart = new DevExpress.XtraEditors.TimeSpanEdit();
-            this.tsDuration = new DevExpress.XtraEditors.TimeSpanEdit();
             ((System.ComponentModel.ISupportInitialize)(this.pnlOptionPanel)).BeginInit();
             this.pnlOptionPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gcDLButtons)).BeginInit();
@@ -87,36 +87,36 @@
             this.gcDownloadLimits.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pnlLimitPanel)).BeginInit();
             this.pnlLimitPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.txtMaxFilesize.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbMaxRes.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.toggleDownloadLimits.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gcConvert)).BeginInit();
             this.gcConvert.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pnlConvertPanel)).BeginInit();
             this.pnlConvertPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cbAudioFormat.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbVideoFormat.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.toggleConvert.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gcCrop)).BeginInit();
             this.gcCrop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pnlCropPanel)).BeginInit();
             this.pnlCropPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gcSegments)).BeginInit();
-            this.gcSegments.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pnlSegPanel)).BeginInit();
-            this.pnlSegPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pnlProgressPanel)).BeginInit();
-            this.pnlProgressPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbProgress.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbListProgress.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.txtMaxFilesize.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cbMaxRes.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.toggleDownloadLimits.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cbAudioFormat.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cbVideoFormat.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.toggleConvert.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.toggleCrop.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtCropTop.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtCropBottom.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtCropLeft.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtCropRight.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gcSegments)).BeginInit();
+            this.gcSegments.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlSegPanel)).BeginInit();
+            this.pnlSegPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.toggleSegment.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tsStart.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tsDuration.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlProgressPanel)).BeginInit();
+            this.pnlProgressPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbProgress.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbListProgress.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // lblSelectionText
@@ -197,6 +197,7 @@
             this.btnDownloadBest.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
             this.btnDownloadBest.Appearance.Options.UseFont = true;
             this.btnDownloadBest.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnDownloadBest.Enabled = false;
             this.btnDownloadBest.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
             this.btnDownloadBest.ImageOptions.SvgImage = global::YTR.Properties.Resources.VideoSound;
             this.btnDownloadBest.ImageOptions.SvgImageSize = new System.Drawing.Size(25, 25);
@@ -214,6 +215,7 @@
             this.btnDownloadAudio.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
             this.btnDownloadAudio.Appearance.Options.UseFont = true;
             this.btnDownloadAudio.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnDownloadAudio.Enabled = false;
             this.btnDownloadAudio.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
             this.btnDownloadAudio.ImageOptions.SvgImage = global::YTR.Properties.Resources.sound;
             this.btnDownloadAudio.ImageOptions.SvgImageSize = new System.Drawing.Size(25, 25);
@@ -249,10 +251,10 @@
             this.gcDownloadLimits.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gcDownloadLimits.CaptionImageOptions.AllowGlyphSkinning = true;
             this.gcDownloadLimits.Controls.Add(this.pnlLimitPanel);
-            buttonImageOptions4.SvgImage = global::YTR.Properties.Resources.actions_remove;
-            buttonImageOptions4.SvgImageSize = new System.Drawing.Size(18, 18);
+            buttonImageOptions1.SvgImage = global::YTR.Properties.Resources.actions_remove;
+            buttonImageOptions1.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcDownloadLimits.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
-            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions4, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions1, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
             this.gcDownloadLimits.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
             this.gcDownloadLimits.Dock = System.Windows.Forms.DockStyle.Top;
             this.gcDownloadLimits.Location = new System.Drawing.Point(0, 434);
@@ -279,6 +281,23 @@
             this.pnlLimitPanel.Size = new System.Drawing.Size(319, 96);
             this.pnlLimitPanel.TabIndex = 0;
             // 
+            // txtMaxFilesize
+            // 
+            this.txtMaxFilesize.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.txtMaxFilesize.EditValue = "0";
+            this.txtMaxFilesize.Enabled = false;
+            this.txtMaxFilesize.Location = new System.Drawing.Point(162, 61);
+            this.txtMaxFilesize.Name = "txtMaxFilesize";
+            this.txtMaxFilesize.Properties.AutoHeight = false;
+            this.txtMaxFilesize.Properties.DisplayFormat.FormatString = "{0} MB";
+            this.txtMaxFilesize.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.txtMaxFilesize.Properties.EditFormat.FormatString = "{0} MB";
+            this.txtMaxFilesize.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.txtMaxFilesize.Properties.NullText = "0";
+            this.txtMaxFilesize.Size = new System.Drawing.Size(142, 25);
+            this.txtMaxFilesize.TabIndex = 11;
+            this.txtMaxFilesize.TextChanged += new System.EventHandler(this.txtMaxFilesize_TextChanged);
+            // 
             // lblMaxFilesize
             // 
             this.lblMaxFilesize.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -301,6 +320,31 @@
             this.lblMaxRes.TabIndex = 0;
             this.lblMaxRes.Text = "Maximum Resolution";
             // 
+            // cbMaxRes
+            // 
+            this.cbMaxRes.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.cbMaxRes.Enabled = false;
+            this.cbMaxRes.Location = new System.Drawing.Point(162, 30);
+            this.cbMaxRes.Name = "cbMaxRes";
+            this.cbMaxRes.Properties.AutoHeight = false;
+            this.cbMaxRes.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.cbMaxRes.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cbMaxRes.Size = new System.Drawing.Size(142, 25);
+            this.cbMaxRes.TabIndex = 10;
+            this.cbMaxRes.SelectedIndexChanged += new System.EventHandler(this.cbMaxRes_SelectedIndexChanged);
+            // 
+            // toggleDownloadLimits
+            // 
+            this.toggleDownloadLimits.Location = new System.Drawing.Point(7, 3);
+            this.toggleDownloadLimits.Name = "toggleDownloadLimits";
+            this.toggleDownloadLimits.Properties.AllowFocused = false;
+            this.toggleDownloadLimits.Properties.OffText = "Off";
+            this.toggleDownloadLimits.Properties.OnText = "On";
+            this.toggleDownloadLimits.Size = new System.Drawing.Size(95, 24);
+            this.toggleDownloadLimits.TabIndex = 9;
+            this.toggleDownloadLimits.Toggled += new System.EventHandler(this.toggleDownloadLimits_Toggled);
+            // 
             // gcConvert
             // 
             this.gcConvert.AutoSize = true;
@@ -309,10 +353,10 @@
             this.gcConvert.Controls.Add(this.hlblOpenSettings);
             this.gcConvert.Controls.Add(this.lblAlwaysConvert);
             this.gcConvert.Controls.Add(this.pnlConvertPanel);
-            buttonImageOptions5.SvgImage = global::YTR.Properties.Resources.actions_remove;
-            buttonImageOptions5.SvgImageSize = new System.Drawing.Size(18, 18);
+            buttonImageOptions2.SvgImage = global::YTR.Properties.Resources.actions_remove;
+            buttonImageOptions2.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcConvert.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
-            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions5, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions2, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
             this.gcConvert.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
             this.gcConvert.Dock = System.Windows.Forms.DockStyle.Top;
             this.gcConvert.Location = new System.Drawing.Point(0, 275);
@@ -395,16 +439,56 @@
             this.labelControl6.TabIndex = 0;
             this.labelControl6.Text = "Video";
             // 
+            // cbAudioFormat
+            // 
+            this.cbAudioFormat.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.cbAudioFormat.Enabled = false;
+            this.cbAudioFormat.Location = new System.Drawing.Point(208, 32);
+            this.cbAudioFormat.Name = "cbAudioFormat";
+            this.cbAudioFormat.Properties.AutoHeight = false;
+            this.cbAudioFormat.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.cbAudioFormat.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cbAudioFormat.Size = new System.Drawing.Size(100, 25);
+            this.cbAudioFormat.TabIndex = 11;
+            this.cbAudioFormat.SelectedIndexChanged += new System.EventHandler(this.cbAudioFormat_SelectedIndexChanged);
+            // 
+            // cbVideoFormat
+            // 
+            this.cbVideoFormat.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.cbVideoFormat.Enabled = false;
+            this.cbVideoFormat.Location = new System.Drawing.Point(55, 32);
+            this.cbVideoFormat.Name = "cbVideoFormat";
+            this.cbVideoFormat.Properties.AutoHeight = false;
+            this.cbVideoFormat.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.cbVideoFormat.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cbVideoFormat.Size = new System.Drawing.Size(100, 25);
+            this.cbVideoFormat.TabIndex = 10;
+            this.cbVideoFormat.SelectedIndexChanged += new System.EventHandler(this.cbVideoFormat_SelectedIndexChanged);
+            // 
+            // toggleConvert
+            // 
+            this.toggleConvert.Location = new System.Drawing.Point(7, 3);
+            this.toggleConvert.Name = "toggleConvert";
+            this.toggleConvert.Properties.AllowFocused = false;
+            this.toggleConvert.Properties.OffText = "Off";
+            this.toggleConvert.Properties.OnText = "On";
+            this.toggleConvert.Size = new System.Drawing.Size(95, 24);
+            this.toggleConvert.TabIndex = 9;
+            this.toggleConvert.Toggled += new System.EventHandler(this.toggleConvert_Toggled);
+            this.toggleConvert.Click += new System.EventHandler(this.toggleConvert_Click);
+            // 
             // gcCrop
             // 
             this.gcCrop.AutoSize = true;
             this.gcCrop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gcCrop.CaptionImageOptions.AllowGlyphSkinning = true;
             this.gcCrop.Controls.Add(this.pnlCropPanel);
-            buttonImageOptions1.SvgImage = global::YTR.Properties.Resources.actions_remove;
-            buttonImageOptions1.SvgImageSize = new System.Drawing.Size(18, 18);
+            buttonImageOptions3.SvgImage = global::YTR.Properties.Resources.actions_remove;
+            buttonImageOptions3.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcCrop.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
-            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions1, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions3, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
             this.gcCrop.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
             this.gcCrop.Dock = System.Windows.Forms.DockStyle.Top;
             this.gcCrop.Location = new System.Drawing.Point(0, 151);
@@ -435,6 +519,17 @@
             this.pnlCropPanel.Size = new System.Drawing.Size(319, 93);
             this.pnlCropPanel.TabIndex = 0;
             // 
+            // toggleCrop
+            // 
+            this.toggleCrop.Location = new System.Drawing.Point(7, 3);
+            this.toggleCrop.Name = "toggleCrop";
+            this.toggleCrop.Properties.AllowFocused = false;
+            this.toggleCrop.Properties.OffText = "Off";
+            this.toggleCrop.Properties.OnText = "On";
+            this.toggleCrop.Size = new System.Drawing.Size(95, 24);
+            this.toggleCrop.TabIndex = 4;
+            this.toggleCrop.Toggled += new System.EventHandler(this.toggleCrop_Toggled);
+            // 
             // labelControl10
             // 
             this.labelControl10.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -445,6 +540,24 @@
             this.labelControl10.Size = new System.Drawing.Size(29, 16);
             this.labelControl10.TabIndex = 0;
             this.labelControl10.Text = "Right";
+            // 
+            // txtCropTop
+            // 
+            this.txtCropTop.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.txtCropTop.EditValue = "";
+            this.txtCropTop.Enabled = false;
+            this.txtCropTop.Location = new System.Drawing.Point(69, 29);
+            this.txtCropTop.Name = "txtCropTop";
+            this.txtCropTop.Properties.AutoHeight = false;
+            this.txtCropTop.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.txtCropTop.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.txtCropTop.Properties.MaskSettings.Set("MaskManagerType", typeof(DevExpress.Data.Mask.NumericMaskManager));
+            this.txtCropTop.Properties.MaskSettings.Set("MaskManagerSignature", "allowNull=False");
+            this.txtCropTop.Properties.MaskSettings.Set("mask", "d");
+            this.txtCropTop.Properties.NullText = "0";
+            this.txtCropTop.Properties.UseMaskAsDisplayFormat = true;
+            this.txtCropTop.Size = new System.Drawing.Size(75, 25);
+            this.txtCropTop.TabIndex = 5;
             // 
             // labelControl9
             // 
@@ -457,6 +570,24 @@
             this.labelControl9.TabIndex = 0;
             this.labelControl9.Text = "Left";
             // 
+            // txtCropBottom
+            // 
+            this.txtCropBottom.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.txtCropBottom.EditValue = "";
+            this.txtCropBottom.Enabled = false;
+            this.txtCropBottom.Location = new System.Drawing.Point(208, 29);
+            this.txtCropBottom.Name = "txtCropBottom";
+            this.txtCropBottom.Properties.AutoHeight = false;
+            this.txtCropBottom.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.txtCropBottom.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.txtCropBottom.Properties.MaskSettings.Set("MaskManagerType", typeof(DevExpress.Data.Mask.NumericMaskManager));
+            this.txtCropBottom.Properties.MaskSettings.Set("MaskManagerSignature", "allowNull=False");
+            this.txtCropBottom.Properties.MaskSettings.Set("mask", "d");
+            this.txtCropBottom.Properties.NullText = "0";
+            this.txtCropBottom.Properties.UseMaskAsDisplayFormat = true;
+            this.txtCropBottom.Size = new System.Drawing.Size(75, 25);
+            this.txtCropBottom.TabIndex = 6;
+            // 
             // labelControl8
             // 
             this.labelControl8.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -467,6 +598,24 @@
             this.labelControl8.Size = new System.Drawing.Size(40, 16);
             this.labelControl8.TabIndex = 0;
             this.labelControl8.Text = "Bottom";
+            // 
+            // txtCropLeft
+            // 
+            this.txtCropLeft.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.txtCropLeft.EditValue = "";
+            this.txtCropLeft.Enabled = false;
+            this.txtCropLeft.Location = new System.Drawing.Point(69, 60);
+            this.txtCropLeft.Name = "txtCropLeft";
+            this.txtCropLeft.Properties.AutoHeight = false;
+            this.txtCropLeft.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.txtCropLeft.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.txtCropLeft.Properties.MaskSettings.Set("MaskManagerType", typeof(DevExpress.Data.Mask.NumericMaskManager));
+            this.txtCropLeft.Properties.MaskSettings.Set("MaskManagerSignature", "allowNull=False");
+            this.txtCropLeft.Properties.MaskSettings.Set("mask", "d");
+            this.txtCropLeft.Properties.NullText = "0";
+            this.txtCropLeft.Properties.UseMaskAsDisplayFormat = true;
+            this.txtCropLeft.Size = new System.Drawing.Size(75, 25);
+            this.txtCropLeft.TabIndex = 7;
             // 
             // labelControl5
             // 
@@ -479,6 +628,24 @@
             this.labelControl5.TabIndex = 0;
             this.labelControl5.Text = "Top";
             // 
+            // txtCropRight
+            // 
+            this.txtCropRight.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.txtCropRight.EditValue = "";
+            this.txtCropRight.Enabled = false;
+            this.txtCropRight.Location = new System.Drawing.Point(208, 60);
+            this.txtCropRight.Name = "txtCropRight";
+            this.txtCropRight.Properties.AutoHeight = false;
+            this.txtCropRight.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.txtCropRight.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.txtCropRight.Properties.MaskSettings.Set("MaskManagerType", typeof(DevExpress.Data.Mask.NumericMaskManager));
+            this.txtCropRight.Properties.MaskSettings.Set("MaskManagerSignature", "allowNull=False");
+            this.txtCropRight.Properties.MaskSettings.Set("mask", "d");
+            this.txtCropRight.Properties.NullText = "0";
+            this.txtCropRight.Properties.UseMaskAsDisplayFormat = true;
+            this.txtCropRight.Size = new System.Drawing.Size(75, 25);
+            this.txtCropRight.TabIndex = 8;
+            // 
             // gcSegments
             // 
             this.gcSegments.AutoSize = true;
@@ -486,10 +653,10 @@
             this.gcSegments.CaptionImageOptions.AllowGlyphSkinning = true;
             this.gcSegments.Controls.Add(this.lblSegmentDisclaimer);
             this.gcSegments.Controls.Add(this.pnlSegPanel);
-            buttonImageOptions2.SvgImage = global::YTR.Properties.Resources.actions_remove;
-            buttonImageOptions2.SvgImageSize = new System.Drawing.Size(18, 18);
+            buttonImageOptions4.SvgImage = global::YTR.Properties.Resources.actions_remove;
+            buttonImageOptions4.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcSegments.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
-            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions2, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, false, true, "ytSegment", -1)});
+            new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions4, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, false, true, "ytSegment", -1)});
             this.gcSegments.CustomHeaderButtonsLocation = DevExpress.Utils.GroupElementLocation.AfterText;
             this.gcSegments.Dock = System.Windows.Forms.DockStyle.Top;
             this.gcSegments.Location = new System.Drawing.Point(0, 0);
@@ -534,6 +701,18 @@
             this.pnlSegPanel.Size = new System.Drawing.Size(319, 69);
             this.pnlSegPanel.TabIndex = 0;
             // 
+            // toggleSegment
+            // 
+            this.toggleSegment.Location = new System.Drawing.Point(7, 3);
+            this.toggleSegment.Name = "toggleSegment";
+            this.toggleSegment.Properties.AllowFocused = false;
+            this.toggleSegment.Properties.GlyphAlignment = DevExpress.Utils.HorzAlignment.Default;
+            this.toggleSegment.Properties.OffText = "Off";
+            this.toggleSegment.Properties.OnText = "On";
+            this.toggleSegment.Size = new System.Drawing.Size(95, 24);
+            this.toggleSegment.TabIndex = 1;
+            this.toggleSegment.Toggled += new System.EventHandler(this.toggleSegment_Toggled);
+            // 
             // labelControl3
             // 
             this.labelControl3.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -559,6 +738,46 @@
             this.lblDuration.TabIndex = 0;
             this.lblDuration.Text = "Duration";
             this.lblDuration.TextChanged += new System.EventHandler(this.lblDuration_TextChanged);
+            // 
+            // tsStart
+            // 
+            this.tsStart.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.tsStart.EditValue = System.TimeSpan.Parse("00:00:00");
+            this.tsStart.Enabled = false;
+            this.tsStart.Location = new System.Drawing.Point(44, 33);
+            this.tsStart.Name = "tsStart";
+            this.tsStart.Properties.AutoHeight = false;
+            this.tsStart.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.tsStart.Properties.DisplayFormat.FormatString = "{hh}h {mm}m {ss}s";
+            this.tsStart.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Custom;
+            this.tsStart.Properties.EditFormat.FormatString = "{hh}h {mm}m {ss}s";
+            this.tsStart.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Custom;
+            this.tsStart.Properties.MaskSettings.Set("mask", "hh\\h mm\\m ss\\s");
+            this.tsStart.Properties.MinValue = System.TimeSpan.Parse("00:00:00");
+            this.tsStart.Size = new System.Drawing.Size(100, 25);
+            this.tsStart.TabIndex = 2;
+            this.tsStart.EditValueChanged += new System.EventHandler(this.tsStart_EditValueChanged);
+            // 
+            // tsDuration
+            // 
+            this.tsDuration.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.tsDuration.EditValue = System.TimeSpan.Parse("00:00:01");
+            this.tsDuration.Enabled = false;
+            this.tsDuration.Location = new System.Drawing.Point(214, 33);
+            this.tsDuration.Name = "tsDuration";
+            this.tsDuration.Properties.AutoHeight = false;
+            this.tsDuration.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.tsDuration.Properties.DisplayFormat.FormatString = "{hh}h {mm}m {ss}s";
+            this.tsDuration.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Custom;
+            this.tsDuration.Properties.EditFormat.FormatString = "{hh}h {mm}m {ss}s";
+            this.tsDuration.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Custom;
+            this.tsDuration.Properties.MaskSettings.Set("mask", "hh\\h mm\\m ss\\s");
+            this.tsDuration.Properties.MinValue = System.TimeSpan.Parse("00:00:01");
+            this.tsDuration.Size = new System.Drawing.Size(100, 25);
+            this.tsDuration.TabIndex = 3;
+            this.tsDuration.EditValueChanged += new System.EventHandler(this.tsDuration_EditValueChanged);
             // 
             // pnlProgressPanel
             // 
@@ -627,223 +846,6 @@
             this.pbListProgress.Visible = false;
             this.pbListProgress.CustomDisplayText += new DevExpress.XtraEditors.Controls.CustomDisplayTextEventHandler(this.pbListProgress_CustomDisplayText);
             // 
-            // txtMaxFilesize
-            // 
-            this.txtMaxFilesize.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtMaxFilesize.EditValue = "0";
-            this.txtMaxFilesize.Enabled = false;
-            this.txtMaxFilesize.Location = new System.Drawing.Point(162, 61);
-            this.txtMaxFilesize.Name = "txtMaxFilesize";
-            this.txtMaxFilesize.Properties.AutoHeight = false;
-            this.txtMaxFilesize.Properties.DisplayFormat.FormatString = "{0} MB";
-            this.txtMaxFilesize.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.txtMaxFilesize.Properties.EditFormat.FormatString = "{0} MB";
-            this.txtMaxFilesize.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.txtMaxFilesize.Properties.NullText = "0";
-            this.txtMaxFilesize.Size = new System.Drawing.Size(142, 25);
-            this.txtMaxFilesize.TabIndex = 11;
-            this.txtMaxFilesize.TextChanged += new System.EventHandler(this.txtMaxFilesize_TextChanged);
-            // 
-            // cbMaxRes
-            // 
-            this.cbMaxRes.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.cbMaxRes.Enabled = false;
-            this.cbMaxRes.Location = new System.Drawing.Point(162, 30);
-            this.cbMaxRes.Name = "cbMaxRes";
-            this.cbMaxRes.Properties.AutoHeight = false;
-            this.cbMaxRes.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cbMaxRes.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.cbMaxRes.Size = new System.Drawing.Size(142, 25);
-            this.cbMaxRes.TabIndex = 10;
-            this.cbMaxRes.SelectedIndexChanged += new System.EventHandler(this.cbMaxRes_SelectedIndexChanged);
-            // 
-            // toggleDownloadLimits
-            // 
-            this.toggleDownloadLimits.Location = new System.Drawing.Point(7, 3);
-            this.toggleDownloadLimits.Name = "toggleDownloadLimits";
-            this.toggleDownloadLimits.Properties.AllowFocused = false;
-            this.toggleDownloadLimits.Properties.OffText = "Off";
-            this.toggleDownloadLimits.Properties.OnText = "On";
-            this.toggleDownloadLimits.Size = new System.Drawing.Size(95, 24);
-            this.toggleDownloadLimits.TabIndex = 9;
-            this.toggleDownloadLimits.Toggled += new System.EventHandler(this.toggleDownloadLimits_Toggled);
-            // 
-            // cbAudioFormat
-            // 
-            this.cbAudioFormat.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.cbAudioFormat.Enabled = false;
-            this.cbAudioFormat.Location = new System.Drawing.Point(208, 32);
-            this.cbAudioFormat.Name = "cbAudioFormat";
-            this.cbAudioFormat.Properties.AutoHeight = false;
-            this.cbAudioFormat.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cbAudioFormat.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.cbAudioFormat.Size = new System.Drawing.Size(100, 25);
-            this.cbAudioFormat.TabIndex = 11;
-            this.cbAudioFormat.SelectedIndexChanged += new System.EventHandler(this.cbAudioFormat_SelectedIndexChanged);
-            // 
-            // cbVideoFormat
-            // 
-            this.cbVideoFormat.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.cbVideoFormat.Enabled = false;
-            this.cbVideoFormat.Location = new System.Drawing.Point(55, 32);
-            this.cbVideoFormat.Name = "cbVideoFormat";
-            this.cbVideoFormat.Properties.AutoHeight = false;
-            this.cbVideoFormat.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cbVideoFormat.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.cbVideoFormat.Size = new System.Drawing.Size(100, 25);
-            this.cbVideoFormat.TabIndex = 10;
-            this.cbVideoFormat.SelectedIndexChanged += new System.EventHandler(this.cbVideoFormat_SelectedIndexChanged);
-            // 
-            // toggleConvert
-            // 
-            this.toggleConvert.Location = new System.Drawing.Point(7, 3);
-            this.toggleConvert.Name = "toggleConvert";
-            this.toggleConvert.Properties.AllowFocused = false;
-            this.toggleConvert.Properties.OffText = "Off";
-            this.toggleConvert.Properties.OnText = "On";
-            this.toggleConvert.Size = new System.Drawing.Size(95, 24);
-            this.toggleConvert.TabIndex = 9;
-            this.toggleConvert.Toggled += new System.EventHandler(this.toggleConvert_Toggled);
-            this.toggleConvert.Click += new System.EventHandler(this.toggleConvert_Click);
-            // 
-            // toggleCrop
-            // 
-            this.toggleCrop.Location = new System.Drawing.Point(7, 3);
-            this.toggleCrop.Name = "toggleCrop";
-            this.toggleCrop.Properties.AllowFocused = false;
-            this.toggleCrop.Properties.OffText = "Off";
-            this.toggleCrop.Properties.OnText = "On";
-            this.toggleCrop.Size = new System.Drawing.Size(95, 24);
-            this.toggleCrop.TabIndex = 4;
-            this.toggleCrop.Toggled += new System.EventHandler(this.toggleCrop_Toggled);
-            // 
-            // txtCropTop
-            // 
-            this.txtCropTop.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtCropTop.EditValue = "";
-            this.txtCropTop.Enabled = false;
-            this.txtCropTop.Location = new System.Drawing.Point(69, 29);
-            this.txtCropTop.Name = "txtCropTop";
-            this.txtCropTop.Properties.AutoHeight = false;
-            this.txtCropTop.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.txtCropTop.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.txtCropTop.Properties.MaskSettings.Set("MaskManagerType", typeof(DevExpress.Data.Mask.NumericMaskManager));
-            this.txtCropTop.Properties.MaskSettings.Set("MaskManagerSignature", "allowNull=False");
-            this.txtCropTop.Properties.MaskSettings.Set("mask", "d");
-            this.txtCropTop.Properties.NullText = "0";
-            this.txtCropTop.Properties.UseMaskAsDisplayFormat = true;
-            this.txtCropTop.Size = new System.Drawing.Size(75, 25);
-            this.txtCropTop.TabIndex = 5;
-            // 
-            // txtCropBottom
-            // 
-            this.txtCropBottom.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtCropBottom.EditValue = "";
-            this.txtCropBottom.Enabled = false;
-            this.txtCropBottom.Location = new System.Drawing.Point(208, 29);
-            this.txtCropBottom.Name = "txtCropBottom";
-            this.txtCropBottom.Properties.AutoHeight = false;
-            this.txtCropBottom.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.txtCropBottom.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.txtCropBottom.Properties.MaskSettings.Set("MaskManagerType", typeof(DevExpress.Data.Mask.NumericMaskManager));
-            this.txtCropBottom.Properties.MaskSettings.Set("MaskManagerSignature", "allowNull=False");
-            this.txtCropBottom.Properties.MaskSettings.Set("mask", "d");
-            this.txtCropBottom.Properties.NullText = "0";
-            this.txtCropBottom.Properties.UseMaskAsDisplayFormat = true;
-            this.txtCropBottom.Size = new System.Drawing.Size(75, 25);
-            this.txtCropBottom.TabIndex = 6;
-            // 
-            // txtCropLeft
-            // 
-            this.txtCropLeft.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtCropLeft.EditValue = "";
-            this.txtCropLeft.Enabled = false;
-            this.txtCropLeft.Location = new System.Drawing.Point(69, 60);
-            this.txtCropLeft.Name = "txtCropLeft";
-            this.txtCropLeft.Properties.AutoHeight = false;
-            this.txtCropLeft.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.txtCropLeft.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.txtCropLeft.Properties.MaskSettings.Set("MaskManagerType", typeof(DevExpress.Data.Mask.NumericMaskManager));
-            this.txtCropLeft.Properties.MaskSettings.Set("MaskManagerSignature", "allowNull=False");
-            this.txtCropLeft.Properties.MaskSettings.Set("mask", "d");
-            this.txtCropLeft.Properties.NullText = "0";
-            this.txtCropLeft.Properties.UseMaskAsDisplayFormat = true;
-            this.txtCropLeft.Size = new System.Drawing.Size(75, 25);
-            this.txtCropLeft.TabIndex = 7;
-            // 
-            // txtCropRight
-            // 
-            this.txtCropRight.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtCropRight.EditValue = "";
-            this.txtCropRight.Enabled = false;
-            this.txtCropRight.Location = new System.Drawing.Point(208, 60);
-            this.txtCropRight.Name = "txtCropRight";
-            this.txtCropRight.Properties.AutoHeight = false;
-            this.txtCropRight.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.txtCropRight.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.txtCropRight.Properties.MaskSettings.Set("MaskManagerType", typeof(DevExpress.Data.Mask.NumericMaskManager));
-            this.txtCropRight.Properties.MaskSettings.Set("MaskManagerSignature", "allowNull=False");
-            this.txtCropRight.Properties.MaskSettings.Set("mask", "d");
-            this.txtCropRight.Properties.NullText = "0";
-            this.txtCropRight.Properties.UseMaskAsDisplayFormat = true;
-            this.txtCropRight.Size = new System.Drawing.Size(75, 25);
-            this.txtCropRight.TabIndex = 8;
-            // 
-            // toggleSegment
-            // 
-            this.toggleSegment.Location = new System.Drawing.Point(7, 3);
-            this.toggleSegment.Name = "toggleSegment";
-            this.toggleSegment.Properties.AllowFocused = false;
-            this.toggleSegment.Properties.GlyphAlignment = DevExpress.Utils.HorzAlignment.Default;
-            this.toggleSegment.Properties.OffText = "Off";
-            this.toggleSegment.Properties.OnText = "On";
-            this.toggleSegment.Size = new System.Drawing.Size(95, 24);
-            this.toggleSegment.TabIndex = 1;
-            this.toggleSegment.Toggled += new System.EventHandler(this.toggleSegment_Toggled);
-            // 
-            // tsStart
-            // 
-            this.tsStart.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.tsStart.EditValue = System.TimeSpan.Parse("00:00:00");
-            this.tsStart.Enabled = false;
-            this.tsStart.Location = new System.Drawing.Point(44, 33);
-            this.tsStart.Name = "tsStart";
-            this.tsStart.Properties.AutoHeight = false;
-            this.tsStart.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.tsStart.Properties.DisplayFormat.FormatString = "{hh}h {mm}m {ss}s";
-            this.tsStart.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Custom;
-            this.tsStart.Properties.EditFormat.FormatString = "{hh}h {mm}m {ss}s";
-            this.tsStart.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Custom;
-            this.tsStart.Properties.MaskSettings.Set("mask", "hh\\h mm\\m ss\\s");
-            this.tsStart.Properties.MinValue = System.TimeSpan.Parse("00:00:00");
-            this.tsStart.Size = new System.Drawing.Size(100, 25);
-            this.tsStart.TabIndex = 2;
-            this.tsStart.EditValueChanged += new System.EventHandler(this.tsStart_EditValueChanged);
-            // 
-            // tsDuration
-            // 
-            this.tsDuration.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.tsDuration.EditValue = System.TimeSpan.Parse("00:00:01");
-            this.tsDuration.Enabled = false;
-            this.tsDuration.Location = new System.Drawing.Point(214, 33);
-            this.tsDuration.Name = "tsDuration";
-            this.tsDuration.Properties.AutoHeight = false;
-            this.tsDuration.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.tsDuration.Properties.DisplayFormat.FormatString = "{hh}h {mm}m {ss}s";
-            this.tsDuration.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Custom;
-            this.tsDuration.Properties.EditFormat.FormatString = "{hh}h {mm}m {ss}s";
-            this.tsDuration.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Custom;
-            this.tsDuration.Properties.MaskSettings.Set("mask", "hh\\h mm\\m ss\\s");
-            this.tsDuration.Properties.MinValue = System.TimeSpan.Parse("00:00:01");
-            this.tsDuration.Size = new System.Drawing.Size(100, 25);
-            this.tsDuration.TabIndex = 3;
-            this.tsDuration.EditValueChanged += new System.EventHandler(this.tsDuration_EditValueChanged);
-            // 
             // ControlPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -865,39 +867,39 @@
             ((System.ComponentModel.ISupportInitialize)(this.pnlLimitPanel)).EndInit();
             this.pnlLimitPanel.ResumeLayout(false);
             this.pnlLimitPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.txtMaxFilesize.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbMaxRes.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.toggleDownloadLimits.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gcConvert)).EndInit();
             this.gcConvert.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pnlConvertPanel)).EndInit();
             this.pnlConvertPanel.ResumeLayout(false);
             this.pnlConvertPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cbAudioFormat.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbVideoFormat.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.toggleConvert.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gcCrop)).EndInit();
             this.gcCrop.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pnlCropPanel)).EndInit();
             this.pnlCropPanel.ResumeLayout(false);
             this.pnlCropPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gcSegments)).EndInit();
-            this.gcSegments.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pnlSegPanel)).EndInit();
-            this.pnlSegPanel.ResumeLayout(false);
-            this.pnlSegPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pnlProgressPanel)).EndInit();
-            this.pnlProgressPanel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pbProgress.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbListProgress.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.txtMaxFilesize.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cbMaxRes.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.toggleDownloadLimits.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cbAudioFormat.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cbVideoFormat.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.toggleConvert.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.toggleCrop.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtCropTop.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtCropBottom.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtCropLeft.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtCropRight.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gcSegments)).EndInit();
+            this.gcSegments.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pnlSegPanel)).EndInit();
+            this.pnlSegPanel.ResumeLayout(false);
+            this.pnlSegPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.toggleSegment.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tsStart.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tsDuration.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlProgressPanel)).EndInit();
+            this.pnlProgressPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbProgress.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbListProgress.Properties)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
