@@ -57,8 +57,11 @@
             this.toolTipController = new DevExpress.Utils.ToolTipController(this.components);
             this.pnlHistoryControls = new DevExpress.XtraEditors.PanelControl();
             this.btnDelAllDLs = new DevExpress.XtraEditors.SimpleButton();
+            this.panelControl2 = new DevExpress.XtraEditors.PanelControl();
             this.btnDelAudDLs = new DevExpress.XtraEditors.SimpleButton();
+            this.panelControl1 = new DevExpress.XtraEditors.PanelControl();
             this.btnDelVidDLs = new DevExpress.XtraEditors.SimpleButton();
+            this.spacer = new DevExpress.XtraEditors.PanelControl();
             this.btnClearHistory = new DevExpress.XtraEditors.SimpleButton();
             this.lblHistoryVert = new DevExpress.XtraEditors.LabelControl();
             this.pnlHistoryHeader = new DevExpress.XtraEditors.PanelControl();
@@ -77,9 +80,6 @@
             this.bbiReDownload = new DevExpress.XtraBars.BarButtonItem();
             this.bbiNewDownload = new DevExpress.XtraBars.BarButtonItem();
             this.historyPopup = new DevExpress.XtraBars.PopupMenu(this.components);
-            this.spacer = new DevExpress.XtraEditors.PanelControl();
-            this.panelControl1 = new DevExpress.XtraEditors.PanelControl();
-            this.panelControl2 = new DevExpress.XtraEditors.PanelControl();
             ((System.ComponentModel.ISupportInitialize)(this.tcMainTabControl)).BeginInit();
             this.tabFormContentContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sccMainSplitter)).BeginInit();
@@ -103,14 +103,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.repPostProcessed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pnlHistoryControls)).BeginInit();
             this.pnlHistoryControls.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.panelControl2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.spacer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pnlHistoryHeader)).BeginInit();
             this.pnlHistoryHeader.SuspendLayout();
             this.taskBarMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.historyBarManager)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.historyPopup)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.spacer)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.panelControl2)).BeginInit();
             this.SuspendLayout();
             // 
             // tcMainTabControl
@@ -514,6 +514,16 @@
             this.btnDelAllDLs.ToolTip = "Delete All Downloads";
             this.btnDelAllDLs.Click += new System.EventHandler(this.btnDelAllDLs_Click);
             // 
+            // panelControl2
+            // 
+            this.panelControl2.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.panelControl2.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panelControl2.Location = new System.Drawing.Point(201, 2);
+            this.panelControl2.Margin = new System.Windows.Forms.Padding(0);
+            this.panelControl2.Name = "panelControl2";
+            this.panelControl2.Size = new System.Drawing.Size(5, 26);
+            this.panelControl2.TabIndex = 6;
+            // 
             // btnDelAudDLs
             // 
             this.btnDelAudDLs.Dock = System.Windows.Forms.DockStyle.Right;
@@ -528,6 +538,16 @@
             this.btnDelAudDLs.TabIndex = 2;
             this.btnDelAudDLs.ToolTip = "Delete Audio Downloads";
             this.btnDelAudDLs.Click += new System.EventHandler(this.btnDelAudDLs_Click);
+            // 
+            // panelControl1
+            // 
+            this.panelControl1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.panelControl1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panelControl1.Location = new System.Drawing.Point(232, 2);
+            this.panelControl1.Margin = new System.Windows.Forms.Padding(0);
+            this.panelControl1.Name = "panelControl1";
+            this.panelControl1.Size = new System.Drawing.Size(5, 26);
+            this.panelControl1.TabIndex = 5;
             // 
             // btnDelVidDLs
             // 
@@ -544,14 +564,24 @@
             this.btnDelVidDLs.ToolTip = "Delete Downloaded Videos";
             this.btnDelVidDLs.Click += new System.EventHandler(this.btnDelVidDLs_Click);
             // 
+            // spacer
+            // 
+            this.spacer.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.spacer.Dock = System.Windows.Forms.DockStyle.Right;
+            this.spacer.Location = new System.Drawing.Point(263, 2);
+            this.spacer.Margin = new System.Windows.Forms.Padding(0);
+            this.spacer.Name = "spacer";
+            this.spacer.Size = new System.Drawing.Size(5, 26);
+            this.spacer.TabIndex = 4;
+            // 
             // btnClearHistory
             // 
             this.btnClearHistory.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnClearHistory.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
             this.btnClearHistory.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
-            this.btnClearHistory.ImageOptions.SvgImage = global::YTR.Properties.Resources.clear_all;
+            this.btnClearHistory.ImageOptions.SvgImage = global::YTR.Properties.Resources.broom;
             this.btnClearHistory.ImageOptions.SvgImageColorizationMode = DevExpress.Utils.SvgImageColorizationMode.Full;
-            this.btnClearHistory.ImageOptions.SvgImageSize = new System.Drawing.Size(22, 22);
+            this.btnClearHistory.ImageOptions.SvgImageSize = new System.Drawing.Size(20, 20);
             this.btnClearHistory.Location = new System.Drawing.Point(268, 2);
             this.btnClearHistory.Name = "btnClearHistory";
             this.btnClearHistory.Size = new System.Drawing.Size(26, 26);
@@ -725,36 +755,6 @@
             this.historyPopup.Manager = this.historyBarManager;
             this.historyPopup.Name = "historyPopup";
             // 
-            // spacer
-            // 
-            this.spacer.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-            this.spacer.Dock = System.Windows.Forms.DockStyle.Right;
-            this.spacer.Location = new System.Drawing.Point(263, 2);
-            this.spacer.Margin = new System.Windows.Forms.Padding(0);
-            this.spacer.Name = "spacer";
-            this.spacer.Size = new System.Drawing.Size(5, 26);
-            this.spacer.TabIndex = 4;
-            // 
-            // panelControl1
-            // 
-            this.panelControl1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-            this.panelControl1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panelControl1.Location = new System.Drawing.Point(232, 2);
-            this.panelControl1.Margin = new System.Windows.Forms.Padding(0);
-            this.panelControl1.Name = "panelControl1";
-            this.panelControl1.Size = new System.Drawing.Size(5, 26);
-            this.panelControl1.TabIndex = 5;
-            // 
-            // panelControl2
-            // 
-            this.panelControl2.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-            this.panelControl2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panelControl2.Location = new System.Drawing.Point(201, 2);
-            this.panelControl2.Margin = new System.Windows.Forms.Padding(0);
-            this.panelControl2.Name = "panelControl2";
-            this.panelControl2.Size = new System.Drawing.Size(5, 26);
-            this.panelControl2.TabIndex = 6;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -798,14 +798,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.repPostProcessed)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pnlHistoryControls)).EndInit();
             this.pnlHistoryControls.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.panelControl2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.spacer)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pnlHistoryHeader)).EndInit();
             this.pnlHistoryHeader.ResumeLayout(false);
             this.taskBarMenu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.historyBarManager)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.historyPopup)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.spacer)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.panelControl2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

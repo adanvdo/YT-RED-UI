@@ -107,6 +107,11 @@ YTR's main interface is pretty straight forward. Simply enter the URL of any vid
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 10/25/2023 v1.0.4.9
+- Added Media Title to Download Logs
+- Fixed Bug where Download History was not immediately refreshed after deleting downloads or clearing logs
+- Replaced the Clear History Button Image
+
 ### 10/6/2023 v1.0.4.8
 - Added Controls for Managing History Log to the Main Form
 

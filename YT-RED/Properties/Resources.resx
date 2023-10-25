@@ -124,8 +124,8 @@
   <data name="crop" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\crop.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="listnumbers" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\listnumbers.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  <data name="actions_question" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\actions_question.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="enablesearch" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\enablesearch.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
@@ -133,8 +133,8 @@
   <data name="loading_8" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Media\loading_8.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="actions_question" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\actions_question.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  <data name="videoslash" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\videoslash.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="security_warningcircled2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\security_warningcircled2.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
@@ -157,17 +157,11 @@
   <data name="actions_checkcircled" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\actions_checkcircled.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="videoslash" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\videoslash.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
-  </data>
   <data name="actions_remove" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\actions_remove.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="bo_attention" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\bo_attention.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
-  </data>
-  <data name="close" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\close.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="highimportance" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\highimportance.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
@@ -205,6 +199,12 @@
   <data name="about" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\about.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
+  <data name="loading_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Media\loading_1.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="actions_trash" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\actions_trash.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
   <data name="exclamation" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\exclamation.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
@@ -217,8 +217,8 @@
   <data name="application" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\application.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="loading_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Media\loading_1.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  <data name="close" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\close.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="VideoSound" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\VideoSound.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
@@ -244,13 +244,16 @@
   <data name="twitch-circle" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Media\twitch-circle.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
+  <data name="listnumbers" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\listnumbers.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
   <data name="loading_6" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Media\loading_6.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="twitter-circle" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Media\twitter-circle.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="actions_trash" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\actions_trash.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  <data name="broom" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\broom.svg;DevExpress.Utils.Svg.SvgImage, DevExpress.Data.v22.1, Version=22.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
 </root>

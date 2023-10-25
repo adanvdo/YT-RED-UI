@@ -382,6 +382,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\broom.svg" />
     <None Include="Resources\audioslash.svg" />
     <None Include="Resources\videoslash.svg" />
     <None Include="Resources\clear-all.svg" />

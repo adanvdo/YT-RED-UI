@@ -842,6 +842,7 @@ namespace YTR
             gcHistory.DataSource = null;
             gcHistory.DataSource = Historian.DownloadHistory;
             PopulateHistoryColumns();
+            gvHistory.RefreshData();
             gvHistory.FocusedRowHandle = originalIndex;
             selectedYTLog = gvHistory.GetRow(originalIndex) as DownloadLog;
         }
@@ -2269,7 +2270,7 @@ namespace YTR
 
         private async void btnDelVidDLs_Click(object sender, EventArgs e)
         {
-            DialogResult res = MsgBox.Show("Files for all recorded Video downloads will be deleted\nand Video download logs will be removed.\n\nContinue?", "Delete Downloaded Files", YTR.Controls.Buttons.OKCancel, YTR.Controls.Icon.Warning, FormStartPosition.CenterParent);
+            DialogResult res = MsgBox.Show("Files for all recorded Video downloads will be deleted and Video download logs will be removed.\n\nContinue?", "Delete Downloaded Files", YTR.Controls.Buttons.OKCancel, YTR.Controls.Icon.Warning, FormStartPosition.CenterParent);
             if (res == DialogResult.OK)
             {
                 await Logging.Historian.CleanHistory(Logging.DownloadCategory.Video, Logging.DownloadCategory.Video);
@@ -2280,7 +2281,7 @@ namespace YTR
 
         private async void btnDelAudDLs_Click(object sender, EventArgs e)
         {
-            DialogResult res = MsgBox.Show("Files for all recorded Audio downloads will be deleted\nand Audio download logs will be removed.\n\nContinue?", "Delete Downloaded Files", YTR.Controls.Buttons.OKCancel, YTR.Controls.Icon.Warning, FormStartPosition.CenterParent);
+            DialogResult res = MsgBox.Show("Files for all recorded Audio downloads will be deleted and Audio download logs will be removed.\n\nContinue?", "Delete Downloaded Files", YTR.Controls.Buttons.OKCancel, YTR.Controls.Icon.Warning, FormStartPosition.CenterParent);
             if (res == DialogResult.OK)
             {
                 await Logging.Historian.CleanHistory(Logging.DownloadCategory.Audio, Logging.DownloadCategory.Audio);
@@ -2291,7 +2292,7 @@ namespace YTR
 
         private async void btnDelAllDLs_Click(object sender, EventArgs e)
         {
-            DialogResult res = MsgBox.Show("Files for all recorded downloads will be deleted\nand download history will be reset.\n\nContinue?", "Delete Downloaded Files", YTR.Controls.Buttons.OKCancel, YTR.Controls.Icon.Warning, FormStartPosition.CenterParent);
+            DialogResult res = MsgBox.Show("Files for all recorded downloads will be deleted and download history will be reset.\n\nContinue?", "Delete Downloaded Files", YTR.Controls.Buttons.OKCancel, YTR.Controls.Icon.Warning, FormStartPosition.CenterParent);
             if (res == DialogResult.OK)
             {
                 await Logging.Historian.CleanHistory(Logging.DownloadCategory.All, Logging.DownloadCategory.All);
