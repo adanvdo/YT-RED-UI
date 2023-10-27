@@ -46,8 +46,7 @@ YTR is a safe alternative to other popular youtube and reddit video downloaders 
 - Update Assistant
 
 ### Known Issues <a name="known-issues"></a>
-- Youtube Playlist downloads are not yet supported
-- GIF Conversion does not convert to proper GIF file
+- None as of 10/26/2023
 
 ### How To Use <a name="how-to-use"></a>
 
