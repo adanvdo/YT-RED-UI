@@ -1,16 +1,7 @@
-﻿using DevExpress.Xpo.Logger;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using System;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using YTR_Updater;
 
 namespace YTR_Updater
 {

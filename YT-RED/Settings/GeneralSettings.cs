@@ -159,11 +159,11 @@ namespace YTR.Settings
 		public string YtdlpLocalVersion { get; set; }
 
 		[Browsable(false)]
-		[JsonProperty("yt-dlp_resource_url")]
+		[JsonIgnore]
 		public string YtdlpUrl { get; set; }
 
 		[Browsable(false)]
-		[JsonProperty("yt-dlp_version_url")]
+		[JsonIgnore]
 		public string YtdlpVersionUrl { get; set; }
 
 		[Browsable(false)]
@@ -171,11 +171,11 @@ namespace YTR.Settings
 		public string FfmpegLocalVersion { get; set; }
 
 		[Browsable(false)]
-		[JsonProperty("ffmpeg_resource_url")]
+		[JsonIgnore]
 		public string FfmpegUrl { get; set; }
 
 		[Browsable(false)]
-		[JsonProperty("ffmpeg_version_url")]
+		[JsonIgnore]
 		public string FfmpegVersionUrl { get; set; }
         #endregion
 
@@ -231,12 +231,12 @@ namespace YTR.Settings
 			AudioDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
 			CreateFolderForPlaylists = true;
 			UsePreferredFormat = false;
-			YtdlpLocalVersion = "2023.09.24";
+			YtdlpLocalVersion = "2023.10.13";
 			YtdlpUrl = @"https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp{0}.exe";
 			YtdlpVersionUrl = "https://api.github.com/repos/yt-dlp/yt-dlp/tags";
-			FfmpegLocalVersion = "2023-09-29-git-40aa451154";
-            FfmpegUrl = @"https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-essentials.7z";
-			FfmpegVersionUrl = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-essentials.7z.ver";
+			FfmpegLocalVersion = "6.0";
+            FfmpegUrl = @"https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.7z";
+			FfmpegVersionUrl = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.7z.ver";
 			CollapseSegmentControl = false;
 			CollapseCropControl = false;
 			CollapseConvertControl = false;

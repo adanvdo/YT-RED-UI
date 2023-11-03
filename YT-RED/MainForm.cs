@@ -3,6 +3,7 @@ using DevExpress.Utils.Drawing;
 using DevExpress.Utils.Svg;
 using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -25,6 +26,7 @@ namespace YTR
 {
     public partial class MainForm : DevExpress.XtraBars.TabForm
     {
+        private string appDirectory = string.Empty;
         private Size minimumSize = new Size(823, 664);
         private UIBlockDetector _blockDetector;
         private Timer historyTimer;
@@ -122,6 +124,7 @@ namespace YTR
         private void initializeProgram()
         {
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            this.appDirectory = Path.GetDirectoryName(assembly.Location);
             AppSettings.Default.About.Version = assembly.GetName().Version.ToString();
             AppSettings.Default.About.ReleaseChannel = EnumExtensions.ToEnum<ReleaseChannel>(assembly.GetCustomAttributes(typeof(AssemblyBuildAttribute), false).Cast<AssemblyBuildAttribute>().FirstOrDefault().Value);
             MainForm.hook.KeyPressed += new EventHandler<KeyPressedEventArgs>(Hook_KeyPressed);
@@ -348,8 +351,27 @@ namespace YTR
 
             if (this.updated || Program.updated)
             {
+                string appLog = Path.Combine(this.appDirectory, "Resources", "App", "update_log.json");
+                try
+                {
+                    if (await Task.Run(() => File.Exists(appLog)))
+                    {
+                        string json = await Task.Run(() => File.ReadAllText(appLog));
+                        UpdateLog log = JsonConvert.DeserializeObject<UpdateLog>(json);
+                        if (!string.IsNullOrEmpty(log.YTDLPVersion))
+                            AppSettings.Default.General.YtdlpLocalVersion = log.YTDLPVersion;
+                        if (!string.IsNullOrEmpty(log.FFMPEGVersion))
+                            AppSettings.Default.General.FfmpegLocalVersion = log.FFMPEGVersion;
+                        await Task.Run(() => File.Delete(appLog));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ExceptionHandler.LogException(ex);
+                }
                 bool replaceDependency = await UpdateHelper.ReplaceZipDependency();
                 bool deleteBackup = await UpdateHelper.DeleteRemnants();
+                AppSettings.Default.Save();
             }
         }
 
