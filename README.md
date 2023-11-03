@@ -106,6 +106,9 @@ YTR's main interface is pretty straight forward. Simply enter the URL of any vid
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 11/03/2023 v1.0.4.11
+- Fixed Bug Where Updater Was Being Deleted
+
 ### 11/03/2023 v1.0.4.10
 - Added App Dependency Update Consistency Check
 - Added Extra Error Information if Updater Cannot Be Found

@@ -110,7 +110,7 @@ namespace YTR_Updater
             marquee.Text = "Cleaning Up Files";
             marquee.Properties.Stopped = false;
             progress.Position = 0;
-            ProcessResult clean = await Updater.CleanBaseDirectory(reportProgress);
+            ProcessResult clean = await Updater.CleanBaseDirectory(reportProgress, updateUpdater);
             progress.Position = 0;
             marquee.Text = "";
             marquee.Properties.Stopped = true;

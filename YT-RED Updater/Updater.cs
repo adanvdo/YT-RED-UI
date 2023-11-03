@@ -167,7 +167,7 @@ namespace YTR_Updater
             return result;
         }
 
-        public static async Task<ProcessResult> CleanBaseDirectory(Action<int> reportProgress)
+        public static async Task<ProcessResult> CleanBaseDirectory(Action<int> reportProgress, bool newUpdater = false)
         {
             ProcessResult result = new ProcessResult();
             try
@@ -185,6 +185,7 @@ namespace YTR_Updater
                             && !f.FullName.Contains(@"\Updates\")
                             && f.Directory.Name != "Backup"
                             && !f.FullName.Contains(@"\Backup\")
+                            && (newUpdater || (!newUpdater && f.Name != "YTR_Updater.exe"))
                         )
                         .ToList();
 
