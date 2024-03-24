@@ -453,7 +453,7 @@ namespace YTR.Utils
                 }
                 else if (vCodec != null)
                 {
-                    parameters.Add(new Classes.FFmpegParam(Classes.ParamType.VideoOutFormat, $"-c:v {vCodec.Encoder}"));                    
+                    parameters.Add(new Classes.FFmpegParam(Classes.ParamType.VideoOutFormat, $"-c:v {vCodec.Encoder}"));
                 }
 
                 if (vFormat != VideoFormat.GIF)

@@ -190,7 +190,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\local-packages\Xabe.FFMpeg\Xabe.FFmpeg.dll</HintPath>
     </Reference>
-    <Reference Include="YoutubeDLSharp, Version=0.4.2.22202, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="YoutubeDLSharp, Version=0.4.2.2375, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\local-packages\YoutubeDLSharp\lib\net48\YoutubeDLSharp.dll</HintPath>
     </Reference>

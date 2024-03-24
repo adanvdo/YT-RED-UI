@@ -182,24 +182,7 @@ namespace YTR
                 if (Clipboard.ContainsText())
                     copiedText = Clipboard.GetText();
                 if(!string.IsNullOrEmpty(tempText))
-                    Clipboard.SetText(tempText);
-
-                var check = HtmlUtil.CheckUrl(copiedText);
-                if (check == DownloadType.Unknown && AppSettings.Default.General.ShowHostWarning)
-                {
-                    DialogResult res = MsgBox.ShowUrlCheckWarning("The URL entered is not from a supported host. Downloads from this URL may fail or result in errors.\n\nContinue?", "Unrecognized URL", Buttons.YesNo, YTR.Controls.Icon.Warning, FormStartPosition.CenterParent);
-                    if (res == DialogResult.No)
-                        return;
-                }
-                else if(check == DownloadType.YouTube)
-                {
-                    YoutubeLink link = VideoUtil.ConvertToYouTubeLink(copiedText);
-                    if (link.Type == YoutubeLinkType.Playlist)
-                    {
-                        MsgBox.Show("Quick Download does not support Youtube Playlists", "Unsupported", Buttons.OK, YTR.Controls.Icon.Exclamation, FormStartPosition.CenterScreen, true);
-                        return;
-                    }
-                }
+                    Clipboard.SetText(tempText);              
 
                 try
                 {

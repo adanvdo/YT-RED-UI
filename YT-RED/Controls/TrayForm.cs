@@ -174,6 +174,7 @@ namespace YTR.Controls
             this.Locked = true;
             this.txtUrl.Enabled = false;
             this.progressPanel.Visible = true;
+            YoutubeLink convertedLink = null;
             progressMarquee.Text = "Starting Download Process..";
             progressMarquee.Show();
             if (hotkeyTriggered)
@@ -195,8 +196,8 @@ namespace YTR.Controls
             }
             if(currentDownload == DownloadType.YouTube)
             {
-                YoutubeLink link = VideoUtil.ConvertToYouTubeLink(txtUrl.Text);
-                if (link.Type == YoutubeLinkType.Playlist)
+                convertedLink = VideoUtil.ConvertToYouTubeLink(txtUrl.Text);
+                if (convertedLink.Type == YoutubeLinkType.Playlist)
                 {
                     DialogResult res = MsgBox.Show("Quick Download does not support Youtube Playlists", "Unsupported", Buttons.OK,YTR.Controls.Icon.Exclamation, FormStartPosition.CenterScreen, true);
                     if(res != DialogResult.None)
@@ -213,10 +214,10 @@ namespace YTR.Controls
             string useFormatString = "bestvideo{0}{1}+bestaudio/best{0}{1}";
             string finalFormatString = String.Format(useFormatString,
                 AppSettings.Default.General.MaxResolutionValue > 0 ? $"[height<={AppSettings.Default.General.MaxResolutionValue}]" : "",
-                AppSettings.Default.General.MaxFilesizeBest > 0 ? $"[filesize<={AppSettings.Default.General.MaxFilesizeBest}M]" : "");       
+                AppSettings.Default.General.MaxFilesizeBest > 0 ? $"[filesize<={AppSettings.Default.General.MaxFilesizeBest}M]" : "");
 
-            RunResult<string> result = null;
-            var convertedLink = VideoUtil.ConvertToYouTubeLink(txtUrl.Text);
+            RunResult<string> result;
+            convertedLink ??= VideoUtil.ConvertToYouTubeLink(txtUrl.Text);
             string url = convertedLink != null ? convertedLink.Url : txtUrl.Text;
 
             var pendingDL = new PendingDownload()
