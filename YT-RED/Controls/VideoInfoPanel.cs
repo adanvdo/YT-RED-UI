@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using YoutubeDLSharp.Metadata;
+using YTR.Classes;
 
 namespace YTR.Controls
 {
@@ -38,9 +39,14 @@ namespace YTR.Controls
             InitializeComponent();
         }
 
-        public void ShowCropButton(bool show)
+        public void QualifyCropButton(bool show)
         {
-            btnCropMedia.Visible = peThumbnail.Image != null && useMediaSize.Width > 0 && useMediaSize.Height > 0 && show;
+            if (currentImage != null && useMediaSize.Width > 0 && useMediaSize.Height > 0 && show)
+            {
+                AspectRatio videoAR = AspectRatio.FromDimensions(useMediaSize);
+                AspectRatio thumbAR = AspectRatio.FromDimensions(currentImage.Width, currentImage.Height);
+                btnCropMedia.Visible = peThumbnail.Image != null && videoAR.ToDecimal() == thumbAR.ToDecimal();
+            }
         }
 
         public void Clear()
@@ -75,7 +81,7 @@ namespace YTR.Controls
 
                 if(videoData.Thumbnails != null && videoData.Thumbnails.Length > 0)
                 {
-                    var supportedImage = videoData.Thumbnails.OrderByDescending(tn => tn.Height * tn.Width).FirstOrDefault(tn => !tn.Url.ToLower().EndsWith(".webp"));
+                    var supportedImage = videoData.Thumbnails.OrderByDescending(tn => tn.Preference).FirstOrDefault(tn => !tn.Url.ToLower().EndsWith(".webp"));
                     if (supportedImage != null)
                     {
                         Stream thumbnailStream = await Utils.WebUtil.GetStreamFromUrl(supportedImage.Url);

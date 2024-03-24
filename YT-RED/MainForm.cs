@@ -1688,12 +1688,12 @@ namespace YTR
                 if (fd.Width != null && fd.Height != null)
                 {
                     videoInfoPanel.UseMediaSize = new Size((int)fd.Width, (int)fd.Height);
-                    videoInfoPanel.ShowCropButton(true);
+                    videoInfoPanel.QualifyCropButton(true);
                 }
                 else
                 {
                     videoInfoPanel.UseMediaSize = new Size(0, 0);
-                    videoInfoPanel.ShowCropButton(false);
+                    videoInfoPanel.QualifyCropButton(false);
                 }
             }
             else if (fd.Type == Classes.StreamType.Audio)
@@ -1867,12 +1867,12 @@ namespace YTR
                     if (cpMainControlPanel.CurrentFormatPair.Width != null && cpMainControlPanel.CurrentFormatPair.Height != null)
                     {
                         videoInfoPanel.UseMediaSize = new Size((int)cpMainControlPanel.CurrentFormatPair.Width, (int)cpMainControlPanel.CurrentFormatPair.Height);
-                        videoInfoPanel.ShowCropButton(true);
+                        videoInfoPanel.QualifyCropButton(true);
                     }
                     else
                     {
                         videoInfoPanel.UseMediaSize = new Size(0, 0);
-                        videoInfoPanel.ShowCropButton(false);
+                        videoInfoPanel.QualifyCropButton(false);
                     }
                 }
 
@@ -2112,7 +2112,7 @@ namespace YTR
 
         private void gvFormats_RowCountChanged(object sender, EventArgs e)
         {
-            videoInfoPanel.ShowCropButton(
+            videoInfoPanel.QualifyCropButton(
                 (gvFormats.RowCount == 0 && cpMainControlPanel.CurrentFormatPair == null)
                 || (gvFormats.RowCount > 0 && cpMainControlPanel.CurrentFormatPair != null
                 && (cpMainControlPanel.CurrentFormatPair.Type == Classes.StreamType.Video || cpMainControlPanel.CurrentFormatPair.Type == Classes.StreamType.AudioAndVideo)));
