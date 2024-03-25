@@ -1,24 +1,52 @@
-﻿using DevExpress.XtraEditors;
-using DevExpress.XtraRichEdit.API.Native;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using YoutubeDLSharp.Metadata;
+using YTR.Classes;
 
-namespace YT_RED.Controls
+namespace YTR.Controls
 {
     public partial class VideoInfoPanel : DevExpress.XtraEditors.XtraUserControl
     {
+        [Browsable(true)]
+        public event EventHandler Crop_Click;
+
+        public string Title
+        {
+            get { return txtTitle.Text; }
+        }
+
+        private Image currentImage;
+        public Image CurrentImage
+        {
+            get { return currentImage; }
+        }
+
+        private Size useMediaSize;
+        public Size UseMediaSize
+        {
+            get { return useMediaSize; }
+            set { useMediaSize = value; }
+        }
+
         public VideoInfoPanel()
         {
             InitializeComponent();
+        }
+
+        public void QualifyCropButton(bool show)
+        {
+            if (currentImage != null && useMediaSize.Width > 0 && useMediaSize.Height > 0 && show)
+            {
+                AspectRatio videoAR = AspectRatio.FromDimensions(useMediaSize);
+                AspectRatio thumbAR = AspectRatio.FromDimensions(currentImage.Width, currentImage.Height);
+                btnCropMedia.Visible = peThumbnail.Image != null && videoAR.ToDecimal() == thumbAR.ToDecimal();
+            }
         }
 
         public void Clear()
@@ -26,6 +54,10 @@ namespace YT_RED.Controls
             var old = peThumbnail.Image;
             peThumbnail.Image = null;
             if (old != null) old.Dispose();
+            btnCropMedia.Visible = false;
+            if(currentImage != null)
+                currentImage.Dispose();
+            currentImage = null;
             clearText();
         }
 
@@ -49,11 +81,13 @@ namespace YT_RED.Controls
 
                 if(videoData.Thumbnails != null && videoData.Thumbnails.Length > 0)
                 {
-                    var supportedImage = videoData.Thumbnails.FirstOrDefault(tn => !tn.Url.ToLower().EndsWith(".webp"));
+                    var supportedImage = videoData.Thumbnails.OrderByDescending(tn => tn.Preference).FirstOrDefault(tn => !tn.Url.ToLower().EndsWith(".webp"));
                     if (supportedImage != null)
                     {
                         Stream thumbnailStream = await Utils.WebUtil.GetStreamFromUrl(supportedImage.Url);
-                        peThumbnail.Image = Image.FromStream(thumbnailStream, false, true);
+                        currentImage = Image.FromStream(thumbnailStream, false, true);
+                        useMediaSize = currentImage.Size;
+                        peThumbnail.Image = currentImage;
                     }
                 }
             }
@@ -66,8 +100,10 @@ namespace YT_RED.Controls
             txtDescription.Lines = new string[] { };
         }
 
-        private void peThumbnail_LoadCompleted(object sender, EventArgs e)
+        private void btnCropMedia_Click(object sender, EventArgs e)
         {
+            if(Crop_Click != null)
+                Crop_Click(sender, e);
         }
     }
 }

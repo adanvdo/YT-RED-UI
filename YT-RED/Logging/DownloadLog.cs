@@ -1,15 +1,18 @@
 ﻿using System;
 using System.IO;
-using YT_RED.Classes;
+using YTR.Classes;
 using Newtonsoft.Json;
-using YT_RED.Settings;
+using YTR.Settings;
+using System.Runtime.CompilerServices;
 
-namespace YT_RED.Logging
+namespace YTR.Logging
 {
     public class DownloadLog
     {
         [JsonProperty("url")]
         public string Url { get; set; }
+        [JsonProperty("title")]
+        public string Title { get; set; } = "";
         [JsonProperty("in_subfolder")]
         public bool InSubFolder { get; set; } = false;
         [JsonProperty("playlist_title")]
@@ -19,7 +22,7 @@ namespace YT_RED.Logging
         [JsonProperty("dl_type")]
         public DownloadType DownloadType { get; set; }
         [JsonProperty("type")]
-        public StreamType Type { get; set; }
+        public StreamType StreamType { get; set; }
         [JsonProperty("downloaded")]
         public DateTime Downloaded { get; set; }
         [JsonProperty("location")]
@@ -66,10 +69,14 @@ namespace YT_RED.Logging
         { }
 
         public DownloadLog(string url, DownloadType dlType, StreamType type, DateTime downloaded, string location, PendingDownload pendingDownload = null)
+            : this(url, "", dlType, type, downloaded, location, pendingDownload) { }
+
+        public DownloadLog(string url, string title, DownloadType dlType, StreamType type, DateTime downloaded, string location, PendingDownload pendingDownload = null)
         {
             Url = url;
+            Title = title;
             DownloadType = dlType;
-            Type = type;
+            StreamType = type;
             Downloaded = downloaded;
             DownloadLocation = location; 
             TimeLogged = DateTime.Now;
@@ -84,17 +91,5 @@ namespace YT_RED.Logging
             }
             SegmentMode = AppSettings.Default.Layout.SegmentControlMode;
         }
-    }
-
-    public enum DownloadType
-    {
-        YouTube = 0,
-        Reddit = 1,
-        Twitter = 2,
-        Vimeo = 3,
-        Instagram = 4,
-        Twitch = 5,
-        Playlist = 6,
-        Unknown = 7
     }
 }

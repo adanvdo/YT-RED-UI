@@ -2,7 +2,7 @@
 using Microsoft.VisualBasic.ApplicationServices;
 using System.Windows.Forms;
 
-namespace YT_RED
+namespace YTR
 {
     public class ApplicationController : WindowsFormsApplicationBase
     {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Xabe.FFmpeg;
 
-namespace YT_RED.Classes
+namespace YTR.Classes
 {
     public class MediaStream
     {
@@ -40,14 +40,5 @@ namespace YT_RED.Classes
         public MediaStream()
         {
         }
-    }
-
-    public enum StreamType
-    {
-        Video = 0,
-        Audio = 1,
-        AudioAndVideo = 3,
-        File = 4,
-        Unknown = 5
-    }
+    }    
 }

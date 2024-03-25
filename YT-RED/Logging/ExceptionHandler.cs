@@ -1,17 +1,16 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
-using YT_RED.Settings;
+using YTR.Settings;
 
-namespace YT_RED.Logging
+namespace YTR.Logging
 {
     public static class ExceptionHandler
     {
-        public static bool LogFFmpegException(Exception exception, bool showDialog = true)
+        public static bool LogFFmpegException(Exception exception, bool showDialog = true, string videoUrl = "", string audioUrl = "")
         {
-            return LogException(exception, showDialog, true);
+            return LogException(exception, showDialog, true, videoUrl, audioUrl);
         }
-
 
         public static bool LogException(Exception exception, string videoUrl, string audioUrl = null, bool ffmpeg = false)
         {
@@ -60,7 +59,7 @@ namespace YT_RED.Logging
                     }
                     else
                     {
-                        using (YT_RED.Controls.YTRErrorMessageBox errorBox = new Controls.YTRErrorMessageBox(exception))
+                        using (YTR.Controls.YTRErrorMessageBox errorBox = new Controls.YTRErrorMessageBox(exception))
                         {
                             errorBox.ShowDialog();
                         }
@@ -71,7 +70,7 @@ namespace YT_RED.Logging
             }
             catch (Exception ex)
             {
-                using (YT_RED.Controls.YTRErrorMessageBox errorBox = new Controls.YTRErrorMessageBox(exception))
+                using (YTR.Controls.YTRErrorMessageBox errorBox = new Controls.YTRErrorMessageBox(exception))
                 {
                     errorBox.ShowDialog();
                 }

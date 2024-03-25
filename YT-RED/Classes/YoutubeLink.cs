@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using YT_RED.Utils;
+using YTR.Utils;
 
-namespace YT_RED.Classes
+namespace YTR.Classes
 {
     public class YoutubeLink
     {

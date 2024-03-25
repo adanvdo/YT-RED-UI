@@ -5,32 +5,16 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using YT_RED.Settings;
-using DevExpress.XtraGrid.Views.Grid.ViewInfo;
-using YT_RED.Logging;
-using YT_RED.Classes;
-using DevExpress.XtraEditors;
+using YTR.Classes;
+using YTR.Settings;
 
-namespace YT_RED.Controls
+namespace YTR.Controls
 {
     public partial class ControlPanel : DevExpress.XtraEditors.XtraUserControl
     {
-        private string formatWarning = "YT-RED is currently set to Always Convert to your\nPreferred Video and Audio Format.\nThis can be changed in Advanced Settings";
+        bool designMode = (LicenseManager.UsageMode == LicenseUsageMode.Designtime);
+        private string formatWarning = "YTR is currently set to Always Convert to your\nPreferred Video and Audio Format.\nThis can be changed in Advanced Settings";
         private string gifWarning = "GIF Conversion has the following limitations\nMax Size: 600px\nMax Frames: 300\nMax Duration: 60 Seconds\nFramerate is adjusted to meet this criteria";
-
-        [Browsable(false)]
-        public DownloadLog TargetLog
-        {
-            get
-            {
-                if (selectedHistoryIndex >= 0)
-                {
-                    var log = gvHistory.GetRow(selectedHistoryIndex) as DownloadLog;
-                    return log;
-                }
-                return null;
-            }
-        }
 
         [Browsable(false)]
         public bool PostProcessingEnabled
@@ -177,6 +161,73 @@ namespace YT_RED.Controls
 
             lblSelectionText.Refresh();
             formatChanged();
+            setProcessingLimits();
+        }
+
+        public void SetProcessingLimits()
+        {
+            this.setProcessingLimits();
+        }
+
+        private void setProcessingLimits()
+        {
+            if (currentFormatPair == null || !currentFormatPair.IsValid())
+                return;
+
+            if(currentFormatPair.Type == StreamType.Video || currentFormatPair.Type == StreamType.AudioAndVideo)
+            {
+                if(CropEnabled)
+                {
+                    if (currentFormatPair.VideoFormat.Height != null && (currentFormatPair.VideoFormat.Height - TotalVerticalCrop) < 50)
+                    {
+                        int acceptableCrop = (int)currentFormatPair.VideoFormat.Height - 50;
+                        if(Convert.ToInt32(CropTop) > 0 || Convert.ToInt32(CropBottom) > 0)
+                        {
+                            if(Convert.ToInt32(CropTop) > Convert.ToInt32(CropBottom))
+                            {
+                                CropTop = (acceptableCrop - Convert.ToInt32(CropBottom)).ToString();
+                            }
+                            else
+                            {
+                                CropBottom = (acceptableCrop - Convert.ToInt32(CropTop)).ToString();
+                            }
+                        }
+                    }
+
+                    if(currentFormatPair.VideoFormat.Width != null && (currentFormatPair.VideoFormat.Width - TotalHorizontalCrop) < 50)
+                    {
+                        int acceptableCrop = (int)currentFormatPair.VideoFormat.Width - 50;
+                        if (Convert.ToInt32(CropLeft) > 0 || Convert.ToInt32(CropRight) > 0)
+                        {
+                            if (Convert.ToInt32(CropLeft) > Convert.ToInt32(CropRight))
+                            {
+                                CropLeft = (acceptableCrop - Convert.ToInt32(CropRight)).ToString();
+                            }
+                            else
+                            {
+                                CropRight = (acceptableCrop - Convert.ToInt32(CropLeft)).ToString();
+                            }
+                        }
+                    }
+                }
+            }
+
+            if(SegmentEnabled)
+            {
+                TimeSpan? dur = currentFormatPair.Duration;
+
+                if(dur != null && SegmentDuration.TotalSeconds > 0)
+                {
+                    if(AppSettings.Default.Layout.SegmentControlMode == SegmentControlMode.EndTime && SegmentDuration > dur)
+                    {
+                        SegmentDuration = (TimeSpan)dur;
+                    }
+                    else if(AppSettings.Default.Layout.SegmentControlMode == SegmentControlMode.Duration && SegmentStart + SegmentDuration > dur)
+                    {
+                        SegmentDuration = (TimeSpan)dur - SegmentStart;
+                    }
+                }
+            }
         }
 
         [Browsable(false)]
@@ -320,6 +371,16 @@ namespace YT_RED.Controls
             set { txtCropRight.Text = value; }
         }
 
+        public int TotalVerticalCrop
+        {
+            get { return Convert.ToInt32(txtCropTop.Text) + Convert.ToInt32(txtCropBottom.Text); }
+        }
+
+        public int TotalHorizontalCrop
+        {
+            get { return Convert.ToInt32(txtCropLeft.Text) + Convert.ToInt32(txtCropRight.Text); }
+        }
+
         public Size TotalControlSize
         {
             get
@@ -330,8 +391,7 @@ namespace YT_RED.Controls
                     + (gcConvert.Visible ? gcConvert.Height : 0)
                     + (gcDownloadLimits.Visible ? gcDownloadLimits.Height : 0)
                     + gcDLButtons.Height
-                    + pnlProgressPanel.Height
-                    + gcHistory.MinimumSize.Height;
+                    + pnlProgressPanel.Height;
                 return new Size(this.Size.Width, totalMinHeight);
             }
         }
@@ -361,7 +421,7 @@ namespace YT_RED.Controls
             {
                 VideoFormat? v = value;
                 if (v != null)
-                    cbVideoFormat.SelectedIndex = cbVideoFormat.Properties.Items.IndexOf(value.ToString());
+                    cbVideoFormat.SelectedIndex = value == VideoFormat.UNSPECIFIED ? 0 : cbVideoFormat.Properties.Items.IndexOf(value.ToString());
             }
         }
 
@@ -384,7 +444,7 @@ namespace YT_RED.Controls
             {
                 AudioFormat? v = value;
                 if (v != null)
-                    cbAudioFormat.SelectedIndex = cbAudioFormat.Properties.Items.IndexOf(value.ToString());
+                    cbAudioFormat.SelectedIndex = value == AudioFormat.UNSPECIFIED ? 0 : cbAudioFormat.Properties.Items.IndexOf(value.ToString());
             }
         }
 
@@ -589,10 +649,13 @@ namespace YT_RED.Controls
         {
             InitializeComponent();
             toggleForeColor = toggleSegment.ForeColor;
-            if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
+            if (!designMode)
             {
-                this.intendedAudioFormat = AppSettings.Default.Advanced.PreferredAudioFormat;
-                this.intendedVideoFormat = AppSettings.Default.Advanced.PreferredVideoFormat;
+                if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
+                {
+                    this.intendedAudioFormat = AppSettings.Default.Advanced.PreferredAudioFormat;
+                    this.intendedVideoFormat = AppSettings.Default.Advanced.PreferredVideoFormat;
+                }
             }
             InitControls();
         }
@@ -608,30 +671,33 @@ namespace YT_RED.Controls
 
         public void InitControls()
         {
-            videoFormats = new List<string>();
-            List<string> vFormats = new List<string>() { "" };
-            vFormats.AddRange(Enum.GetNames(typeof(VideoFormat)).Cast<string>());
-            videoFormats.AddRange(vFormats.Where(f => f != "UNSPECIFIED"));// && f != "GIF"));
-            cbVideoFormat.Properties.Items.AddRange(videoFormats);
-            cbVideoFormat.SelectedIndex = 0;
-            audioFormats = new List<string>();
-            List<string> aFormats = new List<string>() { "" };
-            aFormats.AddRange(Enum.GetNames(typeof(AudioFormat)).Cast<string>());
-            audioFormats.AddRange(aFormats.Where(f => f != "UNSPECIFIED"));
-            cbAudioFormat.Properties.Items.AddRange(audioFormats);
-            cbAudioFormat.SelectedIndex = 0;
-            cbMaxRes.Properties.Items.AddRange(Utils.VideoUtil.ResolutionList);
-            cbMaxRes.SelectedIndex = 4;
-            txtMaxFilesize.Text = "0";
-            lblDuration.Text = AppSettings.Default.Layout.SegmentControlMode == SegmentControlMode.Duration ? "Duration" : "End";
-            inInit = false;
-            this.controlsUpdated();
+            if (!designMode)
+            {
+                videoFormats = new List<string>();
+                List<string> vFormats = new List<string>() { "" };
+                vFormats.AddRange(Enum.GetNames(typeof(VideoFormat)).Cast<string>());
+                videoFormats.AddRange(vFormats.Where(f => f != "UNSPECIFIED"));// && f != "GIF"));
+                cbVideoFormat.Properties.Items.AddRange(videoFormats);
+                cbVideoFormat.SelectedIndex = 0;
+                audioFormats = new List<string>();
+                List<string> aFormats = new List<string>() { "" };
+                aFormats.AddRange(Enum.GetNames(typeof(AudioFormat)).Cast<string>());
+                audioFormats.AddRange(aFormats.Where(f => f != "UNSPECIFIED"));
+                cbAudioFormat.Properties.Items.AddRange(audioFormats);
+                cbAudioFormat.SelectedIndex = 0;
+                cbMaxRes.Properties.Items.AddRange(Utils.VideoUtil.ResolutionList);
+                cbMaxRes.SelectedIndex = 4;
+                txtMaxFilesize.Text = "0";
+                lblDuration.Text = AppSettings.Default.Layout.SegmentControlMode == SegmentControlMode.Duration ? "Duration" : "End";
+                inInit = false;
+                this.controlsUpdated();
+            }
         }
 
         private List<string> videoFormats;
         private List<string> audioFormats;
 
-        public void ResetControls(bool forFormatList = false)
+        public void ResetControls(bool forFormatList = false, bool validUrl = true)
         {
             toggleSegment.IsOn = false;
             tsStart.TimeSpan = TimeSpan.Zero;
@@ -661,7 +727,9 @@ namespace YT_RED.Controls
             }
             btnSelectionDL.Text = "DOWNLOAD SELECTED FORMAT    ";
             btnDownloadAudio.Text = "DOWNLOAD AUDIO       ";
+            btnDownloadAudio.Enabled = validUrl;
             btnDownloadBest.Text = "DOWNLOAD BEST [audio+video]      ";
+            btnDownloadBest.Enabled = validUrl;
             HideDownloadLocation();
             if (currentPlaylistItems != null)
             {
@@ -1125,23 +1193,7 @@ namespace YT_RED.Controls
             }
             checkConversionOptions();
         }
-
-        private void gvHistory_DoubleClick(object sender, EventArgs e)
-        {
-            try
-            {
-                Logging.DownloadLog row = gvHistory.GetRow(gvHistory.FocusedRowHandle) as Logging.DownloadLog;
-                if (row != null && row.FileExists)
-                {
-                    openFileLocation(row.DownloadLocation);
-                }
-            }
-            catch (Exception ex)
-            {
-                Logging.ExceptionHandler.LogException(ex);
-            }
-        }
-
+        
         private void btnOpenDL_Click(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(btnOpenDL.Text) && System.IO.File.Exists(btnOpenDL.Text))
@@ -1155,59 +1207,7 @@ namespace YT_RED.Controls
             string argument = "/select, \"" + path + "\"";
 
             System.Diagnostics.Process.Start("explorer.exe", argument);
-        }
-
-        private void historyTooltip_GetActiveObjectInfo(object sender, DevExpress.Utils.ToolTipControllerGetActiveObjectInfoEventArgs e)
-        {
-            GridHitInfo hitInfo = gvHistory.CalcHitInfo(e.ControlMousePosition);
-            if (hitInfo != null && hitInfo.InRowCell)
-            {
-                object o;
-                if (hitInfo.Column.FieldName == "FileExists")
-                {
-                    bool fileExits = Convert.ToBoolean(gvHistory.GetRowCellValue(hitInfo.RowHandle, "FileExists"));
-                    o = $"{hitInfo.HitTest}{hitInfo.RowHandle}";
-                    e.Info = new DevExpress.Utils.ToolTipControlInfo(o, fileExits ? "File Exists" : "File Not Found");
-                }
-                if(hitInfo.Column.FieldName == "AdditionalSettings")
-                {
-                    string details = "";
-                    o = $"{hitInfo.HitTest}{hitInfo.RowHandle}";
-                    var row = gvHistory.GetRow(hitInfo.RowHandle) as DownloadLog;                    
-                    if (!string.IsNullOrEmpty(row.PlaylistUrl))
-                    {
-                        details += $"Playlist: {row.PlaylistTitle}\nPlaylist URL: {row.PlaylistUrl}\n";
-                    }
-                    
-                    details += $"URL: {row.Url}\nFormat: {row.Format}\n";                    
-
-                    if (row.AdditionalSettings)
-                    {
-                        if (row.Start != null && row.Duration != null)
-                        {
-                            details += $"Segment Start: {(TimeSpan)row.Start} - Duration: {(TimeSpan)row.Duration}\n";
-                        }
-                        if (row.Crops != null && row.Crops.Length > 0)
-                        {
-                            details += $"Crop: Top ({row.Crops[0]}) Bottom ({row.Crops[1]}) Left ({row.Crops[2]}) Right ({row.Crops[3]})\n";
-                        }
-                        if (row.VideoConversionFormat != null)
-                        {
-                            details += $"Convert Video: {row.VideoConversionFormat}\n";
-                        }
-                        if (row.AudioConversionFormat != null)
-                        {
-                            details += $"Convert Audio: {row.AudioConversionFormat}\n";
-                        }
-                        if(row.MaxResolution != null)
-                        {
-                            details += $"Max Resolution: {row.MaxResolution.ToFriendlyString(false, false)}\n";
-                        }
-                    }
-                    e.Info = new DevExpress.Utils.ToolTipControlInfo(o, details);
-                }
-            }
-        }
+        }       
 
         private void btnCancelProcess_MouseMove(object sender, MouseEventArgs e)
         {
@@ -1219,75 +1219,7 @@ namespace YT_RED.Controls
         {
             if (Cancel_MouseLeave != null)
                 Cancel_MouseLeave(sender, e);
-        }
-
-        private int selectedHistoryIndex = -1;
-        private void gcHistory_MouseClick(object sender, MouseEventArgs e)
-        {
-            if(e.Button == MouseButtons.Right)
-            {
-                GridHitInfo hitInfo = gvHistory.CalcHitInfo(e.Location);
-                if (hitInfo != null && hitInfo.InDataRow) {
-                    selectedHistoryIndex = hitInfo.RowHandle;
-                    historyPopup.ShowPopup(Control.MousePosition);
-                }
-            }
-        }
-
-        private void historyPopup_CloseUp(object sender, EventArgs e)
-        {
-        }
-
-        private void bbiReDownload_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            if(ReDownload_Click != null) ReDownload_Click(sender, e);
-        }
-
-        private void bbiNewDownload_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            if(NewDownload_Click != null) NewDownload_Click(sender, e);
-        }
-
-        public void PopulateHistoryColumns()
-        {
-            gvHistory.Columns.Clear();
-            gvHistory.PopulateColumns();
-            gvHistory.Columns["FileExists"].VisibleIndex = 0;
-            gvHistory.Columns["DownloadType"].VisibleIndex = 1;
-            gvHistory.Columns["DownloadLocation"].VisibleIndex = 2;
-            gvHistory.Columns["AdditionalSettings"].VisibleIndex = 3;
-            gvHistory.Columns["AdditionalSettings"].MaxWidth = 25;
-            gvHistory.Columns["AdditionalSettings"].ColumnEdit = repPostProcessed;
-            gvHistory.Columns["AdditionalSettings"].OptionsColumn.ShowCaption = false;
-            gvHistory.Columns["FileExists"].ColumnEdit = repFileExists;
-            gvHistory.Columns["FileExists"].FieldName = "FileExists";
-            gvHistory.Columns["FileExists"].OptionsColumn.ShowCaption = false;
-            gvHistory.Columns["FileExists"].MinWidth = 5;
-            gvHistory.Columns["FileExists"].MaxWidth = 25;
-            gvHistory.Columns["FileExists"].Width = 10;
-            gvHistory.Columns["FileExists"].ToolTip = "File Exists?";
-            gvHistory.Columns["DownloadType"].Width = 10;
-            gvHistory.Columns["DownloadType"].MaxWidth = 75;
-            gvHistory.Columns["DownloadType"].Caption = "Type";
-            gvHistory.Columns["Url"].Visible = false;
-            gvHistory.Columns["InSubFolder"].Visible = false;
-            gvHistory.Columns["PlaylistTitle"].Visible = false;
-            gvHistory.Columns["PlaylistUrl"].Visible = false;
-            gvHistory.Columns["TimeLogged"].Visible = false;
-            gvHistory.Columns["Type"].Visible = false;
-            gvHistory.Columns["Downloaded"].Visible = false;
-            gvHistory.Columns["Format"].Visible = false;
-            gvHistory.Columns["FormatPair"].Visible = false;
-            gvHistory.Columns["Start"].Visible = false;
-            gvHistory.Columns["Duration"].Visible = false;
-            gvHistory.Columns["Crops"].Visible = false;
-            gvHistory.Columns["VideoConversionFormat"].Visible = false;
-            gvHistory.Columns["AudioConversionFormat"].Visible = false;
-            gvHistory.Columns["MaxResolution"].Visible = false;
-            gvHistory.Columns["MaxFileSize"].Visible = false;
-            gvHistory.Columns["SegmentMode"].Visible = false;
-            gvHistory.RefreshData();
-        }
+        }        
 
         private void hlblOpenSettings_Click(object sender, EventArgs e)
         {

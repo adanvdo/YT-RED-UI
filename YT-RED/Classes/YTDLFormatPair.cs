@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace YT_RED.Classes
+namespace YTR.Classes
 {
     public class YTDLFormatPair
     {
@@ -35,7 +35,21 @@ namespace YT_RED.Classes
                 else this.Type = StreamType.Unknown;
             }
         }
-        
+
+        [JsonIgnore]
+        public int? Width
+        {
+            get {
+                if (this.videoFormat != null) return (int)this.videoFormat.Width;
+                else return null;
+            }
+        }
+
+        [JsonIgnore] 
+        public int? Height
+        {
+            get { return (int)this.videoFormat?.Height; }
+        }
 
         private YTDLFormatData audioFormat;
         [JsonProperty("audio_format")]
@@ -86,6 +100,17 @@ namespace YT_RED.Classes
                     return this.audioFormat.Extension;
 
                 return string.Empty;
+            }
+        }
+
+        [JsonIgnore]
+        public TimeSpan? Duration
+        {
+            get
+            {
+                if (this.videoFormat != null) return this.videoFormat.Duration;
+                else if (this.audioFormat != null) return this.audioFormat.Duration;
+                return null;
             }
         }
 

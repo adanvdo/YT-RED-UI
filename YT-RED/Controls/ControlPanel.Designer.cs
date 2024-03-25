@@ -1,4 +1,4 @@
-﻿namespace YT_RED.Controls
+﻿namespace YTR.Controls
 {
     partial class ControlPanel
     {
@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions1 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions2 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
             DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions buttonImageOptions3 = new DevExpress.XtraEditors.ButtonsPanelControl.ButtonImageOptions();
@@ -80,19 +79,6 @@
             this.lblLastDL = new DevExpress.XtraEditors.LabelControl();
             this.pbProgress = new DevExpress.XtraEditors.ProgressBarControl();
             this.pbListProgress = new DevExpress.XtraEditors.ProgressBarControl();
-            this.gcHistory = new DevExpress.XtraGrid.GridControl();
-            this.gvHistory = new DevExpress.XtraGrid.Views.Grid.GridView();
-            this.historyBarManager = new DevExpress.XtraBars.BarManager(this.components);
-            this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
-            this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
-            this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
-            this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
-            this.bbiReDownload = new DevExpress.XtraBars.BarButtonItem();
-            this.bbiNewDownload = new DevExpress.XtraBars.BarButtonItem();
-            this.repFileExists = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
-            this.repPostProcessed = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
-            this.historyTooltip = new DevExpress.Utils.ToolTipController(this.components);
-            this.historyPopup = new DevExpress.XtraBars.PopupMenu(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pnlOptionPanel)).BeginInit();
             this.pnlOptionPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gcDLButtons)).BeginInit();
@@ -131,12 +117,6 @@
             this.pnlProgressPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbProgress.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbListProgress.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gcHistory)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gvHistory)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.historyBarManager)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repFileExists)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repPostProcessed)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.historyPopup)).BeginInit();
             this.SuspendLayout();
             // 
             // lblSelectionText
@@ -198,7 +178,7 @@
             this.btnCancelProcess.Appearance.Options.UseFont = true;
             this.btnCancelProcess.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnCancelProcess.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
-            this.btnCancelProcess.ImageOptions.SvgImage = global::YT_RED.Properties.Resources.close;
+            this.btnCancelProcess.ImageOptions.SvgImage = global::YTR.Properties.Resources.close;
             this.btnCancelProcess.ImageOptions.SvgImageSize = new System.Drawing.Size(25, 25);
             this.btnCancelProcess.Location = new System.Drawing.Point(2, 125);
             this.btnCancelProcess.Margin = new System.Windows.Forms.Padding(0);
@@ -217,8 +197,9 @@
             this.btnDownloadBest.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
             this.btnDownloadBest.Appearance.Options.UseFont = true;
             this.btnDownloadBest.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnDownloadBest.Enabled = false;
             this.btnDownloadBest.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
-            this.btnDownloadBest.ImageOptions.SvgImage = global::YT_RED.Properties.Resources.VideoSound;
+            this.btnDownloadBest.ImageOptions.SvgImage = global::YTR.Properties.Resources.VideoSound;
             this.btnDownloadBest.ImageOptions.SvgImageSize = new System.Drawing.Size(25, 25);
             this.btnDownloadBest.Location = new System.Drawing.Point(2, 93);
             this.btnDownloadBest.Margin = new System.Windows.Forms.Padding(0);
@@ -234,8 +215,9 @@
             this.btnDownloadAudio.Appearance.Font = new System.Drawing.Font("Tahoma", 10F);
             this.btnDownloadAudio.Appearance.Options.UseFont = true;
             this.btnDownloadAudio.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnDownloadAudio.Enabled = false;
             this.btnDownloadAudio.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
-            this.btnDownloadAudio.ImageOptions.SvgImage = global::YT_RED.Properties.Resources.sound;
+            this.btnDownloadAudio.ImageOptions.SvgImage = global::YTR.Properties.Resources.sound;
             this.btnDownloadAudio.ImageOptions.SvgImageSize = new System.Drawing.Size(25, 25);
             this.btnDownloadAudio.Location = new System.Drawing.Point(2, 61);
             this.btnDownloadAudio.Margin = new System.Windows.Forms.Padding(0);
@@ -269,7 +251,7 @@
             this.gcDownloadLimits.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gcDownloadLimits.CaptionImageOptions.AllowGlyphSkinning = true;
             this.gcDownloadLimits.Controls.Add(this.pnlLimitPanel);
-            buttonImageOptions1.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
+            buttonImageOptions1.SvgImage = global::YTR.Properties.Resources.actions_remove;
             buttonImageOptions1.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcDownloadLimits.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
             new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions1, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
@@ -371,7 +353,7 @@
             this.gcConvert.Controls.Add(this.hlblOpenSettings);
             this.gcConvert.Controls.Add(this.lblAlwaysConvert);
             this.gcConvert.Controls.Add(this.pnlConvertPanel);
-            buttonImageOptions2.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
+            buttonImageOptions2.SvgImage = global::YTR.Properties.Resources.actions_remove;
             buttonImageOptions2.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcConvert.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
             new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions2, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
@@ -415,8 +397,8 @@
             this.lblAlwaysConvert.Padding = new System.Windows.Forms.Padding(3);
             this.lblAlwaysConvert.Size = new System.Drawing.Size(319, 45);
             this.lblAlwaysConvert.TabIndex = 0;
-            this.lblAlwaysConvert.Text = "YT-RED is currently set to Always Convert to your \r\nPreferred Video and Audio For" +
-    "mat. \r\nThis can be changed in Advanced Settings";
+            this.lblAlwaysConvert.Text = "YTR is currently set to Always Convert to your \r\nPreferred Video and Audio Format" +
+    ". \r\nThis can be changed in Advanced Settings";
             this.lblAlwaysConvert.Visible = false;
             // 
             // pnlConvertPanel
@@ -503,7 +485,7 @@
             this.gcCrop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gcCrop.CaptionImageOptions.AllowGlyphSkinning = true;
             this.gcCrop.Controls.Add(this.pnlCropPanel);
-            buttonImageOptions3.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
+            buttonImageOptions3.SvgImage = global::YTR.Properties.Resources.actions_remove;
             buttonImageOptions3.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcCrop.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
             new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions3, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, true, true, "ytSegment", -1)});
@@ -671,7 +653,7 @@
             this.gcSegments.CaptionImageOptions.AllowGlyphSkinning = true;
             this.gcSegments.Controls.Add(this.lblSegmentDisclaimer);
             this.gcSegments.Controls.Add(this.pnlSegPanel);
-            buttonImageOptions4.SvgImage = global::YT_RED.Properties.Resources.actions_remove;
+            buttonImageOptions4.SvgImage = global::YTR.Properties.Resources.actions_remove;
             buttonImageOptions4.SvgImageSize = new System.Drawing.Size(18, 18);
             this.gcSegments.CustomHeaderButtons.AddRange(new DevExpress.XtraEditors.ButtonPanel.IBaseButton[] {
             new DevExpress.XtraEditors.ButtonsPanelControl.GroupBoxButton("", false, buttonImageOptions4, DevExpress.XtraBars.Docking2010.ButtonStyle.PushButton, "", -1, true, null, true, false, true, "ytSegment", -1)});
@@ -864,149 +846,17 @@
             this.pbListProgress.Visible = false;
             this.pbListProgress.CustomDisplayText += new DevExpress.XtraEditors.Controls.CustomDisplayTextEventHandler(this.pbListProgress_CustomDisplayText);
             // 
-            // gcHistory
-            // 
-            this.gcHistory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcHistory.Location = new System.Drawing.Point(0, 829);
-            this.gcHistory.MainView = this.gvHistory;
-            this.gcHistory.MenuManager = this.historyBarManager;
-            this.gcHistory.MinimumSize = new System.Drawing.Size(0, 200);
-            this.gcHistory.Name = "gcHistory";
-            this.gcHistory.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
-            this.repFileExists,
-            this.repPostProcessed});
-            this.gcHistory.Size = new System.Drawing.Size(323, 202);
-            this.gcHistory.TabIndex = 0;
-            this.gcHistory.ToolTipController = this.historyTooltip;
-            this.gcHistory.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
-            this.gvHistory});
-            this.gcHistory.MouseClick += new System.Windows.Forms.MouseEventHandler(this.gcHistory_MouseClick);
-            // 
-            // gvHistory
-            // 
-            this.gvHistory.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFocus;
-            this.gvHistory.GridControl = this.gcHistory;
-            this.gvHistory.Name = "gvHistory";
-            this.gvHistory.OptionsBehavior.AlignGroupSummaryInGroupRow = DevExpress.Utils.DefaultBoolean.False;
-            this.gvHistory.OptionsBehavior.Editable = false;
-            this.gvHistory.OptionsCustomization.AllowColumnMoving = false;
-            this.gvHistory.OptionsCustomization.AllowGroup = false;
-            this.gvHistory.OptionsCustomization.AllowQuickHideColumns = false;
-            this.gvHistory.OptionsDetail.EnableDetailToolTip = true;
-            this.gvHistory.OptionsDetail.ShowDetailTabs = false;
-            this.gvHistory.OptionsSelection.EnableAppearanceFocusedCell = false;
-            this.gvHistory.OptionsSelection.EnableAppearanceHideSelection = false;
-            this.gvHistory.OptionsView.ShowDetailButtons = false;
-            this.gvHistory.OptionsView.ShowGroupExpandCollapseButtons = false;
-            this.gvHistory.OptionsView.ShowGroupPanel = false;
-            this.gvHistory.OptionsView.ShowIndicator = false;
-            this.gvHistory.DoubleClick += new System.EventHandler(this.gvHistory_DoubleClick);
-            // 
-            // historyBarManager
-            // 
-            this.historyBarManager.DockControls.Add(this.barDockControlTop);
-            this.historyBarManager.DockControls.Add(this.barDockControlBottom);
-            this.historyBarManager.DockControls.Add(this.barDockControlLeft);
-            this.historyBarManager.DockControls.Add(this.barDockControlRight);
-            this.historyBarManager.Form = this;
-            this.historyBarManager.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
-            this.bbiReDownload,
-            this.bbiNewDownload});
-            this.historyBarManager.MaxItemId = 2;
-            // 
-            // barDockControlTop
-            // 
-            this.barDockControlTop.CausesValidation = false;
-            this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
-            this.barDockControlTop.Manager = this.historyBarManager;
-            this.barDockControlTop.Size = new System.Drawing.Size(323, 0);
-            // 
-            // barDockControlBottom
-            // 
-            this.barDockControlBottom.CausesValidation = false;
-            this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 1031);
-            this.barDockControlBottom.Manager = this.historyBarManager;
-            this.barDockControlBottom.Size = new System.Drawing.Size(323, 0);
-            // 
-            // barDockControlLeft
-            // 
-            this.barDockControlLeft.CausesValidation = false;
-            this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
-            this.barDockControlLeft.Location = new System.Drawing.Point(0, 0);
-            this.barDockControlLeft.Manager = this.historyBarManager;
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 1031);
-            // 
-            // barDockControlRight
-            // 
-            this.barDockControlRight.CausesValidation = false;
-            this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(323, 0);
-            this.barDockControlRight.Manager = this.historyBarManager;
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 1031);
-            // 
-            // bbiReDownload
-            // 
-            this.bbiReDownload.Caption = "Download Again";
-            this.bbiReDownload.Id = 0;
-            this.bbiReDownload.Name = "bbiReDownload";
-            this.bbiReDownload.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiReDownload_ItemClick);
-            // 
-            // bbiNewDownload
-            // 
-            this.bbiNewDownload.Caption = "Use URL for New Download";
-            this.bbiNewDownload.Id = 1;
-            this.bbiNewDownload.Name = "bbiNewDownload";
-            this.bbiNewDownload.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiNewDownload_ItemClick);
-            // 
-            // repFileExists
-            // 
-            this.repFileExists.AutoHeight = false;
-            this.repFileExists.CheckBoxOptions.Style = DevExpress.XtraEditors.Controls.CheckBoxStyle.Custom;
-            this.repFileExists.ImageOptions.SvgImageChecked = global::YT_RED.Properties.Resources.actions_checkcircled;
-            this.repFileExists.ImageOptions.SvgImageSize = new System.Drawing.Size(20, 20);
-            this.repFileExists.ImageOptions.SvgImageUnchecked = global::YT_RED.Properties.Resources.security_warningcircled2;
-            this.repFileExists.Name = "repFileExists";
-            // 
-            // repPostProcessed
-            // 
-            this.repPostProcessed.AutoHeight = false;
-            this.repPostProcessed.CheckBoxOptions.Style = DevExpress.XtraEditors.Controls.CheckBoxStyle.Custom;
-            this.repPostProcessed.CheckBoxOptions.SvgImageSize = new System.Drawing.Size(20, 20);
-            this.repPostProcessed.ImageOptions.SvgImageChecked = global::YT_RED.Properties.Resources.functionsinformation;
-            this.repPostProcessed.ImageOptions.SvgImageSize = new System.Drawing.Size(20, 20);
-            this.repPostProcessed.ImageOptions.SvgImageUnchecked = global::YT_RED.Properties.Resources.about1;
-            this.repPostProcessed.Name = "repPostProcessed";
-            // 
-            // historyTooltip
-            // 
-            this.historyTooltip.GetActiveObjectInfo += new DevExpress.Utils.ToolTipControllerGetActiveObjectInfoEventHandler(this.historyTooltip_GetActiveObjectInfo);
-            // 
-            // historyPopup
-            // 
-            this.historyPopup.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.bbiReDownload),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bbiNewDownload)});
-            this.historyPopup.Manager = this.historyBarManager;
-            this.historyPopup.Name = "historyPopup";
-            this.historyPopup.CloseUp += new System.EventHandler(this.historyPopup_CloseUp);
-            // 
             // ControlPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.gcHistory);
             this.Controls.Add(this.pnlProgressPanel);
             this.Controls.Add(this.pnlOptionPanel);
             this.Controls.Add(this.lblSelectionText);
-            this.Controls.Add(this.barDockControlLeft);
-            this.Controls.Add(this.barDockControlRight);
-            this.Controls.Add(this.barDockControlBottom);
-            this.Controls.Add(this.barDockControlTop);
+            this.DoubleBuffered = true;
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "ControlPanel";
-            this.Size = new System.Drawing.Size(323, 1031);
+            this.Size = new System.Drawing.Size(323, 829);
             ((System.ComponentModel.ISupportInitialize)(this.pnlOptionPanel)).EndInit();
             this.pnlOptionPanel.ResumeLayout(false);
             this.pnlOptionPanel.PerformLayout();
@@ -1050,12 +900,6 @@
             this.pnlProgressPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbProgress.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbListProgress.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gcHistory)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gvHistory)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.historyBarManager)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repFileExists)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repPostProcessed)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.historyPopup)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1080,8 +924,6 @@
         private DevExpress.XtraEditors.PanelControl pnlProgressPanel;
         private DevExpress.XtraEditors.SimpleButton btnOpenDL;
         private DevExpress.XtraEditors.ProgressBarControl pbProgress;
-        public DevExpress.XtraGrid.GridControl gcHistory;
-        public DevExpress.XtraGrid.Views.Grid.GridView gvHistory;
         private DevExpress.XtraEditors.GroupControl gcConvert;
         private DevExpress.XtraEditors.LabelControl lblAlwaysConvert;
         private DevExpress.XtraEditors.PanelControl pnlConvertPanel;
@@ -1091,21 +933,10 @@
         private DevExpress.XtraEditors.ComboBoxEdit cbVideoFormat;
         private DevExpress.XtraEditors.ToggleSwitch toggleConvert;
         private DevExpress.XtraEditors.LabelControl lblLastDL;
-        private DevExpress.Utils.ToolTipController historyTooltip;
         public DevExpress.XtraEditors.SimpleButton btnDownloadBest;
         public DevExpress.XtraEditors.SimpleButton btnDownloadAudio;
         public DevExpress.XtraEditors.SimpleButton btnSelectionDL;
         public DevExpress.XtraEditors.SimpleButton btnCancelProcess;
-        private DevExpress.XtraBars.BarManager historyBarManager;
-        private DevExpress.XtraBars.BarDockControl barDockControlTop;
-        private DevExpress.XtraBars.BarDockControl barDockControlBottom;
-        private DevExpress.XtraBars.BarDockControl barDockControlLeft;
-        private DevExpress.XtraBars.BarDockControl barDockControlRight;
-        private DevExpress.XtraBars.PopupMenu historyPopup;
-        private DevExpress.XtraBars.BarButtonItem bbiReDownload;
-        private DevExpress.XtraBars.BarButtonItem bbiNewDownload;
-        private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repFileExists;
-        private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repPostProcessed;
         private DevExpress.XtraEditors.HyperlinkLabelControl hlblOpenSettings;
         private DevExpress.XtraEditors.ProgressBarControl pbListProgress;
         private DevExpress.XtraEditors.GroupControl gcDownloadLimits;

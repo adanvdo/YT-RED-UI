@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Reflection;
 using System.ComponentModel.DataAnnotations;
 
-namespace YT_RED.Settings
+namespace YTR.Settings
 {
     public class GeneralSettings : FeatureSettings
 	{
@@ -24,20 +24,20 @@ namespace YT_RED.Settings
 		[JsonIgnore]
 		public string ExeDirectoryPath { get; set; }
 
-		[Category("Error Logs")]
+        [Browsable(false)]
+        [JsonProperty("active_skin")]
+        public string ActiveSkin { get; set; }
+
+        [Browsable(false)]
+        [JsonProperty("skin_palette")]
+        public string SkinPalette { get; set; }
+
+        [Category("Error Logs")]
 		[DisplayName("Error Log Path")]
 		[Description("The destination folder to store error logs")]
 		[EditorAttribute(typeof(System.Windows.Forms.Design.FolderNameEditor), typeof(System.Drawing.Design.UITypeEditor))]
 		[JsonProperty("error_logs")]
 		public string ErrorLogPath { get; set; }
-
-		[Browsable(false)]
-		[JsonProperty("active_skin")]
-		public string ActiveSkin { get; set; }
-
-        [Browsable(false)]
-        [JsonProperty("skin_palette")]
-		public string SkinPalette { get; set; }
 
 		[Category("Download Restrictions")]
 		[DisplayName("Enforce Restrictions")]
@@ -86,7 +86,7 @@ namespace YT_RED.Settings
 
         [Category("Download History")]
 		[DisplayName("Enable Download History")]
-		[Description("Enable YT-RED to keep a list of downloads for quick access on the Home screen")]
+		[Description("Enable YTR to keep a list of downloads for quick access on the Home screen")]
 		[DefaultValue(true)]
 		[JsonProperty("history_enabled")]
 		public bool EnableDownloadHistory { get; set; }
@@ -101,7 +101,7 @@ namespace YT_RED.Settings
 		[Category("Downloads")]
 		[DisplayName("Auto-Open Download Location")]
 		[Description("Automatically Open Completed Downloads in File Explorer")]
-		[DefaultValue(false)]
+		[DefaultValue(true)]
 		[JsonProperty("auto_open")]
 		public bool AutomaticallyOpenDownloadLocation { get; set; }
 
@@ -143,6 +143,7 @@ namespace YT_RED.Settings
 		[Browsable(false)]
 		[JsonIgnore]
 		public string RedditMediaURLPrefix { get; set; }
+
 		#endregion
 
 		#region youtube
@@ -158,11 +159,11 @@ namespace YT_RED.Settings
 		public string YtdlpLocalVersion { get; set; }
 
 		[Browsable(false)]
-		[JsonProperty("yt-dlp_resource_url")]
+		[JsonIgnore]
 		public string YtdlpUrl { get; set; }
 
 		[Browsable(false)]
-		[JsonProperty("yt-dlp_version_url")]
+		[JsonIgnore]
 		public string YtdlpVersionUrl { get; set; }
 
 		[Browsable(false)]
@@ -170,14 +171,16 @@ namespace YT_RED.Settings
 		public string FfmpegLocalVersion { get; set; }
 
 		[Browsable(false)]
-		[JsonProperty("ffmpeg_resource_url")]
+		[JsonIgnore]
 		public string FfmpegUrl { get; set; }
 
 		[Browsable(false)]
-		[JsonProperty("ffmpeg_version_url")]
+		[JsonIgnore]
 		public string FfmpegVersionUrl { get; set; }
+        #endregion
 
-		[Browsable(false)]
+        #region Layout
+        [Browsable(false)]
 		[JsonProperty("segment_collapsed")]
 		public bool CollapseSegmentControl { get; set; }
 
@@ -192,6 +195,10 @@ namespace YT_RED.Settings
 		[Browsable(false)]
 		[JsonProperty("limits_collapsed")]
 		public bool CollapseLimitsControl { get; set; }
+
+        [Browsable(false)]
+		[JsonProperty("history_collapsed")]
+        public bool CollapseHistoryPanel { get; set; }
         #endregion
 
         public GeneralSettings()
@@ -215,7 +222,7 @@ namespace YT_RED.Settings
 			MaxFilesizeBest = 0;
 			EnableDownloadHistory = true;
 			HistoryAge = 30;
-			AutomaticallyOpenDownloadLocation = false;
+			AutomaticallyOpenDownloadLocation = true;
 			RedditSampleUrl = @"https://www.reddit.com/r/PraiseTheCameraMan/comments/sj7iwr/couldnt_be_more_perfect/";
 			RedditMediaURLPrefix = @"https://v.redd.it/";
 			YouTubeSampleUrl = @"https://www.youtube.com/watch?v=dCAORZphnlY";
@@ -224,16 +231,17 @@ namespace YT_RED.Settings
 			AudioDownloadPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
 			CreateFolderForPlaylists = true;
 			UsePreferredFormat = false;
-			YtdlpLocalVersion = "2023.7.6.0";
+			YtdlpLocalVersion = "2023.10.13";
 			YtdlpUrl = @"https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp{0}.exe";
 			YtdlpVersionUrl = "https://api.github.com/repos/yt-dlp/yt-dlp/tags";
-			FfmpegLocalVersion = "unknown";
-            FfmpegUrl = @"https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-essentials.7z";
-			FfmpegVersionUrl = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-essentials.7z.ver";
+			FfmpegLocalVersion = "6.0";
+            FfmpegUrl = @"https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.7z";
+			FfmpegVersionUrl = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.7z.ver";
 			CollapseSegmentControl = false;
 			CollapseCropControl = false;
 			CollapseConvertControl = false;
 			CollapseLimitsControl = false;
+			CollapseHistoryPanel = false;
         }
 
 		public override async Task<string> ValidateSettings()

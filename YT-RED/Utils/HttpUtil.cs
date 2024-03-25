@@ -5,13 +5,13 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Threading.Tasks;
-using YT_RED.Classes;
-using YT_RED.Logging;
-using YT_RED.Settings;
+using YTR.Classes;
+using YTR.Logging;
+using YTR.Settings;
 using System.Drawing;
 using DevExpress.Xpo.DB.Helpers;
 
-namespace YT_RED.Utils
+namespace YTR.Utils
 {
     public static class HttpUtil
     {

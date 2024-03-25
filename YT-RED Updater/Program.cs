@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace YT_RED_Updater
+namespace YTR_Updater
 {
     internal static class Program
     {
@@ -34,17 +34,17 @@ namespace YT_RED_Updater
                     skin = s.Remove(0, 6);
                 if (s.StartsWith("-pal"))
                     palette = s.Remove(0, 5);
-                if(s.StartsWith("-dir"))
+                if (s.StartsWith("-dir"))
                     appBase = s.Remove(0, 5);
                 if (s.StartsWith("-pkg"))
                     package = s.Remove(0, 5);
-                if(s.StartsWith("-updater"))
+                if (s.StartsWith("-updater"))
                     includeUpdater = true;
             }
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(dummyRun ? new UpdaterForm() : new UpdaterForm(appBase, package, skin, palette, includeUpdater));
+            Application.Run(dummyRun ? new UpdaterForm() : new UpdaterForm(appBase, package, skin, palette, includeUpdater, devRun));
         }
     }
 }

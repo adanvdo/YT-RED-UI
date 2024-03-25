@@ -5,7 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Reflection;
 
-namespace YT_RED.Settings
+namespace YTR.Settings
 {
     public class LayoutSettings : FeatureSettings
     {
@@ -41,8 +41,8 @@ namespace YT_RED.Settings
         {
             this.InputPanelPosition = VerticalPanelPosition.Top;
             this.ControlPanelPosition = HorizontalPanelPosition.Right;
-            this.FormatMode = FormatMode.Preset;
-            SegmentControlMode = SegmentControlMode.Duration;
+            this.FormatMode = FormatMode.Custom;
+            SegmentControlMode = SegmentControlMode.EndTime;
         }
 
         public override async Task<string> ValidateSettings()

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace YT_RED.Classes
+namespace YTR.Classes
 {
     public class LogPostRequest
     {
@@ -18,9 +18,12 @@ namespace YT_RED.Classes
         [JsonProperty("logText")]
         public string LogText { get; set; }
 
+        [JsonProperty("version")]
+        public string Version { get; set; }
+
         public LogPostRequest()
         {
-
+            Version = Settings.AppSettings.Default.About.Version;
         }
 
         public LogPostRequest(string machineId, DateTime logTime, string logText)
@@ -28,6 +31,7 @@ namespace YT_RED.Classes
             MachineID = machineId;
             LogTime = logTime.ToString();
             LogText = logText.Replace(@"\", @"\\").Replace("\n", "\\n");
+            Version = Settings.AppSettings.Default.About.Version;
         }
     }
 }

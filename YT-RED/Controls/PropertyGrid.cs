@@ -3,13 +3,11 @@ using DevExpress.XtraVerticalGrid;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using YT_RED.Settings;
-using YT_RED.Logging;
-using YT_RED.Utils;
-using DevExpress.Utils.Extensions;
-using System.Linq;
+using YTR.Logging;
+using YTR.Settings;
+using YTR.Utils;
 
-namespace YT_RED.Controls
+namespace YTR.Controls
 {
     public partial class PropertyGrid : DevExpress.XtraEditors.XtraUserControl
     {
@@ -158,26 +156,43 @@ namespace YT_RED.Controls
         }
 
         private async void repButtonEdit_ButtonPressed(object sender, DevExpress.XtraEditors.Controls.ButtonPressedEventArgs e)
-        {     
+        {
             if(!pendingUpdateInfo)
             {
+                if(AppSettings.Default.About.ReleaseChannel != AppSettings.Default.Advanced.Channel)
+                {
+                    DialogResult dialog = MsgBox.Show($"Your selected Release Channel is set to {AppSettings.Default.Advanced.Channel},\n" +
+                        $"but this version of YTR is a{(AppSettings.Default.About.ReleaseChannel == Classes.ReleaseChannel.Alpha ? "n" : "")} {AppSettings.Default.About.Build} Release\n\n" +
+                        $"Proceed and check for an updated {AppSettings.Default.Advanced.Channel} release?",
+                        "To change the target Release Channel, click the 'Advanced' tab", 
+                        "Release Channel Conflict", 
+                        Buttons.YesNo, 
+                        Icon.Exclamation, 
+                        FormStartPosition.CenterParent, 
+                        true);
+
+                    if(dialog == DialogResult.No)
+                    {
+                        return;
+                    }
+                }
+
                 loadingUpdateInfo = true;
                 repButtonEdit.Buttons[0].Visible = !loadingUpdateInfo;
                 repButtonEdit.Buttons[1].Visible = loadingUpdateInfo;
                 pendingReleaseInfo = await UpdateHelper.GetLatestRelease(Settings.AppSettings.Default.Advanced.Channel);
-                if (pendingReleaseInfo != null)
+                
+                currentVersion = new Version(Settings.AppSettings.Default.About.Version);
+                if (pendingReleaseInfo?.Version > currentVersion)
                 {
-                    currentVersion = new Version(Settings.AppSettings.Default.About.Version);
-                    if (pendingReleaseInfo.Version > currentVersion)
-                    {   
-                        pendingUpdateInfo = true;
-                        pgcPropertyGrid.Refresh();
-                    }
-                    else
-                    {
-                        repButtonEdit.Buttons[0].Caption = "Up To Date!";
-                    }
+                    pendingUpdateInfo = true;
+                    pgcPropertyGrid.Refresh();
                 }
+                else
+                {
+                    repButtonEdit.Buttons[0].Caption = "Up To Date!";
+                }
+                
                 loadingUpdateInfo = false;
                 if (!pendingUpdateInfo)
                 {
@@ -307,7 +322,8 @@ namespace YT_RED.Controls
                         string args = $"-dir={Settings.AppSettings.Default.General.ExeDirectoryPath} -pkg={location} -skin={Settings.AppSettings.Default.General.ActiveSkin} -pal={AppSettings.Default.General.SkinPalette}";
                         if (pendingReleaseInfo.ReplaceUpdater)
                             args += " -updater";
-                        string updaterProcess = System.IO.Path.Combine(Settings.AppSettings.Default.General.ExeDirectoryPath, "YT-RED_Updater.exe");
+                        
+                        string updaterProcess = System.IO.Path.Combine(Settings.AppSettings.Default.General.ExeDirectoryPath, "YTR_Updater.exe");
                         System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo(
                             updaterProcess,
                             args
@@ -316,7 +332,11 @@ namespace YT_RED.Controls
                     }
                     catch (Exception ex)
                     {
-                        ExceptionHandler.LogException(ex);
+                        if(ex.Message.Contains("The system cannot find the file specified"))
+                        {
+                            MsgBox.Show("YTR_Updater.exe could not be found\nA Manual Update is Required", "Error", Buttons.OK);
+                        }
+                        ExceptionHandler.LogException(ex, false);
                     }
                 }
                 else
@@ -334,8 +354,6 @@ namespace YT_RED.Controls
         private void progressChanged2(object sender, System.Net.DownloadProgressChangedEventArgs e)
         {
             repButtonEdit2.Buttons[0].Caption = $"Downloading{dependencyName}.. {e.ProgressPercentage}%";
-        }
-
-        
+        }        
     }
 }

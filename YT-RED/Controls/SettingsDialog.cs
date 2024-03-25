@@ -1,17 +1,11 @@
-﻿using DevExpress.XtraEditors;
-using DevExpress.XtraRichEdit.Import.Html;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using YT_RED.Settings;
+using YTR.Settings;
 
-namespace YT_RED.Controls
+namespace YTR.Controls
 {
     public partial class SettingsDialog : DevExpress.XtraEditors.XtraForm
     {
@@ -68,7 +62,7 @@ namespace YT_RED.Controls
             string validate = await AppSettings.Default.General.ValidateSettings();
             if(!string.IsNullOrEmpty(validate))
             {
-                MsgBox.Show(validate, "Invalid Settings", Buttons.OK, YT_RED.Controls.Icon.Exclamation);
+                MsgBox.Show(validate, "Invalid Settings", Buttons.OK, YTR.Controls.Icon.Exclamation);
                 if (this.tcSettingsTabControl.SelectedTabPage.Name != $"tpg{AppFeature.General}")
                 {
                     this.tcSettingsTabControl.SelectedTabPage = this.tcSettingsTabControl.TabPages.Where(tpg => tpg.Name == $"tpg{AppFeature.General}").ToArray()[0];
@@ -78,7 +72,7 @@ namespace YT_RED.Controls
             validate = await AppSettings.Default.Layout.ValidateSettings();
             if (!string.IsNullOrEmpty(validate))
             {
-                MsgBox.Show(validate, "Invalid Settings", Buttons.OK, YT_RED.Controls.Icon.Exclamation);
+                MsgBox.Show(validate, "Invalid Settings", Buttons.OK, YTR.Controls.Icon.Exclamation);
                 if (this.tcSettingsTabControl.SelectedTabPage.Name != $"tpg{AppFeature.Layout}")
                 {
                     this.tcSettingsTabControl.SelectedTabPage = this.tcSettingsTabControl.TabPages.Where(tpg => tpg.Name == $"tpg{AppFeature.Layout}").ToArray()[0];
@@ -88,7 +82,7 @@ namespace YT_RED.Controls
             validate = await AppSettings.Default.Advanced.ValidateSettings();
             if (!string.IsNullOrEmpty(validate))
             {
-                MsgBox.Show(validate, "Invalid Settings", Buttons.OK, YT_RED.Controls.Icon.Exclamation);
+                MsgBox.Show(validate, "Invalid Settings", Buttons.OK, YTR.Controls.Icon.Exclamation);
                 if(this.tcSettingsTabControl.SelectedTabPage.Name != $"tpg{AppFeature.Advanced}")
                 {
                     this.tcSettingsTabControl.SelectedTabPage = this.tcSettingsTabControl.TabPages.Where(tpg => tpg.Name == $"tpg{AppFeature.Advanced}").ToArray()[0];
@@ -128,7 +122,7 @@ namespace YT_RED.Controls
 
         private async void bbiDelAll_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            DialogResult res = MsgBox.Show("Files for all recorded downloads will be deleted\nand download history will be reset.\n\nContinue?", "Delete Downloaded Files", YT_RED.Controls.Buttons.OKCancel, YT_RED.Controls.Icon.Warning, FormStartPosition.CenterParent);
+            DialogResult res = MsgBox.Show("Files for all recorded downloads will be deleted\nand download history will be reset.\n\nContinue?", "Delete Downloaded Files", YTR.Controls.Buttons.OKCancel, YTR.Controls.Icon.Warning, FormStartPosition.CenterParent);
             if (res == DialogResult.OK)
             {
                 await Logging.Historian.CleanHistory(Logging.DownloadCategory.All, Logging.DownloadCategory.All);
@@ -138,7 +132,7 @@ namespace YT_RED.Controls
 
         private async void bbiDelAudio_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            DialogResult res = MsgBox.Show("Files for all recorded Audio downloads will be deleted\nand Audio download logs will be removed.\n\nContinue?", "Delete Downloaded Files", YT_RED.Controls.Buttons.OKCancel, YT_RED.Controls.Icon.Warning, FormStartPosition.CenterParent);
+            DialogResult res = MsgBox.Show("Files for all recorded Audio downloads will be deleted\nand Audio download logs will be removed.\n\nContinue?", "Delete Downloaded Files", YTR.Controls.Buttons.OKCancel, YTR.Controls.Icon.Warning, FormStartPosition.CenterParent);
             if (res == DialogResult.OK)
             {
                 await Logging.Historian.CleanHistory(Logging.DownloadCategory.Audio, Logging.DownloadCategory.Audio);
@@ -148,7 +142,7 @@ namespace YT_RED.Controls
 
         private async void bbiDelVideo_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            DialogResult res = MsgBox.Show("Files for all recorded Video downloads will be deleted\nand Video download logs will be removed.\n\nContinue?", "Delete Downloaded Files", YT_RED.Controls.Buttons.OKCancel, YT_RED.Controls.Icon.Warning, FormStartPosition.CenterParent);
+            DialogResult res = MsgBox.Show("Files for all recorded Video downloads will be deleted\nand Video download logs will be removed.\n\nContinue?", "Delete Downloaded Files", YTR.Controls.Buttons.OKCancel, YTR.Controls.Icon.Warning, FormStartPosition.CenterParent);
             if (res == DialogResult.OK)
             {
                 await Logging.Historian.CleanHistory(Logging.DownloadCategory.Video, Logging.DownloadCategory.Video);

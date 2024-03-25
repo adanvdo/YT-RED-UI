@@ -2,8 +2,9 @@
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using YTR.Classes;
 
-namespace YT_RED.Settings
+namespace YTR.Settings
 {
     public class AdvancedSettings : FeatureSettings
     {
@@ -18,26 +19,26 @@ namespace YT_RED.Settings
         [Category("Hotkeys")]
         [DisplayName("Enable Hotkeys")]
         [Description(@"Enables and Registers Hotkey for Quick Download Feature
-YT-RED will not register any Hotkeys or access your clipboard data if this is disabled")]
+YTR will not register any Hotkeys or access your clipboard data if this is disabled")]
         [DefaultValue(false)]
         [JsonProperty("enable_hotkeys")]
         public bool EnableHotKeys { get; set; }
 
         [Category("Hotkeys")]
         [DisplayName("Quick Download Hotkey")]
-        [Description(@"Register a Hotkey to perform Quick Downloads without needing YT-RED open in the foreground.
+        [Description(@"Register a Hotkey to perform Quick Downloads without needing YTR open in the foreground.
 
 How it works:
 Highlight the YouTube or Reddit Media URL in your browser address bar and press your configured Hotkey.
 YT-DLP will store the highlighted URL on your clipboard, and use the clipboard value to start a download from the System Tray.
-If there is existing text in your clipboard, YT-RED will restore it after starting the download.
+If there is existing text in your clipboard, YTR will restore it after starting the download.
 ")]
         [JsonProperty("dl_hotkey")]
         public Shortcut DownloadHotKey { get; set; }
 
         [Category("Processing")]
         [DisplayName("Generate Missing Metadata")]
-        [Description("When enabled, YT-RED will analyze fetched formats that are missing useful Metadata.\n"
+        [Description("When enabled, YTR will analyze fetched formats that are missing useful Metadata.\n"
             +"(Only applies when loading a format list)")]
         [JsonProperty("fetch_metadata")]
         public bool GetMissingMetadata { get; set; }
@@ -72,9 +73,9 @@ If there is existing text in your clipboard, YT-RED will restore it after starti
             EnableHotKeys = false;
             DownloadHotKey = Shortcut.None;
             GetMissingMetadata = true;
-            AlwaysConvertToPreferredFormat = false;
-            PreferredVideoFormat = VideoFormat.UNSPECIFIED;
-            PreferredAudioFormat = AudioFormat.UNSPECIFIED;
+            AlwaysConvertToPreferredFormat = true;
+            PreferredVideoFormat = VideoFormat.MP4;
+            PreferredAudioFormat = AudioFormat.MP3;
             VerboseOutput = false;
         }
 

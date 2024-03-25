@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using Xabe.FFmpeg;
 
 
-namespace YT_RED
+namespace YTR
 {
     internal static class Program
     {

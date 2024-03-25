@@ -1,13 +1,12 @@
-﻿using System;
+﻿using Ionic.Zip;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Ionic.Zip;
 
-namespace YT_RED_Updater
+namespace YTR_Updater
 {
     public static class Updater
     {
@@ -44,7 +43,7 @@ namespace YT_RED_Updater
             {
                 try
                 {
-                    Process[] running = Process.GetProcessesByName("YT-RED");
+                    Process[] running = Process.GetProcessesByName("YTR");
                     int killed = 0;
                     foreach (var process in running)
                     {
@@ -78,14 +77,14 @@ namespace YT_RED_Updater
 
                         Directory.CreateDirectory(ExtractionFolder);
 
-                        List<ZipEntry> entries = zip.Entries.Where(e => (e.IsDirectory && e.FileName != "YT-RED/") || !e.IsDirectory).ToList();
+                        List<ZipEntry> entries = zip.Entries.Where(e => (e.IsDirectory && e.FileName != "YTR/") || !e.IsDirectory).ToList();
                         decimal total = entries.Count;
                         decimal extracted = 0;
                         int percentage = 0;
 
                         foreach (ZipEntry entry in entries)
                         {
-                            entry.FileName = entry.FileName.Replace("YT-RED/", "");
+                            entry.FileName = entry.FileName.Replace("YTR/", "");
                             entry.Extract(ExtractionFolder);
                             extracted++;
                             percentage = Convert.ToInt32(((extracted / total) * 100));
@@ -168,7 +167,7 @@ namespace YT_RED_Updater
             return result;
         }
 
-        public static async Task<ProcessResult> CleanBaseDirectory(Action<int> reportProgress)
+        public static async Task<ProcessResult> CleanBaseDirectory(Action<int> reportProgress, bool newUpdater = false)
         {
             ProcessResult result = new ProcessResult();
             try
@@ -179,15 +178,14 @@ namespace YT_RED_Updater
 
                     DirectoryInfo baseDir = new DirectoryInfo(BaseDir);
                     List<FileInfo> files = baseDir.GetFiles("*", SearchOption.AllDirectories)
-                        .Where(f => !f.FullName.EndsWith("YT-RED_Updater.exe")
-                            && !f.FullName.EndsWith("Ionic.Zip.Reduced.dll")
-                            && !f.Name.EndsWith(".json")
+                        .Where(f => !f.Name.EndsWith(".json")
                             && f.Directory.Name != "ErrorLogs"
                             && !f.FullName.Contains(@"\ErrorLogs\")
                             && f.Directory.Name != "Updates"
                             && !f.FullName.Contains(@"\Updates\")
                             && f.Directory.Name != "Backup"
                             && !f.FullName.Contains(@"\Backup\")
+                            && (newUpdater || (!newUpdater && f.Name != "YTR_Updater.exe"))
                         )
                         .ToList();
 
@@ -197,9 +195,16 @@ namespace YT_RED_Updater
 
                     foreach (FileInfo f in files)
                     {
-                        FileActionResult tryDelete = await FileHelper.DeleteFile(f);
-                        if (!tryDelete.Success)
+                        if (f.FullName.EndsWith("YTR_Updater.exe") || f.FullName.EndsWith("Ionic.Zip.Reduced.dll"))
+                        {
                             failed.Add(f);
+                        }
+                        else
+                        {
+                            FileActionResult tryDelete = await FileHelper.DeleteFile(f);
+                            if (!tryDelete.Success)
+                                failed.Add(f);
+                        }
                         completed++;
                         percentComplete = Convert.ToInt32((completed / total) * 100);
                         reportProgress(percentComplete);
@@ -278,7 +283,7 @@ namespace YT_RED_Updater
                     else
                     {
                         dirs = extractionFolder.GetDirectories("*", SearchOption.AllDirectories).ToList();
-                        files = extractionFolder.GetFiles("*", SearchOption.AllDirectories).Where(f => f.Name != "YT-RED_Updater.exe").ToList();
+                        files = extractionFolder.GetFiles("*", SearchOption.AllDirectories).Where(f => f.Name != "YTR_Updater.exe").ToList();
                     }
 
                     decimal total = dirs.Count + files.Count;
@@ -300,7 +305,7 @@ namespace YT_RED_Updater
                     foreach (FileInfo newFile in files)
                     {
                         string dest = newFile.FullName.Replace(ExtractionFolder, BaseDir);
-                        if (newFile.Name == "YT-RED_Updater.exe"
+                        if (newFile.Name == "YTR_Updater.exe"
                             || newFile.Name == "Ionic.Zip.Reduced.dll"
                             || (pendingDelete != null && pendingDelete.Find(fi => fi.Name == newFile.Name) != null))
                         {
@@ -338,6 +343,6 @@ namespace YT_RED_Updater
             Output = string.Empty;
             Pending = null;
             Error = string.Empty;
-        }       
+        }
     }
 }

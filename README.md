@@ -15,7 +15,7 @@ This project is UNLICENSED and uses licensed DevExpress WinForms Controls.
 
 ### About the Program <a name="about"></a>
 
-YT-RED is a safe alternative to other popular youtube and reddit video downloaders found online.  Other popular reddit downlaod tools are full of trackers and data collection that the end user is not aware of.  YT-RED was personally built with a no-tracking and no-data-collection policy.  By keeping the source code open to the public, it is meant to be published as a safe and versatile media downloader for Windows
+YTR is a safe alternative to other popular youtube and reddit video downloaders found online.  Other popular reddit downlaod tools are full of trackers and data collection that the end user is not aware of.  YTR was personally built with a no-tracking and no-data-collection policy.  By keeping the source code open to the public, it is meant to be published as a safe and versatile media downloader for Windows
 
 ![YTRMain](https://user-images.githubusercontent.com/26498008/196805373-45dd6736-c6bf-41d1-8a27-507437300b00.png)
 
@@ -46,12 +46,11 @@ YT-RED is a safe alternative to other popular youtube and reddit video downloade
 - Update Assistant
 
 ### Known Issues <a name="known-issues"></a>
-- Youtube Playlist downloads are not yet supported
-- GIF Conversion does not convert to proper GIF file
+- None as of 10/26/2023
 
 ### How To Use <a name="how-to-use"></a>
 
-YT-RED's main interface is pretty straight forward. Simply enter the URL of any video post from Youtube, Reddit, Vimeo, Twitter, Instagram or Twitch in the address bar
+YTR's main interface is pretty straight forward. Simply enter the URL of any video post from Youtube, Reddit, Vimeo, Twitter, Instagram or Twitch in the address bar
 
 - #### List Formats
   This will retrieve all video formats available to download.
@@ -80,18 +79,18 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
   Enter the number of pixels to crop on each desired side, and then start the download.
  
 - #### Convert Format
-  Specify a Video or Audio format for the resulting download.  YT-RED will convert the original media to the format of your choice.
+  Specify a Video or Audio format for the resulting download.  YTR will convert the original media to the format of your choice.
 
 - #### Download History (Optional)
-  When enabled, YT-RED will locally record each download, including settings. Download History can be configured to store download logs for the number of days specified.
+  When enabled, YTR will locally record each download, including settings. Download History can be configured to store download logs for the number of days specified.
   Recorded downloads can be redownloaded by right-clicking on the associated log and choosing the "re-download" option, or you can run a new download by choosing the "Use URL for New Download" option.
   Download History can be manually cleared in Settings, with the option to delete all associated download files.
 
 - #### Quick Downloads
-  Quick Download is only available when YT-RED has been minimized to the System Tray. Right-click on the YT-RED icon in the tray, and select "Quick Download" to open the Quick Download form.
+  Quick Download is only available when YTR has been minimized to the System Tray. Right-click on the YTR icon in the tray, and select "Quick Download" to open the Quick Download form.
 
 - #### Quick Download Hotkey
-  When the Quick Download Hotkey is enabled in advanced settings, YT-RED will register a custom Hotkey that initiates a Quick Download.
+  When the Quick Download Hotkey is enabled in advanced settings, YTR will register a custom Hotkey that initiates a Quick Download.
 
   To use, Highlight a youtube or reddit media post url in your browser, and press the configured hotkey. This will perform an automatic "Best Download" with the progress displayed above the system tray.
 
@@ -106,6 +105,60 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
   ![2022-08-21_0-03-35](https://user-images.githubusercontent.com/26498008/185775490-4ab0e3c0-b980-4f4b-8b36-b11f08dad838.png)
 
 ## CHANGELOG <a name="changelog"></a>
+
+### 3/25/2024
+- Fixed Bug where Visual Crop Tool could result in Incorrect Crop Calculations due to Thumbnail Dimensions
+- Fixed Bug where Quick Download could result in mismatched encoding
+- Updated yt-dlp and ffmpeg
+
+### 11/03/2023 v1.0.4.11
+- Fixed Bug Where Updater Was Being Deleted
+
+### 11/03/2023 v1.0.4.10
+- Added App Dependency Update Consistency Check
+- Added Extra Error Information if Updater Cannot Be Found
+
+### 10/25/2023 v1.0.4.9
+- Added Media Title to Download Logs
+- Fixed Bug where Download History was not immediately refreshed after deleting downloads or clearing logs
+- Replaced the Clear History Button Image
+
+### 10/6/2023 v1.0.4.8
+- Added Controls for Managing History Log to the Main Form
+
+### 10/2/2023 v1.0.4.7
+- Moved Download History to new Side Panel
+- Fixed bug where Updater did not clean up all backup files
+- Fixed bug where post-update batch script was not completely generated
+
+### 9/29/2023 v1.0.4.6
+- Fixed crash when attempting to download or get format list
+- YT-RED is now YTR
+
+### 9/28/2023 v1.0.4.5
+- Updated Assembly Name to "YTR"
+- Added Support for Planned Application Name Change to Updater and Update Processes
+
+### 9/28/2023 v1.0.4.4
+- Fixed Bug where segment End-Time was set to the media end time before download started
+- Fixed bug where some video+audio downloads were logged with a download type of audio
+
+### 9/9/2023 v1.0.4.3 
+- Added Version Number to Error Log Uploads
+- Added Media URLs to Error Logs where they were missing
+- Fixed Bug where Error Log Uploads did not contain a valid Time
+
+### 9/5/2023 v1.0.4.2
+- Fixed bug where app would crash if only an audio format was selected
+- Fixed bug where graphic crop tool accepted an empty crop area or area less than 50x50
+- Fixed bug where graphic crop tool ok button was enabled when there was no crop selection
+
+### 9/1/2023 v1.0.4.1
+- Added Graphical Crop Feature for Selection Downloads
+- Fixed Bug where Invalid Crop Values caused a crash
+
+### 8/16/2023 v1.0.4.0
+- Beta Branch Updated from v1.0.3.4-alpha
 
 ### 8/16/2023 v1.0.4.0
 - Beta Branch Updated from v1.0.3.4-alpha
@@ -201,8 +254,8 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 - Minor UI and Behavior Tweaks
 
 ### 8/17/2022 v1.0.1.14
-- Added Manual Update Requirement to releases. YT-RED will now inform users if a manual update is required.
-- Fixed bug where YT-RED_Updater was not replaced if a new updater was included in a release
+- Added Manual Update Requirement to releases. YTR will now inform users if a manual update is required.
+- Fixed bug where YTR_Updater was not replaced if a new updater was included in a release
 - Fixed bug where the program state was not properly reset after a failed download
 
 ### 7/28/2022 v1.0.1.13
@@ -239,7 +292,7 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 - Fixed Bug where Updater Failed to complete due to dependencies being in use
 
 ### 6/30/2022 v1.0.1.6
-- Added YT-RED Updater for one-click update installs (optional, not automatic)
+- Added YTR Updater for one-click update installs (optional, not automatic)
 - Fixed bug where client would try to clean download history while it was being loaded
 - Fixed bug where progress output text was not displayed in Quick Download form.
 
@@ -248,7 +301,7 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 - Added Update Helper Features
   - Added Release Channel option to Advanced Settings (Stable, Beta, Alpha)
   - Check for Updated Version based on preferred release channel
-  - Download releases packages within YT-RED
+  - Download releases packages within YTR
 - Fixed tab order of main form controls and settings controls
 - Fixed bug where process Marquee did not always display progress output
 - Fixed bug where selected format downloads were not converted with Always Convert enabled
@@ -294,12 +347,12 @@ YT-RED's main interface is pretty straight forward. Simply enter the URL of any 
 - Various UI and Behavior Tweaks
 
 ### 5/25/2022 v1.0.0.10
-- Launching YT-RED VIA exe or shortcut now opens any running instance
+- Launching YTR VIA exe or shortcut now opens any running instance
 - Added Download Cancellation support for Quick Downloads / Hotkey Downloads
 - Added options to delete Video, Audio or All downloads to Settings Form
 - Added Visual Style to Segment and Crop Toggles when they are enabled
 - Clicking the Segment / Crop Headers now Collapse/Expand their panels
-- Fixed bug where multiple instances of YT-RED could be run which resulted in HotKey registration errors
+- Fixed bug where multiple instances of YTR could be run which resulted in HotKey registration errors
 - Fixed bug where active downloads continued running if the Quick Download form was closed
 - Fixed bug where Youtube Crop panel allowed crop input when it was not toggled on
 - Various UI and Behavior Tweaks

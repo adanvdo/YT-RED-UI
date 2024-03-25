@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Threading;
 
-namespace YT_RED.Classes
+namespace YTR.Classes
 {    public class UIBlockDetector
     {
         static System.Threading.Timer _timer;

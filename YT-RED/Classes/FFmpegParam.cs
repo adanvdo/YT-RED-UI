@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace YT_RED.Classes
+namespace YTR.Classes
 {
     public class FFmpegParam
     {
@@ -26,6 +26,14 @@ namespace YT_RED.Classes
         VideoOutFormat = 3,
         AudioOutFormat = 4,
         Crop = 5,
-        ID3Thumbnail = 6
+        ID3Thumbnail = 6,
+        Framerate = 7,
+        VideoCodec = 8,
+        PixelFormat = 9,
+        VF = 10,
+        Loop = 11,
+        ANULLSRC = 12,
+        Map = 13,
+        Input = 14
     }
 }

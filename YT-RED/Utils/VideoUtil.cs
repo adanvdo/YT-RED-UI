@@ -7,15 +7,16 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Xabe.FFmpeg;
+using Xabe.FFmpeg.Events;
 using YoutubeDLSharp;
 using YoutubeDLSharp.Metadata;
 using YoutubeDLSharp.Options;
-using YT_RED.Classes;
-using YT_RED.Logging;
-using YT_RED.Settings;
+using YTR.Classes;
+using YTR.Logging;
+using YTR.Settings;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
-namespace YT_RED.Utils
+namespace YTR.Utils
 {
     public static class VideoUtil
     {
@@ -23,9 +24,11 @@ namespace YT_RED.Utils
         public static bool Running = false;
         public static IProgress<DownloadProgress> ytProgress;
         public static IProgress<string> ytOutput;
+        public static event ConversionProgressEventHandler OnFFMpegProgress;
         public static CancellationTokenSource CancellationTokenSource;
         private static YoutubeDLSharp.Helpers.ProcessRunner runner;
-        private static Regex rgxFile = new Regex(@"\[download\] Destination: [a-zA-Z]:\\\S+\.\S{3,}", RegexOptions.Compiled);        
+        private static Regex rgxFile = new Regex(@"\[download\] Destination: [a-zA-Z]:\\\S+\.\S{3,}", RegexOptions.Compiled);
+        public static Dictionary<string, string> TemporaryFiles;
 
         public static void Init()
         {
@@ -38,6 +41,7 @@ namespace YT_RED.Utils
                 OverwriteFiles = false
             };
             runner = new YoutubeDLSharp.Helpers.ProcessRunner(4);
+            TemporaryFiles = new Dictionary<string, string>();
         }
 
         public static List<string> ResolutionList { 
@@ -132,11 +136,18 @@ namespace YT_RED.Utils
 
             if (crops != null && crops.Length == 4 && (formatPair.VideoFormat != null && formatPair.VideoFormat.Width != null && formatPair.VideoFormat.Height != null))
             {
-                int[] ffmpegCrop = ConvertCrop(crops, (int)formatPair.VideoFormat.Width, (int)formatPair.VideoFormat.Height);
-                x = ffmpegCrop[0];
-                y = ffmpegCrop[1];
-                outWidth = ffmpegCrop[2];
-                outHeight = ffmpegCrop[3];
+                try
+                {
+                    int[] ffmpegCrop = ConvertCrop(crops, (int)formatPair.VideoFormat.Width, (int)formatPair.VideoFormat.Height);
+                    x = ffmpegCrop[0];
+                    y = ffmpegCrop[1];
+                    outWidth = ffmpegCrop[2];
+                    outHeight = ffmpegCrop[3];
+                }
+                catch(Exception ex)
+                {
+                    ExceptionHandler.LogException(ex, formatPair.VideoFormat.Url);
+                }
             }
 
             VideoFormat vFormat = VideoFormat.UNSPECIFIED;
@@ -188,10 +199,17 @@ namespace YT_RED.Utils
             List<Classes.FFmpegParam> parameters = new List<Classes.FFmpegParam>();
             if(start != null)
             {
+            //    if (formatPair.Duration != null && start > formatPair.Duration)
+            //        throw new Exception("Segment Start Exceeds Media Duration");
+
                 parameters.Add(new Classes.FFmpegParam(Classes.ParamType.StartTime, $"-ss {((TimeSpan)start)}"));
             }
             if(duration != null)
             {
+                //var st = start == null ? TimeSpan.Zero : start;
+                //if (formatPair.Duration != null && st + duration > formatPair.Duration)
+                //    throw new Exception("Segment Duration Exceeds Media Duration");
+
                 parameters.Add(new Classes.FFmpegParam(Classes.ParamType.Duration, $"-t {((TimeSpan)duration)}"));
             }
             if (vCodec != null)
@@ -227,8 +245,86 @@ namespace YT_RED.Utils
             return await PrepareStreamConversion(videoUrl, audioUrl, parameters.ToArray(), vFormat, aFormat);
         }
 
+        private static async Task<string> renderVideoFromImage(string urlKey, IVideoStream videoStream, FFmpegVideoCodec vCodec, VideoFormat vFormat, string prependPath, MediaDuration prependType, int prependDuration)
+        {
+            string videoUrl = string.Empty;
+            List<Classes.FFmpegParam> parameters = new List<Classes.FFmpegParam>();
+            ytOutput?.Report("Building Streams..");
+            var fr = videoStream.Framerate;
+            var pf = videoStream.PixelFormat;
+            var w = videoStream.Width;
+            var h = videoStream.Height;
+            var d = videoStream.Duration;
+
+            if (fr >= 1 && w > 0 && h > 0 && d > TimeSpan.Zero)
+            {
+                TimeSpan imgDur = TimeSpan.Zero;
+                if (prependType == MediaDuration.Frames)
+                {
+                    double second = prependDuration / fr;
+                    double ms = 1000 * second;
+                    imgDur = TimeSpan.FromMilliseconds(ms);
+                }
+                else
+                {
+                    imgDur = TimeSpan.FromSeconds(prependDuration);
+                }
+
+                //parameters.Add(new FFmpegParam(ParamType.ANULLSRC, $"-f lavfi -i anullsrc"));
+                parameters.Add(new FFmpegParam(ParamType.Loop, "-loop 1"));
+                parameters.Add(new FFmpegParam(ParamType.Framerate, $"-framerate {fr}"));
+                parameters.Add(new FFmpegParam(ParamType.Input, $"-i {prependPath}"));
+                parameters.Add(new FFmpegParam(ParamType.ANULLSRC, $"-f lavfi -i anullsrc"));
+                parameters.Add(new FFmpegParam(ParamType.VideoCodec, $"-c:v {vCodec.EncoderString}"));
+                parameters.Add(new FFmpegParam(ParamType.Duration, $"-t {((TimeSpan)imgDur)}"));
+                parameters.Add(new FFmpegParam(ParamType.PixelFormat, $"-pix_fmt {pf}"));
+                parameters.Add(new FFmpegParam(ParamType.VF, $"-vf \"scale={w}:{h}:force_original_aspect_ratio=decrease,pad={w}:{h}:(ow-iw)/2:(oh-ih)/2\""));
+                parameters.Add(new FFmpegParam(ParamType.Map, $"-map 0:v -map 0:a? -map 1:a -shortest"));
+
+                IConversion imageConversion = await PrepareStreamConversion(prependPath, null, parameters.ToArray(), vFormat);
+                string destination = imageConversion.OutputFilePath;
+                CancellationTokenSource = new System.Threading.CancellationTokenSource();
+                imageConversion.OnProgress += OnFFMpegProgress;
+                await imageConversion.Start(VideoUtil.CancellationTokenSource.Token);
+                parameters.Clear();
+                if (File.Exists(destination))
+                {
+                    TemporaryFiles.Add(urlKey, destination);
+                    videoUrl = destination;
+                }
+            }
+            return videoUrl;
+        }
+
+        private static async Task<string> convertCustomAudioForVideo(Uri videoUri, string audioPath, TimeSpan audioStart, TimeSpan duration)
+        {
+            string resultUrl = string.Empty;
+            List<Classes.FFmpegParam> parameters = new List<Classes.FFmpegParam>();
+            ytOutput?.Report("Fetching Media Info..");
+            CancellationTokenSource = new CancellationTokenSource();
+            ytOutput?.Report("Creating Temporary Audio");
+            if (audioStart != TimeSpan.Zero) parameters.Add(new FFmpegParam(ParamType.StartTime, $"-ss {((TimeSpan)audioStart)}"));
+            parameters.Add(new FFmpegParam(ParamType.Duration, $"-t {((TimeSpan)duration)}"));
+            parameters.Add(new FFmpegParam(ParamType.AudioOutFormat, "-c:a copy"));
+            IConversion audioConversion = await PrepareStreamConversion(null, audioPath, parameters.ToArray());
+            string destination = audioConversion.OutputFilePath;
+            CancellationTokenSource = new System.Threading.CancellationTokenSource();
+            audioConversion.OnProgress += OnFFMpegProgress;
+            await audioConversion.Start(VideoUtil.CancellationTokenSource.Token);
+            parameters.Clear();
+            if (File.Exists(destination))
+            {
+                TemporaryFiles.Add(videoUri.OriginalString, destination);
+                resultUrl = destination;
+            }
+            return resultUrl;
+        }
+
         public static async Task<IConversion> PrepareBestYtdlConversion(string url, string format, TimeSpan? start = null, TimeSpan? duration = null, bool usePreferences = false, int[] crops = null, VideoFormat convertVideo = VideoFormat.UNSPECIFIED, AudioFormat convertAudio = AudioFormat.UNSPECIFIED, bool embedThumbnail = false, Action<string> showOutput = null)
         {
+            string videoUrl = string.Empty;
+            string audioUrl = string.Empty;
+
             try
             {
                 showOutput("Evaluating Formats..");
@@ -269,8 +365,6 @@ namespace YT_RED.Utils
 
                 showOutput("Preparing Post-Processing Args..");
 
-                string videoUrl = string.Empty;
-                string audioUrl = string.Empty;
                 int outWidth = -1;
                 int outHeight = -1;
                 int x = -1;
@@ -359,7 +453,7 @@ namespace YT_RED.Utils
                 }
                 else if (vCodec != null)
                 {
-                    parameters.Add(new Classes.FFmpegParam(Classes.ParamType.VideoOutFormat, $"-c:v {vCodec.Encoder}"));                    
+                    parameters.Add(new Classes.FFmpegParam(Classes.ParamType.VideoOutFormat, $"-c:v {vCodec.Encoder}"));
                 }
 
                 if (vFormat != VideoFormat.GIF)
@@ -383,7 +477,20 @@ namespace YT_RED.Utils
             }
             catch(Exception ex)
             {
-                ExceptionHandler.LogException(ex);
+                ExceptionHandler.LogException(ex, videoUrl, audioUrl);
+            }
+            return null;
+        }
+
+        public static async Task<IConversion> PrepareVideoConcatenationConversion(string first, string second)
+        {
+            string fileName = GenerateUniqueFFmpegFileName();
+            FileInfo fi = new FileInfo(second);
+            if (fi != null)
+            {
+                string extension = !fi.Extension.StartsWith(".") ? $".{fi.Extension}" : fi.Extension;
+                var conversion = await FFmpeg.Conversions.FromSnippet.Concatenate(Path.Combine(AppSettings.Default.General.VideoDownloadPath, $"{fileName}{extension}"), first, second);
+                return conversion;
             }
             return null;
         }
@@ -414,6 +521,11 @@ namespace YT_RED.Utils
             }
             return null;
         }
+
+        //public static async Task<IConversion> PrepareStreamConversionFromStreams(IVideoStream videoStream = null, IAudioStream audioStream = null, FFmpegParam[] parameters = null, VideoFormat format = VideoFormat.UNSPECIFIED, AudioFormat aformat = AudioFormat.UNSPECIFIED, string prependPath = "")
+        //{
+        //    return await PrepareStreamConversion(null, null, parameters, format, aformat, null, null, videoStream, audioStream);
+        //}
 
         public static async Task<IConversion> PrepareStreamConversion(string videoUrl = "", string audioUrl = "", Classes.FFmpegParam[] parameters = null, VideoFormat format = VideoFormat.UNSPECIFIED, AudioFormat aformat = AudioFormat.UNSPECIFIED)
         {

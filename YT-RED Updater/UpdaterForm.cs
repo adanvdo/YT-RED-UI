@@ -1,32 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace YT_RED_Updater
+namespace YTR_Updater
 {
     public partial class UpdaterForm : DevExpress.XtraEditors.XtraForm
     {
         private DirectoryInfo appBase;
         private FileInfo updatePackage;
         private bool requiresUpdaterReplacement = false;
+        private bool debugMode = false;
 
         public UpdaterForm()
         {
             InitializeComponent();
-            lblMessage.Text = "YT-RED Updater cannot be run manually";
+            lblMessage.Text = "YTR Updater cannot be run manually";
         }
 
-        public UpdaterForm(string appBaseDirectory, string updatePackagePath, string skin, string palette, bool includeUpdater)
+        public UpdaterForm(string appBaseDirectory, string updatePackagePath, string skin, string palette, bool includeUpdater, bool debug = false)
         {
             InitializeComponent();
+            this.debugMode = debug;
 
             if (string.IsNullOrEmpty(appBaseDirectory) || string.IsNullOrEmpty(updatePackagePath))
             {
@@ -76,7 +71,7 @@ namespace YT_RED_Updater
             progress.Position = 0;
             marquee.Text = "";
             marquee.Properties.Stopped = true;
-            if(!string.IsNullOrEmpty(extract.Error))
+            if (!string.IsNullOrEmpty(extract.Error))
             {
                 marquee.Properties.ShowTitle = false;
                 progress.Properties.ShowTitle = false;
@@ -84,7 +79,7 @@ namespace YT_RED_Updater
                 return;
             }
 
-            marquee.Text = "Closing YT-RED";
+            marquee.Text = "Closing YTR";
             marquee.Properties.Stopped = false;
             ProcessResult kill = await Updater.EndRunningProcesses();
             marquee.Text = "";
@@ -115,7 +110,7 @@ namespace YT_RED_Updater
             marquee.Text = "Cleaning Up Files";
             marquee.Properties.Stopped = false;
             progress.Position = 0;
-            ProcessResult clean = await Updater.CleanBaseDirectory(reportProgress);
+            ProcessResult clean = await Updater.CleanBaseDirectory(reportProgress, updateUpdater);
             progress.Position = 0;
             marquee.Text = "";
             marquee.Properties.Stopped = true;
@@ -128,9 +123,9 @@ namespace YT_RED_Updater
             }
 
             ProcessResult createPostBat = null;
-            
+
             string launchArg = requiresUpdaterReplacement ? "-updater -updated" : "-updated";
-            createPostBat = await FileHelper.CreateFileUpdateBatch(clean.Pending, $"{Path.Combine(this.appBase.FullName, "YT-RED.exe")} {launchArg}");
+            createPostBat = await FileHelper.CreateFileUpdateBatch(clean.Pending, $"{Path.Combine(this.appBase.FullName, "YTR.exe")} {launchArg}", this.appBase.FullName);
             if (!string.IsNullOrEmpty(createPostBat.Error))
             {
                 marquee.Properties.ShowTitle = false;
@@ -138,7 +133,7 @@ namespace YT_RED_Updater
                 lblMessage.Text = $"Failed to create post-update script\n{clean.Error}\nYou may close this dialog";
                 return;
             }
-            
+
 
             marquee.Text = "Installing Update";
             marquee.Properties.Stopped = false;
@@ -170,23 +165,26 @@ namespace YT_RED_Updater
                 return;
             }
 
-            marquee.Text = "Launching YT-RED";
+            marquee.Text = "Launching YTR";
             marquee.Properties.Stopped = false;
             try
             {
-                Process p = new Process();
-                p.StartInfo.UseShellExecute = false;
-                p.StartInfo.RedirectStandardOutput = true;
-                p.StartInfo.CreateNoWindow = true;
-                p.StartInfo.FileName = createPostBat.Output;
-                p.Start();
+                new Process
+                {
+                    StartInfo = new ProcessStartInfo(createPostBat.Output)
+                    {
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        CreateNoWindow = true
+                    }
+                }.Start();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 lblMessage.Text = ex.Message;
                 return;
             }
-            Environment.Exit(0);
+            this.Close();            
         }
 
         private void reportProgress(int percent)
@@ -204,7 +202,7 @@ namespace YT_RED_Updater
                 progress.Position = percent;
                 progress.Refresh();
             }
-        }      
+        }
 
     }
 }

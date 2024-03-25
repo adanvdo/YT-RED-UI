@@ -3,8 +3,9 @@ using DevExpress.Utils;
 using Newtonsoft.Json;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using YTR.Classes;
 
-namespace YT_RED.Settings
+namespace YTR.Settings
 {
     public class About : FeatureSettings
     {       
@@ -22,7 +23,15 @@ namespace YT_RED.Settings
         [DisplayName("Build")]
         [Description("Current Build")]
         [JsonIgnore]
-        public string Build { get; set; }
+        public string Build
+        {
+            get { return ReleaseChannel.ToString(); }
+            set { ReleaseChannel = EnumExtensions.ToEnum<ReleaseChannel>(value); }
+        }
+
+        [Browsable(false)]
+        [JsonIgnore]
+        public ReleaseChannel ReleaseChannel { get; set; }
 
         [Category("About")]
         [DisplayName("GitHub")]
@@ -38,24 +47,17 @@ namespace YT_RED.Settings
 
         [Category("About")]
         [DisplayName("Dependencies")]
-        [Description("YT-RED depends on the YT-DLP and FFMPEG Libraries for dowloading and processing media.\nIf you suddenly start getting errors during downloads, these tools may need to be updated.")]
+        [Description("YTR depends on the YT-DLP and FFMPEG Libraries for dowloading and processing media.\nIf you suddenly start getting errors during downloads, these tools may need to be updated.")]
         [JsonIgnore]
         public string Dependencies { get; set; }
 
         public About()
         {
             Version = "0.0.0.0";
-            Build = "Beta";
+            ReleaseChannel = ReleaseChannel.Beta;
             GitHub = @"https://github.com/adanvdo/YT-RED-UI";
             Contact = @"jesse@jamgalactic.com";
             Dependencies = "YT-DLP + FFMPEG";
         }
-    }
-
-    public enum ReleaseChannel
-    {
-        Stable = 0,
-        Beta = 1,
-        Alpha = 2
-    }
+    }    
 }

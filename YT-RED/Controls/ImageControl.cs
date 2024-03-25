@@ -2,7 +2,7 @@
 using System;
 using System.Drawing;
 
-namespace YT_RED.Controls
+namespace YTR.Controls
 {
     public partial class ImageControl : DevExpress.XtraEditors.XtraUserControl
     {

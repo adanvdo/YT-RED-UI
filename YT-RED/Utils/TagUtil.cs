@@ -11,10 +11,10 @@ using Xabe.FFmpeg;
 using YoutubeDLSharp;
 using YoutubeDLSharp.Metadata;
 using YoutubeDLSharp.Options;
-using YT_RED.Logging;
-using YT_RED.Settings;
+using YTR.Logging;
+using YTR.Settings;
 
-namespace YT_RED.Utils
+namespace YTR.Utils
 {
     public static class TagUtil
     {

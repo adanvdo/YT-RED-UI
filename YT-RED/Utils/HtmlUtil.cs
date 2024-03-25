@@ -6,9 +6,10 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using YT_RED.Logging;
+using YTR.Classes;
+using YTR.Logging;
 
-namespace YT_RED.Utils
+namespace YTR.Utils
 {
     public static class HtmlUtil
     {
@@ -35,6 +36,8 @@ namespace YT_RED.Utils
             var test = @"^[a-zA-Z][a-zA-Z0-9]*$";
             var t2 = Regex.Match(url, test);
             if (t2.Success && (url.Length == 11 || url.Length == 34)) return DownloadType.YouTube;
+
+            if (string.IsNullOrEmpty(url)) return DownloadType.Empty;
 
             return DownloadType.Unknown;
         }        

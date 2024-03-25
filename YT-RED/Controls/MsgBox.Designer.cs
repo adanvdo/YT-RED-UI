@@ -1,4 +1,4 @@
-﻿namespace YT_RED.Controls
+﻿namespace YTR.Controls
 {
     partial class MsgBox
     {
@@ -45,6 +45,8 @@
             this.lblCaption = new DevExpress.XtraEditors.LabelControl();
             this.pnlSuppressPanel = new DevExpress.XtraEditors.PanelControl();
             this.chkSuppress = new DevExpress.XtraEditors.CheckEdit();
+            this.pnlNotePanel = new DevExpress.XtraEditors.PanelControl();
+            this.lblNoteLabel = new DevExpress.XtraEditors.LabelControl();
             ((System.ComponentModel.ISupportInitialize)(this.messagePanel)).BeginInit();
             this.messagePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.msgIcon.Properties)).BeginInit();
@@ -56,6 +58,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pnlSuppressPanel)).BeginInit();
             this.pnlSuppressPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chkSuppress.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlNotePanel)).BeginInit();
+            this.pnlNotePanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // messagePanel
@@ -70,14 +74,14 @@
             this.messagePanel.MinimumSize = new System.Drawing.Size(394, 102);
             this.messagePanel.Name = "messagePanel";
             this.messagePanel.Padding = new System.Windows.Forms.Padding(0, 15, 15, 15);
-            this.messagePanel.Size = new System.Drawing.Size(394, 130);
+            this.messagePanel.Size = new System.Drawing.Size(394, 108);
             this.messagePanel.TabIndex = 0;
             // 
             // msgIcon
             // 
             this.msgIcon.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.msgIcon.EditValue = global::YT_RED.Properties.Resources.exclamation;
-            this.msgIcon.Location = new System.Drawing.Point(24, 43);
+            this.msgIcon.EditValue = global::YTR.Properties.Resources.exclamation;
+            this.msgIcon.Location = new System.Drawing.Point(24, 32);
             this.msgIcon.Margin = new System.Windows.Forms.Padding(0);
             this.msgIcon.Name = "msgIcon";
             this.msgIcon.Properties.AllowFocused = false;
@@ -87,7 +91,7 @@
             this.msgIcon.Properties.Appearance.Options.UseImage = true;
             this.msgIcon.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.msgIcon.Properties.ContextButtonOptions.AllowGlyphSkinning = true;
-            this.msgIcon.Properties.ErrorImageOptions.SvgImage = global::YT_RED.Properties.Resources.highimportance;
+            this.msgIcon.Properties.ErrorImageOptions.SvgImage = global::YTR.Properties.Resources.highimportance;
             this.msgIcon.Properties.ShowCameraMenuItem = DevExpress.XtraEditors.Controls.CameraMenuItemVisibility.Auto;
             this.msgIcon.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Zoom;
             this.msgIcon.Properties.SvgImageColorizationMode = DevExpress.Utils.SvgImageColorizationMode.Full;
@@ -102,7 +106,7 @@
             this.panelControl1.Location = new System.Drawing.Point(92, 15);
             this.panelControl1.Margin = new System.Windows.Forms.Padding(0);
             this.panelControl1.Name = "panelControl1";
-            this.panelControl1.Size = new System.Drawing.Size(287, 100);
+            this.panelControl1.Size = new System.Drawing.Size(287, 78);
             this.panelControl1.TabIndex = 0;
             // 
             // lblMessage
@@ -117,7 +121,7 @@
             this.lblMessage.Location = new System.Drawing.Point(0, 0);
             this.lblMessage.MinimumSize = new System.Drawing.Size(287, 72);
             this.lblMessage.Name = "lblMessage";
-            this.lblMessage.Size = new System.Drawing.Size(287, 100);
+            this.lblMessage.Size = new System.Drawing.Size(287, 78);
             this.lblMessage.TabIndex = 0;
             // 
             // pictureEdit1
@@ -270,6 +274,36 @@
             this.chkSuppress.TabIndex = 0;
             this.chkSuppress.CheckedChanged += new System.EventHandler(this.chkSuppress_CheckedChanged);
             // 
+            // pnlNotePanel
+            // 
+            this.pnlNotePanel.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.pnlNotePanel.Controls.Add(this.lblNoteLabel);
+            this.pnlNotePanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlNotePanel.Location = new System.Drawing.Point(3, 136);
+            this.pnlNotePanel.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlNotePanel.Name = "pnlNotePanel";
+            this.pnlNotePanel.Size = new System.Drawing.Size(394, 22);
+            this.pnlNotePanel.TabIndex = 5;
+            this.pnlNotePanel.Visible = false;
+            // 
+            // lblNoteLabel
+            // 
+            this.lblNoteLabel.Appearance.Font = new System.Drawing.Font("Tahoma", 7.25F, System.Drawing.FontStyle.Italic);
+            this.lblNoteLabel.Appearance.Options.UseFont = true;
+            this.lblNoteLabel.Appearance.Options.UseTextOptions = true;
+            this.lblNoteLabel.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.lblNoteLabel.Appearance.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Top;
+            this.lblNoteLabel.Appearance.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap;
+            this.lblNoteLabel.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
+            this.lblNoteLabel.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.lblNoteLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblNoteLabel.Location = new System.Drawing.Point(2, 2);
+            this.lblNoteLabel.Margin = new System.Windows.Forms.Padding(0);
+            this.lblNoteLabel.Name = "lblNoteLabel";
+            this.lblNoteLabel.Padding = new System.Windows.Forms.Padding(5, 2, 5, 2);
+            this.lblNoteLabel.Size = new System.Drawing.Size(390, 18);
+            this.lblNoteLabel.TabIndex = 0;
+            // 
             // MsgBox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -277,6 +311,7 @@
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(400, 227);
             this.Controls.Add(this.messagePanel);
+            this.Controls.Add(this.pnlNotePanel);
             this.Controls.Add(this.pnlSuppressPanel);
             this.Controls.Add(this.lblCaption);
             this.Controls.Add(this.buttonPanel);
@@ -301,6 +336,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pnlSuppressPanel)).EndInit();
             this.pnlSuppressPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.chkSuppress.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlNotePanel)).EndInit();
+            this.pnlNotePanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -324,5 +361,7 @@
         private DevExpress.XtraEditors.LabelControl lblCaption;
         private DevExpress.XtraEditors.PanelControl pnlSuppressPanel;
         private DevExpress.XtraEditors.CheckEdit chkSuppress;
+        private DevExpress.XtraEditors.PanelControl pnlNotePanel;
+        private DevExpress.XtraEditors.LabelControl lblNoteLabel;
     }
 }

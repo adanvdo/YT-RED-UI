@@ -1,31 +1,33 @@
-﻿using DevExpress.Internal.WinApi.Windows.UI.Notifications;
-using DevExpress.Utils;
+﻿using DevExpress.Utils;
 using DevExpress.Utils.Drawing;
 using DevExpress.Utils.Svg;
-using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Security.Policy;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Xabe.FFmpeg;
 using YoutubeDLSharp;
-using YT_RED.Classes;
-using YT_RED.Controls;
-using YT_RED.Logging;
-using YT_RED.Settings;
-using YT_RED.Utils;
+using YoutubeDLSharp.Metadata;
+using YTR.Classes;
+using YTR.Controls;
+using YTR.Logging;
+using YTR.Settings;
+using YTR.Utils;
 
-namespace YT_RED
+namespace YTR
 {
     public partial class MainForm : DevExpress.XtraBars.TabForm
     {
+        private string appDirectory = string.Empty;
+        private Size minimumSize = new Size(823, 664);
         private UIBlockDetector _blockDetector;
         private Timer historyTimer;
         public bool IsLocked
@@ -41,7 +43,6 @@ namespace YT_RED
             }
         }
 
-        private DownloadLog selectedYTLog = null;
         private YoutubeDLSharp.Metadata.FormatData selectedFormat = null;
         public YoutubeDLSharp.Metadata.FormatData SelectedFormat { get { return selectedFormat; } }
         public int FormatCount { get { return gvFormats.RowCount; } }
@@ -58,6 +59,20 @@ namespace YT_RED
         private TrayForm activeTrayForm = null;
         private PlaylistItemCollection playlistItemCollection = null;
 
+        private DownloadLog selectedYTLog;
+        [Browsable(false)]
+        public DownloadLog TargetLog
+        {
+            get
+            {
+                if (selectedHistoryIndex >= 0)
+                {
+                    var log = gvHistory.GetRow(selectedHistoryIndex) as DownloadLog;
+                    return log;
+                }
+                return null;
+            }
+        }
 
         static KeyboardHook hook = new KeyboardHook();
 
@@ -74,7 +89,6 @@ namespace YT_RED
             this.initialLink = "";
             this.newUpdater = newUpdater;
             this.activeTrayForm = new TrayForm();
-            activeTrayForm.FormClosed += TrayForm_FormClosed;
             activeTrayForm.StartPosition = FormStartPosition.Manual;
             Rectangle workingArea = Screen.GetWorkingArea(this);
             var loc = new Point(workingArea.Right - activeTrayForm.Size.Width, workingArea.Bottom - activeTrayForm.Size.Height);
@@ -95,7 +109,6 @@ namespace YT_RED
             this.initialLink = initialLink;
             this.newUpdater = newUpdater;
             this.activeTrayForm = new TrayForm();
-            activeTrayForm.FormClosed += TrayForm_FormClosed;
             activeTrayForm.StartPosition = FormStartPosition.Manual;
             Rectangle workingArea = Screen.GetWorkingArea(this);
             var loc = new Point(workingArea.Right - activeTrayForm.Size.Width, workingArea.Bottom - activeTrayForm.Size.Height);
@@ -111,8 +124,9 @@ namespace YT_RED
         private void initializeProgram()
         {
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            this.appDirectory = Path.GetDirectoryName(assembly.Location);
             AppSettings.Default.About.Version = assembly.GetName().Version.ToString();
-            AppSettings.Default.About.Build = assembly.GetCustomAttributes(typeof(AssemblyBuildAttribute), false).Cast<AssemblyBuildAttribute>().FirstOrDefault().Value;
+            AppSettings.Default.About.ReleaseChannel = EnumExtensions.ToEnum<ReleaseChannel>(assembly.GetCustomAttributes(typeof(AssemblyBuildAttribute), false).Cast<AssemblyBuildAttribute>().FirstOrDefault().Value);
             MainForm.hook.KeyPressed += new EventHandler<KeyPressedEventArgs>(Hook_KeyPressed);
             MainForm.UpdateDownloadHotkey();
             this.historyTimer = new Timer();
@@ -168,32 +182,18 @@ namespace YT_RED
                 if (Clipboard.ContainsText())
                     copiedText = Clipboard.GetText();
                 if(!string.IsNullOrEmpty(tempText))
-                    Clipboard.SetText(tempText);
+                    Clipboard.SetText(tempText);              
 
-                var check = HtmlUtil.CheckUrl(copiedText);
-                if (check == DownloadType.Unknown && AppSettings.Default.General.ShowHostWarning)
+                try
                 {
-                    DialogResult res = MsgBox.ShowUrlCheckWarning("The URL entered is not from a supported host. Downloads from this URL may fail or result in errors.\n\nContinue?", "Unrecognized URL", Buttons.YesNo, YT_RED.Controls.Icon.Warning, FormStartPosition.CenterParent);
-                    if (res == DialogResult.No)
-                        return;
-                }
-                else if(check == DownloadType.YouTube)
-                {
-                    YoutubeLink link = VideoUtil.ConvertToYouTubeLink(copiedText);
-                    if (link.Type == YoutubeLinkType.Playlist)
-                    {
-                        MsgBox.Show("Quick Download does not support Youtube Playlists", "Unsupported", Buttons.OK, YT_RED.Controls.Icon.Exclamation, FormStartPosition.CenterScreen, true);
-                        return;
-                    }
-                }
-
-                if (activeTrayForm == null)
-                {
-                    try
+                    if (activeTrayForm == null)
                     {
                         activeTrayForm = new TrayForm();
-                        activeTrayForm.FormClosed += TrayForm_FormClosed;
                         activeTrayForm.StartPosition = FormStartPosition.Manual;
+                    }
+
+                    if (!activeTrayForm.Locked)
+                    {
                         Rectangle workingArea = Screen.GetWorkingArea(this);
                         var loc = new Point(workingArea.Right - activeTrayForm.Size.Width, workingArea.Bottom - activeTrayForm.Size.Height);
                         activeTrayForm.HideProgressPanel();
@@ -204,23 +204,11 @@ namespace YT_RED
                         activeTrayForm.TopMost = true;
                         activeTrayForm.TriggerDownload();
                     }
-                    catch (Exception ex)
-                    {
-                        if (ex.Message.ToLower() != "a task was canceled.")
-                            ExceptionHandler.LogException(ex);
-                    }
                 }
-                else if(!activeTrayForm.Locked)
+                catch (Exception ex)
                 {
-                    Rectangle workingArea = Screen.GetWorkingArea(this);
-                    var loc = new Point(workingArea.Right - activeTrayForm.Size.Width, workingArea.Bottom - activeTrayForm.Size.Height);
-                    activeTrayForm.HideProgressPanel();
-                    activeTrayForm.Location = loc;
-                    activeTrayForm.Url = copiedText;
-                    activeTrayForm.Show();
-                    activeTrayForm.BringToFront();
-                    activeTrayForm.TopMost = true;
-                    activeTrayForm.TriggerDownload();
+                    if (ex.Message.ToLower() != "a task was canceled")
+                        ExceptionHandler.LogException(ex);
                 }
             }
         }
@@ -248,7 +236,7 @@ namespace YT_RED
                 if (!uploaded)
                     MsgBox.Show("Log Upload Failed", FormStartPosition.CenterParent);
             }
-            splitterNegativePosition = sccMainSplitter.Size.Width - sccMainSplitter.SplitterPosition;
+            splitterNegativePosition = sccMainSplitContainer.Size.Width - sccMainSplitContainer.SplitterPosition;
             if (AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
             {
                 cpMainControlPanel.EnableToggle(false, false, true, true, false);
@@ -263,6 +251,9 @@ namespace YT_RED
             cpMainControlPanel.MaxResolution = AppSettings.Default.General.MaxResolutionBest;
             cpMainControlPanel.MaxFilesize = AppSettings.Default.General.MaxFilesizeBest;
             cpMainControlPanel.RestoreControlGroupCollapseStates();
+            updateControlPanelDisplay();
+            this.MinimumSize = calculateMinSize();
+
             base.OnLoad(e);
         }
 
@@ -308,7 +299,7 @@ namespace YT_RED
                 if (loadDownloadHistory)
                 {
                     refreshHistory();
-                }                
+                }
             }
             gcFormats.DataSource = new List<YTDLFormatData>();
             refreshFormatGrid(DownloadType.Unknown);
@@ -337,21 +328,71 @@ namespace YT_RED
                 bool updaterReplaced = await UpdateHelper.ReplaceUpdater();
                 if (!updaterReplaced)
                 {
-                    YT_RED.Controls.MsgBox.Show($"Failed to Replace Updater", "Something Went Wrong", FormStartPosition.CenterParent);
+                    YTR.Controls.MsgBox.Show($"Failed to Replace Updater", "Something Went Wrong", FormStartPosition.CenterParent);
                 }
             }
 
             if (this.updated || Program.updated)
             {
+                string appLog = Path.Combine(this.appDirectory, "Resources", "App", "update_log.json");
+                try
+                {
+                    if (await Task.Run(() => File.Exists(appLog)))
+                    {
+                        string json = await Task.Run(() => File.ReadAllText(appLog));
+                        UpdateLog log = JsonConvert.DeserializeObject<UpdateLog>(json);
+                        if (!string.IsNullOrEmpty(log.YTDLPVersion))
+                            AppSettings.Default.General.YtdlpLocalVersion = log.YTDLPVersion;
+                        if (!string.IsNullOrEmpty(log.FFMPEGVersion))
+                            AppSettings.Default.General.FfmpegLocalVersion = log.FFMPEGVersion;
+                        await Task.Run(() => File.Delete(appLog));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ExceptionHandler.LogException(ex);
+                }
                 bool replaceDependency = await UpdateHelper.ReplaceZipDependency();
                 bool deleteBackup = await UpdateHelper.DeleteRemnants();
+                AppSettings.Default.Save();
+            }
+        }
+
+        private int prevHistoryWidth = 300;
+
+        private void updateHistoryPanel()
+        {
+            if (AppSettings.Default.General.EnableDownloadHistory)
+            {
+                bool expanding = !AppSettings.Default.General.CollapseHistoryPanel;
+                prevHistoryWidth = expanding ? prevHistoryWidth : pnlHistoryPanel.Width;
+                scHistorySplitter.Visible = !AppSettings.Default.General.CollapseHistoryPanel;
+                sccMainSplitContainer.Padding = new Padding(5, 0, AppSettings.Default.General.CollapseHistoryPanel ? 5 : 0, 0);
+                lblHeaderLabel.Visible = !AppSettings.Default.General.CollapseHistoryPanel;
+                lblHistoryVert.Visible = AppSettings.Default.General.CollapseHistoryPanel;
+                gcHistory.Visible = !AppSettings.Default.General.CollapseHistoryPanel;
+                pnlHistoryPanel.MinimumSize = new Size(AppSettings.Default.General.CollapseHistoryPanel ? 32 : 300, 0);
+                pnlHistoryPanel.Width = AppSettings.Default.General.CollapseHistoryPanel ? 32 : prevHistoryWidth;
+                btnShowHideHistory.ImageOptions.SvgImage = AppSettings.Default.General.CollapseHistoryPanel ? Properties.Resources.doubleprev : Properties.Resources.doublenext;
+                pnlHistoryControls.Visible = !AppSettings.Default.General.CollapseHistoryPanel;
+                if (expanding && !AppSettings.Default.General.CollapseHistoryPanel)
+                {
+                    sccMainSplitContainer.SplitterPosition = sccMainSplitContainer.SplitterPosition - (pnlHistoryPanel.Width - 300);
+                    scHistorySplitter.Location = new Point(tabFormContentContainer1.Width - pnlHistoryPanel.Width, 0);
+                }
+                this.pnlHistoryPanel.Visible = true;
+            }
+            else
+            {
+                this.pnlHistoryPanel.Visible = false;
             }
         }
 
         private void applyLayout(Settings.LayoutArea layoutArea = LayoutArea.All)
         {
             this.UseWaitCursor = true;
-            cpMainControlPanel.gcHistory.Visible = AppSettings.Default.General.EnableDownloadHistory;
+
+            updateHistoryPanel();
 
             if(layoutArea == LayoutArea.All || layoutArea == LayoutArea.Panels)
             {
@@ -367,9 +408,9 @@ namespace YT_RED
                 }
 
                 if (AppSettings.Default.Layout.ControlPanelPosition == HorizontalPanelPosition.Right)
-                    sccMainSplitter.RightToLeft = RightToLeft.No;
+                    sccMainSplitContainer.RightToLeft = RightToLeft.No;
                 else
-                    sccMainSplitter.RightToLeft = RightToLeft.Yes;
+                    sccMainSplitContainer.RightToLeft = RightToLeft.Yes;
                 this.Refresh();
             }
 
@@ -457,7 +498,7 @@ namespace YT_RED
             }
             DialogResult res = dlg.ShowDialog();
             Cursor.Current = Cursors.Default;
-            cpMainControlPanel.gcHistory.DataSource = Historian.DownloadHistory;
+            gcHistory.DataSource = Historian.DownloadHistory;
             refreshHistory();
             applyLayout(LayoutArea.Panels);
             cpMainControlPanel.UpdatePanelStates();
@@ -467,25 +508,9 @@ namespace YT_RED
                 string currentUrl = ipMainInput.URL;
                 cpMainControlPanel.ResetControls(gvFormats.RowCount > 0);
                 if(ipMainInput.URL != currentUrl) { ipMainInput.URL = currentUrl; }
-                cpMainControlPanel.gcHistory.Visible = AppSettings.Default.General.EnableDownloadHistory;
+                pnlHistoryPanel.Visible = AppSettings.Default.General.EnableDownloadHistory;
                 await Task.Delay(3000);
                 bsiMessage.Caption = String.Empty;
-            }
-        }
-
-        private void toolTipController_GetActiveObjectInfo(object sender, DevExpress.Utils.ToolTipControllerGetActiveObjectInfoEventArgs e)
-        {
-            if (e.Info == null && e.SelectedControl is GridControl)
-            {
-                GridView view = (e.SelectedControl as GridControl).FocusedView as GridView;
-                GridHitInfo info = view.CalcHitInfo(e.ControlMousePosition);
-                if (info.InRowCell && info.Column.FieldName == "FileExists")
-                {
-                    bool exists = Convert.ToBoolean(view.GetRowCellValue(info.RowHandle, "FileExists"));
-                    string text = exists ? "File Exists" : "File Not Found";
-                    string cellKey = info.RowHandle.ToString() + " - " + info.Column.ToString();
-                    e.Info = new ToolTipControlInfo(cellKey, text);
-                }
             }
         }
 
@@ -503,41 +528,32 @@ namespace YT_RED
             this.Show();
             this.WindowState = FormWindowState.Normal;
         }
-        
+
         private void tsiDownload_Click(object sender, EventArgs e)
         {
-            if (activeTrayForm == null)
+            try
             {
-                try
-                {
-                    if (activeTrayForm == null) activeTrayForm = new TrayForm();
-                    activeTrayForm.FormClosed += TrayForm_FormClosed;
-                    activeTrayForm.StartPosition = FormStartPosition.Manual;
-                    Rectangle workingArea = Screen.GetWorkingArea(this);
-                    activeTrayForm.HideProgressPanel();
-                    var loc = new Point(workingArea.Right - activeTrayForm.Size.Width, workingArea.Bottom - (activeTrayForm.Size.Height - 81));
-                    activeTrayForm.Location = loc;
-                    activeTrayForm.ShowDialog();
-                    
-                }
-                catch (Exception ex)
-                {
-                    if (ex.Message.ToLower() != "a task was canceled.")
-                        ExceptionHandler.LogException(ex);
-                }
-            }
-        }
+                if (activeTrayForm == null) activeTrayForm = new TrayForm();
+                activeTrayForm.StartPosition = FormStartPosition.Manual;
+                Rectangle workingArea = Screen.GetWorkingArea(this);
+                activeTrayForm.HideProgressPanel();
+                var loc = new Point(workingArea.Right - activeTrayForm.Size.Width, workingArea.Bottom - (activeTrayForm.Size.Height - 81));
+                activeTrayForm.Location = loc;
+                activeTrayForm.ShowDialog();
 
-        private void TrayForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            //activeTrayForm = null;
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.ToLower() != "a task was canceled")
+                    ExceptionHandler.LogException(ex);
+            }
         }
 
         private void tsiExit_Click(object sender, EventArgs e)
         {
             if (IsLocked || (activeTrayForm != null && activeTrayForm.Locked))
             {
-                DialogResult res = MsgBox.Show("A download is in progress.\nAre you sure you want to exit?", "Download In Progress", YT_RED.Controls.Buttons.OKCancel, YT_RED.Controls.Icon.Warning);
+                DialogResult res = MsgBox.Show("A download is in progress.\nAre you sure you want to exit?", "Download In Progress", YTR.Controls.Buttons.OKCancel, YTR.Controls.Icon.Warning);
                 if (res != DialogResult.OK)
                     return;
             }
@@ -558,10 +574,12 @@ namespace YT_RED
                 playlistItemCollection = null;
             }
 
+            var checkUrl = HtmlUtil.CheckUrl(ipMainInput.URL);
+
             gcFormats.DataSource = null;
             gvFormats.RefreshData();
             cpMainControlPanel.CurrentFormatPair.Clear();
-            cpMainControlPanel.ResetControls(false);
+            cpMainControlPanel.ResetControls(false, checkUrl != DownloadType.Empty);
             selectedAudioIndex = -1;
             selectedVideoIndex = -1; 
             videoInfoPanel.Clear();
@@ -570,7 +588,6 @@ namespace YT_RED
             btnPLSelectAll.Text = "Select All";
             allSelected = false;
             
-            var checkUrl = HtmlUtil.CheckUrl(ipMainInput.URL);
             if (gvFormats.GetSelectedRows().Length < 1 && checkUrl != DownloadType.Unknown && checkUrl == DownloadType.YouTube)
             {
                 YoutubeLink link = VideoUtil.ConvertToYouTubeLink(ipMainInput.URL);
@@ -808,12 +825,13 @@ namespace YT_RED
 
         private void refreshHistory()
         {
-            int originalIndex = cpMainControlPanel.gvHistory.FocusedRowHandle;
-            cpMainControlPanel.gcHistory.DataSource = null;
-            cpMainControlPanel.gcHistory.DataSource = Historian.DownloadHistory;
-            cpMainControlPanel.PopulateHistoryColumns();
-            cpMainControlPanel.gvHistory.FocusedRowHandle = originalIndex;
-            selectedYTLog = cpMainControlPanel.gvHistory.GetRow(originalIndex) as DownloadLog;
+            int originalIndex = gvHistory.FocusedRowHandle;
+            gcHistory.DataSource = null;
+            gcHistory.DataSource = Historian.DownloadHistory;
+            PopulateHistoryColumns();
+            gvHistory.RefreshData();
+            gvHistory.FocusedRowHandle = originalIndex;
+            selectedYTLog = gvHistory.GetRow(originalIndex) as DownloadLog;
         }
 
         private void updateProgress(DownloadProgress progress)
@@ -869,7 +887,7 @@ namespace YT_RED
             }
             catch (Exception ex)
             {
-                if (ex.Message.ToLower() != "a task was canceled.")
+                if (ex.Message.ToLower() != "a task was canceled")
                     ExceptionHandler.LogException(ex);
             }
 
@@ -888,7 +906,7 @@ namespace YT_RED
                 this.currentDownload = HtmlUtil.CheckUrl(ipMainInput.URL);
                 if (this.currentDownload == DownloadType.Unknown && AppSettings.Default.General.ShowHostWarning)
                 {
-                    DialogResult res = MsgBox.ShowUrlCheckWarning("The URL entered is not from a supported host. Downloads from this URL may fail or result in errors.\n\nContinue?", "Unrecognized URL", Buttons.YesNo, YT_RED.Controls.Icon.Warning, FormStartPosition.CenterParent);
+                    DialogResult res = MsgBox.ShowUrlCheckWarning("The URL entered is not from a supported host. Downloads from this URL may fail or result in errors.\n\nContinue?", "Unrecognized URL", Buttons.YesNo, YTR.Controls.Icon.Warning, FormStartPosition.CenterParent);
                     if (res == DialogResult.No)
                         return;
                 }
@@ -949,7 +967,7 @@ namespace YT_RED
             }
             catch (Exception ex)
             {
-                if (ex.Message.ToLower() != "a task was canceled.")
+                if (ex.Message.ToLower() != "a task was canceled")
                     ExceptionHandler.LogException(ex);
             }
             this.ipMainInput.btnListFormats.Text = "List Available Formats";
@@ -981,14 +999,14 @@ namespace YT_RED
                     DialogResult res = MsgBox.Show($"There are {this.playlistItemCollection.Count} videos in this playlist.\nContinue download?", 
                         "Confirm Download", 
                         Buttons.YesNo, 
-                        YT_RED.Controls.Icon.Warning, 
+                        YTR.Controls.Icon.Warning, 
                         FormStartPosition.CenterParent);
                     if(res == DialogResult.No) { return; }
                     cpMainControlPanel.SetCurrentPlaylistItems(this.playlistItemCollection);
                 }
                 else
                 {
-                    MsgBox.Show("Empty or Invalid Playlist", "Error", Buttons.OK, YT_RED.Controls.Icon.Error, FormStartPosition.CenterParent);
+                    MsgBox.Show("Empty or Invalid Playlist", "Error", Buttons.OK, YTR.Controls.Icon.Error, FormStartPosition.CenterParent);
                     return;
                 }
             }
@@ -1067,7 +1085,7 @@ namespace YT_RED
                 initialDLLocation = result.Data;
 
                 await Historian.RecordDownload(dlLog);
-                cpMainControlPanel.gcHistory.DataSource = Historian.DownloadHistory;
+                gcHistory.DataSource = Historian.DownloadHistory;
                 refreshHistory();
 
                 cpMainControlPanel.ShowProgress();
@@ -1105,7 +1123,7 @@ namespace YT_RED
             this.currentDownload = HtmlUtil.CheckUrl(ipMainInput.URL);
             if (this.currentDownload == DownloadType.Unknown && AppSettings.Default.General.ShowHostWarning)
             {
-                DialogResult res = MsgBox.ShowUrlCheckWarning("The URL entered is not from a supported host. Downloads from this URL may fail or result in errors.\n\nContinue?", "Unrecognized URL", Buttons.YesNo, YT_RED.Controls.Icon.Warning, FormStartPosition.CenterParent);
+                DialogResult res = MsgBox.ShowUrlCheckWarning("The URL entered is not from a supported host. Downloads from this URL may fail or result in errors.\n\nContinue?", "Unrecognized URL", Buttons.YesNo, YTR.Controls.Icon.Warning, FormStartPosition.CenterParent);
                 if (res == DialogResult.No)
                     return;
             }
@@ -1124,6 +1142,16 @@ namespace YT_RED
             TimeSpan? duration = null;
             VideoFormat? videoFormat = null;
             AudioFormat? audioFormat = null;
+            VideoData mediaData = null;
+
+            try
+            {
+                mediaData = await VideoUtil.GetVideoData(url, false);
+            }
+            catch(Exception ex)
+            {
+                ExceptionHandler.LogException(ex);
+            }
 
             if (cpMainControlPanel.SegmentEnabled)
             {
@@ -1143,7 +1171,7 @@ namespace YT_RED
                 audioFormat = cpMainControlPanel.ConvertAudioFormat == null ? AudioFormat.UNSPECIFIED : cpMainControlPanel.ConvertAudioFormat;
                 if(videoFormat == VideoFormat.GIF)
                 {
-                    DialogResult confirm = MsgBox.Show($"GIF Conversion is limited to 60 seconds.\nOnly the first 60 seconds will be downloaded.\n\nContinue?", "GIF Duration", Buttons.YesNo, YT_RED.Controls.Icon.Exclamation);
+                    DialogResult confirm = MsgBox.Show($"GIF Conversion is limited to 60 seconds.\nOnly the first 60 seconds will be downloaded.\n\nContinue?", "GIF Duration", Buttons.YesNo, YTR.Controls.Icon.Exclamation);
                     if (confirm == DialogResult.No)
                     {
                         this.UseWaitCursor = false;
@@ -1201,8 +1229,8 @@ namespace YT_RED
                         }
                         catch (Exception ex)
                         {
-                            if (ex.Message.ToLower() != "a task was canceled.")
-                                ExceptionHandler.LogFFmpegException(ex);
+                            if (ex.Message.ToLower() != "a task was canceled")
+                                ExceptionHandler.LogFFmpegException(ex, true, url);
                             result = new RunResult<string>(false, new string[] { ex.Message }, null);
                         }
                     }
@@ -1229,8 +1257,8 @@ namespace YT_RED
                         }
                         catch (Exception ex)
                         {
-                            if (ex.Message.ToLower() != "a task was canceled.")
-                                ExceptionHandler.LogFFmpegException(ex);
+                            if (ex.Message.ToLower() != "a task was canceled")
+                                ExceptionHandler.LogFFmpegException(ex, true, url);
                             result = new RunResult<string>(false, new string[] { ex.Message }, null);
                         }
                     }
@@ -1261,7 +1289,7 @@ namespace YT_RED
                         List<YTDLFormatData> converted = new List<YTDLFormatData>();
                         if (data.Formats != null && data.Formats.Count() > 0)
                         {
-                            YT_RED.Classes.StreamType detect = AppSettings.DetectStreamTypeFromExtension(data.Extension);
+                            YTR.Classes.StreamType detect = AppSettings.DetectStreamTypeFromExtension(data.Extension);
                             if (detect != Classes.StreamType.Unknown)
                             {                                
                                 if (cpMainControlPanel.ConversionEnabled && AppSettings.Default.Advanced.AlwaysConvertToPreferredFormat)
@@ -1306,6 +1334,7 @@ namespace YT_RED
             cpMainControlPanel.DownloadBestVisible = true;
             this.cpMainControlPanel.btnCancelProcess.Visible = false;
             var dlLog = new DownloadLog(VideoUtil.ConvertToYouTubeLink(url).Url,
+                mediaData?.Title,
                 currentDownload,
                 streamType,
                 DateTime.Now,
@@ -1326,7 +1355,7 @@ namespace YT_RED
                     System.Diagnostics.Process.Start("explorer.exe", argument);
                 }
             }
-            cpMainControlPanel.gcHistory.DataSource = Historian.DownloadHistory;
+            gcHistory.DataSource = Historian.DownloadHistory;
             refreshHistory();
             this.UseWaitCursor = false;
             this.currentDownload = DownloadType.Unknown;
@@ -1339,10 +1368,12 @@ namespace YT_RED
             this.currentDownload = HtmlUtil.CheckUrl(ipMainInput.URL);
             if(this.currentDownload == DownloadType.Unknown && AppSettings.Default.General.ShowHostWarning)
             {
-                DialogResult res = MsgBox.ShowUrlCheckWarning("The URL entered is not from a supported host. Downloads from this URL may fail or result in errors.\n\nContinue?", "Unrecognized URL", Buttons.YesNo, YT_RED.Controls.Icon.Warning, FormStartPosition.CenterParent);
+                DialogResult res = MsgBox.ShowUrlCheckWarning("The URL entered is not from a supported host. Downloads from this URL may fail or result in errors.\n\nContinue?", "Unrecognized URL", Buttons.YesNo, YTR.Controls.Icon.Warning, FormStartPosition.CenterParent);
                 if (res == DialogResult.No)
                     return;
             }
+
+            cpMainControlPanel.SetProcessingLimits();
 
             VideoUtil.Running = true;
             this.UseWaitCursor = true;
@@ -1404,7 +1435,7 @@ namespace YT_RED
                     {
                         if (cpMainControlPanel.SegmentEnabled && duration != null && ((TimeSpan)duration).TotalSeconds > 60)
                         {
-                            DialogResult confirm = MsgBox.Show($"You have specified a duration of {((TimeSpan)duration).TotalSeconds} seconds.\nGIF Conversion is limited to 60 seconds.\n\nContinue?", "GIF Duration", Buttons.YesNo, YT_RED.Controls.Icon.Exclamation);
+                            DialogResult confirm = MsgBox.Show($"You have specified a duration of {((TimeSpan)duration).TotalSeconds} seconds.\nGIF Conversion is limited to 60 seconds.\n\nContinue?", "GIF Duration", Buttons.YesNo, YTR.Controls.Icon.Exclamation);
                             if (confirm == DialogResult.No)
                             {
                                 this.UseWaitCursor = false;
@@ -1421,7 +1452,7 @@ namespace YT_RED
                             cpMainControlPanel.CurrentFormatPair.VideoFormat.Duration != null &&
                             ((TimeSpan)cpMainControlPanel.CurrentFormatPair.VideoFormat.Duration).TotalSeconds > 60)
                         {
-                            DialogResult confirm = MsgBox.Show($"GIF Conversion is limited to 60 seconds.\nOnly the first 60 seconds will be downloaded.\n\nContinue?", "GIF Duration", Buttons.YesNo, YT_RED.Controls.Icon.Exclamation);
+                            DialogResult confirm = MsgBox.Show($"GIF Conversion is limited to 60 seconds.\nOnly the first 60 seconds will be downloaded.\n\nContinue?", "GIF Duration", Buttons.YesNo, YTR.Controls.Icon.Exclamation);
                             if(confirm == DialogResult.No)
                             {
                                 this.UseWaitCursor = false;
@@ -1485,8 +1516,8 @@ namespace YT_RED
                     catch (Exception ex)
                     {
                         result = new RunResult<string>(false, new string[] { ex.Message }, null);
-                        if (ex.Message.ToLower() != "a task was canceled.")
-                            ExceptionHandler.LogFFmpegException(ex);
+                        if (ex.Message.ToLower() != "a task was canceled")
+                            ExceptionHandler.LogFFmpegException(ex, true, VideoUtil.ConvertToYouTubeLink(ipMainInput.URL).Url);
                     }
                 }
                 else
@@ -1515,10 +1546,10 @@ namespace YT_RED
             }
             pendingDL.Format = cpMainControlPanel.CurrentFormatPair.FormatId;
 
-            YT_RED.Classes.StreamType t = Classes.StreamType.Audio;
+            YTR.Classes.StreamType t = Classes.StreamType.Audio;
             if (cpMainControlPanel.CurrentFormatPair.AudioCodec == "none")
                 t = Classes.StreamType.Video;
-            else if (cpMainControlPanel.CurrentFormatPair.AudioFormat != null || (cpMainControlPanel.CurrentFormatPair.VideoFormat != null && cpMainControlPanel.CurrentFormatPair.VideoFormat.Resolution == "audio only"))
+            else if (cpMainControlPanel.CurrentFormatPair.AudioFormat != null && (cpMainControlPanel.CurrentFormatPair.VideoFormat == null || (cpMainControlPanel.CurrentFormatPair.VideoFormat != null && cpMainControlPanel.CurrentFormatPair.VideoFormat.Resolution == "audio only")))
                 t = Classes.StreamType.Audio;
             else
                 t = Classes.StreamType.AudioAndVideo;
@@ -1533,6 +1564,7 @@ namespace YT_RED
                 {
                     return new DownloadLog(
                         VideoUtil.ConvertToYouTubeLink(ipMainInput.URL).Url,
+                        this.videoInfoPanel.Title,
                         this.currentDownload,
                         t, DateTime.Now,
                         result.Data,
@@ -1551,7 +1583,7 @@ namespace YT_RED
                     System.Diagnostics.Process.Start("explorer.exe", argument);
                 }
             }
-            cpMainControlPanel.gcHistory.DataSource = Historian.DownloadHistory;
+            gcHistory.DataSource = Historian.DownloadHistory;
             refreshHistory();
             gvFormats.FocusedRowHandle = -1;
             this.UseWaitCursor = false;
@@ -1611,7 +1643,7 @@ namespace YT_RED
             }
             catch(Exception ex)
             {
-                if (ex.Message.ToLower() != "a task was canceled.")
+                if (ex.Message.ToLower() != "a task was canceled")
                     ExceptionHandler.LogException(ex);
             }
         }
@@ -1634,7 +1666,19 @@ namespace YT_RED
             cpMainControlPanel.DownloadAudioVisible = false;
             Classes.YTDLFormatData fd = gvFormats.GetFocusedRow() as Classes.YTDLFormatData;
             if (fd.Type == Classes.StreamType.Video || fd.Type == Classes.StreamType.AudioAndVideo)
+            {
                 cpMainControlPanel.SetCurrentFormats(fd);
+                if (fd.Width != null && fd.Height != null)
+                {
+                    videoInfoPanel.UseMediaSize = new Size((int)fd.Width, (int)fd.Height);
+                    videoInfoPanel.QualifyCropButton(true);
+                }
+                else
+                {
+                    videoInfoPanel.UseMediaSize = new Size(0, 0);
+                    videoInfoPanel.QualifyCropButton(false);
+                }
+            }
             else if (fd.Type == Classes.StreamType.Audio)
                 cpMainControlPanel.SetCurrentFormats(null, fd);
             if(fd.VideoCodec == "none")
@@ -1689,7 +1733,7 @@ namespace YT_RED
             if(e.Column.FieldName == "Type")
             {
                 var palette = SvgPaletteHelper.GetSvgPalette(this.LookAndFeel, ObjectState.Normal);
-                YT_RED.Classes.StreamType? type = e.CellValue as Classes.StreamType?;
+                YTR.Classes.StreamType? type = e.CellValue as Classes.StreamType?;
                 switch (type)
                 {
                     case Classes.StreamType.AudioAndVideo:
@@ -1708,12 +1752,12 @@ namespace YT_RED
 
         private void sccMainSplitter_Resize(object sender, EventArgs e)
         {
-            sccMainSplitter.SplitterPosition = sccMainSplitter.Size.Width - splitterNegativePosition;
+            sccMainSplitContainer.SplitterPosition = sccMainSplitContainer.Size.Width - splitterNegativePosition;
         }
 
         private void sccMainSplitter_SplitterMoved(object sender, EventArgs e)
         {
-            splitterNegativePosition = sccMainSplitter.Size.Width - sccMainSplitter.SplitterPosition;
+            splitterNegativePosition = sccMainSplitContainer.Size.Width - sccMainSplitContainer.SplitterPosition;
         }
 
 
@@ -1801,6 +1845,20 @@ namespace YT_RED
                     cpMainControlPanel.RemoveCurrentFormat(selection.Type);
                 }
 
+                if (cpMainControlPanel.CurrentFormatPair != null)
+                {
+                    if (cpMainControlPanel.CurrentFormatPair.Width != null && cpMainControlPanel.CurrentFormatPair.Height != null)
+                    {
+                        videoInfoPanel.UseMediaSize = new Size((int)cpMainControlPanel.CurrentFormatPair.Width, (int)cpMainControlPanel.CurrentFormatPair.Height);
+                        videoInfoPanel.QualifyCropButton(true);
+                    }
+                    else
+                    {
+                        videoInfoPanel.UseMediaSize = new Size(0, 0);
+                        videoInfoPanel.QualifyCropButton(false);
+                    }
+                }
+
                 if (gvFormats.GetSelectedRows().Length < 1)
                 {
                     cpMainControlPanel.CurrentFormatPair.Clear();
@@ -1877,48 +1935,48 @@ namespace YT_RED
 
         private void cpMainControlPanel_ReDownload_Click(object sender, EventArgs e)
         {
-            if (cpMainControlPanel.TargetLog != null)
+            if (TargetLog != null)
             {
-                ipMainInput.URL = cpMainControlPanel.TargetLog.Url;
+                ipMainInput.URL = TargetLog.Url;
 
-                if (cpMainControlPanel.TargetLog.Start != null && cpMainControlPanel.TargetLog.Duration != null)
+                if (TargetLog.Start != null && TargetLog.Duration != null)
                 {
                     cpMainControlPanel.EnableToggle(true, false, false, true);
-                    cpMainControlPanel.SegmentStart = (TimeSpan)cpMainControlPanel.TargetLog.Start;
-                    cpMainControlPanel.SegmentDuration = cpMainControlPanel.TargetLog.SegmentMode == SegmentControlMode.Duration ? (TimeSpan)cpMainControlPanel.TargetLog.Duration : (TimeSpan)cpMainControlPanel.TargetLog.Start + (TimeSpan)cpMainControlPanel.TargetLog.Duration;
+                    cpMainControlPanel.SegmentStart = (TimeSpan)TargetLog.Start;
+                    cpMainControlPanel.SegmentDuration = TargetLog.SegmentMode == SegmentControlMode.Duration ? (TimeSpan)TargetLog.Duration : (TimeSpan)TargetLog.Start + (TimeSpan)TargetLog.Duration;
                 }
-                if (cpMainControlPanel.TargetLog.Crops != null && cpMainControlPanel.TargetLog.Crops.Length > 0)
+                if (TargetLog.Crops != null && TargetLog.Crops.Length > 0)
                 {
                     cpMainControlPanel.EnableToggle(false, true, false, true);
-                    cpMainControlPanel.CropTop = cpMainControlPanel.TargetLog.Crops[0].ToString();
-                    cpMainControlPanel.CropBottom = cpMainControlPanel.TargetLog.Crops[1].ToString();
-                    cpMainControlPanel.CropLeft = cpMainControlPanel.TargetLog.Crops[2].ToString();
-                    cpMainControlPanel.CropRight = cpMainControlPanel.TargetLog.Crops[3].ToString();
+                    cpMainControlPanel.CropTop = TargetLog.Crops[0].ToString();
+                    cpMainControlPanel.CropBottom = TargetLog.Crops[1].ToString();
+                    cpMainControlPanel.CropLeft = TargetLog.Crops[2].ToString();
+                    cpMainControlPanel.CropRight = TargetLog.Crops[3].ToString();
                 }
-                if ((cpMainControlPanel.TargetLog.VideoConversionFormat != null && cpMainControlPanel.TargetLog.VideoConversionFormat != VideoFormat.UNSPECIFIED)
-                    || (cpMainControlPanel.TargetLog.AudioConversionFormat != null && cpMainControlPanel.TargetLog.AudioConversionFormat != AudioFormat.UNSPECIFIED))
+                if ((TargetLog.VideoConversionFormat != null && TargetLog.VideoConversionFormat != VideoFormat.UNSPECIFIED)
+                    || (TargetLog.AudioConversionFormat != null && TargetLog.AudioConversionFormat != AudioFormat.UNSPECIFIED))
                 {
                     cpMainControlPanel.EnableToggle(false, false, true, true);
-                    cpMainControlPanel.ConvertVideoFormat = cpMainControlPanel.TargetLog.VideoConversionFormat;
+                    cpMainControlPanel.ConvertVideoFormat = TargetLog.VideoConversionFormat;
                 }
-                if (cpMainControlPanel.TargetLog.MaxResolution != null && cpMainControlPanel.TargetLog.MaxResolution != Resolution.ANY)
+                if (TargetLog.MaxResolution != null && TargetLog.MaxResolution != Resolution.ANY)
                 {
                     cpMainControlPanel.EnableToggle(false, false, false, true);
-                    cpMainControlPanel.MaxResolution = cpMainControlPanel.TargetLog.MaxResolution;
+                    cpMainControlPanel.MaxResolution = TargetLog.MaxResolution;
                 }
-                if(cpMainControlPanel.TargetLog.MaxFileSize != null && cpMainControlPanel.TargetLog.MaxFileSize > 0)
+                if(TargetLog.MaxFileSize != null && TargetLog.MaxFileSize > 0)
                 {
                     cpMainControlPanel.EnableToggle(false, false, false, true);
-                    cpMainControlPanel.MaxFilesize = (int)cpMainControlPanel.TargetLog.MaxFileSize;
+                    cpMainControlPanel.MaxFilesize = (int)TargetLog.MaxFileSize;
                 }
 
-                if (cpMainControlPanel.TargetLog.FormatPair == null)
+                if (TargetLog.FormatPair == null)
                 {
-                    ytdlDownloadBest(cpMainControlPanel.TargetLog.Url, cpMainControlPanel.TargetLog.Type);
+                    ytdlDownloadBest(TargetLog.Url, TargetLog.StreamType);
                 }
                 else
                 {
-                    cpMainControlPanel.SetCurrentFormatPair(cpMainControlPanel.TargetLog.FormatPair);                    
+                    cpMainControlPanel.SetCurrentFormatPair(TargetLog.FormatPair);                    
 
                     ytdlDownloadSelection();
                 }
@@ -1930,8 +1988,8 @@ namespace YT_RED
 
         private void cpMainControlPanel_NewDownload_Click(object sender, EventArgs e)
         {
-            if (cpMainControlPanel.TargetLog != null)
-                ipMainInput.URL = cpMainControlPanel.TargetLog.Url;
+            if (TargetLog != null)
+                ipMainInput.URL = TargetLog.Url;
             else
                 MsgBox.Show("Error reading log info");
         }
@@ -1988,11 +2046,11 @@ namespace YT_RED
         private bool adjustedSplitter = false;
         private void updateControlPanelDisplay()
         {
-            if (cpMainControlPanel.TotalControlSize.Height > sccMainSplitter.Panel2.Size.Height)
+            if (cpMainControlPanel.TotalControlSize.Height > sccMainSplitContainer.Panel2.Size.Height)
             {
                 if (pnlScrollableControls.VerticalScroll.Visible && !adjustedSplitter)
                 {
-                    sccMainSplitter.SplitterPosition = sccMainSplitter.SplitterPosition - 25;
+                    sccMainSplitContainer.SplitterPosition = sccMainSplitContainer.SplitterPosition - 25;
                     adjustedSplitter = true;
                 }
                 cpMainControlPanel.Dock = DockStyle.Top;
@@ -2003,13 +2061,241 @@ namespace YT_RED
             {
                 if (!pnlScrollableControls.VerticalScroll.Visible && adjustedSplitter)
                 {
-                    sccMainSplitter.SplitterPosition = sccMainSplitter.SplitterPosition + 25;
+                    sccMainSplitContainer.SplitterPosition = sccMainSplitContainer.SplitterPosition + 25;
                     adjustedSplitter = false;
                 }
                 cpMainControlPanel.Dock = DockStyle.Fill;
                 cpMainControlPanel.MinimumSize = new Size(0, 0);
                 cpMainControlPanel.AdjustControls(pnlScrollableControls.Height);
             }
+        }
+
+        private void videoInfoPanel_Crop_Click(object sender, EventArgs e)
+        {
+            using (var cropForm = new CropForm(videoInfoPanel.CurrentImage.Clone() as Image, videoInfoPanel.UseMediaSize))
+            {
+                cropForm.StartPosition = FormStartPosition.CenterScreen;
+                DialogResult cropRes = cropForm.ShowDialog();
+                if (cropRes == DialogResult.OK && cropForm.Crops != null)
+                {
+                    if(!cpMainControlPanel.CropEnabled)
+                        cpMainControlPanel.EnableToggle(false, true, false, true, false);
+
+                    cpMainControlPanel.CropTop = cropForm.Crops[0].ToString();
+                    cpMainControlPanel.CropBottom = cropForm.Crops[1].ToString();
+                    cpMainControlPanel.CropLeft = cropForm.Crops[2].ToString();
+                    cpMainControlPanel.CropRight = cropForm.Crops[3].ToString();
+                }
+                else if (cropRes == DialogResult.Cancel)
+                {
+                    return;
+                }
+            }
+        }
+
+        private void gvFormats_RowCountChanged(object sender, EventArgs e)
+        {
+            videoInfoPanel.QualifyCropButton(
+                (gvFormats.RowCount == 0 && cpMainControlPanel.CurrentFormatPair == null)
+                || (gvFormats.RowCount > 0 && cpMainControlPanel.CurrentFormatPair != null
+                && (cpMainControlPanel.CurrentFormatPair.Type == Classes.StreamType.Video || cpMainControlPanel.CurrentFormatPair.Type == Classes.StreamType.AudioAndVideo)));
+        }
+
+        private int selectedHistoryIndex = -1;
+        private void gcHistory_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                GridHitInfo hitInfo = gvHistory.CalcHitInfo(e.Location);
+                if (hitInfo != null && hitInfo.InDataRow)
+                {
+                    selectedHistoryIndex = hitInfo.RowHandle;
+                    historyPopup.ShowPopup(Control.MousePosition);
+                }
+            }
+        }
+
+        private void gvHistory_DoubleClick(object sender, EventArgs e)
+        {
+            try
+            {
+                Logging.DownloadLog row = gvHistory.GetRow(gvHistory.FocusedRowHandle) as Logging.DownloadLog;
+                if (row != null && row.FileExists)
+                {
+                    openFileLocation(row.DownloadLocation);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logging.ExceptionHandler.LogException(ex);
+            }
+        }
+        private void openFileLocation(string path)
+        {
+            string argument = "/select, \"" + path + "\"";
+
+            System.Diagnostics.Process.Start("explorer.exe", argument);
+        }
+
+        private void bbiReDownload_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            cpMainControlPanel_ReDownload_Click(sender, e);
+        }
+
+        private void bbiNewDownload_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            cpMainControlPanel_NewDownload_Click(sender, e);
+        }
+
+        private void historyTooltip_GetActiveObjectInfo(object sender, DevExpress.Utils.ToolTipControllerGetActiveObjectInfoEventArgs e)
+        {
+            GridHitInfo hitInfo = gvHistory.CalcHitInfo(e.ControlMousePosition);
+            if (hitInfo != null && hitInfo.InRowCell)
+            {
+                object o;
+                if (hitInfo.Column.FieldName == "FileExists")
+                {
+                    bool fileExits = Convert.ToBoolean(gvHistory.GetRowCellValue(hitInfo.RowHandle, "FileExists"));
+                    o = $"{hitInfo.HitTest}{hitInfo.RowHandle}";
+                    e.Info = new DevExpress.Utils.ToolTipControlInfo(o, fileExits ? "File Exists" : "File Not Found");
+                }
+                if (hitInfo.Column.FieldName == "AdditionalSettings")
+                {
+                    string details = "";
+                    o = $"{hitInfo.HitTest}{hitInfo.RowHandle}";
+                    var row = gvHistory.GetRow(hitInfo.RowHandle) as DownloadLog;
+                    if (!string.IsNullOrEmpty(row.PlaylistUrl))
+                    {
+                        details += $"Playlist: {row.PlaylistTitle}\nPlaylist URL: {row.PlaylistUrl}\n";
+                    }
+
+                    details += $"Title: {row.Title}\nURL: {row.Url}\nFormat: {row.Format}\n";
+
+                    if (row.AdditionalSettings)
+                    {
+                        if (row.Start != null && row.Duration != null)
+                        {
+                            details += $"Segment Start: {(TimeSpan)row.Start} - Duration: {(TimeSpan)row.Duration}\n";
+                        }
+                        if (row.Crops != null && row.Crops.Length > 0)
+                        {
+                            details += $"Crop: Top ({row.Crops[0]}) Bottom ({row.Crops[1]}) Left ({row.Crops[2]}) Right ({row.Crops[3]})\n";
+                        }
+                        if (row.VideoConversionFormat != null)
+                        {
+                            details += $"Convert Video: {row.VideoConversionFormat}\n";
+                        }
+                        if (row.AudioConversionFormat != null)
+                        {
+                            details += $"Convert Audio: {row.AudioConversionFormat}\n";
+                        }
+                        if (row.MaxResolution != null)
+                        {
+                            details += $"Max Resolution: {row.MaxResolution.ToFriendlyString(false, false)}\n";
+                        }
+                    }
+                    e.Info = new DevExpress.Utils.ToolTipControlInfo(o, details);
+                }
+            }
+        }
+
+        public void PopulateHistoryColumns()
+        {
+            gvHistory.Columns.Clear();
+            gvHistory.PopulateColumns();
+            gvHistory.Columns["FileExists"].VisibleIndex = 0;
+            gvHistory.Columns["DownloadType"].VisibleIndex = 1;
+            gvHistory.Columns["DownloadLocation"].VisibleIndex = 2;
+            gvHistory.Columns["AdditionalSettings"].VisibleIndex = 3;
+            gvHistory.Columns["AdditionalSettings"].MaxWidth = 25;
+            gvHistory.Columns["AdditionalSettings"].ColumnEdit = repPostProcessed;
+            gvHistory.Columns["AdditionalSettings"].OptionsColumn.ShowCaption = false;
+            gvHistory.Columns["FileExists"].ColumnEdit = repFileExists;
+            gvHistory.Columns["FileExists"].FieldName = "FileExists";
+            gvHistory.Columns["FileExists"].OptionsColumn.ShowCaption = false;
+            gvHistory.Columns["FileExists"].MinWidth = 18;
+            gvHistory.Columns["FileExists"].MaxWidth = 25;
+            gvHistory.Columns["FileExists"].Width = 18;
+            gvHistory.Columns["FileExists"].ToolTip = "File Exists?";
+            gvHistory.Columns["DownloadType"].Width = 50;
+            gvHistory.Columns["DownloadType"].MaxWidth = 50;
+            gvHistory.Columns["DownloadType"].Caption = "Type";
+            gvHistory.Columns["Url"].Visible = false;
+            gvHistory.Columns["InSubFolder"].Visible = false;
+            gvHistory.Columns["PlaylistTitle"].Visible = false;
+            gvHistory.Columns["PlaylistUrl"].Visible = false;
+            gvHistory.Columns["TimeLogged"].Visible = false;
+            gvHistory.Columns["StreamType"].Visible = false;
+            gvHistory.Columns["Downloaded"].Visible = false;
+            gvHistory.Columns["Format"].Visible = false;
+            gvHistory.Columns["FormatPair"].Visible = false;
+            gvHistory.Columns["Start"].Visible = false;
+            gvHistory.Columns["Duration"].Visible = false;
+            gvHistory.Columns["Crops"].Visible = false;
+            gvHistory.Columns["VideoConversionFormat"].Visible = false;
+            gvHistory.Columns["AudioConversionFormat"].Visible = false;
+            gvHistory.Columns["MaxResolution"].Visible = false;
+            gvHistory.Columns["MaxFileSize"].Visible = false;
+            gvHistory.Columns["SegmentMode"].Visible = false;
+            gvHistory.Columns["Title"].Visible = false;
+            gvHistory.RefreshData();
+        }
+
+        private void btnShowHideHistory_Click(object sender, EventArgs e)
+        {
+            AppSettings.Default.General.CollapseHistoryPanel = !AppSettings.Default.General.CollapseHistoryPanel;
+            AppSettings.Default.Save();
+            updateHistoryPanel();
+        }
+
+        private async void btnClearHistory_Click(object sender, EventArgs e)
+        {
+            await Logging.Historian.CleanHistory(Logging.DownloadCategory.All);
+            refreshHistory();
+            MsgBox.Show("Download History Cleared", FormStartPosition.CenterParent);
+        }
+
+        private async void btnDelVidDLs_Click(object sender, EventArgs e)
+        {
+            DialogResult res = MsgBox.Show("Files for all recorded Video downloads will be deleted and Video download logs will be removed.\n\nContinue?", "Delete Downloaded Files", YTR.Controls.Buttons.OKCancel, YTR.Controls.Icon.Warning, FormStartPosition.CenterParent);
+            if (res == DialogResult.OK)
+            {
+                await Logging.Historian.CleanHistory(Logging.DownloadCategory.Video, Logging.DownloadCategory.Video);
+                refreshHistory();
+                MsgBox.Show("Downloads Cleared", FormStartPosition.CenterParent);
+            }
+        }
+
+        private async void btnDelAudDLs_Click(object sender, EventArgs e)
+        {
+            DialogResult res = MsgBox.Show("Files for all recorded Audio downloads will be deleted and Audio download logs will be removed.\n\nContinue?", "Delete Downloaded Files", YTR.Controls.Buttons.OKCancel, YTR.Controls.Icon.Warning, FormStartPosition.CenterParent);
+            if (res == DialogResult.OK)
+            {
+                await Logging.Historian.CleanHistory(Logging.DownloadCategory.Audio, Logging.DownloadCategory.Audio);
+                refreshHistory();
+                MsgBox.Show("Downloads Cleared", FormStartPosition.CenterParent);
+            }
+        }
+
+        private async void btnDelAllDLs_Click(object sender, EventArgs e)
+        {
+            DialogResult res = MsgBox.Show("Files for all recorded downloads will be deleted and download history will be reset.\n\nContinue?", "Delete Downloaded Files", YTR.Controls.Buttons.OKCancel, YTR.Controls.Icon.Warning, FormStartPosition.CenterParent);
+            if (res == DialogResult.OK)
+            {
+                await Logging.Historian.CleanHistory(Logging.DownloadCategory.All, Logging.DownloadCategory.All);
+                refreshHistory();
+                MsgBox.Show("Downloads Cleared", FormStartPosition.CenterParent);
+            }
+        }
+
+        private void pnlHistoryPanel_SizeChanged(object sender, EventArgs e)
+        {
+            this.MinimumSize = calculateMinSize();
+        }
+
+        private Size calculateMinSize()
+        {
+            return new Size(sccMainSplitContainer.MinimumSize.Width + pnlHistoryPanel.Width + scHistorySplitter.Width, this.minimumSize.Height);
         }
     }
 }

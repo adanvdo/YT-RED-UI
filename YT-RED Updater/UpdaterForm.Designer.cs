@@ -1,4 +1,4 @@
-﻿namespace YT_RED_Updater
+﻿namespace YTR_Updater
 {
     partial class UpdaterForm
     {
@@ -92,7 +92,7 @@
             this.lblMessage.Padding = new System.Windows.Forms.Padding(18);
             this.lblMessage.Size = new System.Drawing.Size(432, 54);
             this.lblMessage.TabIndex = 1;
-            this.lblMessage.Text = "Updating YT-RED";
+            this.lblMessage.Text = "Updating YTR";
             // 
             // UpdaterForm
             // 
@@ -103,13 +103,13 @@
             this.ClientSize = new System.Drawing.Size(432, 116);
             this.Controls.Add(this.pnlMain);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.IconOptions.Image = global::YT_RED_Updater.Properties.Resources.ytr;
+            this.IconOptions.Image = global::YTR_Updater.Properties.Resources.ytr;
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(434, 150);
             this.Name = "UpdaterForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "YT-RED Updater";
+            this.Text = "YTR Updater";
             ((System.ComponentModel.ISupportInitialize)(this.pnlMain)).EndInit();
             this.pnlMain.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.progress.Properties)).EndInit();

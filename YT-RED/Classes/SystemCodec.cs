@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using YT_RED.Settings;
+using YTR.Settings;
 
-namespace YT_RED.Classes
+namespace YTR.Classes
 {   
     public static class SystemCodecMaps
     {
@@ -335,10 +335,14 @@ namespace YT_RED.Classes
 
         public string Encoder { get; set; }
 
-        public FFmpegVideoCodec(SystemVideoCodec codec, string encoder)
+        public string Tags { get; set; }
+        public string EncoderString { get { return $"{Encoder} {Tags}"; } }
+
+        public FFmpegVideoCodec(SystemVideoCodec codec, string encoder, string tags = null)
         {
             Codec = codec;
             Encoder = encoder;
+            Tags = tags;
         }
     }
 
@@ -346,11 +350,14 @@ namespace YT_RED.Classes
     {
         public AudioFormat Codec { get; set; }
         public string Encoder { get; set; }
+        public string Tags { get; set; }
+        public string EncoderString { get { return $"{Encoder} {Tags}"; } }
 
-        public FFmpegAudioCodec(AudioFormat codec, string encoder)
+        public FFmpegAudioCodec(AudioFormat codec, string encoder, string tags = null)
         {
             Codec = codec;
             Encoder = encoder;
+            Tags = tags;
         }
     }
 

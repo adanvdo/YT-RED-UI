@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace YT_RED.Classes
+namespace YTR.Classes
 {
     public class Release
     {
@@ -13,7 +13,7 @@ namespace YT_RED.Classes
         public Guid ReleaseID { get; set; }
 
         [JsonProperty("Channel")]
-        public Settings.ReleaseChannel Channel { get; set; }
+        public ReleaseChannel Channel { get; set; }
 
         [JsonProperty("Major")]
         public int Major { get; set; }
