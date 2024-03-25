@@ -17,7 +17,9 @@ This project is UNLICENSED and uses licensed DevExpress WinForms Controls.
 
 YTR is a safe alternative to other popular youtube and reddit video downloaders found online.  Other popular reddit downlaod tools are full of trackers and data collection that the end user is not aware of.  YTR was personally built with a no-tracking and no-data-collection policy.  By keeping the source code open to the public, it is meant to be published as a safe and versatile media downloader for Windows
 
-![YTRMain](https://user-images.githubusercontent.com/26498008/196805373-45dd6736-c6bf-41d1-8a27-507437300b00.png)
+![ytr_ss1](https://github.com/adanvdo/YT-RED-UI/assets/26498008/25a75584-f76f-4c89-b2cc-190836430866)
+
+![ytr_ss2](https://github.com/adanvdo/YT-RED-UI/assets/26498008/d202eb8a-46b7-45d0-8091-89fb62bee43b)
 
 ![2022-08-21_0-03-18](https://user-images.githubusercontent.com/26498008/185775468-58de4d42-dfba-425b-b370-6f59f7091bf7.png)
 
