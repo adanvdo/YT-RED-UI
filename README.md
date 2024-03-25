@@ -109,7 +109,7 @@ YTR's main interface is pretty straight forward. Simply enter the URL of any vid
 ### 3/25/2024
 - Beta Branch Updated from v1.0.4.12
 
-### 3/25/2024
+### 3/25/2024 v1.0.4.12
 - Fixed Bug where Visual Crop Tool could result in Incorrect Crop Calculations due to Thumbnail Dimensions
 - Fixed Bug where Quick Download could result in mismatched encoding
 - Updated yt-dlp and ffmpeg

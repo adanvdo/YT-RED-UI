@@ -324,6 +324,9 @@ namespace YTR.Controls
                             args += " -updater";
                         
                         string updaterProcess = System.IO.Path.Combine(Settings.AppSettings.Default.General.ExeDirectoryPath, "YTR_Updater.exe");
+
+                        Console.WriteLine("Starting Updater");
+
                         System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo(
                             updaterProcess,
                             args
