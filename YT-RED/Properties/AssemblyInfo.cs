@@ -10,7 +10,7 @@ using YTR.Classes;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("JAMGALACTIC")]
 [assembly: AssemblyProduct("YTR")]
-[assembly: AssemblyCopyright("Copyright ©  2022")]
+[assembly: AssemblyCopyright("Copyright ©  2025")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 // Setting ComVisible to false makes the types in this assembly not visible 
@@ -29,6 +29,6 @@ using YTR.Classes;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.5.3")]
+[assembly: AssemblyVersion("1.0.5.4")]
 [assembly: AssemblyBuild("Alpha") ]
 [assembly: AssemblyFileVersion("1.0.0.0")]

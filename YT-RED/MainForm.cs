@@ -1056,13 +1056,13 @@ namespace YTR
                 else
                     result = await Utils.VideoUtil.DownloadBestYtdl(playlistItem.Url, streamType, cpMainControlPanel.EmbedThumbnail, targetPlaylist.PlaylistData.Title.Replace(" ", ""));
 
-                if (!result.Success && result.Data != "canceled")
+                if (!result.Success && result.Data != "canceled" && result.ErrorOutput[0] != "The operation was canceled.")
                 {
                     MsgBox.Show("Download Failed\n" + String.Join("\n", result.ErrorOutput));
                     break;
                 }
 
-                if(!result.Success && result.Data == "canceled")
+                if(!result.Success && (result.Data == "canceled" || result.ErrorOutput[0] == "The operation was canceled."))
                 {
                     cpMainControlPanel.HideListProgress();
                     break;
@@ -1135,7 +1135,7 @@ namespace YTR
             cpMainControlPanel.DownloadSelectionVisible = false;
             cpMainControlPanel.DownloadAudioVisible = false;
             cpMainControlPanel.DownloadBestVisible = false;
-            this.cpMainControlPanel.btnCancelProcess.Visible = false;
+            this.cpMainControlPanel.btnCancelProcess.Visible = true;
             (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = true;
             ipMainInput.marqeeMain.Text = "Sending Download Request..";
             ipMainInput.marqeeMain.Show();
@@ -1152,6 +1152,8 @@ namespace YTR
             }
             catch(Exception ex)
             {
+                if (ex.Message == "A task was canceled.") return;
+
                 ExceptionHandler.LogException(ex);
             }
 
@@ -1332,12 +1334,12 @@ namespace YTR
                     }
                 }
                 result = test;
-                cpMainControlPanel.HideProgress();
             }
-            if (!result.Success && result.Data != "canceled")
+            if (!result.Success && result.Data != "canceled" && result.ErrorOutput[0] != "The operation was canceled.")
             {
                 MsgBox.Show("Download Failed\n" + String.Join("\n", result.ErrorOutput));
             }
+            cpMainControlPanel.HideProgress();
             VideoUtil.Running = false;
             ipMainInput.marqeeMain.Hide();
             ipMainInput.marqeeMain.Text = ""; 
@@ -1538,7 +1540,7 @@ namespace YTR
                 cpMainControlPanel.ShowProgress();
                 result = await Utils.VideoUtil.DownloadYTDLFormat(VideoUtil.ConvertToYouTubeLink(cpMainControlPanel.CurrentFormatPair.VideoCodec == "gif" ? cpMainControlPanel.CurrentFormatPair.VideoFormat.Url : ipMainInput.URL).Url, cpMainControlPanel.CurrentFormatPair, cpMainControlPanel.EmbedThumbnail);
                 cpMainControlPanel.HideProgress();
-                if (!result.Success)
+                if (!result.Success && result.Data != "canceled" && result.ErrorOutput[0] != "The operation was canceled.")
                 {
                     YTRErrorMessageBox eb = new YTRErrorMessageBox(String.Join("\n", result.ErrorOutput), "Download Failed", MessageBoxButtons.OK, MessageBoxIcon.Error, true);
                     eb.ShowDialog();

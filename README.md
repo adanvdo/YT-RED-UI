@@ -108,6 +108,13 @@ YTR's main interface is pretty straight forward. Simply enter the URL of any vid
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 5/1/2025 v1.0.5.4
+- Updated Dependency Packages
+- Fixed bug where UI Crop was not available for format selections when it should be
+- Fixed bug where Cancel button was not displayed when downloading Best Format
+- Fixed bug where Cancelling a download displayed one or more error dialogs
+- Fixed bug where Cancelling a download did not hide the progress bar
+
 ### 7/15/2024 v1.0.5.3
 - Really fixed bug where List Formats failed if a thumbnail download returned a 404 error
 - Fixed bug where crop button was displayed when no video format was selected

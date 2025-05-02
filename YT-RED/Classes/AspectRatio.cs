@@ -10,13 +10,13 @@ namespace YTR.Classes
 {
     public class AspectRatio
     {
-        private byte x;
-        public byte X { get { return x; } }
+        private int x;
+        public int X { get { return x; } }
 
-        private byte y;
-        public byte Y { get { return y; } }
+        private int y;
+        public int Y { get { return y; } }
 
-        public AspectRatio(byte x, byte y)
+        public AspectRatio(int x, int y)
         {
             this.x = x;
             this.y = y;
@@ -30,14 +30,14 @@ namespace YTR.Classes
         public static AspectRatio FromDimensions(int width, int height)
         {
             var gcd = MathUtil.GreatestCommonDivisor(width, height);
-            byte x = (byte)(width / gcd);
-            byte y = (byte)(height / gcd);
+            int x = width / gcd;
+            int y = height / gcd;
             return new AspectRatio(x, y);
         }
 
         public decimal ToDecimal()
         {
-            return (decimal)x / (decimal)y;
+            return Math.Round((decimal)x / (decimal)y, 3);
         }
 
         public override string ToString()

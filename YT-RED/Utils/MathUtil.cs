@@ -10,15 +10,13 @@ namespace YTR.Utils
     {
         public static int GreatestCommonDivisor(int a, int b)
         {
-            while (a != 0 && b != 0)
+            while (b != 0)
             {
-                if (a > b)
-                    a %= b;
-                else
-                    b %= a;
+                int temp = b;
+                b = a % b;
+                a = temp;
             }
-
-            return a | b;
+            return a;
         }
     }
 }
