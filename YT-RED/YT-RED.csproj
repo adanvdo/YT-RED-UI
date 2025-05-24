@@ -313,6 +313,7 @@
     <Compile Include="Controls\TrayForm.Designer.cs">
       <DependentUpon>TrayForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Converters\DateFormatConverter.cs" />
     <Compile Include="Extensions\EnumExtension.cs" />
     <Compile Include="Extensions\ThumbnailDataExtensions.cs" />
     <Compile Include="Logging\DownloadLog.cs" />

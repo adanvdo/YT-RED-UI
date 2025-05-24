@@ -9,6 +9,8 @@ namespace YTR.Logging
 {
     public class DownloadLog
     {
+        [JsonProperty("id")]
+        public Guid? DownloadID { get; set; }
         [JsonProperty("url")]
         public string Url { get; set; }
         [JsonProperty("title")]
@@ -73,6 +75,7 @@ namespace YTR.Logging
 
         public DownloadLog(string url, string title, DownloadType dlType, StreamType type, DateTime downloaded, string location, PendingDownload pendingDownload = null)
         {
+            DownloadID = Guid.NewGuid();
             Url = url;
             Title = title;
             DownloadType = dlType;

@@ -214,21 +214,21 @@ namespace YTR.Controls
             string ytdlpLatestVersion = await UpdateHelper.GetLatestYtdlpVersionNumber();
             string[] localVersions = await UpdateHelper.GetLocalAppVersions();
             string dlytdlp = "";
-            if (ytdlpLatestVersion != null && (ytdlpLatestVersion != localVersions[0] || ytdlpLatestVersion != AppSettings.Default.General.YtdlpLocalVersion))
+            if (Program.Debugging || (ytdlpLatestVersion != null && (ytdlpLatestVersion != localVersions[0] || ytdlpLatestVersion != AppSettings.Default.General.YtdlpLocalVersion)))
             {
-                dlytdlp = await UpdateHelper.UpdateYTDLP(new System.Net.DownloadProgressChangedEventHandler(progressChanged2));
+                dlytdlp = await UpdateHelper.UpdateYTDLP(new System.Net.DownloadProgressChangedEventHandler(progressChanged2), ytdlpLatestVersion);
             }
             dependencyName = " FFMPEG";
             string dlffmpeg = "";
             string installFfmpeg = "";
             string ffmpegLatestVersion = await UpdateHelper.GetLatestFfmpegVersionNumber();
-            if (ffmpegLatestVersion != null && ((!string.IsNullOrEmpty(localVersions[1]) && ffmpegLatestVersion != localVersions[1]) || ffmpegLatestVersion != AppSettings.Default.General.FfmpegLocalVersion))
+            if (Program.Debugging || (ffmpegLatestVersion != null && ((!string.IsNullOrEmpty(localVersions[1]) && ffmpegLatestVersion != localVersions[1]) || ffmpegLatestVersion != AppSettings.Default.General.FfmpegLocalVersion)))
             {
                 dlffmpeg = await UpdateHelper.UpdateFfmpeg(new System.Net.DownloadProgressChangedEventHandler(progressChanged2));
                 if (dlffmpeg == "Download Complete")
                 {
                     repButtonEdit2.Buttons[0].Caption = "Extracting FFMPEG Files..";
-                    installFfmpeg = await UpdateHelper.InstallFfmpeg();
+                    installFfmpeg = await UpdateHelper.InstallFfmpeg(ffmpegLatestVersion);
                     await UpdateHelper.CleanUpFFMPEG();
                 }
             }

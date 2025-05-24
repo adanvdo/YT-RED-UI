@@ -23,6 +23,7 @@ using YTR.Controls;
 using YTR.Logging;
 using YTR.Settings;
 using YTR.Utils;
+using static System.Resources.ResXFileRef;
 
 namespace YTR
 {
@@ -32,6 +33,8 @@ namespace YTR
         private Size minimumSize = new Size(823, 664);
         private UIBlockDetector _blockDetector;
         private Timer historyTimer;
+        private bool pauseHistoryTimer = false;
+
         public bool IsLocked
         {
             get
@@ -217,7 +220,7 @@ namespace YTR
 
         private async void HistoryTimer_Tick(object sender, EventArgs e)
         {
-            if (AppSettings.Default.General.EnableDownloadHistory && Historian.Loaded)
+            if (AppSettings.Default.General.EnableDownloadHistory && Historian.Loaded && !pauseHistoryTimer)
             {
                 await Historian.CleanHistory();
                 refreshHistory();
@@ -1377,7 +1380,7 @@ namespace YTR
             return;
         }
 
-        private async void ytdlDownloadSelection()
+        private async void ytdlDownloadSelection(bool clearSelectionAfterDL = false)
         {
             this.currentDownload = HtmlUtil.CheckUrl(ipMainInput.URL);
             if(this.currentDownload == DownloadType.Unknown && AppSettings.Default.General.ShowHostWarning)
@@ -1590,6 +1593,10 @@ namespace YTR
             gvFormats.FocusedRowHandle = -1;
             this.UseWaitCursor = false;
             this.currentDownload = DownloadType.Unknown;
+            if (clearSelectionAfterDL)
+            {
+                ipMainInput.btnListReset.PerformClick();
+            }
             (this.tcMainTabControl.SelectedPage as CustomTabFormPage).IsLocked = false;
         }
 
@@ -1960,11 +1967,14 @@ namespace YTR
             ipMainInput.marqeeMain.Text = "";
         }
 
-        private void cpMainControlPanel_ReDownload_Click(object sender, EventArgs e)
+        private async void cpMainControlPanel_ReDownload_Click(object sender, EventArgs e)
         {
             if (TargetLog != null)
             {
+                ipMainInput.btnListReset.PerformClick();
                 ipMainInput.URL = TargetLog.Url;
+                cpMainControlPanel.btnDownloadBest.Enabled = false;
+                cpMainControlPanel.btnSelectionDL.Enabled = false;
 
                 if (TargetLog.Start != null && TargetLog.Duration != null)
                 {
@@ -2003,9 +2013,63 @@ namespace YTR
                 }
                 else
                 {
-                    cpMainControlPanel.SetCurrentFormatPair(TargetLog.FormatPair);                    
+                    if(TargetLog.FormatPair.Type == Classes.StreamType.Unknown ||
+                        (TargetLog.FormatPair.VideoFormat == null && TargetLog.FormatPair.AudioFormat == null))
+                    {
+                        try
+                        {
+                            ipMainInput.marqeeMain.Text = "Repairing Download Log..";
+                            ipMainInput.marqeeMain.Show();
 
-                    ytdlDownloadSelection();
+                            var data = await VideoUtil.GetVideoData(TargetLog.Url);
+                            ipMainInput.marqeeMain.Hide();
+                            ipMainInput.marqeeMain.Text = "";
+
+                            if (data.Formats != null)
+                            {
+                                YoutubeDLSharp.Metadata.FormatData supplementAudio = null;
+                                if (AppSettings.Default.Layout.FormatMode == FormatMode.Preset && this.currentDownload == DownloadType.Reddit && data.Formats.Where(f => f.VideoCodec != null && f.VideoCodec != "none" && f.AudioCodec != null && f.AudioCodec != "none").Count() < 1)
+                                {
+                                    var checkAudio = data.Formats.Where(af => af.Format.ToLower().Contains("audio only") || (af.AudioCodec != null && af.AudioCodec != "none" && (af.VideoCodec == null || af.VideoCodec == "none")));
+                                    if (checkAudio != null && checkAudio.Count() > 0)
+                                        supplementAudio = checkAudio.LastOrDefault();
+                                }
+
+                                var ids = TargetLog.Format.Split('+');
+
+                                var formatList = data.Formats.Where(f => ids.Any(id => id == f.FormatId)).ToList();
+
+                                foreach (YoutubeDLSharp.Metadata.FormatData format in formatList)
+                                {
+                                    var convert = new YTDLFormatData(format, data.Duration);
+                                    if (convert.Type == Classes.StreamType.Video || convert.Type == Classes.StreamType.AudioAndVideo)
+                                    {
+                                        TargetLog.FormatPair.VideoFormat = convert;
+                                    }
+                                    else if (convert.Type == Classes.StreamType.Audio)
+                                    {
+                                        TargetLog.FormatPair.AudioFormat = convert;
+                                    }
+                                }
+
+                                await Historian.UpdateDownload(TargetLog);
+                            }
+                            else
+                            {
+                                MessageBox.Show("There was an error reading the download log");
+                            }
+                        }
+                        catch(Exception ex)
+                        {
+                            ExceptionHandler.LogException(ex);
+                        }
+                    }
+
+                    cpMainControlPanel.SetCurrentFormatPair(TargetLog.FormatPair);
+                    cpMainControlPanel.btnDownloadBest.Enabled = false;
+                    cpMainControlPanel.btnSelectionDL.Enabled = false;
+
+                    ytdlDownloadSelection(true);
                 }
 
             }
@@ -2247,6 +2311,7 @@ namespace YTR
             gvHistory.Columns["DownloadType"].Width = 50;
             gvHistory.Columns["DownloadType"].MaxWidth = 50;
             gvHistory.Columns["DownloadType"].Caption = "Type";
+            gvHistory.Columns["DownloadID"].Visible = false;
             gvHistory.Columns["Url"].Visible = false;
             gvHistory.Columns["InSubFolder"].Visible = false;
             gvHistory.Columns["PlaylistTitle"].Visible = false;
@@ -2272,6 +2337,7 @@ namespace YTR
         {
             AppSettings.Default.General.CollapseHistoryPanel = !AppSettings.Default.General.CollapseHistoryPanel;
             AppSettings.Default.Save();
+            this.pauseHistoryTimer = AppSettings.Default.General.CollapseHistoryPanel;
             updateHistoryPanel();
         }
 
@@ -2323,6 +2389,16 @@ namespace YTR
         private Size calculateMinSize()
         {
             return new Size(sccMainSplitContainer.MinimumSize.Width + pnlHistoryPanel.Width + scHistorySplitter.Width, this.minimumSize.Height);
+        }
+
+        private void gvHistory_MouseEnter(object sender, EventArgs e)
+        {
+            pauseHistoryTimer = true;
+        }
+
+        private void gvHistory_MouseLeave(object sender, EventArgs e)
+        {
+            pauseHistoryTimer = false;
         }
     }
 }

@@ -108,6 +108,13 @@ YTR's main interface is pretty straight forward. Simply enter the URL of any vid
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 5/24/2025 v1.0.5.5
+- Updated Media Processing Dependencies
+- Fixed Crash when trying to re-download a file using the "Download Again" context menu option in the History Panel
+- Fixed issue where download log entries could be missing important info
+- Improved Media Processing Dependency update procedure for builds
+- UI Behavior Improvements
+
 ### 5/1/2025 v1.0.5.4
 - Updated Dependency Packages
 - Fixed bug where UI Crop was not available for format selections when it should be

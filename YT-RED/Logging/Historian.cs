@@ -31,7 +31,21 @@ namespace YTR.Logging
                     var json = await Task.Run(() => File.ReadAllText(historyFile));
                     List<DownloadLog> history = JsonConvert.DeserializeObject<List<DownloadLog>>(json);
                     if (history != null)
+                    {
+                        bool resave = false;
+                        foreach (var log in history)
+                        {
+                            if (log.DownloadID == null) log.DownloadID = Guid.NewGuid();
+                            resave = true;
+                        }
+
                         DownloadHistory = history;
+
+                        if (resave)
+                        {
+                            await SaveHistory();
+                        }
+                    }
                     else
                         DownloadHistory = new List<DownloadLog>();
                     historyWasLoaded = true;
@@ -133,6 +147,23 @@ namespace YTR.Logging
             {
                 ExceptionHandler.LogException(ex);
             }
+        }
+
+        public static async Task<bool> UpdateDownload(DownloadLog dlLog)
+        {
+            try
+            {
+                if (DownloadHistory == null || DownloadHistory.Count == 0) return false;
+                var index = DownloadHistory.IndexOf(DownloadHistory.Find(dl => dl.DownloadID == dlLog.DownloadID));
+                DownloadHistory[index] = dlLog;
+                bool saved = await SaveHistory();
+                return saved;
+            }
+            catch(Exception ex)
+            {
+                ExceptionHandler.LogException(ex);
+            }
+            return false;
         }
 
         public static async Task<bool> RecordDownload(DownloadLog dlLog)

@@ -22,6 +22,7 @@ namespace YTR.Utils
         #region YTR UPDATES
 
         private static string updateDirectory = "";
+
         public static async Task<string> GetUpdateDirectoryAsync()
         {
             updateDirectory = Path.Combine(AppSettings.Default.General.ExeDirectoryPath, "Updates");
@@ -186,6 +187,65 @@ namespace YTR.Utils
 
         #region DEPENDENCY UPDATES
 
+        private static async Task<bool> updateDependencyForBuild(string dependencyName, string version, string target1, string target2)
+        {
+            if (string.IsNullOrEmpty(target1) || string.IsNullOrEmpty(target2)) return false;
+
+            try
+            {
+                return await Task.Run(() => {
+                    UpdateLog log;
+                    string relativeTarget = $"../../../Resources/App/";
+                    string appLog = $"{relativeTarget}update_log.json";
+                    string json;
+
+                    if (!File.Exists(appLog)) log = new UpdateLog();
+                    else
+                    {
+                        json = File.ReadAllText(appLog);
+                        log = JsonConvert.DeserializeObject<UpdateLog>(json);
+                    }
+
+                    if (dependencyName == "ffmpeg")
+                    {
+                        string projectTarget1 = $"{relativeTarget}ffmpeg.exe";
+                        string projectTarget2 = $"{relativeTarget}ffprobe.exe";
+                        File.Copy(target1, projectTarget1, true);
+                        File.Copy(target2, projectTarget2, true);
+
+                        log.Updated = DateTime.Now.Date;
+                        log.FFMPEGVersion = version;
+
+                        json = JsonConvert.SerializeObject(log, Formatting.Indented);
+                        File.WriteAllText(appLog, json);
+                        return true;
+                    }
+
+                    if (dependencyName == "ytdlp")
+                    {
+                        string projectTarget1 = $"{relativeTarget}yt-dlp.exe";
+                        string projectTarget2 = $"{relativeTarget}yt-dlp_x86.exe";
+                        File.Copy(target1, projectTarget1, true);
+                        File.Copy(target2, projectTarget2, true);
+
+                        log.Updated = DateTime.Now.Date;
+                        log.YTDLPVersion = version;
+
+                        json = JsonConvert.SerializeObject(log, Formatting.Indented);
+                        File.WriteAllText(appLog, json);
+                        return true;
+                    }
+
+                    return false;
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            return false;
+        }
+
         public static async Task<string[]> GetLocalAppVersions()
         {
             return await Task.Run(() =>
@@ -254,7 +314,7 @@ namespace YTR.Utils
             return tempDir;
         }
 
-        public static async Task<string> InstallFfmpeg()
+        public static async Task<string> InstallFfmpeg(string latestVersion)
         {
             string result = "";
             string package = Path.Combine(AppSettings.Default.General.ExeDirectoryPath, "Resources", "App", "Temp", "ffmpeg-git-essentials.7z");
@@ -262,7 +322,7 @@ namespace YTR.Utils
             {
                 try
                 {
-                    await Task.Run(() =>
+                    await Task.Run(async () =>
                     {
                         using (var archive = new ArchiveFile(package))
                         {
@@ -282,6 +342,12 @@ namespace YTR.Utils
 
                             File.Move(Path.Combine(AppSettings.Default.General.ExeDirectoryPath, "Resources", "App", "Temp", "ffmpeg.exe"), target1);
                             File.Move(Path.Combine(AppSettings.Default.General.ExeDirectoryPath, "Resources", "App", "Temp", "ffprobe.exe"), target2);
+
+                            if (Program.Debugging)
+                            {
+                                var updatedDeps = await updateDependencyForBuild("ffmpeg", latestVersion, target1, target2);
+                                if (!updatedDeps) MessageBox.Show("Failed to update Build Dependency");
+                            }
                         }
                     });
                     result = "Installation Complete";
@@ -297,7 +363,7 @@ namespace YTR.Utils
                 result = "Installation Failed";
             }
             return result;
-        }
+        }       
 
         public static async Task<bool> CleanUpFFMPEG()
         {
@@ -357,7 +423,7 @@ namespace YTR.Utils
             return result;
         }
 
-        public static async Task<string> UpdateYTDLP(System.Net.DownloadProgressChangedEventHandler progressChanged)
+        public static async Task<string> UpdateYTDLP(System.Net.DownloadProgressChangedEventHandler progressChanged, string latestVersion)
         {
             string result = "";
             try
@@ -403,6 +469,12 @@ namespace YTR.Utils
                                 File.Delete(targetPath2);
                             }
                             File.Move(downloadPath2, targetPath2);
+
+                            if (Program.Debugging)
+                            {
+                                var updatedDeps = await updateDependencyForBuild("ytdlp", latestVersion, targetPath1, targetPath2);
+                                if (!updatedDeps) MessageBox.Show("Failed to update Build Dependency");
+                            }
 
                             result = "Download Complete";
                         }

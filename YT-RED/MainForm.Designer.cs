@@ -313,6 +313,7 @@
             // videoInfoPanel
             // 
             this.videoInfoPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.videoInfoPanel.EnableCropButton = false;
             this.videoInfoPanel.Location = new System.Drawing.Point(0, 123);
             this.videoInfoPanel.Margin = new System.Windows.Forms.Padding(0);
             this.videoInfoPanel.Name = "videoInfoPanel";
@@ -460,6 +461,8 @@
             this.gvHistory.OptionsView.ShowGroupExpandCollapseButtons = false;
             this.gvHistory.OptionsView.ShowGroupPanel = false;
             this.gvHistory.OptionsView.ShowIndicator = false;
+            this.gvHistory.MouseEnter += new System.EventHandler(this.gvHistory_MouseEnter);
+            this.gvHistory.MouseLeave += new System.EventHandler(this.gvHistory_MouseLeave);
             this.gvHistory.DoubleClick += new System.EventHandler(this.gvHistory_DoubleClick);
             // 
             // repFileExists

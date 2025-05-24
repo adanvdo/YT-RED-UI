@@ -9,6 +9,7 @@ namespace YTR
 {
     internal static class Program
     {
+        public static bool Debugging = false;
         public static bool DevRun = false;
         public static bool x64 = false;
         public static string initialYTLink = string.Empty;
@@ -41,6 +42,8 @@ namespace YTR
                 {
                     foreach (string s in args)
                     {
+                        if(s.StartsWith("-debug") || s == "debug")
+                            Debugging = true;
                         if (s.StartsWith("-dev") || s == "dev")
                             DevRun = true;
                         if (s.StartsWith("-if"))
