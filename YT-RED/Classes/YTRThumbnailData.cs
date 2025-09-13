@@ -4,17 +4,18 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using Winista.Mime;
 using YoutubeDLSharp.Metadata;
 
 namespace YTR.Classes
 {
     public class YTRThumbnailData : YoutubeDLSharp.Metadata.ThumbnailData
     {
-        public MimeType MimeType { get; set; }
+        public string MimeType { get; set; }
+        public bool IsSupported { get; set; } = false;
+        public bool IsWebp { get; set; } = false;
         public int Order { get; set; }
         public YTRThumbnailData() : base() { }
-        public YTRThumbnailData(MimeType mimeType) : base()
+        public YTRThumbnailData(string mimeType) : base()
         {
             this.MimeType = mimeType;
         }

@@ -108,8 +108,15 @@ YTR's main interface is pretty straight forward. Simply enter the URL of any vid
 
 ## CHANGELOG <a name="changelog"></a>
 
+### 9/13/2025 v1.0.5.6
+- Added support for webp thumbnails
+- Updated Project Dependency Packages
+- Updated Media Processing Tools
+- Replaced Webclient with Httpclient in methods that download files
+- Fixed a bug where reddit thumbnails caused multiple errors due to CDN changes
+
 ### 5/24/2025 v1.0.5.5
-- Updated Media Processing Dependencies
+- Updated Media Processing Tools
 - Fixed Crash when trying to re-download a file using the "Download Again" context menu option in the History Panel
 - Fixed issue where download log entries could be missing important info
 - Improved Media Processing Dependency update procedure for builds

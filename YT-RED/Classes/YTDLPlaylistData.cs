@@ -29,7 +29,7 @@ namespace YTR.Classes
             Description = sourceData.Description;
             Duration = sourceData.Duration;
             Thumbnails = sourceData.Thumbnails;
-            var useThumb = sourceData.Thumbnails.FirstOrDefault(tn => !tn.Url.ToLower().EndsWith(".webp"));
+            var useThumb = sourceData.Thumbnails.FirstOrDefault();
             if (useThumb != null) this.thumbUrl = useThumb.Url;
         }
 

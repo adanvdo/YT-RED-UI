@@ -357,7 +357,6 @@ namespace YTR
                 {
                     ExceptionHandler.LogException(ex);
                 }
-                bool replaceDependency = await UpdateHelper.ReplaceZipDependency();
                 bool deleteBackup = await UpdateHelper.DeleteRemnants();
                 AppSettings.Default.Save();
             }

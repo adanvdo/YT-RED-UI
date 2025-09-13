@@ -3,13 +3,11 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Web;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using YTR.Classes;
 using YTR.Logging;
 using YTR.Settings;
-using System.Drawing;
-using DevExpress.Xpo.DB.Helpers;
 
 namespace YTR.Utils
 {
@@ -35,6 +33,61 @@ namespace YTR.Utils
             {
                 ExceptionHandler.LogException(ex);
             }
+            return null;
+        }
+
+        /// <summary>
+        /// Gets a MemoryStream from a given URL, handling direct image links and HTML pages containing images.
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public static async Task<MemoryStream> GetStreamFromUrl(string url)
+        {
+
+            using var client = new HttpClient();
+
+            // Add headers to mimic a real browser
+            client.DefaultRequestHeaders.Add("User-Agent",
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36");
+            client.DefaultRequestHeaders.Add("Accept",
+                "image/webp,image/apng,image/*,*/*;q=0.8");
+            client.DefaultRequestHeaders.Add("Accept-Language", "en-US,en;q=0.9");
+            client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate, br");
+
+            try
+            {
+                var response = await client.GetAsync(url);
+                if(response.StatusCode != HttpStatusCode.OK) { return null; }
+
+                var contentType = response.Content.Headers.ContentType?.MediaType;
+
+                if (contentType?.StartsWith("image/") == true)
+                {
+                    var bytes = await response.Content.ReadAsByteArrayAsync();
+                    return new MemoryStream(bytes);
+                }
+
+                // If we get HTML, try to extract the real image URL
+                if (contentType?.Contains("text/html") == true)
+                {
+                    var html = await response.Content.ReadAsStringAsync();
+                    var match = Regex.Match(html, @"<img[^>]+src=[""']([^""']+)[""']",
+                        RegexOptions.IgnoreCase);
+
+                    if (match.Success)
+                    {
+                        var imageUrl = match.Groups[1].Value;
+                        var imageResponse = await client.GetAsync(imageUrl);
+                        var bytes = await imageResponse.Content.ReadAsByteArrayAsync();
+                        return new MemoryStream(bytes);
+                    }
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                ExceptionHandler.LogException(ex);
+            }
+
             return null;
         }
 
@@ -194,7 +247,7 @@ namespace YTR.Utils
 
         #endregion
 
-        #region WEB
+        #region Images
 
         public static async Task<byte[]> GetImageAsByteArrayAsync(string url, bool useAbsoluteUri = true)
         {
@@ -202,7 +255,7 @@ namespace YTR.Utils
             {
                 Uri uri = new Uri(url);
                 string useUrl = useAbsoluteUri ? $"https://{uri.Host}{uri.AbsolutePath}" : uri.ToString();
-                using(HttpClient client = new HttpClient())
+                using (HttpClient client = new HttpClient())
                 {
                     var response = await client.GetAsync(useUrl);
                     if (response.IsSuccessStatusCode)
@@ -217,6 +270,56 @@ namespace YTR.Utils
             }
             return null;
         }
+
+        public static async Task<(byte[] imageBytes, string contentType)> DownloadImageSimpleAsync(string url)
+        {
+            using var client = new HttpClient();
+
+            // Add headers to mimic a real browser
+            client.DefaultRequestHeaders.Add("User-Agent",
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36");
+            client.DefaultRequestHeaders.Add("Accept",
+                "image/webp,image/apng,image/*,*/*;q=0.8");
+            client.DefaultRequestHeaders.Add("Accept-Language", "en-US,en;q=0.9");
+            client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate, br");
+
+            // Try the original URL first
+            try
+            {
+                var response = await client.GetAsync(url);
+                var contentType = response.Content.Headers.ContentType?.MediaType;
+
+                if (contentType?.StartsWith("image/") == true)
+                {
+                    var bytes = await response.Content.ReadAsByteArrayAsync();
+                    return (bytes, contentType);
+                }
+
+                // If we get HTML, try to extract the real image URL
+                if (contentType?.Contains("text/html") == true)
+                {
+                    var html = await response.Content.ReadAsStringAsync();
+                    var match = Regex.Match(html, @"<img[^>]+src=[""']([^""']+)[""']",
+                        RegexOptions.IgnoreCase);
+
+                    if (match.Success)
+                    {
+                        var imageUrl = match.Groups[1].Value;
+                        var imageResponse = await client.GetAsync(imageUrl);
+                        var bytes = await imageResponse.Content.ReadAsByteArrayAsync();
+                        return (bytes, imageResponse.Content.Headers.ContentType?.MediaType);
+                    }
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                ExceptionHandler.LogException(ex);
+            }
+
+            throw new InvalidOperationException("Could not download image from Reddit URL");
+        }
+        
+
         #endregion
     }
 }

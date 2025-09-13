@@ -96,14 +96,7 @@ namespace YTR.Controls
                 if(videoData.Thumbnails != null && videoData.Thumbnails.Length > 0)
                 {
                     List<YTRThumbnailData> ytrThumbnails = new List<YTRThumbnailData>();
-                    if (!videoData.Thumbnails.Any(t => t.Preference != null))
-                    {
-                        ytrThumbnails = await MimeUtil.GetSupportedYTRThumbnailDataFromByteArrayAsync(videoData.Thumbnails);
-                    }
-                    else
-                    {
-                        ytrThumbnails = YTRThumbnailData.ConvertFromThumbnailDataArray(videoData.Thumbnails, SortPriority.Resolution, tn => !tn.Url.ToLower().EndsWith(".webp")).ToList();
-                    }
+                    ytrThumbnails = await MimeUtil.GetSupportedYTRThumbnailDataAsync(videoData.Thumbnails);                    
                     
                     YTRThumbnailData supportedYTRImage = null;
                     for (int i = 0; i < ytrThumbnails.Count; i++)
@@ -130,12 +123,23 @@ namespace YTR.Controls
             }
         }
 
-        private async Task loadThumbnail(ThumbnailData thumbData)
+        private async Task loadThumbnail(YTRThumbnailData thumbData)
         {            
             if (thumbData != null)
-            {
-                Stream thumbnailStream = await Utils.WebUtil.GetStreamFromUrl(thumbData.Url);
-                currentImage = Image.FromStream(thumbnailStream, false, true);
+            {                
+                using Stream sourceStream = await Utils.HttpUtil.GetStreamFromUrl(thumbData.Url);
+                if(sourceStream == null)
+                    throw new WebException("Could not get stream from URL");
+
+                if (thumbData.IsWebp)
+                {
+                    using Stream convertedStream = await ImageUtil.WebpToPngStream(sourceStream);
+                    currentImage = Image.FromStream(convertedStream, false, true);
+                }
+                else
+                {
+                    currentImage = Image.FromStream(sourceStream, false, true);
+                }
                 useMediaSize = currentImage.Size;
                 peThumbnail.Image = currentImage;
             }

@@ -123,33 +123,7 @@ namespace YTR.Utils
                 ExceptionHandler.LogException(ex);
             }
             return result;
-        }
-
-        public static async Task<bool> ReplaceZipDependency()
-        {
-            bool result = false;
-            try
-            {
-                await Task.Run(() =>
-                {
-                    string path = AppSettings.Default.General.ExeDirectoryPath;
-                    string oldPath = Path.Combine(path, "Ionic.Zip.Reduced.dll");
-                    string newPath = Path.Combine(path, "Ionic.Zip.Reduced.dll.new");
-                    if (File.Exists(newPath))
-                    {
-                        if (File.Exists(oldPath))
-                            File.Delete(oldPath);
-                        File.Move(newPath, oldPath);
-                    }
-                    result = true;
-                });
-            }
-            catch (Exception ex)
-            {
-                ExceptionHandler.LogException(ex);
-            }
-            return result;
-        }
+        }        
 
         public static async Task<bool> DeleteRemnants()
         {
