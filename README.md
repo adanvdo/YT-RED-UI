@@ -48,7 +48,7 @@ YTR is a safe alternative to other popular youtube and reddit video downloaders 
 - Update Assistant
 
 ### Known Issues <a name="known-issues"></a>
-- None as of 10/26/2023
+- None as of 10/26/2025
 
 ### How To Use <a name="how-to-use"></a>
 
