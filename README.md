@@ -1,3 +1,13 @@
+# ⚠️ THIS PROJECT HAS BEEN RETIRED ⚠️
+
+> **YT-RED is no longer maintained and will not receive any further updates.**
+>
+> This project is being replaced by [**YTR-MAUI**](https://github.com/adanvdo/YTR-MAUI) — a complete .NET 10 rewrite that will offer the same features as the .NET Framework version. Windows will be available first, with an Android version to follow at a later date.
+>
+> Please visit the new repository: https://github.com/adanvdo/YTR-MAUI
+
+---
+
 # YTR-UI ALPHA BRANCH
 
 ![ytr-banner-1 0 1 1](https://user-images.githubusercontent.com/26498008/171912293-7d925959-aba1-4826-8da8-8fbbf2a35a8f.png)
