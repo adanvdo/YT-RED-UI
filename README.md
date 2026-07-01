@@ -1,3 +1,13 @@
+# ⚠️ THIS PROJECT HAS BEEN RETIRED ⚠️
+
+> **YT-RED is no longer maintained and will not receive any further updates.**
+>
+> This project is being replaced by [**YTR-MAUI**](https://github.com/adanvdo/YTR-MAUI) — a complete .NET 10 rewrite that will offer the same features as the .NET Framework version. Windows will be available first, with an Android version to follow at a later date.
+>
+> Please visit the new repository: https://github.com/adanvdo/YTR-MAUI
+
+---
+
 # YT-RED-UI
 
 ## Windows .NET Framework GUI Application for Downloading Video and Audio Files from YouTube, Reddit, Vimeo, Twitter, Instagram, Twitch, and other popular media hosts. 
